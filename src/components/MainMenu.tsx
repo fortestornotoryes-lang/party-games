@@ -22,7 +22,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", damping: 10 }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className="inline-block p-4 rounded-3xl bg-red-600/20 border border-red-500/30 mb-2"
           >
             <LayoutGrid className="w-12 h-12 text-red-500" />

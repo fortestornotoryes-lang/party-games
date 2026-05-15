@@ -35,11 +35,13 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#0a0502] text-[#e5e7eb] font-sans overflow-hidden select-none">
        <div className={`fixed inset-0 transition-colors duration-1000 pointer-events-none opacity-20 ${isRevealed && currentPlayer.isSpy ? 'bg-red-900' : isRevealed ? 'bg-sky-900' : 'bg-transparent'}`} />
 
+      <AnimatePresence mode="wait">
       <motion.div
         key={currentIndex}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 1.2 }}
+        transition={{ duration: 0.25 }}
         className="w-full max-w-sm space-y-8 flex flex-col items-center relative z-10"
       >
         <div className="text-center space-y-2">
@@ -58,7 +60,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
                 initial={{ rotateY: -180, opacity: 0 }}
                 animate={{ rotateY: 0, opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
+                transition={{ duration: 0.45, type: "spring", bounce: 0.1 }}
                 whileHover={!isTransitioning ? { rotateY: 5, rotateX: -5 } : {}}
                 className="w-full h-full bg-white/5 border-2 border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center space-y-6 cursor-pointer hover:border-emerald-500/40 transition-all group shadow-2xl relative overflow-hidden"
                 onClick={() => !isTransitioning && setIsRevealed(true)}
@@ -78,7 +80,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
                 initial={{ rotateY: 180, opacity: 0 }}
                 animate={{ rotateY: 0, opacity: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
+                transition={{ duration: 0.45, type: "spring", bounce: 0.1 }}
                 className={`w-full h-full rounded-[2.5rem] p-8 flex flex-col items-center justify-between text-center border-2 shadow-2xl ${currentPlayer.isSpy ? 'bg-gradient-to-br from-red-950/40 to-black border-red-500' : 'bg-gradient-to-br from-sky-950/40 to-black border-sky-500'}`}
               >
                 <div className="w-full flex-1 flex flex-col items-center justify-center py-4">
@@ -127,6 +129,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
           Тебе предстоит нарисовать ровно две линии за всю игру. Будь точен!
         </p>
       </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

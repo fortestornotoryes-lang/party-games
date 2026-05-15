@@ -150,8 +150,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ onBack }) => {
 
             {/* Guess Indicator */}
             {phase !== 'telepath' && hasGuessed && (
-              <motion.div 
-                layout
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="absolute top-0 bottom-0 w-1.5 bg-yellow-400 z-30 shadow-[0_0_20px_rgba(250,204,21,0.9)]"

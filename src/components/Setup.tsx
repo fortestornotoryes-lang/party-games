@@ -149,12 +149,12 @@ export const Setup: React.FC<SetupProps> = ({
             <AnimatePresence mode="popLayout">
               {names.map((name, index) => (
                 <motion.div
-                  key={index}
+                  key={name + index}
                   layout
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ duration: 0.2 }}
                   className="flex items-center space-x-2 group relative"
                 >
                   <div className="flex-1 relative">
