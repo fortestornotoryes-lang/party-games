@@ -21,7 +21,7 @@ import { TelestrationsGame } from './components/TelestrationsGame';
 import { JustOneGame } from './components/JustOneGame';
 import { Player, GameStatus } from './types';
 import { LOCATIONS_DATA, SPY_HUNT_INSTRUCTIONS } from './constants/spyHuntContent';
-import { FAKE_ARTIST_DATA, FAKE_ARTIST_INSTRUCTIONS } from './constants/fakeArtistContent';
+import { FAKE_ARTIST_INSTRUCTIONS } from './constants/fakeArtistContent';
 import { RESISTANCE_INSTRUCTIONS } from './constants/resistanceContent';
 import { TELESTRATIONS_INSTRUCTIONS } from './constants/telestrationsContent';
 import { WAVELENGTH_INSTRUCTIONS } from './constants/wavelengthContent';
@@ -62,7 +62,6 @@ export default function App() {
       }
 
       case 'fake_artist_setup': {
-        const gameObj = FAKE_ARTIST_DATA[Math.floor(Math.random() * FAKE_ARTIST_DATA.length)];
         const spyIndex = Math.floor(Math.random() * playerNames.length);
 
         const initialPlayers: Player[] = playerNames.map((name, index) => ({
@@ -73,7 +72,6 @@ export default function App() {
         }));
 
         setPlayers(initialPlayers);
-        setGameState(prev => ({ ...prev, word: gameObj.word, category: gameObj.category }));
         setStatus('fake_artist_distributing');
         break;
       }
@@ -122,9 +120,14 @@ export default function App() {
     }
   }, [status]);
 
-  const handleFinishDistribution = () => {
+  const handleFinishDistribution = (wordParam?: string, categoryParam?: string) => {
     if (status === 'distributing') setStatus('playing');
-    else if (status === 'fake_artist_distributing') setStatus('fake_artist_playing');
+    else if (status === 'fake_artist_distributing') {
+      if (wordParam && categoryParam) {
+        setGameState(prev => ({ ...prev, word: wordParam, category: categoryParam }));
+      }
+      setStatus('fake_artist_playing');
+    }
     else setStatus('resistance_playing');
   };
 
@@ -171,14 +174,12 @@ export default function App() {
   }, [players]);
 
   const quickRestartFake = useCallback(() => {
-    const gameObj = FAKE_ARTIST_DATA[Math.floor(Math.random() * FAKE_ARTIST_DATA.length)];
     const spyIndex = Math.floor(Math.random() * players.length);
     setPlayers(players.map((p, i) => ({
       ...p,
       role: i === spyIndex ? 'Самозванец' : 'Художник',
       isSpy: i === spyIndex,
     })));
-    setGameState(prev => ({ ...prev, word: gameObj.word, category: gameObj.category }));
     setStatus('fake_artist_distributing');
   }, [players]);
 
@@ -253,11 +254,9 @@ export default function App() {
         />
       )}
       {status === 'fake_artist_distributing' && (
-        <FakeArtistDistribution 
-          players={players} 
-          word={gameState.word} 
-          category={gameState.category}
-          onFinish={handleFinishDistribution} 
+        <FakeArtistDistribution
+          players={players}
+          onFinish={(word, category) => handleFinishDistribution(word, category)}
         />
       )}
       {status === 'resistance_distributing' && (
