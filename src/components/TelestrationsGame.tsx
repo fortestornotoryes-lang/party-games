@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, Eraser, Download } from 'lucide-react';
-import { TELESTRATIONS_INSTRUCTIONS, STARTING_WORDS } from '../telestrationsContent';
+import { TELESTRATIONS_INSTRUCTIONS, STARTING_WORDS } from '../constants/telestrationsContent';
 
 interface TelestrationsGameProps {
   playerNames: string[];

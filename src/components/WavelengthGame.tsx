@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import { RotateCcw, Home, HelpCircle, X, CheckCircle2, Eye, EyeOff, Timer } from 'lucide-react';
-import { WAVELENGTH_INSTRUCTIONS, WAVELENGTH_CATEGORIES } from '../wavelengthContent';
+import { WAVELENGTH_INSTRUCTIONS, WAVELENGTH_CATEGORIES } from '../constants/wavelengthContent';
 
 interface WavelengthGameProps {
   onBack: () => void;

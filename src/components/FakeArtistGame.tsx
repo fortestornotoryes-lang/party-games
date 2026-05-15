@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, Play, CheckCircle2, RotateCcw, Home, Brush, Info, HelpCircle, X, Undo2 } from 'lucide-react';
 import { Player } from '../types';
-import { FAKE_ARTIST_INSTRUCTIONS } from '../fakeArtistContent';
+import { FAKE_ARTIST_INSTRUCTIONS } from '../constants/fakeArtistContent';
 
 interface Stroke {
   points: { x: number; y: number }[];

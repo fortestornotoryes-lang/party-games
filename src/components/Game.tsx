@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, List, Info, Skull, RotateCcw, AlertTriangle, HelpCircle, X, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { Player } from '../types';
-import { LOCATIONS, SPY_HUNT_INSTRUCTIONS as INSTRUCTIONS, QUESTION_IDEAS, GAME_DURATION } from '../spyHuntContent';
+import { LOCATIONS, SPY_HUNT_INSTRUCTIONS as INSTRUCTIONS, QUESTION_IDEAS, GAME_DURATION } from '../constants/spyHuntContent';
 
 interface GameProps {
   players: Player[];

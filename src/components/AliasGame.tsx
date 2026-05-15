@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, SkipForward, CheckCircle2, RotateCcw, Home, Brain, Zap, Trophy, Users, Shield, Target, ArrowRight, X } from 'lucide-react';
-import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../aliasContent';
+import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../constants/aliasContent';
 
 interface AliasGameProps {
   playerNames: string[];
