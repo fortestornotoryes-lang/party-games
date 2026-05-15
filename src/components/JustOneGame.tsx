@@ -14,6 +14,14 @@ interface Clue {
   isDuplicate: boolean;
 }
 
+interface RoundRecord {
+  word: string;
+  validClues: string[];
+  guess: string;
+  isCorrect: boolean;
+  isSkipped: boolean;
+}
+
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
   const [guesserIndex, setGuesserIndex] = useState(0);
   const [phase, setPhase] = useState<'setup_rounds' | 'start' | 'clues' | 'reveal_clues' | 'guess_result' | 'game_over'>('setup_rounds');
@@ -26,6 +34,9 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   const [guess, setGuess] = useState('');
   const [score, setScore] = useState(0);
   const [totalRounds, setTotalRounds] = useState(0);
+  const [roundHistory, setRoundHistory] = useState<RoundRecord[]>([]);
+  const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
+  const [wasCurrentSkipped, setWasCurrentSkipped] = useState(false);
 
   const clueGiverIndices = playerNames
     .map((_, i) => i)
@@ -58,12 +69,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     if (currentClueGiverIndex === clueGiverIndices.length - 1) {
       // Process duplicates
       const processedClues = newClues.map(clue => {
-        const isDup = newClues.some(other => 
-          other !== clue && 
-          (other.word === clue.word || 
-           other.word.includes(clue.word) && clue.word.length > 3 || 
-           clue.word.includes(other.word) && other.word.length > 3)
-        );
+        const isDup = newClues.some(other => other !== clue && other.word === clue.word);
         return { ...clue, isDuplicate: isDup };
       });
       setClues(processedClues);
@@ -74,14 +80,32 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   };
 
   const handleGuessSubmit = () => {
-    const newTotalRounds = totalRounds + 1;
-    setTotalRounds(newTotalRounds);
-    
-    let currentCorrect = false;
-    if (guess.toLowerCase().trim() === secretWord.toLowerCase().trim()) {
-      setScore(prev => prev + 1);
-      currentCorrect = true;
-    }
+    const isCorrect = guess.toLowerCase().trim() === secretWord.toLowerCase().trim();
+    setTotalRounds(prev => prev + 1);
+    if (isCorrect) setScore(prev => prev + 1);
+    setIsCurrentCorrect(isCorrect);
+    setWasCurrentSkipped(false);
+    setRoundHistory(prev => [...prev, {
+      word: secretWord,
+      validClues: clues.filter(c => !c.isDuplicate).map(c => c.word),
+      guess,
+      isCorrect,
+      isSkipped: false,
+    }]);
+    setPhase('guess_result');
+  };
+
+  const handleSkip = () => {
+    setTotalRounds(prev => prev + 1);
+    setIsCurrentCorrect(false);
+    setWasCurrentSkipped(true);
+    setRoundHistory(prev => [...prev, {
+      word: secretWord,
+      validClues: clues.filter(c => !c.isDuplicate).map(c => c.word),
+      guess: '',
+      isCorrect: false,
+      isSkipped: true,
+    }]);
     setPhase('guess_result');
   };
 
@@ -305,21 +329,28 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <input 
+              <div className="space-y-3">
+                <input
                   type="text"
                   value={guess}
                   onChange={(e) => setGuess(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && guess.trim() && handleGuessSubmit()}
                   placeholder="Твой ответ..."
                   className="w-full p-6 bg-white/5 border border-white/10 rounded-3xl text-2xl font-black text-center focus:border-emerald-500 transition-all outline-none"
                 />
                 <button
                   disabled={!guess.trim()}
                   onClick={handleGuessSubmit}
-                  className="w-full py-6 bg-white text-black rounded-3xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 shadow-2xl active:scale-95 transition-transform"
+                  className="w-full py-6 bg-white text-black rounded-3xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 shadow-2xl active:scale-95 transition-transform disabled:opacity-30"
                 >
                   <MessageSquare className="w-5 h-5" />
                   <span>Ответить</span>
+                </button>
+                <button
+                  onClick={handleSkip}
+                  className="w-full py-4 bg-white/5 border border-white/10 text-gray-500 rounded-3xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
+                >
+                  <span className="text-xs">Пропустить раунд</span>
                 </button>
               </div>
             </motion.div>
@@ -333,7 +364,15 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               className="h-full flex flex-col items-center justify-center p-8 space-y-12 relative z-10"
             >
               <div className="text-center space-y-4">
-                {guess.toLowerCase().trim() === secretWord.toLowerCase().trim() ? (
+                {wasCurrentSkipped ? (
+                  <>
+                    <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <span className="text-4xl font-black text-white">—</span>
+                    </div>
+                    <h3 className="text-5xl font-black uppercase italic tracking-tighter text-gray-400">ПРОПУСК</h3>
+                    <p className="text-gray-500">Слово пропущено без штрафа</p>
+                  </>
+                ) : isCurrentCorrect ? (
                   <>
                     <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_50px_rgba(16,185,129,0.3)]">
                       <CheckCircle2 className="w-12 h-12 text-black" />
@@ -359,7 +398,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 </div>
                 <div className="p-6 bg-white/5 rounded-3xl border border-white/10 text-center">
                   <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Ваш ответ</p>
-                  <p className="text-xl font-black text-white uppercase">{guess}</p>
+                  <p className="text-xl font-black text-white uppercase">{wasCurrentSkipped ? '—' : guess || '...'}</p>
                 </div>
               </div>
 
@@ -374,28 +413,49 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
           )}
 
           {phase === 'game_over' && (
-            <motion.div 
+            <motion.div
               key="game_over"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="h-full flex flex-col items-center justify-center p-8 space-y-12 relative z-10"
+              className="h-full flex flex-col items-center justify-center p-6 space-y-6 relative z-10 overflow-y-auto"
             >
-               <div className="text-center space-y-6">
-                <div className="w-24 h-24 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+               <div className="text-center space-y-4">
+                <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
                   <Users className="w-10 h-10 text-emerald-500" />
                 </div>
                 <p className="text-[10px] text-emerald-500 uppercase font-black tracking-[0.3em]">Игра завершена</p>
-                <h3 className="text-6xl font-black italic tracking-tighter text-white uppercase">{score} / {totalRounds}</h3>
+                <h3 className="text-5xl font-black italic tracking-tighter text-white uppercase">{score} / {totalRounds}</h3>
                 <div className="px-6 py-2 bg-white/5 border border-white/10 rounded-full inline-block">
                   <p className="text-sm font-bold text-gray-400">{getRank()}</p>
                 </div>
               </div>
+
+              {roundHistory.length > 0 && (
+                <div className="w-full max-w-sm space-y-2 text-left">
+                  <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest px-1">История раундов</p>
+                  <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                    {roundHistory.map((r, idx) => (
+                      <div key={idx} className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl border text-sm ${r.isCorrect ? 'bg-emerald-500/5 border-emerald-500/20' : r.isSkipped ? 'bg-white/5 border-white/5' : 'bg-red-500/5 border-red-500/10'}`}>
+                        <span className={`font-black text-base ${r.isCorrect ? 'text-emerald-500' : r.isSkipped ? 'text-gray-600' : 'text-red-500/60'}`}>
+                          {r.isCorrect ? '✓' : r.isSkipped ? '—' : '✗'}
+                        </span>
+                        <span className={`font-black flex-1 ${r.isCorrect ? 'text-white' : 'text-gray-500'}`}>{r.word}</span>
+                        {!r.isSkipped && r.validClues.length > 0 && (
+                          <span className="text-[9px] text-gray-700 italic truncate max-w-[80px]">{r.validClues.join(', ')}</span>
+                        )}
+                        {r.isSkipped && <span className="text-[10px] text-gray-700">пропуск</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col space-y-3 w-full max-w-sm">
                 <button
                   onClick={() => {
                     setScore(0);
                     setTotalRounds(0);
+                    setRoundHistory([]);
                     setPhase('setup_rounds');
                   }}
                   className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"

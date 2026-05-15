@@ -7,9 +7,10 @@ interface FakeArtistResultProps {
   players: Player[];
   word: string;
   onRestart: () => void;
+  onPlayAgain: () => void;
 }
 
-export const FakeArtistResult: React.FC<FakeArtistResultProps> = ({ players, word, onRestart }) => {
+export const FakeArtistResult: React.FC<FakeArtistResultProps> = ({ players, word, onRestart, onPlayAgain }) => {
   const spy = players.find(p => p.isSpy);
 
   return (
@@ -78,13 +79,21 @@ export const FakeArtistResult: React.FC<FakeArtistResultProps> = ({ players, wor
           transition={{ delay: 0.8 }}
           className="pt-4"
         >
-          <button
-            onClick={onRestart}
-            className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-red-500 hover:text-white transition-all shadow-2xl"
-          >
-            <RotateCcw className="w-5 h-5" />
-            <span className="text-xs">Новый рисунок</span>
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={onPlayAgain}
+              className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-red-500 hover:text-white transition-all shadow-2xl"
+            >
+              <RotateCcw className="w-5 h-5" />
+              <span className="text-xs">Те же игроки, другое слово</span>
+            </button>
+            <button
+              onClick={onRestart}
+              className="w-full py-4 bg-white/5 border border-white/10 text-gray-500 rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center"
+            >
+              <span className="text-xs">Сменить состав</span>
+            </button>
+          </div>
         </motion.div>
       </motion.div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Pencil, MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, Eraser, Shuffle } from 'lucide-react';
+import { Pencil, MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, Eraser, Shuffle, Eye, Undo2 } from 'lucide-react';
 import { TELESTRATIONS_INSTRUCTIONS, STARTING_WORDS } from '../constants/telestrationsContent';
 
 interface TelestrationsGameProps {
@@ -15,7 +15,7 @@ type Step = {
 };
 
 const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#000000'];
-const BRUSH_SIZES = [2, 4, 8, 16, 24];
+const BRUSH_SIZES = [1, 2, 4, 8, 14];
 
 const shuffle = <T,>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
 const randomWord = () => STARTING_WORDS[Math.floor(Math.random() * STARTING_WORDS.length)];
@@ -33,11 +33,15 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
   const [showInstructions, setShowInstructions] = useState(false);
 
+  const [wordRevealed, setWordRevealed] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawHistory = useRef<ImageData[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#ffffff');
-  const [brushSize, setBrushSize] = useState(4);
+  const [brushSize, setBrushSize] = useState(2);
   const [guess, setGuess] = useState('');
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const currentPlayer = shuffledPlayers[currentRound];
   const isDrawingRound = currentRound % 2 === 0;
@@ -50,11 +54,15 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     setCurrentRound(0);
     setCurrentWord(word);
     setPhase('start');
+    setWordRevealed(false);
+    setTimeLeft(0);
   };
 
   const startAction = () => {
+    drawHistory.current = [];
     setPhase('action');
     setGuess('');
+    setTimeLeft(isDrawingRound ? 60 : 30);
   };
 
   const handleFinishAction = () => {
@@ -117,6 +125,19 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     }
   }, [phase, isDrawingRound]);
 
+  // Timer countdown
+  useEffect(() => {
+    if (phase !== 'action' || timeLeft <= 0) return;
+    const t = setTimeout(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [phase, timeLeft]);
+
+  // Auto-submit on timeout
+  useEffect(() => {
+    if (phase === 'action' && timeLeft === 0) handleFinishAction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft, phase]);
+
   const getCoords = (e: React.MouseEvent | React.TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
@@ -132,6 +153,13 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    // Save snapshot before each stroke for undo
+    if (canvas.width > 0 && canvas.height > 0) {
+      try {
+        drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (drawHistory.current.length > 50) drawHistory.current.shift();
+      } catch {}
+    }
     setIsDrawing(true);
     const { x, y } = getCoords(e, canvas);
     ctx.beginPath();
@@ -150,17 +178,29 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     const { x, y } = getCoords(e, canvas);
     ctx.lineTo(x, y);
     ctx.stroke();
+    // Reset path so next stroke() only draws the new segment, not the entire stroke from the start
+    ctx.beginPath();
+    ctx.moveTo(x, y);
   };
 
   const stopDrawing = () => setIsDrawing(false);
 
   const clearCanvas = () => {
+    drawHistory.current = [];
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (ctx && canvas) {
       ctx.fillStyle = '#120a0a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
+  };
+
+  const undoDrawing = () => {
+    if (drawHistory.current.length === 0 || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.putImageData(drawHistory.current.pop()!, 0, 0);
   };
 
   return (
@@ -233,14 +273,28 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 </div>
               </div>
 
-              <div className="w-full max-w-sm p-8 bg-white/5 border border-white/10 rounded-[2.5rem] text-center group">
-                <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest mb-2">Твоё секретное слово</p>
-                <h4 className="text-3xl font-black text-orange-400 group-hover:scale-105 transition-transform">{currentWord}</h4>
-              </div>
+              {!wordRevealed ? (
+                <button
+                  onClick={() => setWordRevealed(true)}
+                  className="w-full max-w-sm p-8 bg-white/5 border-2 border-dashed border-orange-500/20 rounded-[2.5rem] text-center hover:bg-orange-500/5 hover:border-orange-500/40 transition-all group"
+                >
+                  <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3">Убедись, что остальные не смотрят</p>
+                  <div className="flex items-center justify-center gap-2 text-orange-500/50 group-hover:text-orange-500 transition-colors">
+                    <Eye className="w-5 h-5" />
+                    <span className="text-base font-black">Показать слово</span>
+                  </div>
+                </button>
+              ) : (
+                <div className="w-full max-w-sm p-8 bg-orange-500/10 border border-orange-500/30 rounded-[2.5rem] text-center">
+                  <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest mb-2">Твоё секретное слово</p>
+                  <h4 className="text-3xl font-black text-orange-400">{currentWord}</h4>
+                </div>
+              )}
 
               <button
                 onClick={startAction}
-                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
+                disabled={!wordRevealed}
+                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
               >
                 <span>Я готов рисовать</span>
                 <ArrowRight className="w-5 h-5" />
@@ -318,6 +372,10 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                       <p className="text-lg font-black text-orange-400 leading-tight">{currentWord}</p>
                     </div>
                     <div className="flex items-center gap-2">
+                      <span className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}>{timeLeft}с</span>
+                      <button onClick={undoDrawing} className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all">
+                        <Undo2 className="w-5 h-5" />
+                      </button>
                       <button onClick={clearCanvas} className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all">
                         <Eraser className="w-5 h-5" />
                       </button>
@@ -325,6 +383,13 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                         <CheckCircle2 className="w-5 h-5" />
                       </button>
                     </div>
+                  </div>
+
+                  {/* Chain progress */}
+                  <div className="flex-shrink-0 flex justify-center gap-1.5 py-0.5">
+                    {shuffledPlayers.map((_, i) => (
+                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'}`} />
+                    ))}
                   </div>
 
                   {/* Canvas */}
@@ -370,7 +435,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                         >
                           <div
                             className={`rounded-full transition-all ${brushSize === size ? 'bg-orange-500' : 'bg-white/25'}`}
-                            style={{ width: Math.max(4, size / 2), height: Math.max(4, size / 2) }}
+                            style={{ width: Math.max(2, size * 1.2), height: Math.max(2, size * 1.2) }}
                           />
                         </button>
                       ))}
@@ -379,10 +444,17 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 </div>
               ) : (
                 /* ── GUESS MODE ── */
-                <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-5">
+                <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
                   <div className="text-center space-y-1">
                     <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest">💬 Угадай рисунок</p>
-                    <h3 className="text-2xl font-black italic">Что здесь изображено?</h3>
+                    <span className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-400'}`}>{timeLeft}с</span>
+                    <h3 className="text-xl font-black italic">Что здесь изображено?</h3>
+                  </div>
+
+                  <div className="flex justify-center gap-1.5">
+                    {shuffledPlayers.map((_, i) => (
+                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'}`} />
+                    ))}
                   </div>
 
                   <div className="w-full max-w-sm bg-white/5 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl p-3">

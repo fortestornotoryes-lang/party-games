@@ -27,7 +27,7 @@ import { TELESTRATIONS_INSTRUCTIONS } from './constants/telestrationsContent';
 import { WAVELENGTH_INSTRUCTIONS } from './constants/wavelengthContent';
 import { JUST_ONE_INSTRUCTIONS } from './constants/justOneContent';
 import { ALIAS_INSTRUCTIONS } from './constants/aliasContent';
-import { Shield, Palette, Users, RotateCcw, Pencil, Lightbulb, Brain } from 'lucide-react';
+import { Shield, Palette, Users, RotateCcw, Pencil, Lightbulb, Brain, Radio } from 'lucide-react';
 
 type AppState = 'menu' | GameStatus;
 
@@ -99,10 +99,12 @@ export default function App() {
         break;
       }
 
+      case 'wavelength_setup':
       case 'telestrations_setup':
       case 'just_one_setup':
       case 'alias_setup': {
         const newStatusMap: Record<string, GameStatus> = {
+          'wavelength_setup': 'wavelength_playing',
           'telestrations_setup': 'telestrations_playing',
           'just_one_setup': 'just_one_playing',
           'alias_setup': 'alias'
@@ -155,12 +157,37 @@ export default function App() {
     }
   };
 
+  const quickRestartSpy = useCallback(() => {
+    const locationObj = LOCATIONS_DATA[Math.floor(Math.random() * LOCATIONS_DATA.length)];
+    const spyIndex = Math.floor(Math.random() * players.length);
+    const availableRoles = [...locationObj.roles].sort(() => Math.random() - 0.5);
+    setPlayers(players.map((p, i) => ({
+      ...p,
+      role: i === spyIndex ? 'Шпион' : availableRoles[i % availableRoles.length],
+      isSpy: i === spyIndex,
+    })));
+    setGameState(prev => ({ ...prev, location: locationObj.name }));
+    setStatus('distributing');
+  }, [players]);
+
+  const quickRestartFake = useCallback(() => {
+    const gameObj = FAKE_ARTIST_DATA[Math.floor(Math.random() * FAKE_ARTIST_DATA.length)];
+    const spyIndex = Math.floor(Math.random() * players.length);
+    setPlayers(players.map((p, i) => ({
+      ...p,
+      role: i === spyIndex ? 'Самозванец' : 'Художник',
+      isSpy: i === spyIndex,
+    })));
+    setGameState(prev => ({ ...prev, word: gameObj.word, category: gameObj.category }));
+    setStatus('fake_artist_distributing');
+  }, [players]);
+
   const handleMenuSelect = (id: string) => {
     const statusMap: Record<string, AppState> = {
       'spy': 'setup',
       'fake_artist': 'fake_artist_setup',
       'resistance': 'resistance_setup',
-      'wavelength': 'wavelength_playing',
+      'wavelength': 'wavelength_setup',
       'telestrations': 'telestrations_setup',
       'just_one': 'just_one_setup',
       'alias': 'alias_setup'
@@ -284,8 +311,23 @@ export default function App() {
           onBack={resetToMenu} 
         />
       )}
+      {status === 'wavelength_setup' && (
+        <Setup
+          onStart={startGame}
+          onBack={resetToMenu}
+          title="WAVELENGTH"
+          subtitle="Читай мысли, угадывай волну"
+          icon={Radio}
+          themeColor="purple"
+          playerPlaceholder="Телепат"
+          addPlayerLabel="Добавить Игрока"
+          instructions={WAVELENGTH_INSTRUCTIONS}
+          minPlayers={2}
+          maxPlayers={12}
+        />
+      )}
       {status === 'wavelength_playing' && (
-        <WavelengthGame onBack={resetToMenu} />
+        <WavelengthGame playerNames={players.map(p => p.name)} onBack={resetToMenu} />
       )}
       {status === 'telestrations_setup' && (
         <Setup 
@@ -330,17 +372,19 @@ export default function App() {
         />
       )}
       {status === 'result' && (
-        <Result 
-          players={players} 
-          location={gameState.location} 
-          onRestart={() => restartGame('spy')} 
+        <Result
+          players={players}
+          location={gameState.location}
+          onPlayAgain={quickRestartSpy}
+          onRestart={() => restartGame('spy')}
         />
       )}
       {status === 'fake_artist_result' && (
-        <FakeArtistResult 
-          players={players} 
-          word={gameState.word} 
-          onRestart={() => restartGame('fake')} 
+        <FakeArtistResult
+          players={players}
+          word={gameState.word}
+          onPlayAgain={quickRestartFake}
+          onRestart={() => restartGame('fake')}
         />
       )}
       {status === 'resistance_result' && (

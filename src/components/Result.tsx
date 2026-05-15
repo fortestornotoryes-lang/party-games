@@ -7,9 +7,10 @@ interface ResultProps {
   players: Player[];
   location: string;
   onRestart: () => void;
+  onPlayAgain: () => void;
 }
 
-export const Result: React.FC<ResultProps> = ({ players, location, onRestart }) => {
+export const Result: React.FC<ResultProps> = ({ players, location, onRestart, onPlayAgain }) => {
   const spy = players.find(p => p.isSpy);
 
   return (
@@ -105,14 +106,22 @@ export const Result: React.FC<ResultProps> = ({ players, location, onRestart }) 
           transition={{ delay: 0.8 }}
           className="pt-4"
         >
-          <button
-            onClick={onRestart}
-            className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-red-500 hover:text-white transition-all shadow-2xl group"
-          >
-            <RotateCcw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
-            <span className="text-xs">Новый протокол</span>
-          </button>
-          <div className="flex items-center justify-center mt-6 space-x-2 text-gray-700">
+          <div className="space-y-3">
+            <button
+              onClick={onPlayAgain}
+              className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-red-500 hover:text-white transition-all shadow-2xl group"
+            >
+              <RotateCcw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
+              <span className="text-xs">Те же игроки, другое место</span>
+            </button>
+            <button
+              onClick={onRestart}
+              className="w-full py-4 bg-white/5 border border-white/10 text-gray-500 rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center"
+            >
+              <span className="text-xs">Сменить состав</span>
+            </button>
+          </div>
+          <div className="flex items-center justify-center mt-4 space-x-2 text-gray-700">
             <ShieldCheck className="w-3 h-3" />
             <p className="text-[9px] uppercase font-bold tracking-tighter">Все данные удалены из памяти устройства</p>
           </div>
