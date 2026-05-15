@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, Eraser, Shuffle, Eye, Undo2 } from 'lucide-react';
-import { TELESTRATIONS_INSTRUCTIONS, STARTING_WORDS } from '../constants/telestrationsContent';
+import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../constants/telestrationsContent';
 
 interface TelestrationsGameProps {
   playerNames: string[];
@@ -18,18 +18,15 @@ const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8
 const BRUSH_SIZES = [1, 2, 4, 8, 14];
 
 const shuffle = <T,>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
-const randomWord = () => STARTING_WORDS[Math.floor(Math.random() * STARTING_WORDS.length)];
 
 export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack }) => {
-  // Перемешиваем порядок игроков с первого запуска
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
-  const [phase, setPhase] = useState<'start' | 'action' | 'transition' | 'gallery'>('start');
-
-  // Инициализируем слово сразу, без useEffect
-  const [initialWord] = useState(randomWord);
-  const [currentWord, setCurrentWord] = useState(initialWord);
+  const [phase, setPhase] = useState<'setup' | 'start' | 'action' | 'transition' | 'gallery'>('setup');
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [initialWord, setInitialWord] = useState('');
+  const [currentWord, setCurrentWord] = useState('');
 
   const [showInstructions, setShowInstructions] = useState(false);
 
@@ -46,23 +43,34 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const currentPlayer = shuffledPlayers[currentRound];
   const isDrawingRound = currentRound % 2 === 0;
 
-  // Запуск новой игры: новое слово + перемешанный порядок
-  const startNewGame = () => {
-    const word = randomWord();
+  const handleStartGame = (selectedDiff: Difficulty) => {
+    const words = WORDS_BY_DIFFICULTY[selectedDiff];
+    const word = words[Math.floor(Math.random() * words.length)];
+    setDifficulty(selectedDiff);
+    setInitialWord(word);
+    setCurrentWord(word);
     setShuffledPlayers(shuffle(playerNames));
     setSteps([]);
     setCurrentRound(0);
-    setCurrentWord(word);
-    setPhase('start');
     setWordRevealed(false);
     setTimeLeft(0);
+    setPhase('start');
+  };
+
+  const startNewGame = () => {
+    setSteps([]);
+    setCurrentRound(0);
+    setWordRevealed(false);
+    setTimeLeft(0);
+    setPhase('setup');
   };
 
   const startAction = () => {
     drawHistory.current = [];
     setPhase('action');
     setGuess('');
-    setTimeLeft(isDrawingRound ? 60 : 30);
+    const cfg = DIFFICULTY_CONFIG[difficulty];
+    setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
   };
 
   const handleFinishAction = () => {
@@ -216,10 +224,10 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               Tele<span className="text-orange-500">strations</span>
             </h2>
             <p className="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">
-              Раунд {currentRound + 1} из {shuffledPlayers.length}
-              {phase === 'action' || phase === 'transition'
-                ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}`
-                : ''}
+              {phase === 'setup'
+                ? `${playerNames.length} игроков`
+                : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === 'action' || phase === 'transition' ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`
+              }
             </p>
           </div>
         </div>
@@ -236,6 +244,54 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
       {/* Content — phases are absolute inset-0 */}
       <div className="flex-1 relative min-h-0">
         <AnimatePresence mode="wait">
+
+          {/* ── SETUP (difficulty picker) ── */}
+          {phase === 'setup' && (
+            <motion.div
+              key="setup"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
+            >
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 mb-1">
+                  <Pencil className="w-7 h-7 text-orange-500" />
+                </div>
+                <h3 className="text-3xl font-black italic uppercase tracking-tighter">Сложность</h3>
+                <p className="text-gray-500 text-sm">Определяет слова и время на ход</p>
+              </div>
+
+              <div className="w-full max-w-sm space-y-3">
+                {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => {
+                  const cfg = DIFFICULTY_CONFIG[diff];
+                  return (
+                    <motion.button
+                      key={diff}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleStartGame(diff)}
+                      className={`w-full p-5 rounded-[2rem] border ${cfg.border} ${cfg.bg} text-left flex items-center gap-4 active:opacity-80 transition-opacity`}
+                    >
+                      <span className="text-3xl leading-none">{cfg.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-xl font-black uppercase italic ${cfg.text}`}>{cfg.label}</h4>
+                        <p className="text-xs text-gray-500 mt-0.5 leading-tight">{cfg.desc}</p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className={`text-lg font-black tabular-nums ${cfg.text}`}>{cfg.drawTime}с</p>
+                        <p className="text-[9px] text-gray-600 uppercase font-bold tracking-widest">рисунок</p>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              <p className="text-[10px] text-gray-700 uppercase tracking-widest font-bold">
+                {playerNames.length} игроков
+              </p>
+            </motion.div>
+          )}
 
           {/* ── START ── */}
           {phase === 'start' && (
