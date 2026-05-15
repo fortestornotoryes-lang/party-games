@@ -301,7 +301,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               key="playing"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full max-w-sm flex flex-col items-center space-y-8 z-10"
+              className="w-full max-w-sm flex flex-col items-center space-y-4 sm:space-y-8 z-10"
             >
               <div className="w-full flex justify-between items-center px-4">
                 <div className="flex flex-col">
@@ -317,7 +317,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                 </div>
               </div>
 
-              <div className="w-full aspect-[4/3] bg-white/5 border-2 border-white/10 rounded-[3rem] flex flex-col items-center justify-center p-8 text-center relative overflow-hidden group">
+              <div className="w-full aspect-[4/3] max-h-[38vh] bg-white/5 border-2 border-white/10 rounded-[2rem] sm:rounded-[3rem] flex flex-col items-center justify-center p-6 sm:p-8 text-center relative overflow-hidden group">
                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.1),transparent_70%)]" />
                  <AnimatePresence mode="wait">
                     <motion.h2 
@@ -325,7 +325,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                       initial={{ y: 20, opacity: 0, scale: 0.9 }}
                       animate={{ y: 0, opacity: 1, scale: 1 }}
                       exit={{ y: -20, opacity: 0, scale: 1.1 }}
-                      className="text-5xl font-black text-white italic uppercase tracking-tighter z-10"
+                      className="text-4xl sm:text-5xl font-black text-white italic uppercase tracking-tighter z-10"
                     >
                       {words[currentWordIndex]}
                     </motion.h2>
@@ -335,14 +335,14 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               <div className="grid grid-cols-2 gap-4 w-full">
                 <button
                   onClick={() => handleWordAction(false)}
-                  className="py-6 bg-white/5 border border-white/10 text-gray-500 rounded-3xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:bg-white/10 transition-all"
+                  className="py-4 sm:py-6 bg-white/5 border border-white/10 text-gray-500 rounded-3xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:bg-white/10 transition-all"
                 >
                   <SkipForward className="w-5 h-5" />
                   <span className="text-xs italic">Пропуск</span>
                 </button>
                 <button
                   onClick={() => handleWordAction(true)}
-                  className="py-6 bg-sky-500 text-white rounded-3xl font-black uppercase tracking-widest flex items-center justify-center space-x-2 shadow-2xl shadow-sky-500/20 active:scale-95 transition-all"
+                  className="py-4 sm:py-6 bg-sky-500 text-white rounded-3xl font-black uppercase tracking-widest flex items-center justify-center space-x-2 shadow-2xl shadow-sky-500/20 active:scale-95 transition-all"
                 >
                   <CheckCircle2 className="w-5 h-5" />
                   <span className="text-xs italic">Готово</span>

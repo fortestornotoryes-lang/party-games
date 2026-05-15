@@ -98,7 +98,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ onBack }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-12">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 space-y-6 sm:space-y-12 overflow-y-auto">
         
         {/* Category Display - Removed word divider to avoid confusion with target handle */}
         <div className="w-full max-w-lg bg-gradient-to-br from-white/10 to-white/5 p-1 rounded-[2.5rem] border border-white/10 shadow-2xl relative overflow-hidden">
@@ -121,7 +121,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ onBack }) => {
         <div className="w-full max-w-lg space-y-8">
           <div 
             ref={dialRef}
-            className="relative h-28 bg-white/5 rounded-full border-2 border-white/10 overflow-hidden cursor-crosshair touch-none shadow-inner"
+            className="relative h-20 sm:h-28 bg-white/5 rounded-full border-2 border-white/10 overflow-hidden cursor-crosshair touch-none shadow-inner"
             onClick={handleDialClick}
             onTouchStart={handleDialClick}
             onTouchMove={handleDialClick}

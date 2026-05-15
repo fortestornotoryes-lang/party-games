@@ -43,7 +43,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 1.2 }}
         transition={{ duration: 0.25 }}
-        className="w-full max-w-sm space-y-8 flex flex-col items-center relative z-10"
+        className="w-full max-w-sm space-y-4 sm:space-y-8 flex flex-col items-center relative z-10"
       >
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center space-x-1 mb-2">
@@ -55,15 +55,15 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
             ))}
           </div>
           <p className="text-[10px] text-gray-500 uppercase tracking-[0.3em] font-bold">Секретная дешифровка</p>
-          <h2 className="text-2xl font-light tracking-tight text-gray-400">Передайте устройство:</h2>
-          <motion.h3 
-            className="text-5xl font-black text-white mt-1 italic tracking-tighter"
+          <h2 className="text-xl font-light tracking-tight text-gray-400">Передайте устройство:</h2>
+          <motion.h3
+            className="text-4xl sm:text-5xl font-black text-white mt-1 italic tracking-tighter"
           >
             {currentPlayer.name}
           </motion.h3>
         </div>
 
-        <div className="relative w-full aspect-[4/5] [perspective:2000px]">
+        <div className="relative w-full aspect-[4/5] max-h-[58vh] [perspective:2000px]">
           <AnimatePresence mode="wait">
             {!isRevealed ? (
               <motion.div

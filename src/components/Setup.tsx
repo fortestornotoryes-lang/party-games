@@ -115,23 +115,20 @@ export const Setup: React.FC<SetupProps> = ({
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md space-y-6 relative z-10 py-6 pb-24"
       >
-        <button 
-          onClick={onBack}
-          className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-gray-400 flex items-center space-x-2 transition-all border border-white/5 mb-2 group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Назад</span>
-        </button>
+       <div className='flex items-center justify-between px-2 sm:px-0'>
+         <button
+             onClick={onBack}
+             className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-gray-400 flex items-center space-x-2 transition-all border border-white/5 mb-2 group"
+         >
+           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+           <span className="text-[10px] font-black uppercase tracking-widest">Назад</span>
 
+         </button>
+
+           <Icon className={`w-6 h-6 ${config.text}`} />
+       </div>
         <div className="text-left space-y-4">
-          <motion.div
-            initial={{ rotate: -15, scale: 0 }}
-            animate={{ rotate: 0, scale: 1 }}
-            transition={{ type: "spring", damping: 12 }}
-            className={`inline-block p-4 rounded-3xl ${config.bg} border ${config.border} backdrop-blur-xl mb-1 shadow-2xl`}
-          >
-            <Icon className={`w-10 h-10 ${config.text}`} />
-          </motion.div>
+
           <h1 className="text-5xl font-black tracking-tighter uppercase sm:text-6xl italic leading-[0.8] mb-2">
             {title.split(' ')[0]} <br/>
             <span className={config.text}>{title.split(' ').slice(1).join(' ') || ''}</span>
