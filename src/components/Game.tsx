@@ -143,7 +143,7 @@ export const Game: React.FC<GameProps> = ({ players, location, onRestart, onFini
                 <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-[10px] font-bold text-gray-500">
                   {idx + 1}
                 </div>
-                <span className="text-sm font-bold tracking-tight">{player.name}</span>
+                <span className="text-sm font-bold tracking-tight truncate">{player.name}</span>
               </motion.div>
             ))}
           </div>

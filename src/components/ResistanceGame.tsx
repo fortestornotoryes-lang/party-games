@@ -26,6 +26,10 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
 
   const missionSize = (MISSION_SIZES as any)[players.length]?.[missionIndex] || 2;
   const currentLeader = players[leaderIndex % players.length];
+  const shuffledMissionVotes = useMemo(
+    () => [...missionVotes].sort(() => Math.random() - 0.5),
+    [missionVotes.length] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const handleTogglePlayer = (id: string) => {
     if (phase !== 'proposing') return;
@@ -323,7 +327,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                  </div>
 
                  <div className="grid grid-cols-5 gap-2 justify-center">
-                    {missionVotes.sort(() => Math.random() - 0.5).map((v, i) => (
+                    {shuffledMissionVotes.map((v, i) => (
                       <div key={i} className={`h-1.5 rounded-full ${v ? 'bg-blue-500' : 'bg-red-500'}`} />
                     ))}
                  </div>

@@ -152,7 +152,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto relative p-6 flex flex-col items-center">
+      <div className="flex-1 overflow-y-auto relative p-6 flex flex-col items-center justify-center">
         <AnimatePresence mode="wait">
           {phase === 'team_setup' && (
             <motion.div
@@ -321,7 +321,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
               <button
                 onClick={() => setPhase('round_intro')}
-                className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
+                className="w-full py-6 bg-white text-black rounded-4xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
               >
                 <span>Начать игру</span>
                 <ArrowRight className="w-5 h-5" />
@@ -385,15 +385,16 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                 </div>
               </div>
 
-              <div className="w-full aspect-[4/3] max-h-[38vh] bg-white/5 border-2 border-white/10 rounded-[2rem] sm:rounded-[3rem] flex flex-col items-center justify-center p-6 sm:p-8 text-center relative overflow-hidden group">
+              <div className="w-full min-h-75 max-h-[44vh] bg-white/5 border-2 border-white/10 rounded-4xl sm:rounded-[3rem] flex flex-col items-center justify-center p-6 sm:p-8 text-center relative overflow-hidden group">
                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.1),transparent_70%)]" />
                  <AnimatePresence mode="wait">
-                    <motion.h2 
+                    <motion.h2
                       key={currentWordIndex}
                       initial={{ y: 20, opacity: 0, scale: 0.9 }}
                       animate={{ y: 0, opacity: 1, scale: 1 }}
                       exit={{ y: -20, opacity: 0, scale: 1.1 }}
-                      className="text-4xl sm:text-5xl font-black text-white italic uppercase tracking-tighter z-10"
+                      className="font-black text-white italic uppercase tracking-tighter z-10 wrap-break-word w-full leading-tight"
+                      style={{ fontSize: 'clamp(1.75rem, 8vw, 3rem)' }}
                     >
                       {words[currentWordIndex]}
                     </motion.h2>

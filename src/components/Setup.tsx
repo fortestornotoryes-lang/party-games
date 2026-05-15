@@ -87,7 +87,7 @@ interface PlayerEntry {
 let _idCounter = 0;
 const makeId = () => `p-${++_idCounter}-${Math.random().toString(36).slice(2, 6)}`;
 
-const DEFAULT_NAMES = ['Дуня', 'Валера', 'Булочка', 'Люба', 'Саша', 'Костя', 'Марго', 'Артём'];
+const DEFAULT_NAMES = ['Дуня', 'Валера', 'Булочка', 'Люба', 'Саша'];
 
 type Config = (typeof colorConfig)[keyof typeof colorConfig];
 

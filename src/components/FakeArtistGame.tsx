@@ -177,7 +177,7 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
             <Palette className="w-5 h-5 text-emerald-500" />
           </div>
           <div>
-            <h2 className="text-lg font-black uppercase italic italic tracking-tighter">Fake <span className="text-emerald-500">Artist</span></h2>
+            <h2 className="text-lg font-black uppercase italic tracking-tighter">Fake <span className="text-emerald-500">Artist</span></h2>
             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Раунд {round} // {turnIndex + 1} ход</p>
           </div>
         </div>

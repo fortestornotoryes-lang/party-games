@@ -37,6 +37,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   const [roundHistory, setRoundHistory] = useState<RoundRecord[]>([]);
   const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
   const [wasCurrentSkipped, setWasCurrentSkipped] = useState(false);
+  const [isSecretWordVisible, setIsSecretWordVisible] = useState(false);
 
   const clueGiverIndices = playerNames
     .map((_, i) => i)
@@ -50,6 +51,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
       setClues([]);
       setCurrentClueGiverIndex(0);
       setGuess('');
+      setIsSecretWordVisible(false);
     }
   }, [phase, guesserIndex]);
 
@@ -207,12 +209,15 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 <p className="text-gray-400 max-w-xs mx-auto">Отдай телефон остальным. Ты не должен видеть секретное слово!</p>
               </div>
 
-              <div className="w-full max-w-sm p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center space-y-4 group">
+              <div className="w-full max-w-sm p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center space-y-4">
                 <div className="w-16 h-1 bg-emerald-500/30 rounded-full mx-auto" />
                 <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest leading-none">Сложите телефон экраном вниз</p>
-                <div className="relative overflow-hidden py-4">
-                   <h4 className="text-3xl font-black text-emerald-400 blur-md group-hover:blur-0 transition-all duration-500">{secretWord}</h4>
-                   <p className="absolute inset-0 flex items-center justify-center text-xs font-black uppercase text-white/20 group-hover:opacity-0 transition-opacity">Наведи, чтобы увидеть</p>
+                <div
+                  className="relative overflow-hidden py-4 cursor-pointer select-none"
+                  onClick={() => setIsSecretWordVisible(v => !v)}
+                >
+                  <h4 className={`text-3xl font-black text-emerald-400 transition-all duration-500 ${isSecretWordVisible ? 'blur-0' : 'blur-md'}`}>{secretWord}</h4>
+                  <p className={`absolute inset-0 flex items-center justify-center text-xs font-black uppercase text-white/20 transition-opacity ${isSecretWordVisible ? 'opacity-0' : 'opacity-100'}`}>Нажмите, чтобы увидеть</p>
                 </div>
               </div>
 
