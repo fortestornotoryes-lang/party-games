@@ -13,6 +13,7 @@ import { AliasGame } from './components/AliasGame';
 import { FakeArtistGame } from './components/FakeArtistGame';
 import { FakeArtistDistribution } from './components/FakeArtistDistribution';
 import { FakeArtistResult } from './components/FakeArtistResult';
+import { FakeArtistVoting } from './components/FakeArtistVoting';
 import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { ResistanceGame } from './components/ResistanceGame';
 import { ResistanceResult } from './components/ResistanceResult';
@@ -38,7 +39,9 @@ export default function App() {
     location: '',
     word: '',
     category: '',
-    winner: null as 'resistance' | 'spies' | null
+    winner: null as 'resistance' | 'spies' | null,
+    rounds: 2,
+    timerSeconds: 0,
   });
 
   const startGame = useCallback((playerNames: string[]) => {
@@ -120,11 +123,11 @@ export default function App() {
     }
   }, [status]);
 
-  const handleFinishDistribution = (wordParam?: string, categoryParam?: string) => {
+  const handleFinishDistribution = (wordParam?: string, categoryParam?: string, rounds?: number, timerSeconds?: number) => {
     if (status === 'distributing') setStatus('playing');
     else if (status === 'fake_artist_distributing') {
       if (wordParam && categoryParam) {
-        setGameState(prev => ({ ...prev, word: wordParam, category: categoryParam }));
+        setGameState(prev => ({ ...prev, word: wordParam, category: categoryParam, rounds: rounds ?? 2, timerSeconds: timerSeconds ?? 0 }));
       }
       setStatus('fake_artist_playing');
     }
@@ -133,7 +136,7 @@ export default function App() {
 
   const handleFinishGame = (params?: any) => {
     if (status === 'playing') setStatus('result');
-    else if (status === 'fake_artist_playing') setStatus('fake_artist_result');
+    else if (status === 'fake_artist_playing') setStatus('fake_artist_voting');
     else if (status === 'resistance_playing') {
       setGameState(prev => ({ ...prev, winner: params }));
       setStatus('resistance_result');
@@ -143,7 +146,7 @@ export default function App() {
   const resetToMenu = () => {
     setStatus('menu');
     setPlayers([]);
-    setGameState({ location: '', word: '', category: '', winner: null });
+    setGameState({ location: '', word: '', category: '', winner: null, rounds: 2, timerSeconds: 0 });
   };
 
   const restartGame = (type: 'spy' | 'fake' | 'resistance') => {
@@ -153,7 +156,7 @@ export default function App() {
       setGameState(prev => ({ ...prev, location: '' }));
     } else if (type === 'fake') {
       setStatus('fake_artist_setup');
-      setGameState(prev => ({ ...prev, word: '', category: '' }));
+      setGameState(prev => ({ ...prev, word: '', category: '', rounds: 2, timerSeconds: 0 }));
     } else {
       setStatus('resistance_setup');
       setGameState(prev => ({ ...prev, winner: null }));
@@ -256,7 +259,7 @@ export default function App() {
       {status === 'fake_artist_distributing' && (
         <FakeArtistDistribution
           players={players}
-          onFinish={(word, category) => handleFinishDistribution(word, category)}
+          onFinish={(word, category, rounds, timerSeconds) => handleFinishDistribution(word, category, rounds, timerSeconds)}
         />
       )}
       {status === 'resistance_distributing' && (
@@ -274,12 +277,20 @@ export default function App() {
         />
       )}
       {status === 'fake_artist_playing' && (
-        <FakeArtistGame 
-          players={players} 
-          word={gameState.word} 
+        <FakeArtistGame
+          players={players}
+          word={gameState.word}
           category={gameState.category}
+          rounds={gameState.rounds}
+          timerSeconds={gameState.timerSeconds}
           onBack={resetToMenu}
           onFinish={handleFinishGame}
+        />
+      )}
+      {status === 'fake_artist_voting' && (
+        <FakeArtistVoting
+          players={players}
+          onReveal={() => setStatus('fake_artist_result')}
         />
       )}
       {status === 'resistance_playing' && (

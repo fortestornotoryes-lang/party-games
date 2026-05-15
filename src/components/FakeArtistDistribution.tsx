@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2, Ghost, Palette } from 'lucide-react';
+import { CheckCircle2, Ghost, Palette, ChevronRight } from 'lucide-react';
 import { Player } from '../types';
 import {
   FAKE_ARTIST_DATA_BY_DIFFICULTY,
@@ -10,19 +10,32 @@ import {
 
 interface FakeArtistDistributionProps {
   players: Player[];
-  onFinish: (word: string, category: string) => void;
+  onFinish: (word: string, category: string, rounds: number, timerSeconds: number) => void;
 }
 
+const ROUND_OPTIONS = [1, 2, 3];
+const TIMER_OPTIONS = [
+  { value: 0, label: 'Нет' },
+  { value: 30, label: '30с' },
+  { value: 60, label: '60с' },
+  { value: 90, label: '90с' },
+];
+
 export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ players, onFinish }) => {
-  const [phase, setPhase] = useState<'difficulty' | 'distributing'>('difficulty');
+  const [phase, setPhase] = useState<'settings' | 'distributing'>('settings');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [word, setWord] = useState('');
   const [category, setCategory] = useState('');
 
-  const handleSelectDifficulty = (diff: FakeArtistDifficulty) => {
-    const pool = FAKE_ARTIST_DATA_BY_DIFFICULTY[diff];
+  const [selectedDifficulty, setSelectedDifficulty] = useState<FakeArtistDifficulty | null>(null);
+  const [selectedRounds, setSelectedRounds] = useState(2);
+  const [selectedTimer, setSelectedTimer] = useState(0);
+
+  const handleStart = () => {
+    if (!selectedDifficulty) return;
+    const pool = FAKE_ARTIST_DATA_BY_DIFFICULTY[selectedDifficulty];
     const gameObj = pool[Math.floor(Math.random() * pool.length)];
     setWord(gameObj.word);
     setCategory(gameObj.category);
@@ -34,7 +47,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
 
   const nextPlayer = () => {
     if (isLastPlayer) {
-      onFinish(word, category);
+      onFinish(word, category, selectedRounds, selectedTimer);
     } else {
       setIsTransitioning(true);
       setIsRevealed(false);
@@ -49,47 +62,103 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#0a0502] text-[#e5e7eb] font-sans overflow-hidden select-none">
       <AnimatePresence mode="wait">
 
-        {/* ── DIFFICULTY PICKER ── */}
-        {phase === 'difficulty' && (
+        {/* ── SETTINGS (difficulty + rounds + timer) ── */}
+        {phase === 'settings' && (
           <motion.div
-            key="difficulty"
+            key="settings"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-sm flex flex-col items-center gap-6"
+            className="w-full max-w-sm flex flex-col gap-6"
           >
             <div className="text-center space-y-2">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-1">
                 <Palette className="w-7 h-7 text-emerald-500" />
               </div>
-              <h3 className="text-3xl font-black italic uppercase tracking-tighter">Сложность</h3>
-              <p className="text-gray-500 text-sm">Определяет, насколько легко самозванцу спрятаться</p>
+              <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
+              <p className="text-gray-500 text-sm">{players.length} игроков</p>
             </div>
 
-            <div className="w-full space-y-3">
-              {(['easy', 'medium', 'hard'] as FakeArtistDifficulty[]).map(diff => {
-                const cfg = FAKE_ARTIST_DIFFICULTY_CONFIG[diff];
-                return (
-                  <motion.button
-                    key={diff}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => handleSelectDifficulty(diff)}
-                    className={`w-full p-5 rounded-[2rem] border ${cfg.border} ${cfg.bg} text-left flex items-center gap-4 active:opacity-80 transition-opacity`}
+            {/* Difficulty */}
+            <div className="space-y-2">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold px-1">Сложность</p>
+              <div className="space-y-2">
+                {(['easy', 'medium', 'hard'] as FakeArtistDifficulty[]).map(diff => {
+                  const cfg = FAKE_ARTIST_DIFFICULTY_CONFIG[diff];
+                  const isSelected = selectedDifficulty === diff;
+                  return (
+                    <motion.button
+                      key={diff}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setSelectedDifficulty(diff)}
+                      className={`w-full p-4 rounded-[1.5rem] border text-left flex items-center gap-3 transition-all ${
+                        isSelected
+                          ? `${cfg.border} ${cfg.bg} opacity-100`
+                          : 'border-white/10 bg-white/5 opacity-60'
+                      }`}
+                    >
+                      <span className="text-2xl leading-none">{cfg.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-gray-400'}`}>{cfg.label}</h4>
+                        <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{cfg.desc}</p>
+                      </div>
+                      {isSelected && <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Rounds */}
+            <div className="space-y-2">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold px-1">Раундов</p>
+              <div className="flex gap-2">
+                {ROUND_OPTIONS.map(r => (
+                  <button
+                    key={r}
+                    onClick={() => setSelectedRounds(r)}
+                    className={`flex-1 py-3 rounded-2xl font-black text-lg transition-all border ${
+                      selectedRounds === r
+                        ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-400'
+                        : 'bg-white/5 border-white/10 text-gray-500'
+                    }`}
                   >
-                    <span className="text-3xl leading-none">{cfg.emoji}</span>
-                    <div className="flex-1 min-w-0">
-                      <h4 className={`text-xl font-black uppercase italic ${cfg.text}`}>{cfg.label}</h4>
-                      <p className="text-xs text-gray-500 mt-0.5 leading-tight">{cfg.desc}</p>
-                    </div>
-                  </motion.button>
-                );
-              })}
+                    {r}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <p className="text-[10px] text-gray-700 uppercase tracking-widest font-bold">
-              {players.length} игроков
-            </p>
+            {/* Timer */}
+            <div className="space-y-2">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold px-1">Таймер на ход</p>
+              <div className="flex gap-2">
+                {TIMER_OPTIONS.map(t => (
+                  <button
+                    key={t.value}
+                    onClick={() => setSelectedTimer(t.value)}
+                    className={`flex-1 py-3 rounded-2xl font-black text-sm transition-all border ${
+                      selectedTimer === t.value
+                        ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-400'
+                        : 'bg-white/5 border-white/10 text-gray-500'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleStart}
+              disabled={!selectedDifficulty}
+              className="w-full py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-2xl disabled:opacity-30 transition-all"
+            >
+              <span>Раздать роли</span>
+              <ChevronRight className="w-5 h-5" />
+            </motion.button>
           </motion.div>
         )}
 
@@ -187,7 +256,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
             </div>
 
             <p className="text-[9px] text-gray-600 uppercase tracking-widest text-center px-8 leading-relaxed">
-              Тебе предстоит нарисовать ровно две линии за всю игру. Будь точен!
+              За игру каждый делает ровно {selectedRounds === 1 ? 'одну линию' : `${selectedRounds} линии`} · {selectedTimer > 0 ? `таймер ${selectedTimer}с` : 'без таймера'}
             </p>
           </motion.div>
         )}

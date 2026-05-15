@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Palette, Play, CheckCircle2, RotateCcw, Home, Brush, Info, HelpCircle, X, Undo2 } from 'lucide-react';
+import { Palette, CheckCircle2, Home, Brush, HelpCircle, X, Undo2, Timer } from 'lucide-react';
 import { Player } from '../types';
 import { FAKE_ARTIST_INSTRUCTIONS } from '../constants/fakeArtistContent';
 
@@ -14,21 +14,23 @@ interface FakeArtistGameProps {
   players: Player[];
   word: string;
   category: string;
+  rounds: number;
+  timerSeconds: number;
   onBack: () => void;
   onFinish: () => void;
 }
 
 const PLAYER_COLORS = [
-  '#ef4444', // red
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#06b6d4'  // cyan
+  '#ef4444',
+  '#3b82f6',
+  '#10b981',
+  '#f59e0b',
+  '#8b5cf6',
+  '#ec4899',
+  '#06b6d4'
 ];
 
-export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, category, onBack, onFinish }) => {
+export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, category, rounds, timerSeconds, onBack, onFinish }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
@@ -38,31 +40,68 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawnThisTurn, setHasDrawnThisTurn] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(timerSeconds);
+  const [timeExpired, setTimeExpired] = useState(false);
 
+  const totalTurns = players.length * rounds;
   const currentPlayer = players[turnIndex % players.length];
   const playerColor = PLAYER_COLORS[turnIndex % PLAYER_COLORS.length];
 
-  // Adjust canvas size on resize and handle high-DPI
+  const advanceTurn = useCallback(() => {
+    const nextIdx = turnIndex + 1;
+    if (nextIdx >= totalTurns) {
+      onFinish();
+    } else {
+      setTurnIndex(nextIdx);
+      setHasDrawnThisTurn(false);
+      setTimeExpired(false);
+      if (nextIdx % players.length === 0) {
+        setRound(prev => prev + 1);
+      }
+    }
+  }, [turnIndex, totalTurns, players.length, onFinish]);
+
+  // Reset timer on each new turn
+  useEffect(() => {
+    if (timerSeconds > 0) {
+      setTimeLeft(timerSeconds);
+      setTimeExpired(false);
+    }
+  }, [turnIndex, timerSeconds]);
+
+  // Countdown
+  useEffect(() => {
+    if (timerSeconds === 0) return;
+    if (timeLeft <= 0) {
+      setTimeExpired(true);
+      return;
+    }
+    const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [timeLeft, timerSeconds]);
+
+  // Auto-advance when timer expires
+  useEffect(() => {
+    if (timeExpired) {
+      const id = setTimeout(() => advanceTurn(), 800);
+      return () => clearTimeout(id);
+    }
+  }, [timeExpired, advanceTurn]);
+
+  // Canvas resize
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
-
     const canvas = canvasRef.current;
     const container = containerRef.current;
-
     const resizeObserver = new ResizeObserver(() => {
       const dpr = window.devicePixelRatio || 1;
       const rect = container.getBoundingClientRect();
-      
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-      
       const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.scale(dpr, dpr);
-      }
+      if (ctx) ctx.scale(dpr, dpr);
       redraw();
     });
-
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
   }, []);
@@ -72,44 +111,32 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // We don't clear the transform here because it's handled by the scale(dpr) in resizeObserver
-    // But we do need to clear the rect
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = 4;
-
     strokes.forEach(stroke => {
       if (stroke.points.length < 2) return;
       ctx.beginPath();
       ctx.strokeStyle = stroke.color;
       ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-      for (let i = 1; i < stroke.points.length; i++) {
-        ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-      }
+      for (let i = 1; i < stroke.points.length; i++) ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
       ctx.stroke();
     });
-
     if (currentStroke && currentStroke.length > 1) {
       ctx.beginPath();
       ctx.strokeStyle = playerColor;
       ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-      for (let i = 1; i < currentStroke.length; i++) {
-        ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
-      }
+      for (let i = 1; i < currentStroke.length; i++) ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
       ctx.stroke();
     }
   };
 
-  useEffect(() => {
-    redraw();
-  }, [strokes, currentStroke]);
+  useEffect(() => { redraw(); }, [strokes, currentStroke]);
 
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
-    
     let clientX, clientY;
     if ('touches' in e) {
       const touch = e.touches[0] || e.changedTouches[0];
@@ -120,24 +147,18 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
       clientX = e.clientX;
       clientY = e.clientY;
     }
-
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
+    return { x: clientX - rect.left, y: clientY - rect.top };
   };
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    if (hasDrawnThisTurn) return;
+    if (hasDrawnThisTurn || timeExpired) return;
     setIsDrawing(true);
-    const pos = getPos(e);
-    setCurrentStroke([pos]);
+    setCurrentStroke([getPos(e)]);
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || hasDrawnThisTurn) return;
-    const pos = getPos(e);
-    setCurrentStroke(prev => prev ? [...prev, pos] : [pos]);
+    if (!isDrawing || hasDrawnThisTurn || timeExpired) return;
+    setCurrentStroke(prev => prev ? [...prev, getPos(e)] : [getPos(e)]);
   };
 
   const stopDrawing = () => {
@@ -150,24 +171,14 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
     setCurrentStroke(null);
   };
 
-  const nextTurn = () => {
-    const nextIdx = turnIndex + 1;
-    if (nextIdx === players.length * 2) {
-      onFinish();
-    } else {
-      setTurnIndex(nextIdx);
-      setHasDrawnThisTurn(false);
-      if (nextIdx % players.length === 0) {
-        setRound(2);
-      }
-    }
-  };
-
   const undoLastStroke = () => {
     if (!hasDrawnThisTurn) return;
     setStrokes(prev => prev.slice(0, -1));
     setHasDrawnThisTurn(false);
   };
+
+  const timerPct = timerSeconds > 0 ? timeLeft / timerSeconds : 1;
+  const timerColor = timerPct > 0.5 ? '#10b981' : timerPct > 0.25 ? '#f59e0b' : '#ef4444';
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a0502] text-[#e5e7eb] font-sans overflow-hidden select-none">
@@ -178,10 +189,16 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
           </div>
           <div>
             <h2 className="text-lg font-black uppercase italic tracking-tighter">Fake <span className="text-emerald-500">Artist</span></h2>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Раунд {round} // {turnIndex + 1} ход</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Раунд {round}/{rounds} // ход {(turnIndex % players.length) + 1}/{players.length}</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
+          {timerSeconds > 0 && (
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+              <Timer className="w-3.5 h-3.5" style={{ color: timerColor }} />
+              <span className="text-sm font-black tabular-nums" style={{ color: timerColor }}>{timeLeft}</span>
+            </div>
+          )}
           <button onClick={() => setShowInstructions(true)} className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-500 transition-all">
             <HelpCircle className="w-5 h-5" />
           </button>
@@ -206,7 +223,19 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
           </div>
         </div>
 
-        <div 
+        {/* Timer bar */}
+        {timerSeconds > 0 && (
+          <div className="w-full max-w-lg mb-3 h-1 bg-white/10 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ backgroundColor: timerColor }}
+              animate={{ width: `${timerPct * 100}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
+        )}
+
+        <div
           ref={containerRef}
           className="w-full max-w-lg flex-1 bg-white/[0.03] border-4 border-white/10 rounded-[2.5rem] relative overflow-hidden shadow-inner cursor-crosshair touch-none"
           onMouseDown={startDrawing}
@@ -219,16 +248,27 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
         >
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
           <AnimatePresence>
-            {!hasDrawnThisTurn && (
-               <motion.div 
+            {timeExpired && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none"
+              >
+                <Timer className="w-12 h-12 text-red-500 mb-2" />
+                <p className="text-2xl font-black uppercase tracking-tighter text-red-500">Время вышло!</p>
+              </motion.div>
+            )}
+            {!hasDrawnThisTurn && !timeExpired && (
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center space-y-4"
-               >
-                 <Brush className="w-12 h-12 text-white/10 " />
-                 <p className="text-[10px] text-gray-600 uppercase font-bold tracking-widest">Нарисуй одну линию</p>
-               </motion.div>
+              >
+                <Brush className="w-12 h-12 text-white/10" />
+                <p className="text-[10px] text-gray-600 uppercase font-bold tracking-widest">Нарисуй одну линию</p>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -241,10 +281,10 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
           >
             <Undo2 className="w-6 h-6" />
           </button>
-          
+
           <button
-            onClick={nextTurn}
-            disabled={!hasDrawnThisTurn}
+            onClick={advanceTurn}
+            disabled={!hasDrawnThisTurn && !timeExpired}
             className="flex-1 py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 shadow-2xl disabled:opacity-30 disabled:grayscale transition-all"
           >
             <CheckCircle2 className="w-5 h-5" />
@@ -268,14 +308,13 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
               className="bg-[#120a0a] border border-emerald-500/20 p-8 rounded-[2.5rem] max-w-lg w-full relative"
             >
               <div className="absolute top-0 right-0 p-6">
-                <button 
+                <button
                   onClick={() => setShowInstructions(false)}
                   className="p-3 bg-white/5 rounded-2xl hover:bg-emerald-500 hover:text-white transition-all"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
-
               <div className="space-y-6">
                 <h2 className="text-3xl font-black uppercase tracking-tighter italic">Правила</h2>
                 <div className="space-y-4">
@@ -300,4 +339,3 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
     </div>
   );
 };
-
