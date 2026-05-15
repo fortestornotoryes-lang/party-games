@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Timer, SkipForward, CheckCircle2, RotateCcw, Home, Brain, Zap, Trophy, Users, Shield, Target, ArrowRight, X } from 'lucide-react';
+import { Timer, SkipForward, CheckCircle2, RotateCcw, Home, Brain, Zap, Trophy, Target, ArrowRight, Shuffle, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../constants/aliasContent';
 
 interface AliasGameProps {
@@ -34,15 +34,33 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [timeLeft, setTimeLeft] = useState(60);
   const [showInstructions, setShowInstructions] = useState(false);
 
-  // Automatic team assignment on mount
+  // Initial random team assignment
   useEffect(() => {
     const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
     const mid = Math.ceil(shuffled.length / 2);
     setTeams([
       { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
-      { name: 'Синие', players: shuffled.slice(mid), score: 0 }
+      { name: 'Синие', players: shuffled.slice(mid), score: 0 },
     ]);
   }, [playerNames]);
+
+  const movePlayer = (playerName: string, fromIdx: number) => {
+    const toIdx = fromIdx === 0 ? 1 : 0;
+    setTeams(prev => prev.map((team, i) => {
+      if (i === fromIdx) return { ...team, players: team.players.filter(p => p !== playerName) };
+      if (i === toIdx) return { ...team, players: [...team.players, playerName] };
+      return team;
+    }));
+  };
+
+  const reshuffleTeams = () => {
+    const all = teams.flatMap(t => t.players).sort(() => Math.random() - 0.5);
+    const mid = Math.ceil(all.length / 2);
+    setTeams(prev => [
+      { ...prev[0], players: all.slice(0, mid) },
+      { ...prev[1], players: all.slice(mid) },
+    ]);
+  };
 
   useEffect(() => {
     let timer: number;
@@ -137,37 +155,87 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
       <div className="flex-1 overflow-y-auto relative p-6 flex flex-col items-center">
         <AnimatePresence mode="wait">
           {phase === 'team_setup' && (
-            <motion.div 
+            <motion.div
               key="teams"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-sm space-y-8 z-10"
+              className="w-full max-w-sm space-y-6 z-10"
             >
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-1">
                 <h3 className="text-4xl font-black italic uppercase tracking-tighter">Команды</h3>
-                <p className="text-xs text-gray-500 uppercase tracking-widest">Мы распределили игроков за вас</p>
+                <p className="text-xs text-gray-500 uppercase tracking-widest">Нажми на игрока чтобы переместить</p>
               </div>
 
-              <div className="space-y-4">
-                {teams.map((team, idx) => (
-                  <div key={idx} className={`p-6 rounded-[2.5rem] border ${idx === 0 ? 'bg-red-500/5 border-red-500/20' : 'bg-blue-500/5 border-blue-500/20'} space-y-4`}>
+              {/* Two-column team assignment */}
+              <div className="grid grid-cols-2 gap-3">
+                {teams.map((team, teamIdx) => (
+                  <div
+                    key={teamIdx}
+                    className={`rounded-[2rem] border p-4 space-y-3 min-h-[140px] ${
+                      teamIdx === 0
+                        ? 'bg-red-500/5 border-red-500/20'
+                        : 'bg-blue-500/5 border-blue-500/20'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
-                       <h4 className={`text-xl font-black italic uppercase ${idx === 0 ? 'text-red-500' : 'text-blue-500'}`}>{team.name}</h4>
-                       <Users className={`w-5 h-5 ${idx === 0 ? 'text-red-500/40' : 'text-blue-500/40'}`} />
+                      <h4 className={`text-xs font-black italic uppercase tracking-tight ${teamIdx === 0 ? 'text-red-400' : 'text-blue-400'}`}>
+                        {team.name}
+                      </h4>
+                      <span className={`text-[10px] font-black ${teamIdx === 0 ? 'text-red-500/50' : 'text-blue-500/50'}`}>
+                        {team.players.length}
+                      </span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {team.players.map((p, pIdx) => (
-                        <span key={pIdx} className="px-3 py-1 bg-white/5 rounded-full text-xs font-bold text-gray-300 border border-white/5">{p}</span>
-                      ))}
+
+                    <div className="flex flex-col gap-1.5">
+                      <AnimatePresence mode="popLayout">
+                        {team.players.map(playerName => (
+                          <motion.button
+                            key={playerName}
+                            layout
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+                            whileTap={{ scale: 0.93 }}
+                            onClick={() => movePlayer(playerName, teamIdx)}
+                            className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between gap-1 text-xs font-bold transition-colors ${
+                              teamIdx === 0
+                                ? 'bg-red-500/10 text-red-200 active:bg-red-500/25 border border-red-500/15'
+                                : 'bg-blue-500/10 text-blue-200 active:bg-blue-500/25 border border-blue-500/15'
+                            }`}
+                          >
+                            <span className="truncate">{playerName}</span>
+                            {teamIdx === 0
+                              ? <ChevronRight className="w-3 h-3 shrink-0 opacity-40" />
+                              : <ChevronLeft className="w-3 h-3 shrink-0 opacity-40" />
+                            }
+                          </motion.button>
+                        ))}
+                      </AnimatePresence>
+
+                      {team.players.length === 0 && (
+                        <p className="text-[10px] text-gray-700 text-center py-2 italic">пусто</p>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
+              {/* Shuffle button */}
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={reshuffleTeams}
+                className="w-full py-3.5 border border-white/10 bg-white/5 active:bg-white/10 rounded-2xl flex items-center justify-center gap-2 text-gray-400 transition-colors"
+              >
+                <Shuffle className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Перемешать случайно</span>
+              </motion.button>
+
               <button
+                disabled={teams.some(t => t.players.length === 0)}
                 onClick={() => setPhase('settings')}
-                className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
+                className="w-full py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-2xl active:scale-95 transition-transform disabled:opacity-40 disabled:pointer-events-none"
               >
                 <span>Далее</span>
                 <ArrowRight className="w-5 h-5" />
@@ -301,7 +369,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               key="playing"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full max-w-sm flex flex-col items-center space-y-4 sm:space-y-8 z-10"
+              className="w-full md:max-w-xl flex flex-col items-center space-y-4 sm:space-y-8 z-10"
             >
               <div className="w-full flex justify-between items-center px-4">
                 <div className="flex flex-col">

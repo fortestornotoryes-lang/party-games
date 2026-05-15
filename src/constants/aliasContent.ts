@@ -28,8 +28,8 @@ export interface WordCategory {
 export const ALIAS_CATEGORIES: WordCategory[] = [
   {
     id: 'verbs',
-    name: 'Движ',
-    description: 'Только глаголы. Попробуй объяснить действие!',
+    name: 'Ну такое',
+    description: '',
     difficulty: 'medium',
     words: [
       "Бежать", "Прыгать", "Думать", "Программировать", "Рисовать", "Петь", "Танцевать", "Готовить",
@@ -52,8 +52,8 @@ export const ALIAS_CATEGORIES: WordCategory[] = [
 
   {
     id: 'emotions',
-    name: 'Чувства',
-    description: 'Эмоции и состояния души.',
+    name: 'Сложно',
+    description: '',
     difficulty: 'hard',
     words: [
       "Радость", "Грусть", "Гнев", "Страх", "Удивление", "Отвращение", "Стыд", "Вина",
@@ -76,8 +76,8 @@ export const ALIAS_CATEGORIES: WordCategory[] = [
 
   {
     id: 'brands',
-    name: 'Бренды',
-    description: 'Мировые компании, сервисы и известные бренды.',
+    name: 'Легко',
+    description: '',
     difficulty: 'easy',
     words: [
       "Apple", "Google", "Microsoft", "Tesla", "McDonald's", "Nike", "Adidas", "Samsung",

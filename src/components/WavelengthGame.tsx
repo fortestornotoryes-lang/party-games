@@ -193,12 +193,12 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
                   className="absolute top-0 bottom-0 flex items-center justify-center z-10"
                   style={{ left: `${targetPos}%`, transform: 'translateX(-50%)' }}
                 >
-                  {/* Score Zones */}
-                  <div className="relative h-full flex items-center justify-center">
-                    <div className="absolute w-32 h-full bg-purple-500/10 blur-3xl rounded-full" />
-                    <div className="w-24 h-full bg-purple-500/20 border-x border-purple-500/30" />
-                    <div className="w-12 h-full bg-purple-500/50 border-x border-white/20" />
-                    <div className="w-4 h-full bg-white shadow-[0_0_35px_rgba(255,255,255,1)] z-20" />
+                  {/* Score Zones — all stacked and centered at targetPos */}
+                  <div className="relative h-full w-24">
+                    <div className="absolute inset-y-0 -left-4 -right-4 bg-purple-500/10 blur-3xl rounded-full" />
+                    <div className="absolute inset-0 bg-purple-500/20 border-x border-purple-500/30" />
+                    <div className="absolute inset-y-0 left-6 right-6 bg-purple-500/50 border-x border-white/20" />
+                    <div className="absolute inset-y-0 left-10 right-10 bg-white shadow-[0_0_35px_rgba(255,255,255,1)] z-20" />
                   </div>
                 </motion.div>
               )}
