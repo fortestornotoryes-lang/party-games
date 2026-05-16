@@ -136,7 +136,7 @@ function AppContent() {
                 <MainMenu onSelectGame={handleMenuSelect} />
                 <button 
                   onClick={() => setStatus('settings')}
-                  className="fixed bottom-6 right-6 w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 active:scale-95 transition-all shadow-2xl backdrop-blur-xl z-50"
+                  className="fixed bottom-6 right-6 w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 active:scale-95 transition-all shadow-2xl z-50"
                 >
                   <SettingsIcon className="w-6 h-6" />
                 </button>
@@ -150,7 +150,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen safe-top safe-bottom flex flex-col items-center">
-      <div className="w-full max-w-3xl min-h-screen relative flex flex-col shadow-2xl bg-black/20 backdrop-blur-3xl ring-1 ring-white/5">
+      <div className="w-full max-w-3xl min-h-screen relative flex flex-col shadow-2xl bg-black/20 ring-1 ring-white/5">
          {renderGame()}
       </div>
     </div>

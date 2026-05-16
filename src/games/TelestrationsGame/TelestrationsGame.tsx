@@ -114,7 +114,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   return (
     <div className="flex flex-col h-screen bg-[#0a0502] text-[#e5e7eb] font-sans select-none overflow-hidden">
       {/* Header */}
-      <div className="flex-shrink-0 px-4 py-3 bg-[#0a0502]/90 backdrop-blur-xl border-b border-white/5 flex items-center justify-between z-20">
+      <div className="flex-shrink-0 px-4 py-3 bg-[#0a0502]/90  border-b border-white/5 flex items-center justify-between z-20">
         <div className="flex items-center space-x-3">
           <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
             <Pencil className="w-4 h-4 text-orange-500" />

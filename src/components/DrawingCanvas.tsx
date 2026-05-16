@@ -224,7 +224,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         />
       </div>
 
-      <div className="flex-shrink-0 bg-black/70 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
+      <div className="flex-shrink-0 bg-black/70  border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
         <div className="flex items-center justify-center gap-1.5">
           {BRUSH_COLORS.map(color => (
             <button
