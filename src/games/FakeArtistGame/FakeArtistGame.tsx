@@ -48,18 +48,28 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
   }, [turnIndex, isTransitioning, timerSeconds]);
 
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current) return;
     const canvas = canvasRef.current;
-    const rect = containerRef.current.getBoundingClientRect();
-    canvas.width = rect.width * 2;
-    canvas.height = rect.height * 2;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-        ctx.scale(2, 2);
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = 4;
-    }
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const initCanvas = () => {
+      const rect = container.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const dpr = window.devicePixelRatio || 2;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 4;
+    };
+
+    const ro = new ResizeObserver(initCanvas);
+    ro.observe(container);
+    initCanvas();
+    return () => ro.disconnect();
   }, []);
 
   const drawAll = useCallback(() => {
@@ -87,7 +97,8 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
   useEffect(() => { drawAll(); }, [drawAll]);
 
   const getPos = (e: any) => {
-    const rect = canvasRef.current!.getBoundingClientRect();
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     return { x: clientX - rect.left, y: clientY - rect.top };
@@ -158,11 +169,12 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
              <div
                ref={containerRef}
                className="w-full h-full"
+               style={{ touchAction: 'none' }}
                onMouseDown={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
                onMouseMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
                onMouseUp={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
-               onTouchStart={(e) => { e.preventDefault(); if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
-               onTouchMove={(e) => { e.preventDefault(); if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
+               onTouchStart={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
+               onTouchMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
                onTouchEnd={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
              >
                  <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white transition-opacity" />
