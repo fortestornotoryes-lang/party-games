@@ -175,7 +175,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
           </motion.p>
         </div>
 
-        {/* Game list */}
+        {/* SpyHuntGame list */}
         <motion.div
           variants={container}
           initial="hidden"

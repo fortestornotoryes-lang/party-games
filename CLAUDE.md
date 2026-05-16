@@ -22,7 +22,7 @@ Single-page party game hub built with React 19 + TypeScript + Vite. UI language 
 **`GameStatus` in `src/types.ts`** defines every possible state. Each game follows a `{game}_setup → {game}_distributing → {game}_playing → {game}_result` chain (not all games have every step).
 
 **7 games and their flows:**
-| Game | Menu ID | States |
+| SpyHuntGame | Menu ID | States |
 |------|---------|--------|
 | Spy Hunt | `spy` | `setup → distributing → playing → result` |
 | Fake Artist | `fake_artist` | `fake_artist_setup → fake_artist_distributing → fake_artist_playing → fake_artist_result` |
@@ -34,7 +34,7 @@ Single-page party game hub built with React 19 + TypeScript + Vite. UI language 
 
 **Shared `Setup` component** (`src/components/Setup.tsx`) — reused for all games that need player name entry. Accepts a `themeColor` prop (`'red' | 'emerald' | 'sky' | 'orange' | 'purple'`) that drives all color variants via a `colorConfig` lookup object.
 
-**Game content** lives in `src/constants/` (locations, words, roles, instructions). There are duplicate files at `src/*.ts` root — those are stale; the canonical versions are in `src/constants/`.
+**SpyHuntGame content** lives in `src/constants/` (locations, words, roles, instructions). There are duplicate files at `src/*.ts` root — those are stale; the canonical versions are in `src/constants/`.
 
 ## Key dependencies
 

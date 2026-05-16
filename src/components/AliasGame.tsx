@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useCountdown } from '../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, SkipForward, CheckCircle2, RotateCcw, Home, Brain, Zap, Trophy, Target, ArrowRight, Shuffle, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../constants/aliasContent';
+import { shuffle } from '../utils/random';
 
 interface AliasGameProps {
   playerNames: string[];
@@ -31,12 +33,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [words, setWords] = useState<string[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [roundScore, setRoundScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useCountdown(phase === 'playing');
   const [showInstructions, setShowInstructions] = useState(false);
 
   // Initial random team assignment
   useEffect(() => {
-    const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(playerNames);
     const mid = Math.ceil(shuffled.length / 2);
     setTeams([
       { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
@@ -54,7 +56,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   };
 
   const reshuffleTeams = () => {
-    const all = teams.flatMap(t => t.players).sort(() => Math.random() - 0.5);
+    const all = shuffle(teams.flatMap(t => t.players));
     const mid = Math.ceil(all.length / 2);
     setTeams(prev => [
       { ...prev[0], players: all.slice(0, mid) },
@@ -62,20 +64,16 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     ]);
   };
 
+  // Detect timer expiry
   useEffect(() => {
-    let timer: number;
-    if (phase === 'playing' && timeLeft > 0) {
-      timer = window.setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0 && phase === 'playing') {
+    if (timeLeft === 0 && phase === 'playing') {
       finishRound();
     }
-    return () => clearInterval(timer);
-  }, [phase, timeLeft]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft, phase]);
 
   const startNewRound = () => {
-    const shuffled = [...selectedCategory.words].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(selectedCategory.words);
     setWords(shuffled);
     setCurrentWordIndex(0);
     setRoundScore(0);

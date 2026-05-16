@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useCountdown } from '../hooks/useCountdown';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import { RotateCcw, Home, HelpCircle, X, CheckCircle2, Eye, EyeOff, Timer, History } from 'lucide-react';
 import { WAVELENGTH_INSTRUCTIONS, WAVELENGTH_CATEGORIES } from '../constants/wavelengthContent';
+import { shuffle } from '../utils/random';
+import { InstructionsModal } from './InstructionsModal';
 
 interface WavelengthGameProps {
   playerNames: string[];
@@ -25,7 +28,7 @@ interface WLRound {
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onBack }) => {
   const [teams, setTeams] = useState<WLTeam[]>(() => {
-    const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(playerNames);
     const mid = Math.ceil(shuffled.length / 2);
     return [
       { name: 'Красные', color: 'red', players: shuffled.slice(0, mid), score: 0 },
@@ -52,21 +55,15 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const [category, setCategory] = useState(() => WAVELENGTH_CATEGORIES[Math.floor(Math.random() * WAVELENGTH_CATEGORIES.length)]);
   const [phase, setPhase] = useState<'telepath' | 'guess' | 'reveal'>('telepath');
   const [showInstructions, setShowInstructions] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes for discussion
   const [timerActive, setTimerActive] = useState(false);
+  const [timeLeft, setTimeLeft] = useCountdown(timerActive, 120);
   const [hasGuessed, setHasGuessed] = useState(false);
   const [isPassDismissed, setIsPassDismissed] = useState(false);
   const dialRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let interval: any;
-    if (timerActive && timeLeft > 0) {
-      interval = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    } else if (timeLeft === 0) {
-      setTimerActive(false);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+    if (timeLeft === 0 && timerActive) setTimerActive(false);
+  }, [timeLeft, timerActive]);
 
   const handleDialClick = (e: React.MouseEvent | React.TouchEvent) => {
     if (phase !== 'guess' || !isPassDismissed) return;
@@ -386,35 +383,12 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
         )}
       </AnimatePresence>
 
-      {/* Instructions Modal */}
-      <AnimatePresence>
-        {showInstructions && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-[#120a0a] border border-purple-500/20 p-8 rounded-[2.5rem] max-w-lg w-full relative">
-              <div className="absolute top-0 right-0 p-6">
-                <button onClick={() => setShowInstructions(false)} className="p-3 bg-white/5 rounded-2xl hover:bg-purple-500 hover:text-white transition-all">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <h2 className="text-3xl font-black uppercase tracking-tighter italic">Инструкции</h2>
-                <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
-                  {WAVELENGTH_INSTRUCTIONS.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                      <h4 className="text-xs font-black text-purple-500 uppercase tracking-widest mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-400 leading-relaxed font-medium">{item.content}</p>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowInstructions(false)} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest">
-                  Понятно
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InstructionsModal
+        open={showInstructions}
+        instructions={WAVELENGTH_INSTRUCTIONS}
+        onClose={() => setShowInstructions(false)}
+        theme="purple"
+      />
     </div>
   );
 };

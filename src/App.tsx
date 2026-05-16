@@ -7,7 +7,7 @@ import React, { useState, useCallback } from 'react';
 import { MainMenu } from './components/MainMenu';
 import { Setup } from './components/Setup';
 import { RoleDistribution } from './components/RoleDistribution';
-import { Game } from './components/Game';
+import { SpyHuntGame } from './components/SpyHuntGame';
 import { Result } from './components/Result';
 import { AliasGame } from './components/AliasGame';
 import { FakeArtistGame } from './components/FakeArtistGame';
@@ -270,7 +270,7 @@ export default function App() {
         />
       )}
       {status === 'playing' && (
-        <Game 
+        <SpyHuntGame
           players={players} 
           location={gameState.location} 
           onRestart={() => restartGame('spy')}

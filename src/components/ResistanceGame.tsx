@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Skull, CheckCircle2, XCircle, Users, ArrowRight, Home, HelpCircle, X, ChevronRight } from 'lucide-react';
 import { Player } from '../types';
 import { RESISTANCE_INSTRUCTIONS, MISSION_SIZES } from '../constants/resistanceContent';
+import { InstructionsModal } from './InstructionsModal';
 
 interface ResistanceGameProps {
   players: Player[];
@@ -345,35 +346,12 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
         </div>
       </div>
 
-      {/* Footer / Instructions */}
-      <AnimatePresence>
-        {showInstructions && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-[#120a0a] border border-blue-500/20 p-8 rounded-[2.5rem] max-w-lg w-full relative">
-              <div className="absolute top-0 right-0 p-6">
-                <button onClick={() => setShowInstructions(false)} className="p-3 bg-white/5 rounded-2xl hover:bg-blue-500 hover:text-white transition-all">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <h2 className="text-3xl font-black uppercase tracking-tighter italic">Инструкции</h2>
-                <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
-                  {RESISTANCE_INSTRUCTIONS.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                      <h4 className="text-xs font-black text-blue-500 uppercase tracking-widest mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-400 leading-relaxed font-medium">{item.content}</p>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowInstructions(false)} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest">
-                  Все понятно
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InstructionsModal
+        open={showInstructions}
+        instructions={RESISTANCE_INSTRUCTIONS}
+        onClose={() => setShowInstructions(false)}
+        theme="blue"
+      />
     </div>
   );
 };

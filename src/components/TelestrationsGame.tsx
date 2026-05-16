@@ -1,7 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useCountdown } from '../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { Pencil, MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, Eraser, Shuffle, Eye, Undo2 } from 'lucide-react';
+import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } from 'lucide-react';
 import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../constants/telestrationsContent';
+import { shuffle } from '../utils/random';
+import { InstructionsModal } from './InstructionsModal';
+import { DrawingCanvas } from './DrawingCanvas';
 
 interface TelestrationsGameProps {
   playerNames: string[];
@@ -14,10 +18,6 @@ type Step = {
   author: string;
 };
 
-const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#000000'];
-const BRUSH_SIZES = [1, 2, 4, 8, 14];
-
-const shuffle = <T,>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
 
 export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack }) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
@@ -29,16 +29,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const [currentWord, setCurrentWord] = useState('');
 
   const [showInstructions, setShowInstructions] = useState(false);
-
   const [wordRevealed, setWordRevealed] = useState(false);
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawHistory = useRef<ImageData[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [brushColor, setBrushColor] = useState('#ffffff');
-  const [brushSize, setBrushSize] = useState(2);
   const [guess, setGuess] = useState('');
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useCountdown(phase === 'action');
 
   const currentPlayer = shuffledPlayers[currentRound];
   const isDrawingRound = currentRound % 2 === 0;
@@ -66,29 +59,16 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   };
 
   const startAction = () => {
-    drawHistory.current = [];
     setPhase('action');
     setGuess('');
     const cfg = DIFFICULTY_CONFIG[difficulty];
     setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
   };
 
-  const handleFinishAction = () => {
-    let content = '';
-    if (isDrawingRound) {
-      content = canvasRef.current?.toDataURL() || '';
-    } else {
-      content = guess;
-      setCurrentWord(guess);
-    }
-
-    const newSteps: Step[] = [...steps, {
-      type: isDrawingRound ? 'draw' : 'guess',
-      content,
-      author: currentPlayer,
-    }];
+  const finishAction = (content: string, type: 'draw' | 'guess') => {
+    if (type === 'guess') setCurrentWord(content);
+    const newSteps: Step[] = [...steps, { type, content, author: currentPlayer }];
     setSteps(newSteps);
-
     if (currentRound === shuffledPlayers.length - 1) {
       setPhase('gallery');
     } else {
@@ -97,119 +77,11 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     }
   };
 
-  // Canvas resize + init
+  // Auto-submit guess on timeout
   useEffect(() => {
-    if (phase === 'action' && isDrawingRound && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const updateCanvasSize = () => {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        const newW = Math.round(rect.width * dpr);
-        const newH = Math.round(rect.height * dpr);
-        if (canvas.width !== newW || canvas.height !== newH) {
-          let saved: ImageData | undefined;
-          if (canvas.width > 0 && canvas.height > 0) {
-            try { saved = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch {}
-          }
-          canvas.width = newW;
-          canvas.height = newH;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-          ctx.fillStyle = '#120a0a';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          if (saved) { try { ctx.putImageData(saved, 0, 0); } catch {} }
-        }
-      };
-
-      const ro = new ResizeObserver(updateCanvasSize);
-      if (canvas.parentElement) ro.observe(canvas.parentElement);
-      updateCanvasSize();
-      return () => ro.disconnect();
-    }
-  }, [phase, isDrawingRound]);
-
-  // Timer countdown
-  useEffect(() => {
-    if (phase !== 'action' || timeLeft <= 0) return;
-    const t = setTimeout(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
-    return () => clearTimeout(t);
-  }, [phase, timeLeft]);
-
-  // Auto-submit on timeout
-  useEffect(() => {
-    if (phase === 'action' && timeLeft === 0) handleFinishAction();
+    if (phase === 'action' && !isDrawingRound && timeLeft === 0) finishAction(guess, 'guess');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase]);
-
-  const getCoords = (e: React.MouseEvent | React.TouchEvent, canvas: HTMLCanvasElement) => {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height),
-    };
-  };
-
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    // Save snapshot before each stroke for undo
-    if (canvas.width > 0 && canvas.height > 0) {
-      try {
-        drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        if (drawHistory.current.length > 50) drawHistory.current.shift();
-      } catch {}
-    }
-    setIsDrawing(true);
-    const { x, y } = getCoords(e, canvas);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.strokeStyle = brushColor;
-    ctx.lineWidth = brushSize * (window.devicePixelRatio || 1);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  };
-
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || !canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const { x, y } = getCoords(e, canvas);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    // Reset path so next stroke() only draws the new segment, not the entire stroke from the start
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  };
-
-  const stopDrawing = () => setIsDrawing(false);
-
-  const clearCanvas = () => {
-    drawHistory.current = [];
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (ctx && canvas) {
-      ctx.fillStyle = '#120a0a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-  };
-
-  const undoDrawing = () => {
-    if (drawHistory.current.length === 0 || !canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.putImageData(drawHistory.current.pop()!, 0, 0);
-  };
+  }, [timeLeft, phase, isDrawingRound]);
 
   return (
     <div className="flex flex-col h-screen bg-[#0a0502] text-[#e5e7eb] font-sans select-none overflow-hidden">
@@ -419,85 +291,13 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               className="absolute inset-0 flex flex-col"
             >
               {isDrawingRound ? (
-                /* ── DRAWING: canvas fills all space ── */
-                <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
-                  {/* Top bar */}
-                  <div className="flex-shrink-0 flex items-center justify-between px-1">
-                    <div>
-                      <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">✏️ Рисуешь</p>
-                      <p className="text-lg font-black text-orange-400 leading-tight">{currentWord}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}>{timeLeft}с</span>
-                      <button onClick={undoDrawing} className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all">
-                        <Undo2 className="w-5 h-5" />
-                      </button>
-                      <button onClick={clearCanvas} className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all">
-                        <Eraser className="w-5 h-5" />
-                      </button>
-                      <button onClick={handleFinishAction} className="p-2.5 bg-white text-black rounded-xl hover:bg-zinc-200 transition-all">
-                        <CheckCircle2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Chain progress */}
-                  <div className="flex-shrink-0 flex justify-center gap-1.5 py-0.5">
-                    {shuffledPlayers.map((_, i) => (
-                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'}`} />
-                    ))}
-                  </div>
-
-                  {/* Canvas */}
-                  <div className="flex-1 relative min-h-0 bg-[#120a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-                    <canvas
-                      ref={canvasRef}
-                      onMouseDown={startDrawing}
-                      onMouseUp={stopDrawing}
-                      onMouseMove={draw}
-                      onMouseLeave={stopDrawing}
-                      onTouchStart={startDrawing}
-                      onTouchEnd={stopDrawing}
-                      onTouchMove={draw}
-                      className="w-full h-full touch-none"
-                    />
-                  </div>
-
-                  {/* Brush controls — below canvas */}
-                  <div className="flex-shrink-0 bg-black/70 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
-                    <div className="flex items-center justify-center gap-1.5">
-                      {BRUSH_COLORS.map(color => (
-                        <button
-                          key={color}
-                          onClick={() => setBrushColor(color)}
-                          className={`w-7 h-7 rounded-full border-2 transition-all active:scale-90 ${brushColor === color ? 'border-white scale-110' : 'border-transparent'}`}
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                      <div className="w-px h-5 bg-white/10 mx-0.5" />
-                      <input
-                        type="color"
-                        value={brushColor}
-                        onChange={e => setBrushColor(e.target.value)}
-                        className="w-7 h-7 rounded-full cursor-pointer border-none bg-transparent p-0 overflow-hidden"
-                      />
-                    </div>
-                    <div className="flex items-center justify-center gap-4">
-                      {BRUSH_SIZES.map(size => (
-                        <button
-                          key={size}
-                          onClick={() => setBrushSize(size)}
-                          className="flex items-center justify-center w-8 h-8"
-                        >
-                          <div
-                            className={`rounded-full transition-all ${brushSize === size ? 'bg-orange-500' : 'bg-white/25'}`}
-                            style={{ width: Math.max(2, size * 1.2), height: Math.max(2, size * 1.2) }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <DrawingCanvas
+                  word={currentWord}
+                  timeLeft={timeLeft}
+                  playerCount={shuffledPlayers.length}
+                  currentRound={currentRound}
+                  onFinish={(dataUrl) => finishAction(dataUrl, 'draw')}
+                />
               ) : (
                 /* ── GUESS MODE ── */
                 <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
@@ -526,13 +326,13 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                       type="text"
                       value={guess}
                       onChange={e => setGuess(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && guess.trim() && handleFinishAction()}
+                      onKeyDown={e => e.key === 'Enter' && guess.trim() && finishAction(guess, 'guess')}
                       placeholder="Напиши ответ..."
                       className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-orange-500 focus:bg-orange-500/5 transition-all outline-none"
                     />
                     <button
                       disabled={!guess.trim()}
-                      onClick={handleFinishAction}
+                      onClick={() => finishAction(guess, 'guess')}
                       className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 disabled:opacity-20 transition-all shadow-2xl"
                     >
                       <MessageSquare className="w-5 h-5" />
@@ -624,38 +424,12 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
         </AnimatePresence>
       </div>
 
-      {/* Instructions Modal */}
-      <AnimatePresence>
-        {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/95 backdrop-blur-xl"
-          >
-            <motion.div
-              initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-              className="bg-[#120a0a] border border-orange-500/20 p-6 rounded-[2rem] max-w-lg w-full"
-            >
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-black uppercase tracking-tighter italic">Инструкции</h2>
-                <button onClick={() => setShowInstructions(false)} className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500 hover:text-white transition-all">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-                {TELESTRATIONS_INSTRUCTIONS.map((item, idx) => (
-                  <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                    <h4 className="text-xs font-black text-orange-500 uppercase tracking-widest mb-1">{item.title}</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">{item.content}</p>
-                  </div>
-                ))}
-              </div>
-              <button onClick={() => setShowInstructions(false)} className="w-full py-4 mt-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest">
-                Все понятно
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InstructionsModal
+        open={showInstructions}
+        instructions={TELESTRATIONS_INSTRUCTIONS}
+        onClose={() => setShowInstructions(false)}
+        theme="orange"
+      />
     </div>
   );
 };

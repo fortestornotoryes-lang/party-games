@@ -28,7 +28,7 @@ export interface WordCategory {
 export const ALIAS_CATEGORIES: WordCategory[] = [
   {
     id: 'verbs',
-    name: 'Ну такое',
+    name: 'Средне',
     description: '',
     difficulty: 'medium',
     words: [

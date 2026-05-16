@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Palette, CheckCircle2, Home, Brush, HelpCircle, X, Undo2, Timer } from 'lucide-react';
 import { Player } from '../types';
 import { FAKE_ARTIST_INSTRUCTIONS } from '../constants/fakeArtistContent';
+import { InstructionsModal } from './InstructionsModal';
 
 interface Stroke {
   points: { x: number; y: number }[];
@@ -309,49 +310,13 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
         </div>
       </div>
 
-      {/* Instructions Modal */}
-      <AnimatePresence>
-        {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="bg-[#120a0a] border border-emerald-500/20 p-8 rounded-[2.5rem] max-w-lg w-full relative"
-            >
-              <div className="absolute top-0 right-0 p-6">
-                <button
-                  onClick={() => setShowInstructions(false)}
-                  className="p-3 bg-white/5 rounded-2xl hover:bg-emerald-500 hover:text-white transition-all"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              <div className="space-y-6">
-                <h2 className="text-3xl font-black uppercase tracking-tighter italic">Правила</h2>
-                <div className="space-y-4">
-                  {FAKE_ARTIST_INSTRUCTIONS.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                      <h4 className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-400 leading-relaxed font-medium">{item.content}</p>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowInstructions(false)}
-                  className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest"
-                >
-                  Понятно
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <InstructionsModal
+        open={showInstructions}
+        instructions={FAKE_ARTIST_INSTRUCTIONS}
+        onClose={() => setShowInstructions(false)}
+        title="Правила"
+        theme="emerald"
+      />
     </div>
   );
 };

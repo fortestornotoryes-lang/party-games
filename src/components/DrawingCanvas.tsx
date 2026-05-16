@@ -1,0 +1,224 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
+
+const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#000000'];
+const BRUSH_SIZES = [1, 2, 4, 8, 14];
+
+interface DrawingCanvasProps {
+  word: string;
+  timeLeft: number;
+  playerCount: number;
+  currentRound: number;
+  onFinish: (dataUrl: string) => void;
+}
+
+export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
+  word,
+  timeLeft,
+  playerCount,
+  currentRound,
+  onFinish,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawHistory = useRef<ImageData[]>([]);
+  const prevTimeLeftRef = useRef(timeLeft);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [brushColor, setBrushColor] = useState('#ffffff');
+  const [brushSize, setBrushSize] = useState(2);
+
+  // Auto-submit when timer transitions from >0 to 0
+  useEffect(() => {
+    if (prevTimeLeftRef.current > 0 && timeLeft === 0) {
+      onFinish(canvasRef.current?.toDataURL() || '');
+    }
+    prevTimeLeftRef.current = timeLeft;
+  }, [timeLeft, onFinish]);
+
+  // Canvas resize observer
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const updateCanvasSize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const newW = Math.round(rect.width * dpr);
+      const newH = Math.round(rect.height * dpr);
+      if (canvas.width !== newW || canvas.height !== newH) {
+        let saved: ImageData | undefined;
+        if (canvas.width > 0 && canvas.height > 0) {
+          try { saved = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch {}
+        }
+        canvas.width = newW;
+        canvas.height = newH;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#120a0a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (saved) { try { ctx.putImageData(saved, 0, 0); } catch {} }
+      }
+    };
+
+    const ro = new ResizeObserver(updateCanvasSize);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+    updateCanvasSize();
+    return () => ro.disconnect();
+  }, []);
+
+  const getCoords = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height),
+    };
+  };
+
+  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    if (canvas.width > 0 && canvas.height > 0) {
+      try {
+        drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (drawHistory.current.length > 50) drawHistory.current.shift();
+      } catch {}
+    }
+    setIsDrawing(true);
+    const { x, y } = getCoords(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.strokeStyle = brushColor;
+    ctx.lineWidth = brushSize * (window.devicePixelRatio || 1);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  };
+
+  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawing || !canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+    const { x, y } = getCoords(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const stopDrawing = () => setIsDrawing(false);
+
+  const clearCanvas = () => {
+    drawHistory.current = [];
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (ctx && canvas) {
+      ctx.fillStyle = '#120a0a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  };
+
+  const undoDrawing = () => {
+    if (drawHistory.current.length === 0 || !canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+    ctx.putImageData(drawHistory.current.pop()!, 0, 0);
+  };
+
+  const handleSubmit = () => {
+    onFinish(canvasRef.current?.toDataURL() || '');
+  };
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
+      {/* Top bar */}
+      <div className="flex-shrink-0 flex items-center justify-between px-1">
+        <div>
+          <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">✏️ Рисуешь</p>
+          <p className="text-lg font-black text-orange-400 leading-tight">{word}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}>
+            {timeLeft}с
+          </span>
+          <button onClick={undoDrawing} className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all">
+            <Undo2 className="w-5 h-5" />
+          </button>
+          <button onClick={clearCanvas} className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all">
+            <Eraser className="w-5 h-5" />
+          </button>
+          <button onClick={handleSubmit} className="p-2.5 bg-white text-black rounded-xl hover:bg-zinc-200 transition-all">
+            <CheckCircle2 className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Progress dots */}
+      <div className="flex-shrink-0 flex justify-center gap-1.5 py-0.5">
+        {Array.from({ length: playerCount }).map((_, i) => (
+          <div
+            key={i}
+            className={`h-1 rounded-full transition-all duration-300 ${
+              i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Canvas */}
+      <div className="flex-1 relative min-h-0 bg-[#120a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+        <canvas
+          ref={canvasRef}
+          onMouseDown={startDrawing}
+          onMouseUp={stopDrawing}
+          onMouseMove={draw}
+          onMouseLeave={stopDrawing}
+          onTouchStart={startDrawing}
+          onTouchEnd={stopDrawing}
+          onTouchMove={draw}
+          className="w-full h-full touch-none"
+        />
+      </div>
+
+      {/* Brush controls */}
+      <div className="flex-shrink-0 bg-black/70 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
+        <div className="flex items-center justify-center gap-1.5">
+          {BRUSH_COLORS.map(color => (
+            <button
+              key={color}
+              onClick={() => setBrushColor(color)}
+              className={`w-7 h-7 rounded-full border-2 transition-all active:scale-90 ${brushColor === color ? 'border-white scale-110' : 'border-transparent'}`}
+              style={{ backgroundColor: color }}
+            />
+          ))}
+          <div className="w-px h-5 bg-white/10 mx-0.5" />
+          <input
+            type="color"
+            value={brushColor}
+            onChange={e => setBrushColor(e.target.value)}
+            className="w-7 h-7 rounded-full cursor-pointer border-none bg-transparent p-0 overflow-hidden"
+          />
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          {BRUSH_SIZES.map(size => (
+            <button
+              key={size}
+              onClick={() => setBrushSize(size)}
+              className="flex items-center justify-center w-8 h-8"
+            >
+              <div
+                className={`rounded-full transition-all ${brushSize === size ? 'bg-orange-500' : 'bg-white/25'}`}
+                style={{ width: Math.max(2, size * 1.2), height: Math.max(2, size * 1.2) }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};

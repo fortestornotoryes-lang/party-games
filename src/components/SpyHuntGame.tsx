@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Timer, List, Info, Skull, RotateCcw, AlertTriangle, HelpCircle, X, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { Player } from '../types';
 import { LOCATIONS, SPY_HUNT_INSTRUCTIONS as INSTRUCTIONS, QUESTION_IDEAS, GAME_DURATION } from '../constants/spyHuntContent';
+import { InstructionsModal } from './InstructionsModal';
 
 interface GameProps {
   players: Player[];
@@ -11,7 +12,7 @@ interface GameProps {
   onFinish: () => void;
 }
 
-export const Game: React.FC<GameProps> = ({ players, location, onRestart, onFinish }) => {
+export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart, onFinish }) => {
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
   const [showLocations, setShowLocations] = useState(false);
   const [showRevealConfirm, setShowRevealConfirm] = useState(false);
@@ -238,49 +239,15 @@ export const Game: React.FC<GameProps> = ({ players, location, onRestart, onFini
           </motion.div>
         )}
 
-        {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y:-20 }}
-              className="bg-[#120a0a] border border-red-500/20 p-8 rounded-[2.5rem] max-w-lg w-full relative"
-            >
-              <div className="absolute top-0 right-0 p-6">
-                <button 
-                  onClick={() => setShowInstructions(false)}
-                  className="p-3 bg-white/5 rounded-2xl hover:bg-red-500 hover:text-white transition-all"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <h2 className="text-3xl font-black uppercase tracking-tighter italic">Протоколы</h2>
-                <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                  {INSTRUCTIONS.map((item, idx) => (
-                    <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5">
-                      <h4 className="text-xs font-black text-red-500 uppercase tracking-widest mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-400 leading-relaxed font-medium">{item.content}</p>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowInstructions(false)}
-                  className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest"
-                >
-                  Понятно
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
       </AnimatePresence>
+
+      <InstructionsModal
+        open={showInstructions}
+        instructions={INSTRUCTIONS}
+        onClose={() => setShowInstructions(false)}
+        title="Протоколы"
+        theme="red"
+      />
     </div>
   );
 };
