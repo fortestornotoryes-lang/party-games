@@ -1,493 +1,251 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, ShieldAlert, Users, Brain } from 'lucide-react';
-import { JUST_ONE_INSTRUCTIONS, JUST_ONE_WORDS } from '../../constants/justOneContent';
-import { InstructionsModal } from '../../components/InstructionsModal';
+import { Lightbulb, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { storageService } from '../../services/storageService';
+import { feedbackService } from '../../services/feedbackService';
+import { JUST_ONE_WORDS } from '../../constants/justOneContent';
+import { GameHeader } from '../../components/GameHeader';
+import { PrimaryButton, GameCard } from '../../components/UI';
 
 interface JustOneGameProps {
   playerNames: string[];
   onBack: () => void;
 }
 
-interface Clue {
-  author: string;
-  word: string;
-  isDuplicate: boolean;
-}
-
-interface RoundRecord {
-  word: string;
-  validClues: string[];
-  guess: string;
-  isCorrect: boolean;
-  isSkipped: boolean;
-}
-
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
-  const [guesserIndex, setGuesserIndex] = useState(0);
-  const [phase, setPhase] = useState<'setup_rounds' | 'start' | 'clues' | 'reveal_clues' | 'guess_result' | 'game_over'>('setup_rounds');
-  const [maxRounds, setMaxRounds] = useState(13);
-  const [secretWord, setSecretWord] = useState('');
-  const [clues, setClues] = useState<Clue[]>([]);
-  const [currentClueGiverIndex, setCurrentClueGiverIndex] = useState(0);
-  const [currentInputValue, setCurrentInputValue] = useState('');
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [guesserIdx, setGuesserIdx] = useState(0);
+  const [word, setWord] = useState('');
+  const [hints, setHints] = useState<{ [playerName: string]: string }>({});
+  const [phase, setPhase] = useState<'pass' | 'hinting' | 'guessing' | 'result'>('pass');
   const [guess, setGuess] = useState('');
-  const [score, setScore] = useState(0);
-  const [totalRounds, setTotalRounds] = useState(0);
-  const [roundHistory, setRoundHistory] = useState<RoundRecord[]>([]);
-  const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
-  const [wasCurrentSkipped, setWasCurrentSkipped] = useState(false);
-  const [isSecretWordVisible, setIsSecretWordVisible] = useState(false);
-
-  const clueGiverIndices = playerNames
-    .map((_, i) => i)
-    .filter(i => i !== guesserIndex);
-
-  const guesser = playerNames[guesserIndex];
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [visibleHints, setVisibleHints] = useState<string[]>([]);
+  const [localHints, setLocalHints] = useState<{ [playerName: string]: string }>({});
 
   useEffect(() => {
-    if (phase === 'start') {
-      setSecretWord(JUST_ONE_WORDS[Math.floor(Math.random() * JUST_ONE_WORDS.length)]);
-      setClues([]);
-      setCurrentClueGiverIndex(0);
-      setGuess('');
-      setIsSecretWordVisible(false);
+    generateNewWord();
+  }, [guesserIdx]);
+
+  const generateNewWord = () => {
+    const custom = storageService.getCustomWords('just_one');
+    const used = storageService.getUsedWords('just_one');
+    const allWords = [...JUST_ONE_WORDS, ...custom];
+    
+    let available = allWords.filter(w => !used.includes(w));
+    
+    if (available.length === 0) {
+      storageService.resetUsedWords('just_one');
+      available = allWords;
     }
-  }, [phase, guesserIndex]);
+    
+    const newWord = available[Math.floor(Math.random() * available.length)];
+    setWord(newWord);
+    storageService.markWordAsUsed('just_one', newWord);
 
-  const handleClueSubmit = () => {
-    if (!currentInputValue.trim()) return;
+    setHints({});
+    setLocalHints({});
+    setGuess('');
+    setPhase('pass');
+  };
 
-    const newClue: Clue = {
-      author: playerNames[clueGiverIndices[currentClueGiverIndex]],
-      word: currentInputValue.trim().toLowerCase(),
-      isDuplicate: false
-    };
+  const submitHint = (player: string, hint: string) => {
+    if (!hint.trim()) return;
+    setHints(prev => ({ ...prev, [player]: hint.trim().toLowerCase() }));
+  };
 
-    const newClues = [...clues, newClue];
-    setClues(newClues);
-    setCurrentInputValue('');
+  const startGuessing = () => {
+    const hintCounts: { [hint: string]: number } = {};
+    const hintValues = Object.values(hints) as string[];
+    hintValues.forEach(h => {
+      hintCounts[h] = (hintCounts[h] || 0) + 1;
+    });
+    const unique = hintValues.filter(h => hintCounts[h] === 1);
+    setVisibleHints(unique);
+    setPhase('guessing');
+  };
 
-    if (currentClueGiverIndex === clueGiverIndices.length - 1) {
-      // Process duplicates
-      const processedClues = newClues.map(clue => {
-        const isDup = newClues.some(other => other !== clue && other.word === clue.word);
-        return { ...clue, isDuplicate: isDup };
-      });
-      setClues(processedClues);
-      setPhase('reveal_clues');
+  const handleGuess = () => {
+    const correct = guess.trim().toLowerCase() === word.toLowerCase();
+    setIsCorrect(correct);
+    
+    const settings = storageService.getSettings();
+
+    if (correct) {
+      feedbackService.playSound('success');
+      feedbackService.vibrate([50, 30, 50]);
+      if (settings.visualEffects) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#eab308', '#ffffff', '#ffffff']
+        });
+      }
     } else {
-      setCurrentClueGiverIndex(prev => prev + 1);
+      feedbackService.playSound('error');
+      feedbackService.vibrate(100);
     }
-  };
-
-  const handleGuessSubmit = () => {
-    const isCorrect = guess.toLowerCase().trim() === secretWord.toLowerCase().trim();
-    setTotalRounds(prev => prev + 1);
-    if (isCorrect) setScore(prev => prev + 1);
-    setIsCurrentCorrect(isCorrect);
-    setWasCurrentSkipped(false);
-    setRoundHistory(prev => [...prev, {
-      word: secretWord,
-      validClues: clues.filter(c => !c.isDuplicate).map(c => c.word),
-      guess,
-      isCorrect,
-      isSkipped: false,
-    }]);
-    setPhase('guess_result');
-  };
-
-  const handleSkip = () => {
-    setTotalRounds(prev => prev + 1);
-    setIsCurrentCorrect(false);
-    setWasCurrentSkipped(true);
-    setRoundHistory(prev => [...prev, {
-      word: secretWord,
-      validClues: clues.filter(c => !c.isDuplicate).map(c => c.word),
-      guess: '',
-      isCorrect: false,
-      isSkipped: true,
-    }]);
-    setPhase('guess_result');
+    setPhase('result');
   };
 
   const nextRound = () => {
-    if (maxRounds !== -1 && totalRounds >= maxRounds) {
-      setPhase('game_over');
-    } else {
-      setGuesserIndex((guesserIndex + 1) % playerNames.length);
-      setPhase('start');
-    }
+    setGuesserIdx((guesserIdx + 1) % playerNames.length);
   };
 
-  const getRank = () => {
-    const ratio = score / totalRounds;
-    if (ratio >= 0.9) return "Мастера Телепатии";
-    if (ratio >= 0.7) return "Профессиональные Намекатели";
-    if (ratio >= 0.5) return "Крепкая Команда";
-    return "Новички в Мире Намеков";
-  };
-
-  const validClues = clues.filter(c => !c.isDuplicate);
+  const guesser = playerNames[guesserIdx];
+  const hinters = playerNames.filter((_, i) => i !== guesserIdx);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#050505] text-[#e5e7eb] font-sans selection:bg-emerald-500/30 overflow-hidden">
-      {/* Header */}
-      <div className="p-4 sm:p-6 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between z-20">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-            <Brain className="w-5 h-5 text-emerald-500" />
-          </div>
-          <div>
-            <h2 className="text-lg font-black uppercase italic tracking-tighter leading-none">Just <span className="text-emerald-500">One</span></h2>
-            <p className="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-1">
-              Кооператив // Счёт: {score}/{maxRounds === -1 ? totalRounds : maxRounds}
-              {maxRounds !== -1 && ` [${totalRounds}/${maxRounds}]`}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button onClick={() => setShowInstructions(true)} className="p-2 bg-white/5 rounded-lg text-gray-500 hover:text-white transition-all">
-            <HelpCircle className="w-5 h-5" />
-          </button>
-          <button onClick={onBack} className="p-2 bg-white/5 rounded-lg text-gray-500 hover:text-white transition-all">
-            <Home className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col h-screen bg-[#07050a]">
+      <GameHeader 
+        title="JUST ONE" 
+        subtitle="Пойми намек" 
+        icon={Lightbulb} 
+        themeColor="border-yellow-500/50 text-yellow-500"
+        onBack={onBack}
+      />
 
-      <div className="flex-1 overflow-y-auto relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#064e3b,transparent_50%)] opacity-20" />
-        
+      <div className="flex-1 overflow-y-auto px-6 py-8">
         <AnimatePresence mode="wait">
-          {phase === 'setup_rounds' && (
-            <motion.div
-              key="setup_rounds"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
-              className="h-full flex flex-col items-center justify-center p-8 space-y-12 relative z-10"
-            >
+          {phase === 'pass' && (
+            <motion.div key="pass" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center space-y-10 text-center">
+               <div className="space-y-4">
+                  <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Новый раунд</p>
+                  <h3 className="text-xl font-bold uppercase tracking-widest text-white/60">Отгадывающий:</h3>
+                  <h2 className="text-5xl font-black italic uppercase text-yellow-500 tracking-tighter leading-none">{guesser}</h2>
+               </div>
+               <div className="p-8 bg-yellow-500/5 border-2 border-yellow-500/10 rounded-[40px] text-sm text-gray-500 max-w-xs transition-all">
+                  {guesser}, передай телефон остальным игрокам. Только вы должны видеть загаданное слово!
+               </div>
+               <PrimaryButton onClick={() => setPhase('hinting')} className="bg-yellow-500">МЫ ВЗЯЛИ ТЕЛЕФОН</PrimaryButton>
+            </motion.div>
+          )}
+
+          {phase === 'hinting' && (
+            <motion.div key="hinting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
               <div className="text-center space-y-4">
-                <h3 className="text-4xl font-black italic tracking-tighter text-white uppercase">Сколько слов разгадаем?</h3>
-                <p className="text-gray-500 max-w-xs mx-auto">Выберите количество раундов для этой партии</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
-                {[5, 10, 13, -1].map((val) => (
-                  <button
-                    key={val}
-                    onClick={() => {
-                      setMaxRounds(val);
-                      setPhase('start');
-                    }}
-                    className={`p-6 rounded-[2rem] border transition-all flex flex-col items-center justify-center space-y-2 ${maxRounds === val ? 'bg-emerald-500 border-emerald-500 text-black scale-105 shadow-xl shadow-emerald-500/20' : 'bg-white/5 border-white/10 text-white hover:bg-white/10'}`}
-                  >
-                    <span className="text-3xl font-black">{val === -1 ? '∞' : val}</span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-                      {val === -1 ? 'Бесконечно' : 'Раундов'}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {phase === 'start' && (
-            <motion.div 
-              key="start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="h-full flex flex-col items-center justify-center p-8 space-y-12 relative z-10"
-            >
-              <div className="text-center space-y-6">
-                <div className="inline-block px-4 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Ведущий</span>
-                </div>
-                <h3 className="text-5xl font-black italic tracking-tighter text-white">{guesser}</h3>
-                <p className="text-gray-400 max-w-xs mx-auto">Отдай телефон остальным. Ты не должен видеть секретное слово!</p>
-              </div>
-
-              <div className="w-full max-w-sm p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center space-y-4">
-                <div className="w-16 h-1 bg-emerald-500/30 rounded-full mx-auto" />
-                <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest leading-none">Сложите телефон экраном вниз</p>
-                <div
-                  className="relative overflow-hidden py-4 cursor-pointer select-none"
-                  onClick={() => setIsSecretWordVisible(v => !v)}
-                >
-                  <h4 className={`text-3xl font-black text-emerald-400 transition-all duration-500 ${isSecretWordVisible ? 'blur-0' : 'blur-md'}`}>{secretWord}</h4>
-                  <p className={`absolute inset-0 flex items-center justify-center text-xs font-black uppercase text-white/20 transition-opacity ${isSecretWordVisible ? 'opacity-0' : 'opacity-100'}`}>Нажмите, чтобы увидеть</p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setPhase('clues')}
-                className="w-full max-w-sm py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
-              >
-                <span>Мы готовы подсказывать</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </motion.div>
-          )}
-
-          {phase === 'clues' && (
-            <motion.div 
-              key="clues"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="h-full flex flex-col p-6 space-y-8 relative z-10"
-            >
-              <div className="flex justify-between items-end">
-                <div className="space-y-1">
-                  <p className="text-[10px] text-emerald-500 uppercase font-black tracking-widest">Подсказывает</p>
-                  <h3 className="text-3xl font-black italic">{playerNames[clueGiverIndices[currentClueGiverIndex]]}</h3>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest">Слово</p>
-                  <p className="text-xl font-bold text-white uppercase">{secretWord}</p>
-                </div>
-              </div>
-
-              <div className="flex-1 flex flex-col items-center justify-center space-y-8">
-                 <div className="w-full max-w-sm space-y-4">
-                    <p className="text-center text-gray-500 text-sm font-medium">Напиши ОДНО слово, которое поможет <span className="text-white font-bold">{guesser}</span> угадать секретное слово.</p>
-                    <input 
-                      type="text"
-                      autoFocus
-                      value={currentInputValue}
-                      onChange={(e) => setCurrentInputValue(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleClueSubmit()}
-                      placeholder="Твой вариант..."
-                      className="w-full p-6 bg-white/5 border border-white/10 rounded-3xl text-2xl font-black text-center placeholder:text-gray-800 focus:border-emerald-500 focus:bg-emerald-500/5 transition-all outline-none"
-                    />
-                    <button
-                      disabled={!currentInputValue.trim()}
-                      onClick={handleClueSubmit}
-                      className="w-full py-6 bg-emerald-500 text-black rounded-3xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 disabled:opacity-20 transition-all shadow-xl"
-                    >
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span>Подтвердить</span>
-                    </button>
-                    
-                    <div className="flex justify-center space-x-2 pt-4">
-                      {clueGiverIndices.map((_, i) => (
-                        <div 
-                          key={i} 
-                          className={`h-1.5 rounded-full transition-all duration-300 ${i === currentClueGiverIndex ? 'w-8 bg-emerald-500' : i < currentClueGiverIndex ? 'w-4 bg-emerald-500/40' : 'w-4 bg-white/10'}`}
-                        />
-                      ))}
-                    </div>
+                 <div className="space-y-1">
+                    <p className="text-[10px] text-yellow-500 font-black uppercase tracking-widest">Загаданное слово</p>
+                    <h2 className="text-5xl font-black italic uppercase text-white tracking-tighter">{word}</h2>
                  </div>
               </div>
+
+              <GameCard className="text-center bg-white/[0.02]">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Отгадывает</p>
+                <h3 className="text-2xl font-black italic uppercase text-yellow-500">{guesser}</h3>
+              </GameCard>
+
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                   <h4 className="text-sm font-bold uppercase tracking-widest text-white/60">Подсказки:</h4>
+                   <span className="text-[10px] font-black px-3 py-1 bg-white/5 rounded-full text-white/50">{Object.keys(hints).length}/{hinters.length}</span>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-3">
+                  {hinters.map(player => (
+                    <div key={player} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-4">
+                      <span className="font-bold shrink-0 min-w-[80px]">{player}</span>
+                      {hints[player] ? (
+                        <div className="flex items-center gap-2 text-emerald-500">
+                           <span className="text-sm font-black italic uppercase italic tracking-tighter opacity-70">{hints[player]}</span>
+                           <CheckCircle className="w-5 h-5" />
+                        </div>
+                      ) : (
+                        <div className="flex flex-1 items-center gap-2">
+                           <input 
+                              type="text" 
+                              value={localHints[player] || ''}
+                              onChange={(e) => setLocalHints(prev => ({ ...prev, [player]: e.target.value }))}
+                              placeholder="Твой намек..."
+                              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-yellow-500/50 outline-none transition-colors"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') submitHint(player, localHints[player] || '');
+                              }}
+                           />
+                           <button 
+                             onClick={() => submitHint(player, localHints[player] || '')}
+                             className="w-10 h-10 shrink-0 bg-yellow-500 text-black rounded-xl flex items-center justify-center active:scale-95 transition-transform"
+                           >
+                              <CheckCircle className="w-5 h-5" />
+                           </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {Object.keys(hints).length === hinters.length && (
+                <PrimaryButton onClick={startGuessing}>
+                  ГОТОВО! ПОКАЗАТЬ {guesser.toUpperCase()}
+                </PrimaryButton>
+              )}
             </motion.div>
           )}
 
-          {phase === 'reveal_clues' && (
-            <motion.div 
-              key="reveal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="h-full flex flex-col p-6 space-y-12 relative z-10"
-            >
-              <div className="text-center space-y-2">
-                <div className="inline-block px-4 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-2">
-                  <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Момент истины</span>
-                </div>
-                <h3 className="text-4xl font-black italic uppercase tracking-tighter text-white">{guesser}, твой выход!</h3>
-                <p className="text-gray-500">Вот что осталось после удаления дубликатов</p>
+          {phase === 'guessing' && (
+            <motion.div key="guessing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 text-center">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-black italic uppercase italic tracking-tighter">{guesser}, твой черед!</h3>
+                <p className="text-gray-400 font-medium">Используй эти подсказки, чтобы угадать слово</p>
               </div>
 
-              <div className="flex-1 flex flex-col space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {clues.map((clue, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className={`p-6 rounded-3xl border flex items-center justify-between relative overflow-hidden ${clue.isDuplicate ? 'bg-red-500/5 border-red-500/20' : 'bg-white/5 border-white/10 shadow-lg'}`}
-                    >
-                      {clue.isDuplicate ? (
-                        <>
-                          <div className="absolute inset-0 bg-red-500/5 backdrop-blur-[2px]" />
-                          <p className="text-xl font-bold line-through text-red-500/40 relative z-10">{clue.word}</p>
-                          <ShieldAlert className="w-5 h-5 text-red-500/40 relative z-10" />
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-2xl font-black uppercase text-white relative z-10">{clue.word}</p>
-                          <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 relative z-10">
-                            <span className="text-[8px] font-black text-emerald-500">{clue.author[0]}</span>
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  ))}
-                  {validClues.length === 0 && (
-                     <div className="col-span-full p-12 text-center bg-red-500/10 rounded-[3rem] border border-red-500/20 space-y-4">
-                        <ShieldAlert className="w-12 h-12 text-red-500 mx-auto opacity-50" />
-                        <h4 className="text-xl font-black text-red-500 uppercase">Ой! Все подсказки удалены</h4>
-                        <p className="text-gray-500 text-sm">Вы написали слишком много одинаковых слов. <span className="text-white">{guesser}</span> придется гадать вслепую!</p>
-                     </div>
-                  )}
-                </div>
+              <div className="flex flex-wrap justify-center gap-4">
+                {visibleHints.map((hint, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="px-8 py-5 bg-white/5 border border-white/10 rounded-[30px] shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+                  >
+                    <span className="text-2xl font-black italic uppercase tracking-tight">{hint}</span>
+                  </motion.div>
+                ))}
               </div>
 
-              <div className="space-y-3">
-                <input
+              <div className="pt-8 space-y-4">
+                <input 
                   type="text"
                   value={guess}
                   onChange={(e) => setGuess(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && guess.trim() && handleGuessSubmit()}
-                  placeholder="Твой ответ..."
-                  className="w-full p-6 bg-white/5 border border-white/10 rounded-3xl text-2xl font-black text-center focus:border-emerald-500 transition-all outline-none"
+                  placeholder="Твоя догадка..."
+                  className="w-full py-6 bg-white/5 border border-white/10 rounded-3xl text-center text-3xl font-black italic uppercase outline-none focus:border-yellow-500/50 transition-all"
                 />
-                <button
-                  disabled={!guess.trim()}
-                  onClick={handleGuessSubmit}
-                  className="w-full py-6 bg-white text-black rounded-3xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 shadow-2xl active:scale-95 transition-transform disabled:opacity-30"
-                >
-                  <MessageSquare className="w-5 h-5" />
-                  <span>Ответить</span>
-                </button>
-                <button
-                  onClick={handleSkip}
-                  className="w-full py-4 bg-white/5 border border-white/10 text-gray-500 rounded-3xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
-                >
-                  <span className="text-xs">Пропустить раунд</span>
-                </button>
+                <PrimaryButton onClick={handleGuess} disabled={!guess} className="bg-yellow-500">
+                  ОТВЕТИТЬ
+                </PrimaryButton>
               </div>
             </motion.div>
           )}
 
-          {phase === 'guess_result' && (
-            <motion.div 
-              key="result"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="h-full flex flex-col items-center justify-center p-8 space-y-12 relative z-10"
-            >
-              <div className="text-center space-y-4">
-                {wasCurrentSkipped ? (
+          {phase === 'result' && (
+            <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-10">
+              <div className="space-y-4">
+                {isCorrect ? (
                   <>
-                    <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <span className="text-4xl font-black text-white">—</span>
-                    </div>
-                    <h3 className="text-5xl font-black uppercase italic tracking-tighter text-gray-400">ПРОПУСК</h3>
-                    <p className="text-gray-500">Слово пропущено без штрафа</p>
-                  </>
-                ) : isCurrentCorrect ? (
-                  <>
-                    <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_50px_rgba(16,185,129,0.3)]">
-                      <CheckCircle2 className="w-12 h-12 text-black" />
-                    </div>
-                    <h3 className="text-5xl font-black uppercase italic tracking-tighter text-emerald-500">В ТОЧКУ!</h3>
-                    <p className="text-gray-400">Великолепная работа команды</p>
+                    <CheckCircle className="w-24 h-24 text-emerald-500 mx-auto" />
+                    <h2 className="text-6xl font-black italic uppercase tracking-tighter text-emerald-500">ПРАВИЛЬНО!</h2>
                   </>
                 ) : (
                   <>
-                    <div className="w-24 h-24 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_50px_rgba(239,68,68,0.3)]">
-                      <X className="w-12 h-12 text-black" />
-                    </div>
-                    <h3 className="text-5xl font-black uppercase italic tracking-tighter text-red-500">МИМО...</h3>
-                    <p className="text-gray-400">Было близко, но нет</p>
+                    <XCircle className="w-24 h-24 text-red-500 mx-auto" />
+                    <h2 className="text-6xl font-black italic uppercase tracking-tighter text-red-500">ОШИБКА</h2>
                   </>
                 )}
+                <p className="text-xl font-bold uppercase tracking-widest text-white/40">Загаданное слово:</p>
+                <div className="text-5xl font-black italic uppercase tracking-tighter">{word}</div>
+                {!isCorrect && <p className="text-xl font-bold uppercase tracking-widest text-red-400/60">Твой ответ: {guess}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
-                <div className="p-6 bg-white/5 rounded-3xl border border-white/10 text-center">
-                  <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Слово было</p>
-                  <p className="text-xl font-black text-white uppercase">{secretWord}</p>
-                </div>
-                <div className="p-6 bg-white/5 rounded-3xl border border-white/10 text-center">
-                  <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Ваш ответ</p>
-                  <p className="text-xl font-black text-white uppercase">{wasCurrentSkipped ? '—' : guess || '...'}</p>
-                </div>
-              </div>
-
-              <button
-                onClick={nextRound}
-                className="w-full max-w-sm py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
-              >
-                <RotateCcw className="w-5 h-5" />
-                <span>{maxRounds !== -1 && totalRounds >= maxRounds ? "Завершить игру" : "Следующий раунд"}</span>
-              </button>
-            </motion.div>
-          )}
-
-          {phase === 'game_over' && (
-            <motion.div
-              key="game_over"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="h-full flex flex-col items-center justify-center p-6 space-y-6 relative z-10 overflow-y-auto"
-            >
-               <div className="text-center space-y-4">
-                <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
-                  <Users className="w-10 h-10 text-emerald-500" />
-                </div>
-                <p className="text-[10px] text-emerald-500 uppercase font-black tracking-[0.3em]">Игра завершена</p>
-                <h3 className="text-5xl font-black italic tracking-tighter text-white uppercase">{score} / {totalRounds}</h3>
-                <div className="px-6 py-2 bg-white/5 border border-white/10 rounded-full inline-block">
-                  <p className="text-sm font-bold text-gray-400">{getRank()}</p>
-                </div>
-              </div>
-
-              {roundHistory.length > 0 && (
-                <div className="w-full max-w-sm space-y-2 text-left">
-                  <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest px-1">История раундов</p>
-                  <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
-                    {roundHistory.map((r, idx) => (
-                      <div key={idx} className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl border text-sm ${r.isCorrect ? 'bg-emerald-500/5 border-emerald-500/20' : r.isSkipped ? 'bg-white/5 border-white/5' : 'bg-red-500/5 border-red-500/10'}`}>
-                        <span className={`font-black text-base ${r.isCorrect ? 'text-emerald-500' : r.isSkipped ? 'text-gray-600' : 'text-red-500/60'}`}>
-                          {r.isCorrect ? '✓' : r.isSkipped ? '—' : '✗'}
-                        </span>
-                        <span className={`font-black flex-1 ${r.isCorrect ? 'text-white' : 'text-gray-500'}`}>{r.word}</span>
-                        {!r.isSkipped && r.validClues.length > 0 && (
-                          <span className="text-[9px] text-gray-700 italic truncate max-w-[80px]">{r.validClues.join(', ')}</span>
-                        )}
-                        {r.isSkipped && <span className="text-[10px] text-gray-700">пропуск</span>}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex flex-col space-y-3 w-full max-w-sm">
-                <button
-                  onClick={() => {
-                    setScore(0);
-                    setTotalRounds(0);
-                    setRoundHistory([]);
-                    setPhase('setup_rounds');
-                  }}
-                  className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
-                >
-                  <RotateCcw className="w-5 h-5" />
-                  <span>Сыграть еще раз</span>
-                </button>
-                <button
-                  onClick={onBack}
-                  className="w-full py-6 bg-white/5 text-white/50 border border-white/10 rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 active:scale-95 transition-transform"
-                >
-                  <Home className="w-5 h-5" />
-                  <span>В меню</span>
-                </button>
-              </div>
+              <PrimaryButton onClick={nextRound} icon={RotateCcw}>
+                СЛЕДУЮЩИЙ РАУНД
+              </PrimaryButton>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      <InstructionsModal
-        open={showInstructions}
-        instructions={JUST_ONE_INSTRUCTIONS}
-        onClose={() => setShowInstructions(false)}
-        theme="emerald"
-      />
     </div>
   );
 };

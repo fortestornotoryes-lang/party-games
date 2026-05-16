@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Reorder, useDragControls } from 'motion/react';
-import { UserPlus, UserMinus, Play, HelpCircle, X, ChevronRight, ArrowLeft, LucideIcon, GripVertical, Shuffle } from 'lucide-react';
+import { UserPlus, UserMinus, Play, HelpCircle, X, ChevronRight, ArrowLeft, LucideIcon, GripVertical, Shuffle, Users } from 'lucide-react';
+import { SectionLabel, Badge, IconButton, TextInput, PrimaryButton,PageWrapper ,Typography, ParallaxBackground } from './UI';
+import { InstructionsModal } from './InstructionsModal';
+import { storageService } from '../services/storageService';
+import { useGameSettings } from '../contexts/GameSettingsContext';
+import { GameTheme } from '../types';
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;
@@ -8,74 +13,111 @@ interface SetupProps {
     title: string;
     subtitle: string;
     icon: LucideIcon;
-    themeColor: 'red' | 'emerald' | 'sky' | 'orange' | 'purple';
+    themeColor: GameTheme;
     playerPlaceholder: string;
     addPlayerLabel: string;
     instructions: { title: string; content: string }[];
+    description?: string;
     minPlayers?: number;
     maxPlayers?: number;
+    children?: React.ReactNode;
 }
 
-const colorConfig = {
+const colorConfig: Record<GameTheme, {
+    bg: string;
+    border: string;
+    text: string;
+    button: string;
+    shadow: string;
+    gradient: string;
+    focus: string;
+    addHover: string;
+    closeHover: string;
+    indexBg: string;
+}> = {
     red: {
-        bg: 'bg-red-500/10',
-        border: 'border-red-500/30',
-        text: 'text-red-500',
-        button: 'bg-red-600 hover:bg-red-500 active:bg-red-700',
-        shadow: 'shadow-red-900/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,#450a0a,transparent_50%)]',
-        focus: 'focus:border-red-500/50',
-        addHover: 'hover:border-red-500/30 hover:text-red-400 hover:bg-red-500/10',
-        closeHover: 'hover:bg-red-500/10 hover:text-red-500',
-        indexBg: 'bg-red-500/15 text-red-400',
+        bg: 'bg-premium-red/10',
+        border: 'border-premium-red/30',
+        text: 'text-premium-red',
+        button: 'bg-premium-red hover:bg-[#ff4d6a] active:scale-95 shadow-[0_20px_50px_rgba(255,46,77,0.3)]',
+        shadow: 'shadow-premium-red/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,46,77,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-red/50',
+        addHover: 'hover:bg-premium-red/5 hover:text-white/40 hover:border-premium-red/20',
+        closeHover: 'hover:bg-premium-red/10 hover:text-premium-red',
+        indexBg: 'bg-premium-red/20 text-premium-red border-premium-red/30',
     },
     emerald: {
-        bg: 'bg-emerald-500/10',
-        border: 'border-emerald-500/30',
-        text: 'text-emerald-500',
-        button: 'bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700',
-        shadow: 'shadow-emerald-900/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,#064e3b,transparent_50%)]',
-        focus: 'focus:border-emerald-500/50',
-        addHover: 'hover:border-emerald-500/30 hover:text-emerald-400 hover:bg-emerald-500/10',
-        closeHover: 'hover:bg-emerald-500/10 hover:text-emerald-500',
-        indexBg: 'bg-emerald-500/15 text-emerald-400',
+        bg: 'bg-premium-green/10',
+        border: 'border-premium-green/30',
+        text: 'text-premium-green',
+        button: 'bg-premium-green hover:bg-[#1ae599] active:scale-95 shadow-[0_20px_50px_rgba(0,216,138,0.3)]',
+        shadow: 'shadow-premium-green/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(0,216,138,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-green/50',
+        addHover: 'hover:bg-premium-green/5 hover:text-white/40 hover:border-premium-green/20',
+        closeHover: 'hover:bg-premium-green/10 hover:text-premium-green',
+        indexBg: 'bg-premium-green/20 text-premium-green border-premium-green/30',
     },
     sky: {
-        bg: 'bg-sky-500/10',
-        border: 'border-sky-500/30',
-        text: 'text-sky-500',
-        button: 'bg-sky-600 hover:bg-sky-500 active:bg-sky-700',
-        shadow: 'shadow-sky-900/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,#0c4a6e,transparent_50%)]',
-        focus: 'focus:border-sky-500/50',
-        addHover: 'hover:border-sky-500/30 hover:text-sky-400 hover:bg-sky-500/10',
-        closeHover: 'hover:bg-sky-500/10 hover:text-sky-500',
-        indexBg: 'bg-sky-500/15 text-sky-400',
+        bg: 'bg-premium-sky/10',
+        border: 'border-premium-sky/30',
+        text: 'text-premium-sky',
+        button: 'bg-premium-sky hover:bg-[#3ac1ff] active:scale-95 shadow-[0_20px_50px_rgba(31,182,255,0.3)]',
+        shadow: 'shadow-premium-sky/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(31,182,255,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-sky/50',
+        addHover: 'hover:bg-premium-sky/5 hover:text-white/40 hover:border-premium-sky/20',
+        closeHover: 'hover:bg-premium-sky/10 hover:text-premium-sky',
+        indexBg: 'bg-premium-sky/20 text-premium-sky border-premium-sky/30',
     },
     orange: {
-        bg: 'bg-orange-500/10',
-        border: 'border-orange-500/30',
-        text: 'text-orange-500',
-        button: 'bg-orange-600 hover:bg-orange-500 active:bg-orange-700',
-        shadow: 'shadow-orange-900/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,#7c2d12,transparent_50%)]',
-        focus: 'focus:border-orange-500/50',
-        addHover: 'hover:border-orange-500/30 hover:text-orange-400 hover:bg-orange-500/10',
-        closeHover: 'hover:bg-orange-500/10 hover:text-orange-500',
-        indexBg: 'bg-orange-500/15 text-orange-400',
+        bg: 'bg-premium-orange/10',
+        border: 'border-premium-orange/30',
+        text: 'text-premium-orange',
+        button: 'bg-premium-orange hover:bg-[#ffa14d] active:scale-95 shadow-[0_20px_50px_rgba(255,138,31,0.3)]',
+        shadow: 'shadow-premium-orange/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,138,31,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-orange/50',
+        addHover: 'hover:bg-premium-orange/5 hover:text-white/40 hover:border-premium-orange/20',
+        closeHover: 'hover:bg-premium-orange/10 hover:text-premium-orange',
+        indexBg: 'bg-premium-orange/20 text-premium-orange border-premium-orange/30',
     },
     purple: {
-        bg: 'bg-purple-500/10',
-        border: 'border-purple-500/30',
-        text: 'text-purple-500',
-        button: 'bg-purple-600 hover:bg-purple-500 active:bg-purple-700',
-        shadow: 'shadow-purple-900/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,#581c87,transparent_50%)]',
-        focus: 'focus:border-purple-500/50',
-        addHover: 'hover:border-purple-500/30 hover:text-purple-400 hover:bg-purple-500/10',
-        closeHover: 'hover:bg-purple-500/10 hover:text-purple-500',
-        indexBg: 'bg-purple-500/15 text-purple-400',
+        bg: 'bg-premium-purple/10',
+        border: 'border-premium-purple/30',
+        text: 'text-premium-purple',
+        button: 'bg-premium-purple hover:bg-[#d499ff] active:scale-95 shadow-[0_20px_50px_rgba(199,123,255,0.3)]',
+        shadow: 'shadow-premium-purple/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(199,123,255,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-purple/50',
+        addHover: 'hover:bg-premium-purple/5 hover:text-white/40 hover:border-premium-purple/20',
+        closeHover: 'hover:bg-premium-purple/10 hover:text-premium-purple',
+        indexBg: 'bg-premium-purple/20 text-premium-purple border-premium-purple/30',
+    },
+    yellow: {
+        bg: 'bg-premium-yellow/10',
+        border: 'border-premium-yellow/30',
+        text: 'text-premium-yellow',
+        button: 'bg-premium-yellow hover:bg-[#ffd14d] active:scale-95 shadow-[0_20px_50px_rgba(255,216,77,0.3)]',
+        shadow: 'shadow-premium-yellow/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,216,77,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-yellow/50',
+        addHover: 'hover:bg-premium-yellow/5 hover:text-white/40 hover:border-premium-yellow/20',
+        closeHover: 'hover:bg-premium-yellow/10 hover:text-premium-yellow',
+        indexBg: 'bg-premium-yellow/20 text-premium-yellow border-premium-yellow/30',
+    },
+    blue: {
+        bg: 'bg-premium-blue/10',
+        border: 'border-premium-blue/30',
+        text: 'text-premium-blue',
+        button: 'bg-premium-blue hover:bg-[#6699ff] active:scale-95 shadow-[0_20px_50px_rgba(63,123,255,0.3)]',
+        shadow: 'shadow-premium-blue/40',
+        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(63,123,255,0.15),transparent_70%)]',
+        focus: 'focus:border-premium-blue/50',
+        addHover: 'hover:bg-premium-blue/5 hover:text-white/40 hover:border-premium-blue/20',
+        closeHover: 'hover:bg-premium-blue/10 hover:text-premium-blue',
+        indexBg: 'bg-premium-blue/20 text-premium-blue border-premium-blue/30',
     },
 };
 
@@ -110,277 +152,195 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
             dragListener={false}
             dragControls={dragControls}
             layout="position"
-            className="flex items-center gap-2 list-none"
-            whileDrag={{ scale: 1.02, zIndex: 10, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+            className="flex items-center gap-4 list-none group"
+            whileDrag={{ scale: 1.02, zIndex: 50, rotate: -1 }}
         >
-            {/* Drag handle */}
-            <div
-                onPointerDown={e => dragControls.start(e)}
-                className="w-8 h-11 shrink-0 flex items-center justify-center text-gray-700 hover:text-gray-500 cursor-grab active:cursor-grabbing touch-none select-none"
+            <div 
+                onPointerDown={e => dragControls.start(e)} 
+                className="w-5 h-14 shrink-0 flex items-center justify-center text-white/10 hover:text-white/80 cursor-grab active:cursor-grabbing touch-none select-none"
             >
-                <GripVertical className="w-4 h-4" />
+                <GripVertical className="w-5 h-5" />
+            </div>
+            
+            <div className={`w-9 h-9 shrink-0 rounded-premium-sm border flex items-center justify-center text-xs font-black italic select-none shadow-xl ${config.indexBg}`}>
+                {index + 1}
             </div>
 
-            {/* Index */}
-            <span className={`w-6 h-6 shrink-0 rounded-lg flex items-center justify-center text-[10px] font-black select-none ${config.indexBg}`}>
-                {index + 1}
-            </span>
+            <div className="flex-1 relative">
+                <TextInput
+                    value={player.name}
+                    onChange={e => onChange(player.id, e.target.value)}
+                    autoComplete="off"
+                    className={`h-14 px-6 glass-card rounded-premium-md w-full text-base font-semibold placeholder:text-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-white/20 ${config.focus}`}
+                    placeholder={`${placeholder} ${index + 1}`}
+                />
+            </div>
 
-            {/* Input */}
-            <input
-                type="text"
-                value={player.name}
-                onChange={e => onChange(player.id, e.target.value)}
-                autoComplete="off"
-                className={`flex-1 min-w-0 bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 focus:outline-none ${config.focus} transition-colors text-base font-medium placeholder:text-gray-700`}
-                placeholder={`${placeholder} ${index + 1}`}
-            />
-
-            {/* Remove */}
-            <button
-                onClick={() => onRemove(player.id)}
+            <button 
+                onClick={() => onRemove(player.id)} 
                 disabled={!canRemove}
-                className={`w-11 h-11 shrink-0 rounded-2xl flex items-center justify-center transition-all ${
-                    canRemove
-                        ? `${config.bg} ${config.text} active:bg-red-500 active:text-white`
-                        : 'opacity-0 pointer-events-none'
-                }`}
+                className={`w-12 h-14 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
             >
-                <UserMinus className="w-4 h-4" />
+                <UserMinus className="w-5 h-5" />
             </button>
         </Reorder.Item>
     );
 };
 
-export const Setup: React.FC<SetupProps> = ({
-    onStart,
-    onBack,
-    title,
-    subtitle,
-    icon: Icon,
-    themeColor,
-    playerPlaceholder,
-    addPlayerLabel,
-    instructions,
-    minPlayers = 3,
-    maxPlayers = 8,
-}) => {
-    const config = colorConfig[themeColor];
-
+export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, icon: Icon, themeColor, playerPlaceholder, addPlayerLabel, instructions, description, minPlayers = 3, maxPlayers = 8, children }) => {
+    const { difficulty } = useGameSettings();
+    const config = colorConfig[themeColor] || colorConfig.red;
     const [players, setPlayers] = useState<PlayerEntry[]>(() => {
+        const savedNames = storageService.getPlayers();
+        if (savedNames.length >= minPlayers) {
+            return savedNames.slice(0, maxPlayers).map(name => ({ id: makeId(), name }));
+        }
         const shuffled = [...DEFAULT_NAMES].sort(() => Math.random() - 0.5);
-        return Array.from({ length: minPlayers }, (_, i) => ({
-            id: makeId(),
-            name: shuffled[i] ?? `${playerPlaceholder} ${i + 1}`,
-        }));
+        return Array.from({ length: minPlayers }, (_, i) => ({ id: makeId(), name: shuffled[i] ?? `${playerPlaceholder} ${i + 1}` }));
     });
     const [showInstructions, setShowInstructions] = useState(false);
 
-    const addPlayer = () => {
-        if (players.length < maxPlayers) {
-            setPlayers(prev => [...prev, { id: makeId(), name: `${playerPlaceholder} ${prev.length + 1}` }]);
+    useEffect(() => {
+        const names = players.map(p => p.name);
+        if (names.some(n => n.trim() !== '')) {
+            storageService.savePlayers(names);
         }
-    };
+    }, [players]);
 
-    const removePlayer = (id: string) => {
-        if (players.length > minPlayers) {
-            setPlayers(prev => prev.filter(p => p.id !== id));
-        }
-    };
-
-    const handleNameChange = (id: string, name: string) => {
-        setPlayers(prev => prev.map(p => p.id === id ? { ...p, name } : p));
-    };
-
-    const shufflePlayers = () => {
-        setPlayers(prev => [...prev].sort(() => Math.random() - 0.5));
-    };
+    const addPlayer = () => { if (players.length < maxPlayers) setPlayers(prev => [...prev, { id: makeId(), name: `${playerPlaceholder} ${prev.length + 1}` }]); };
+    const removePlayer = (id: string) => { if (players.length > minPlayers) setPlayers(prev => prev.filter(p => p.id !== id)); };
+    const handleNameChange = (id: string, name: string) => { setPlayers(prev => prev.map(p => p.id === id ? { ...p, name } : p)); };
+    const shufflePlayers = () => { setPlayers(prev => [...prev].sort(() => Math.random() - 0.5)); };
 
     const isReady = players.every(p => p.name.trim() !== '');
     const canRemove = players.length > minPlayers;
-
     const titleWords = title.split(' ');
-    const titleFirst = titleWords.slice(0, -1).join(' ');
-    const titleLast = titleWords.at(-1) ?? title;
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-[#0a0502] text-[#e5e7eb] font-sans overflow-x-hidden">
-            <div className="fixed inset-0 pointer-events-none opacity-30">
-                <div className={`absolute inset-0 ${config.gradient}`} />
-            </div>
+        <div className="min-h-screen pt-6 pb-32 px-6 relative flex flex-col items-center">
+            {/* Ambient Background Gradient */}
+            <div className={`fixed inset-x-0 top-0 h-[60vh] transition-colors duration-700 ${config.gradient} pointer-events-none opacity-60`} />
 
-            <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-full max-w-md relative z-10 px-4 pt-6 pb-28"
-            >
-                {/* Nav row */}
-                <div className="flex items-center justify-between mb-6">
-                    <motion.button
-                        whileTap={{ scale: 0.96 }}
-                        onClick={onBack}
-                        className="p-3 rounded-2xl bg-white/5 active:bg-white/10 text-gray-400 flex items-center gap-2 border border-white/5 group transition-colors"
-                    >
-                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Назад</span>
-                    </motion.button>
-                    <Icon className={`w-5 h-5 ${config.text} opacity-60`} />
-                </div>
-
-                {/* Title */}
-                <div className="mb-6">
-                    <h1 className="text-5xl sm:text-6xl font-black tracking-tighter uppercase italic leading-[0.85] mb-3">
-                        {titleWords.length > 1 ? (
-                            <>{titleFirst} <span className={config.text}>{titleLast}</span></>
-                        ) : (
-                            <span className={config.text}>{title}</span>
-                        )}
-                    </h1>
-                    <p className="text-[10px] uppercase font-bold tracking-[0.3em] text-gray-500 border-l-2 border-white/10 pl-3">
-                        {subtitle}
-                    </p>
-                </div>
-
-                {/* Player list header */}
-                <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-600">Участники</span>
-                    <div className="flex items-center gap-2">
-                        <motion.button
-                            whileTap={{ scale: 0.9, rotate: 180 }}
-                            onClick={shufflePlayers}
-                            className="p-1.5 rounded-lg text-gray-600 hover:text-gray-400 active:text-white transition-colors"
-                            title="Перемешать порядок"
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
+                {/* Header Section */}
+                <div className="relative mb-12">
+                    <div className="flex items-center justify-between mb-10">
+                        <button 
+                            onClick={onBack}
+                            className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-white active:scale-90 transition-all border-none"
                         >
-                            <Shuffle className="w-3.5 h-3.5" />
-                        </motion.button>
-                        <span className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${config.indexBg} border-white/5`}>
-                            {players.length} / {maxPlayers}
-                        </span>
+                            <ArrowLeft className="w-6 h-6" />
+                        </button>
+
+                        <div className={`w-14 h-14 rounded-[20px] glass-card flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.5)] border-white/10`}>
+                            <div className={`absolute inset-0 rounded-[20px] blur-xl opacity-20 ${config.bg}`} />
+                            <Icon className={`w-7 h-7 ${config.text} relative z-10`} />
+                        </div>
+                    </div>
+
+                    <div className="px-1">
+                        <h2 className="text-[52px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
+                            {titleWords.length > 1 ? (
+                                <>
+                                    {titleWords.slice(0, -1).join(' ')} <br />
+                                    <span className={`${config.text} drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]`}>{titleWords.at(-1)}</span>
+                                </>
+                            ) : (
+                                <span className={config.text}>{title}</span>
+                            )}
+                        </h2>
+
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-1 h-3 rounded-full ${config.text} bg-current`} />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">
+                                    {subtitle}
+                                </span>
+                            </div>
+                            <div className={`px-4 py-1.5 rounded-premium-sm glass-card border-none text-[10px] font-black italic uppercase tracking-[0.2em] font-display ${difficulty === 'easy' ? 'text-premium-green' : difficulty === 'medium' ? 'text-premium-sky' : 'text-premium-red'}`}>
+                                {difficulty === 'easy' ? 'ЛЕГКО' : difficulty === 'medium' ? 'НОРМА' : 'ПРОФИ'}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Drag-reorderable player list */}
-                <Reorder.Group
-                    as="div"
-                    axis="y"
-                    values={players}
-                    onReorder={setPlayers}
-                    className="flex flex-col gap-2 mb-3"
-                >
-                    {players.map((player, index) => (
-                        <PlayerRow
-                            key={player.id}
-                            player={player}
-                            index={index}
-                            canRemove={canRemove}
-                            config={config}
-                            placeholder={playerPlaceholder}
-                            onRemove={removePlayer}
-                            onChange={handleNameChange}
-                        />
-                    ))}
-                </Reorder.Group>
+                {/* Participants Section */}
+                <div className="mb-10">
+                    <div className="flex items-center justify-between mb-6 px-1">
+                        <div className="flex items-center gap-3">
+                             <Users className={`w-4 h-4 ${config.text}`} />
+                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">УЧАСТНИКИ</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button onClick={shufflePlayers} className="text-white/20 hover:text-white/50 active:scale-90 transition-all">
+                                <Shuffle className="w-5 h-5" />
+                            </button>
+                            <div className={`px-4 py-1 rounded-premium-sm border border-white/5 bg-white/3 text-[11px] font-black italic text-white/40 tracking-tighter`}>
+                                {players.length} / {maxPlayers}
+                            </div>
+                        </div>
+                    </div>
 
-                {/* Add player */}
-                <AnimatePresence>
+                    <Reorder.Group values={players} onReorder={setPlayers} className="flex flex-col gap-4">
+                        {players.map((p, i) => (
+                            <PlayerRow 
+                                key={p.id} 
+                                player={p} 
+                                index={i} 
+                                canRemove={canRemove} 
+                                config={config} 
+                                placeholder={playerPlaceholder} 
+                                onRemove={removePlayer} 
+                                onChange={handleNameChange} 
+                            />
+                        ))}
+                    </Reorder.Group>
+
                     {players.length < maxPlayers && (
-                        <motion.button
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={addPlayer}
-                            className={`w-full py-3.5 border-2 border-dashed border-white/8 rounded-2xl flex items-center justify-center gap-2.5 text-gray-600 transition-all ${config.addHover}`}
+                        <button 
+                            onClick={addPlayer} 
+                            className={`w-full mt-4 h-16 border-2 border-dashed border-white/5 rounded-premium-lg flex items-center justify-center gap-4 text-[11px] font-black uppercase tracking-[0.4em] text-white/10 transition-all ${config.addHover} hover:border-dashed`}
                         >
-                            <UserPlus className="w-4 h-4" />
-                            <span className="uppercase text-[10px] font-bold tracking-widest">{addPlayerLabel}</span>
-                        </motion.button>
+                            <UserPlus className="w-5 h-5" />
+                            <span>Добавить</span>
+                        </button>
                     )}
-                </AnimatePresence>
+                </div>
+
+                {children && <div className="mt-12">{children}</div>}
             </motion.div>
 
-            {/* Fixed bottom action bar */}
-            <div className="fixed bottom-0 left-0 right-0 z-20 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-[#0a0502] via-[#0a0502]/95 to-transparent pt-6">
-                <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-                    <motion.button
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => setShowInstructions(true)}
-                        className="py-4 bg-white/5 active:bg-white/10 text-gray-400 rounded-2xl font-bold uppercase tracking-widest border border-white/10 flex items-center justify-center gap-2 transition-colors"
+            {/* Footer Buttons */}
+            <div className="fixed bottom-0 left-0 right-0 z-50 p-6 pb-10 bg-gradient-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent pt-12">
+                <div className="grid grid-cols-[1fr_2fr] gap-5 max-w-md mx-auto">
+                    <button 
+                        onClick={() => setShowInstructions(true)} 
+                        className="h-16 glass-card rounded-premium-md flex items-center justify-center gap-3 text-white/80 active:scale-95 transition-all group border-white/5"
                     >
-                        <HelpCircle className="w-4 h-4" />
-                        <span className="text-[10px]">Брифинг</span>
-                    </motion.button>
-
-                    <motion.button
-                        whileTap={{ scale: 0.97 }}
-                        disabled={!isReady}
-                        onClick={() => onStart(players.map(p => p.name))}
-                        className={`py-4 ${config.button} text-white rounded-2xl font-black uppercase tracking-[0.2em] shadow-2xl ${config.shadow} flex items-center justify-center gap-2 disabled:opacity-40 disabled:pointer-events-none transition-colors`}
+                        <HelpCircle className="w-7 h-7 transition-colors group-hover:text-white/60" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] italic group-hover:text-white/60">БРИФ</span>
+                    </button>
+                    
+                    <button 
+                        disabled={!isReady} 
+                        onClick={() => onStart(players.map(p => p.name))} 
+                        className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}
                     >
-                        <Play className="w-4 h-4 fill-current" />
-                        <span className="text-[10px] italic">Старт</span>
-                    </motion.button>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <Play className="w-6 h-6 fill-current relative z-10" />
+                        <span className="text-2xl font-black uppercase tracking-tighter italic relative z-10 leading-none">СТАРТ</span>
+                    </button>
                 </div>
             </div>
 
-            {/* Instructions modal */}
-            <AnimatePresence>
-                {showInstructions && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/95 backdrop-blur-xl"
-                        onClick={e => { if (e.target === e.currentTarget) setShowInstructions(false); }}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.92, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.92, y: 20 }}
-                            transition={{ type: 'spring', stiffness: 360, damping: 30 }}
-                            className={`bg-[#120a0a] border ${config.border} p-6 rounded-[2rem] max-w-lg w-full shadow-2xl`}
-                        >
-                            <div className="flex items-center justify-between mb-5">
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2.5 ${config.bg} rounded-xl`}>
-                                        <HelpCircle className={`w-5 h-5 ${config.text}`} />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-black uppercase tracking-tighter italic leading-none">Брифинг</h2>
-                                        <p className={`text-[10px] ${config.text} uppercase tracking-widest font-bold mt-0.5`}>{title}</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setShowInstructions(false)}
-                                    className={`p-2 bg-white/5 rounded-xl ${config.closeHover} transition-colors`}
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            <div className="space-y-3 max-h-[58vh] overflow-y-auto pr-1">
-                                {instructions.map((inst, idx) => (
-                                    <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5 space-y-1.5">
-                                        <h4 className={`text-xs font-black ${config.text} uppercase flex items-center gap-1`}>
-                                            <ChevronRight className="w-3.5 h-3.5" />
-                                            {inst.title}
-                                        </h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed">{inst.content}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={() => setShowInstructions(false)}
-                                className="w-full py-4 mt-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-sm"
-                            >
-                                Принято
-                            </button>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <InstructionsModal 
+                open={showInstructions} 
+                onClose={() => setShowInstructions(false)} 
+                title={title} 
+                instructions={instructions}
+                description={description}
+                theme={themeColor}
+            />
         </div>
     );
 };

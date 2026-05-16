@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { storageService } from '../../services/storageService';
+import { feedbackService } from '../../services/feedbackService';
 import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
 import { shuffle } from '../../utils/random';
 import { InstructionsModal } from '../../components/InstructionsModal';
@@ -37,11 +40,24 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const isDrawingRound = currentRound % 2 === 0;
 
   const handleStartGame = (selectedDiff: Difficulty) => {
-    const words = WORDS_BY_DIFFICULTY[selectedDiff];
-    const word = words[Math.floor(Math.random() * words.length)];
+    const staticWords = WORDS_BY_DIFFICULTY[selectedDiff];
+    const custom = storageService.getCustomWords('telestrations');
+    const used = storageService.getUsedWords('telestrations');
+    
+    const all = [...staticWords, ...custom];
+    let available = all.filter(w => !used.includes(w));
+    
+    if (available.length === 0) {
+      storageService.resetUsedWords('telestrations');
+      available = all;
+    }
+
+    const word = available[Math.floor(Math.random() * available.length)];
     setDifficulty(selectedDiff);
     setInitialWord(word);
     setCurrentWord(word);
+    storageService.markWordAsUsed('telestrations', word);
+    
     setShuffledPlayers(shuffle(playerNames));
     setSteps([]);
     setCurrentRound(0);
@@ -66,12 +82,24 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   };
 
   const finishAction = (content: string, type: 'draw' | 'guess') => {
+    const settings = storageService.getSettings();
     if (type === 'guess') setCurrentWord(content);
     const newSteps: Step[] = [...steps, { type, content, author: currentPlayer }];
     setSteps(newSteps);
     if (currentRound === shuffledPlayers.length - 1) {
+      feedbackService.playSound('success');
+      feedbackService.vibrate([50, 30, 50, 30, 50]);
+      if (settings.visualEffects) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#f97316', '#ffffff']
+        });
+      }
       setPhase('gallery');
     } else {
+      feedbackService.playSound('click');
       setCurrentRound(prev => prev + 1);
       setPhase('transition');
     }
@@ -195,7 +223,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                     }`}>
                       <span className="opacity-50">{i + 1}.</span>
                       <span>{name}</span>
-                      <span className="opacity-40">{i % 2 === 0 ? '✏️' : '💬'}</span>
+                      <span className="opacity-60">{i % 2 === 0 ? '✏️' : '💬'}</span>
                     </div>
                   ))}
                 </div>

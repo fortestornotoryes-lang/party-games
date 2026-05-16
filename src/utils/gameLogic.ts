@@ -1,82 +1,128 @@
 import { Player } from '../types';
 import { LOCATIONS_DATA } from '../constants/spyHuntContent';
 import { shuffle } from './random';
+import { storageService } from '../services/storageService';
 
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
-export const initSpyHunt = (playerNames: string[]) => {
-    const locationObj = LOCATIONS_DATA[Math.floor(Math.random() * LOCATIONS_DATA.length)];
-    const spyIndex = Math.floor(Math.random() * playerNames.length);
+export const initSpyHunt = (playerNames: string[], difficulty: string = 'medium', mode: string = 'classic') => {
+  const custom = storageService.getCustomWords('spy');
+  const used = storageService.getUsedWords('spy');
+  
+  const defaultRoles = ["Агент", "Специалист", "Наблюдатель", "Сотрудник", "Гость", "Персонал", "Охранник"];
+  
+  const allLocations = [
+    ...LOCATIONS_DATA,
+    ...custom.map(name => ({ name, roles: defaultRoles }))
+  ];
 
-    const players: Player[] = playerNames.map((name, index) => ({
-        id: generateId(),
-        name,
-        role: index === spyIndex ? 'Шпион' : locationObj.roles[index % locationObj.roles.length],
-        isSpy: index === spyIndex,
-    }));
+  let available = allLocations.filter(l => !used.includes(l.name));
+  
+  if (available.length === 0) {
+    storageService.resetUsedWords('spy');
+    available = allLocations;
+  }
 
-    return { players, location: locationObj.name };
+  const locationObj = available[Math.floor(Math.random() * available.length)];
+  storageService.markWordAsUsed('spy', locationObj.name);
+
+  // Mode logic
+  const indices = Array.from({ length: playerNames.length }, (_, i) => i);
+  const shuffled = shuffle(indices);
+  
+  let spyIndices: number[] = [shuffled[0]];
+  let moleIndex: number | null = null;
+
+  if (mode === 'double_agent' && playerNames.length >= 5) {
+    spyIndices = [shuffled[0], shuffled[1]];
+  } else if (mode === 'mole' && playerNames.length >= 5) {
+    moleIndex = shuffled[1];
+  }
+  
+  const players: Player[] = playerNames.map((name, index) => {
+    let role = 'Игрок';
+    let isSpy = false;
+
+    if (spyIndices.includes(index)) {
+      role = 'Шпион';
+      isSpy = true;
+    } else if (index === moleIndex) {
+      role = 'Предатель';
+      isSpy = false; // He knows the location, but is not "the" spy
+    } else {
+      role = locationObj.roles[index % locationObj.roles.length];
+    }
+
+    return {
+      id: generateId(),
+      name,
+      role,
+      isSpy,
+    };
+  });
+
+  return { players, location: locationObj.name };
 };
 
 export const initFakeArtist = (playerNames: string[]) => {
-    const spyIndex = Math.floor(Math.random() * playerNames.length);
+  const spyIndex = Math.floor(Math.random() * playerNames.length);
 
-    const players: Player[] = playerNames.map((name, index) => ({
-        id: generateId(),
-        name,
-        role: index === spyIndex ? 'Самозванец' : 'Художник',
-        isSpy: index === spyIndex,
-    }));
+  const players: Player[] = playerNames.map((name, index) => ({
+    id: generateId(),
+    name,
+    role: index === spyIndex ? 'Самозванец' : 'Художник',
+    isSpy: index === spyIndex,
+  }));
 
-    return { players };
+  return { players };
 };
 
 export const initResistance = (playerNames: string[]) => {
-    const pCount = playerNames.length;
-    let spyCount = 2;
-    if (pCount >= 7) spyCount = 3;
-    if (pCount >= 10) spyCount = 4;
+  const pCount = playerNames.length;
+  let spyCount = 2;
+  if (pCount >= 7) spyCount = 3;
+  if (pCount >= 10) spyCount = 4;
 
-    const indices = Array.from({ length: pCount }, (_, i) => i);
-    const shuffledIndices = shuffle(indices);
-    const spyIndices = shuffledIndices.slice(0, spyCount);
+  const indices = Array.from({ length: pCount }, (_, i) => i);
+  const shuffledIndices = shuffle(indices);
+  const spyIndices = shuffledIndices.slice(0, spyCount);
 
-    const players: Player[] = playerNames.map((name, index) => ({
-        id: generateId(),
-        name,
-        role: spyIndices.includes(index) ? 'Шпион' : 'Сопротивление',
-        isSpy: spyIndices.includes(index)
-    }));
+  const players: Player[] = playerNames.map((name, index) => ({
+    id: generateId(),
+    name,
+    role: spyIndices.includes(index) ? 'Шпион' : 'Сопротивление',
+    isSpy: spyIndices.includes(index)
+  }));
 
-    return { players };
+  return { players };
 };
 
 export const initAlias = (playerNames: string[]) => {
-    const shuffled = shuffle(playerNames);
-    const mid = Math.ceil(shuffled.length / 2);
-    return {
-        teams: [
-            { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
-            { name: 'Синие', players: shuffled.slice(mid), score: 0 },
-        ]
-    };
+  const shuffled = shuffle(playerNames);
+  const mid = Math.ceil(shuffled.length / 2);
+  return {
+    teams: [
+      { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
+      { name: 'Синие', players: shuffled.slice(mid), score: 0 },
+    ]
+  };
 };
 
 export const initJustOne = (playerNames: string[]) => {
-    return { guesserIndex: 0, score: 0, totalRounds: 0 };
+  return { guesserIndex: 0, score: 0, totalRounds: 0 };
 };
 
 export const initTelestrations = (playerNames: string[]) => {
-    return { shuffledPlayers: shuffle(playerNames), currentRound: 0 };
+  return { shuffledPlayers: shuffle(playerNames), currentRound: 0 };
 };
 
 export const initWavelength = (playerNames: string[]) => {
-    const shuffled = shuffle(playerNames);
-    const mid = Math.ceil(shuffled.length / 2);
-    return {
-        teams: [
-            { name: 'Красные', color: 'red', players: shuffled.slice(0, mid), score: 0 },
-            { name: 'Синие', color: 'blue', players: shuffled.slice(mid), score: 0 },
-        ]
-    };
+  const shuffled = shuffle(playerNames);
+  const mid = Math.ceil(shuffled.length / 2);
+  return {
+    teams: [
+      { name: 'Красные', color: 'red', players: shuffled.slice(0, mid), score: 0 },
+      { name: 'Синие', color: 'blue', players: shuffled.slice(mid), score: 0 },
+    ]
+  };
 };

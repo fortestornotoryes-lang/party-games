@@ -1,17 +1,14 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Palette, CheckCircle2, Home, Brush, HelpCircle, X, Undo2, Timer } from 'lucide-react';
+import { Palette, Brush, Undo2, Send } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { Player } from '../../types';
-import { FAKE_ARTIST_INSTRUCTIONS } from '../../constants/fakeArtistContent';
-import { InstructionsModal } from '../../components/InstructionsModal';
+import { storageService } from '../../services/storageService';
+import { feedbackService } from '../../services/feedbackService';
+import { GameHeader } from '../../components/GameHeader';
+import { PrimaryButton, GameCard } from '../../components/UI';
 
-interface Stroke {
-  points: { x: number; y: number }[];
-  color: string;
-  playerId: string;
-}
-
-interface FakeArtistGameProps {
+interface Props {
   players: Player[];
   word: string;
   category: string;
@@ -21,302 +18,207 @@ interface FakeArtistGameProps {
   onFinish: (imageUrl: string) => void;
 }
 
-const PLAYER_COLORS = [
-  '#ef4444',
-  '#3b82f6',
-  '#10b981',
-  '#f59e0b',
-  '#8b5cf6',
-  '#ec4899',
-  '#06b6d4'
-];
-
-export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, category, rounds, timerSeconds, onBack, onFinish }) => {
+export const FakeArtistGame: React.FC<Props> = ({ players, word, category, rounds, timerSeconds, onBack, onFinish }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const redrawRef = useRef<() => void>(() => {});
-  const [strokes, setStrokes] = useState<Stroke[]>([]);
-  const [currentStroke, setCurrentStroke] = useState<{ x: number; y: number }[] | null>(null);
   const [turnIndex, setTurnIndex] = useState(0);
-  const [round, setRound] = useState(1);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [hasDrawnThisTurn, setHasDrawnThisTurn] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [hasDrawn, setHasDrawn] = useState(false);
+  const [strokes, setStrokes] = useState<any[]>([]);
+  const [currentStroke, setCurrentStroke] = useState<any>(null);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
-  const [timeExpired, setTimeExpired] = useState(false);
 
-  const totalTurns = players.length * rounds;
-  const currentPlayer = players[turnIndex % players.length];
-  const playerColor = PLAYER_COLORS[turnIndex % players.length];
+  const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][turnIndex % players.length];
 
-  const advanceTurn = useCallback(() => {
-    const nextIdx = turnIndex + 1;
-    if (nextIdx >= totalTurns) {
-      let imageUrl = '';
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const temp = document.createElement('canvas');
-        temp.width = canvas.width;
-        temp.height = canvas.height;
-        const ctx = temp.getContext('2d');
-        if (ctx) {
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, temp.width, temp.height);
-          ctx.drawImage(canvas, 0, 0);
-          imageUrl = temp.toDataURL('image/png');
-        }
-      }
-      onFinish(imageUrl);
-    } else {
-      setTurnIndex(nextIdx);
-      setHasDrawnThisTurn(false);
-      setTimeExpired(false);
-      if (nextIdx % players.length === 0) {
-        setRound(prev => prev + 1);
-      }
-    }
-  }, [turnIndex, totalTurns, players.length, onFinish]);
-
-  // Reset timer on each new turn
   useEffect(() => {
-    if (timerSeconds > 0) {
-      setTimeLeft(timerSeconds);
-      setTimeExpired(false);
+    if (timerSeconds > 0 && !isTransitioning) {
+        setTimeLeft(timerSeconds);
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    confirm();
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(timer);
     }
-  }, [turnIndex, timerSeconds]);
+  }, [turnIndex, isTransitioning, timerSeconds]);
 
-  // Countdown
-  useEffect(() => {
-    if (timerSeconds === 0) return;
-    if (timeLeft <= 0) {
-      setTimeExpired(true);
-      return;
-    }
-    const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
-    return () => clearTimeout(id);
-  }, [timeLeft, timerSeconds]);
-
-  // Auto-advance when timer expires
-  useEffect(() => {
-    if (timeExpired) {
-      const id = setTimeout(() => advanceTurn(), 800);
-      return () => clearTimeout(id);
-    }
-  }, [timeExpired, advanceTurn]);
-
-  // Canvas resize
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
     const canvas = canvasRef.current;
-    const container = containerRef.current;
-    const resizeObserver = new ResizeObserver(() => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = container.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      const ctx = canvas.getContext('2d');
-      if (ctx) ctx.scale(dpr, dpr);
-      redrawRef.current();
-    });
-    resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
+    const rect = containerRef.current.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+        ctx.scale(2, 2);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 4;
+    }
   }, []);
 
-  const redraw = () => {
+  const drawAll = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 4;
-    strokes.forEach(stroke => {
-      if (stroke.points.length < 2) return;
-      ctx.beginPath();
-      ctx.strokeStyle = stroke.color;
-      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-      for (let i = 1; i < stroke.points.length; i++) ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-      ctx.stroke();
+    strokes.forEach(s => {
+        ctx.beginPath();
+        ctx.strokeStyle = s.color;
+        ctx.moveTo(s.points[0].x, s.points[0].y);
+        s.points.forEach((p: any) => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
     });
-    if (currentStroke && currentStroke.length > 1) {
-      ctx.beginPath();
-      ctx.strokeStyle = playerColor;
-      ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-      for (let i = 1; i < currentStroke.length; i++) ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
-      ctx.stroke();
+    if (currentStroke) {
+        ctx.beginPath();
+        ctx.strokeStyle = playerColor;
+        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+        currentStroke.forEach((p: any) => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
     }
-  };
+  }, [strokes, currentStroke, playerColor]);
 
-  redrawRef.current = redraw;
-  useEffect(() => { redraw(); }, [strokes, currentStroke]);
+  useEffect(() => { drawAll(); }, [drawAll]);
 
-  const getPos = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!canvasRef.current) return { x: 0, y: 0 };
-    const rect = canvasRef.current.getBoundingClientRect();
-    let clientX, clientY;
-    if ('touches' in e) {
-      const touch = e.touches[0] || e.changedTouches[0];
-      if (!touch) return { x: 0, y: 0 };
-      clientX = touch.clientX;
-      clientY = touch.clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
+  const getPos = (e: any) => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     return { x: clientX - rect.left, y: clientY - rect.top };
   };
 
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    if (hasDrawnThisTurn || timeExpired) return;
-    setIsDrawing(true);
-    setCurrentStroke([getPos(e)]);
-  };
-
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || hasDrawnThisTurn || timeExpired) return;
-    setCurrentStroke(prev => prev ? [...prev, getPos(e)] : [getPos(e)]);
-  };
-
-  const stopDrawing = () => {
-    if (!isDrawing) return;
-    setIsDrawing(false);
-    if (currentStroke && currentStroke.length > 1) {
-      setStrokes(prev => [...prev, { points: currentStroke, color: playerColor, playerId: currentPlayer.id }]);
-      setHasDrawnThisTurn(true);
+  const confirm = () => {
+    const settings = storageService.getSettings();
+    if (turnIndex === players.length * rounds - 1) {
+      feedbackService.playSound('success');
+      feedbackService.vibrate([50, 30, 50]);
+      if (settings.visualEffects) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#10b981', '#ffffff']
+        });
+      }
+      onFinish(canvasRef.current!.toDataURL());
     }
-    setCurrentStroke(null);
+    else {
+        feedbackService.playSound('click');
+        setTurnIndex(turnIndex + 1);
+        setHasDrawn(false);
+        setIsTransitioning(true);
+    }
   };
-
-  const undoLastStroke = () => {
-    if (!hasDrawnThisTurn) return;
-    setStrokes(prev => prev.slice(0, -1));
-    setHasDrawnThisTurn(false);
-  };
-
-  const timerPct = timerSeconds > 0 ? timeLeft / timerSeconds : 1;
-  const timerColor = timerPct > 0.5 ? '#10b981' : timerPct > 0.25 ? '#f59e0b' : '#ef4444';
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a0502] text-[#e5e7eb] font-sans overflow-hidden select-none">
-      <div className="p-4 sm:p-6 bg-[#0a0502]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-            <Palette className="w-5 h-5 text-emerald-500" />
-          </div>
-          <div>
-            <h2 className="text-lg font-black uppercase italic tracking-tighter">Fake <span className="text-emerald-500">Artist</span></h2>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Раунд {round}/{rounds} // ход {(turnIndex % players.length) + 1}/{players.length}</p>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          {timerSeconds > 0 && (
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
-              <Timer className="w-3.5 h-3.5" style={{ color: timerColor }} />
-              <span className="text-sm font-black tabular-nums" style={{ color: timerColor }}>{timeLeft}</span>
-            </div>
-          )}
-          <button onClick={() => setShowInstructions(true)} className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-500 transition-all">
-            <HelpCircle className="w-5 h-5" />
-          </button>
-          <button onClick={onBack} className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-500 transition-all">
-            <Home className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-screen bg-[#060807] overflow-hidden select-none relative">
+       <GameHeader
+          title="FAKE ARTIST"
+          subtitle={`Ход ${turnIndex + 1} / ${players.length * rounds}`}
+          icon={Palette}
+          themeColor="border-emerald-500/50 text-emerald-400"
+          onBack={onBack}
+       />
 
-      <div className="p-4 flex-1 flex flex-col items-center">
-        <div className="w-full max-w-lg mb-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-2 h-8 rounded-full" style={{ backgroundColor: playerColor }} />
-            <div>
-              <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest">Сейчас рисует</p>
-              <h3 className="text-lg font-bold leading-none">{currentPlayer.name}</h3>
-            </div>
+       {/* Canvas UI — always mounted so canvas persists between turns */}
+       <div className="p-6 flex-1 flex flex-col items-center space-y-6">
+          <div className="w-full flex justify-between items-end">
+              <div className="space-y-1">
+                  <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Рисует</p>
+                  <div className="flex items-center gap-3">
+                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: playerColor }} />
+                     <h3 className="text-2xl font-black italic uppercase text-white leading-none">{players[turnIndex % players.length].name}</h3>
+                  </div>
+              </div>
+              <div className="text-right space-y-1">
+                  {timerSeconds > 0 && (
+                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-white/40'}`}>
+                        {timeLeft}с
+                     </p>
+                  )}
+                  <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Тема</p>
+                  <h3 className="text-xl font-black italic uppercase text-emerald-500 leading-none">{category}</h3>
+              </div>
           </div>
-          <div className="text-right">
-            <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest">Тема</p>
-            <h3 className="text-sm font-bold text-emerald-500">{category}</h3>
-          </div>
-        </div>
 
-        {/* Timer bar */}
-        {timerSeconds > 0 && (
-          <div className="w-full max-w-lg mb-3 h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60 mb-1">Секретное слово</p>
+             <p className="text-xl font-black italic uppercase tracking-tight">
+               {players[turnIndex % players.length].isSpy ? 'ТЫ САМОЗВАНЕЦ' : word}
+             </p>
+          </div>
+
+          <GameCard className="w-full flex-1 p-0 overflow-hidden relative border-emerald-500/20">
+             <div
+               ref={containerRef}
+               className="w-full h-full"
+               onMouseDown={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
+               onMouseMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
+               onMouseUp={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
+               onTouchStart={(e) => { e.preventDefault(); if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
+               onTouchMove={(e) => { e.preventDefault(); if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
+               onTouchEnd={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
+             >
+                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white transition-opacity" />
+                 {!hasDrawn && !isDrawing && (
+                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-20 space-y-4">
+                       <Brush className="w-16 h-16 text-black" />
+                       <span className="font-black italic text-black uppercase tracking-tighter">Нарисуй одну линию</span>
+                   </div>
+                 )}
+             </div>
+          </GameCard>
+
+          <div className="w-full flex gap-4 justify-center items-center">
+             <button
+               disabled={!hasDrawn}
+               onClick={() => { setStrokes(strokes.slice(0, -1)); setHasDrawn(false); }}
+               className="w-20 py-6 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center disabled:opacity-0 active:scale-90 transition-all"
+             >
+               <Undo2 className="w-6 h-6" />
+             </button>
+             <PrimaryButton
+               disabled={!hasDrawn}
+               onClick={confirm}
+               className="bg-emerald-500 !text-black flex-1 font-semibold"
+             >
+               ПОДТВЕРДИТЬ
+             </PrimaryButton>
+          </div>
+       </div>
+
+       {/* Transition overlay — rendered on top, canvas stays mounted underneath */}
+       <AnimatePresence>
+          {isTransitioning && (
             <motion.div
-              className="h-full rounded-full"
-              style={{ backgroundColor: timerColor }}
-              animate={{ width: `${timerPct * 100}%` }}
-              transition={{ duration: 0.4 }}
-            />
-          </div>
-        )}
+               key="transition"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="absolute inset-0 bg-[#060807] z-10 flex flex-col items-center justify-center p-6 space-y-8"
+            >
+               <div className="text-center space-y-4">
+                  <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
+                  <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
+               </div>
 
-        <div
-          ref={containerRef}
-          className="w-full max-w-lg flex-1 bg-white/[0.03] border-4 border-white/10 rounded-[2.5rem] relative overflow-hidden shadow-inner cursor-crosshair touch-none"
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        >
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white" />
-          <AnimatePresence>
-            {timeExpired && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none"
-              >
-                <Timer className="w-12 h-12 text-red-500 mb-2" />
-                <p className="text-2xl font-black uppercase tracking-tighter text-red-500">Время вышло!</p>
-              </motion.div>
-            )}
-            {!hasDrawnThisTurn && !timeExpired && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center space-y-4"
-              >
-                <Brush className="w-12 h-12 text-white/10" />
-                <p className="text-[10px] text-gray-600 uppercase font-bold tracking-widest">Нарисуй одну линию</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+               <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-emerald-500/20 bg-emerald-500/5">
+                  <Palette className="w-16 h-16 text-emerald-500 animate-pulse" />
+                  <p className="text-xs text-center text-gray-400 px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
+               </GameCard>
 
-        <div className="w-full max-w-lg mt-6 flex gap-3">
-          <button
-            onClick={undoLastStroke}
-            disabled={!hasDrawnThisTurn}
-            className="p-5 bg-white/5 text-gray-400 border border-white/10 rounded-[2rem] font-black uppercase transition-all disabled:opacity-0"
-          >
-            <Undo2 className="w-6 h-6" />
-          </button>
-
-          <button
-            onClick={advanceTurn}
-            disabled={!hasDrawnThisTurn && !timeExpired}
-            className="flex-1 py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 shadow-2xl disabled:opacity-30 disabled:grayscale transition-all"
-          >
-            <CheckCircle2 className="w-5 h-5" />
-            <span>Подтвердить</span>
-          </button>
-        </div>
-      </div>
-
-      <InstructionsModal
-        open={showInstructions}
-        instructions={FAKE_ARTIST_INSTRUCTIONS}
-        onClose={() => setShowInstructions(false)}
-        title="Правила"
-        theme="emerald"
-      />
-    </div>
-  );
+               <PrimaryButton onClick={() => setIsTransitioning(false)} className="bg-white !text-black">
+                  Я ГОТОВ РИСОВАТЬ
+               </PrimaryButton>
+            </motion.div>
+          )}
+       </AnimatePresence>
+  </div>
+);
 };

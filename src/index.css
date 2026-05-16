@@ -13,29 +13,61 @@
   }
 
   body {
-    @apply  text-gray-200 antialiased selection:bg-red-500/30 selection:text-red-200;
-  } 
-
-  /* Custom scrollbar for a more professional feel */
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    @apply text-slate-100 antialiased selection:bg-red-500/30 selection:text-red-200 overflow-x-hidden;
+    background: #0B0915;
+    position: relative;
   }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-black;
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(120% 40% at 50% 110%, rgb(0 71 255 / 0.9) 0%, rgb(81 0 73 / 0.15) 60%),
+      radial-gradient(100% 40% at 50% 110%, rgb(60 255 149) 0%, rgb(71 0 12 / 0.15) 60%);
+
+    pointer-events: none;
+    z-index: -1;
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3FfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3F/filter%3E%3Frect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3F/svg%3E");
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: -1;
   }
 
-  /* Safe area handling for mobile devices */
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
+  .glass-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors; }
 }
+
+@theme {
+  --color-premium-red: #FF2E4D;
+  --color-premium-green: #00D88A;
+  --color-premium-sky: #1FB6FF;
+  --color-premium-blue: #3F7BFF;
+  --color-premium-orange: #FF8A1F;
+  --color-premium-yellow: #FFCC1F;
+  --color-premium-purple: #C77BFF;
+  
+  --radius-premium-lg: 22px;
+  --radius-premium-md: 16px;
+  --radius-premium-sm: 12px;
+}
+
+.font-display { font-family: var(--font-display); }

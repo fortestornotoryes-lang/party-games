@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
 
 const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#000000'];
@@ -70,40 +71,75 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   }, []);
 
   const getCoords = (e: React.MouseEvent | React.TouchEvent) => {
-    const canvas = canvasRef.current!;
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    
+    // For mouse events, native offsetX/Y is more robust against some layout styles
+    if ('nativeEvent' in e && (e.nativeEvent as MouseEvent).offsetX !== undefined) {
+      const mouseEvent = e.nativeEvent as MouseEvent;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {
+        x: mouseEvent.offsetX * scaleX,
+        y: mouseEvent.offsetY * scaleY
+      };
+    }
+
+    // Fallback for touch events
     const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
     return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height),
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
     };
   };
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    // Prevent default to avoid scrolling/gestures interfering
+    if ('cancelable' in e && e.cancelable) e.preventDefault();
+
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
+    
     if (canvas.width > 0 && canvas.height > 0) {
       try {
         drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
         if (drawHistory.current.length > 50) drawHistory.current.shift();
-      } catch {}
+      } catch (err) {
+        console.error('History push error:', err);
+      }
     }
+    
     setIsDrawing(true);
     const { x, y } = getCoords(e);
+    
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.strokeStyle = brushColor;
-    ctx.lineWidth = brushSize * (window.devicePixelRatio || 1);
+    
+    // Using simple ratio for line width consistency
+    const rect = canvas.getBoundingClientRect();
+    const dprScale = canvas.width / rect.width;
+    ctx.lineWidth = brushSize * dprScale;
+    
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing || !canvasRef.current) return;
+    if ('cancelable' in e && e.cancelable) e.preventDefault();
+    
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
+    
     const { x, y } = getCoords(e);
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -136,11 +172,16 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 
   return (
     <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
-      {/* Top bar */}
       <div className="flex-shrink-0 flex items-center justify-between px-1">
         <div>
           <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">✏️ Рисуешь</p>
-          <p className="text-lg font-black text-orange-400 leading-tight">{word}</p>
+          <motion.p 
+            initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
+            className="text-lg font-black text-orange-400 leading-tight"
+          >
+            {word}
+          </motion.p>
         </div>
         <div className="flex items-center gap-2">
           <span className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}>
@@ -158,7 +199,6 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         </div>
       </div>
 
-      {/* Progress dots */}
       <div className="flex-shrink-0 flex justify-center gap-1.5 py-0.5">
         {Array.from({ length: playerCount }).map((_, i) => (
           <div
@@ -170,7 +210,6 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         ))}
       </div>
 
-      {/* Canvas */}
       <div className="flex-1 relative min-h-0 bg-[#120a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
         <canvas
           ref={canvasRef}
@@ -185,7 +224,6 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         />
       </div>
 
-      {/* Brush controls */}
       <div className="flex-shrink-0 bg-black/70 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
         <div className="flex items-center justify-center gap-1.5">
           {BRUSH_COLORS.map(color => (

@@ -1,232 +1,233 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Shield, Zap, Users, Brain, Palette, RotateCcw, Pencil, Lightbulb } from 'lucide-react';
+import React, {useEffect} from 'react';
+import {motion} from 'motion/react';
+import {Shield, Zap, Users, Brain, Palette, RotateCcw, Pencil, Lightbulb, PartyPopper, Grid, Key} from 'lucide-react';
+
+import {storageService} from '../services/storageService';
+import {useGameSettings} from '../contexts/GameSettingsContext';
+import {SectionLabel, Badge, Typography, PageWrapper, ParallaxBackground} from './UI';
+import {JUST_ONE_WORDS} from '../constants/justOneContent';
+import {ALIAS_CATEGORIES} from '../constants/aliasContent';
+import {LOCATIONS_DATA} from '../constants/spyHuntContent';
+import {WAVELENGTH_CATEGORIES} from '../constants/wavelengthContent';
+import {FAKE_ARTIST_DATA_BY_DIFFICULTY} from '../constants/fakeArtistContent';
+import {GAMES_REGISTRY} from '../registry/GameRegistry';
+import {GameMetadata} from '../types';
 
 interface MainMenuProps {
-  onSelectGame: (gameId: string) => void;
+    onSelectGame: (gameId: string) => void;
 }
 
-const GAMES = [
-  {
-    id: 'spy',
-    title: 'Найти Шпиона',
-    desc: 'Раскройте лжеца среди своих',
-    players: '4–7',
-    icon: Shield,
-    color: 'red',
-    iconBg: 'bg-red-500',
-    iconShadow: 'shadow-red-500/30',
-    hoverBorder: 'hover:border-red-500/50',
-    hoverBg: 'hover:bg-red-500/5',
-    accentText: 'text-red-500',
-    rotate: 'rotate-3',
-  },
-  {
-    id: 'alias',
-    title: 'Alias Rapid',
-    desc: 'Объясни слово быстрее всех',
-    players: '4+',
-    icon: Brain,
-    color: 'sky',
-    iconBg: 'bg-sky-500',
-    iconShadow: 'shadow-sky-500/30',
-    hoverBorder: 'hover:border-sky-500/50',
-    hoverBg: 'hover:bg-sky-500/5',
-    accentText: 'text-sky-500',
-    rotate: '-rotate-3',
-  },
-  {
-    id: 'fake_artist',
-    title: 'Рисовальщик',
-    desc: 'Один рисует, не зная темы',
-    players: '4–7',
-    icon: Palette,
-    color: 'emerald',
-    iconBg: 'bg-emerald-500',
-    iconShadow: 'shadow-emerald-500/30',
-    hoverBorder: 'hover:border-emerald-500/50',
-    hoverBg: 'hover:bg-emerald-500/5',
-    accentText: 'text-emerald-500',
-    rotate: 'rotate-12',
-  },
-  {
-    id: 'resistance',
-    title: 'Сопротивление',
-    desc: 'Шпионы против повстанцев',
-    players: '5–10',
-    icon: Shield,
-    color: 'blue',
-    iconBg: 'bg-blue-500',
-    iconShadow: 'shadow-blue-500/30',
-    hoverBorder: 'hover:border-blue-500/50',
-    hoverBg: 'hover:bg-blue-500/5',
-    accentText: 'text-blue-500',
-    rotate: '-rotate-3',
-  },
-  {
-    id: 'wavelength',
-    title: 'Длина волны',
-    desc: 'Читай мысли, угадывай волну',
-    players: '2+',
-    icon: RotateCcw,
-    color: 'purple',
-    iconBg: 'bg-purple-500',
-    iconShadow: 'shadow-purple-500/30',
-    hoverBorder: 'hover:border-purple-500/50',
-    hoverBg: 'hover:bg-purple-500/5',
-    accentText: 'text-purple-500',
-    rotate: 'rotate-3',
-  },
-  {
-    id: 'telestrations',
-    title: 'Испорч. телефон',
-    desc: 'Рисуй и угадывай по цепочке',
-    players: '4–12',
-    icon: Pencil,
-    color: 'orange',
-    iconBg: 'bg-orange-500',
-    iconShadow: 'shadow-orange-500/30',
-    hoverBorder: 'hover:border-orange-500/50',
-    hoverBg: 'hover:bg-orange-500/5',
-    accentText: 'text-orange-500',
-    rotate: '-rotate-3',
-  },
-  {
-    id: 'just_one',
-    title: 'Намёк понял?',
-    desc: 'Одно слово — одна подсказка',
-    players: '3–12',
-    icon: Lightbulb,
-    color: 'yellow',
-    iconBg: 'bg-yellow-500',
-    iconShadow: 'shadow-yellow-500/30',
-    hoverBorder: 'hover:border-yellow-500/50',
-    hoverBg: 'hover:bg-yellow-500/5',
-    accentText: 'text-yellow-500',
-    rotate: 'rotate-3',
-  },
-];
+const themeConfigs = {
+    'premium-red': {
+        iconBg: 'bg-premium-red',
+        iconShadow: 'shadow-premium-red/50',
+        hoverBorder: 'hover:border-premium-red/40',
+        accentBg: 'bg-premium-red/10',
+        accentText: 'text-premium-red',
+    },
+    'premium-sky': {
+        iconBg: 'bg-premium-sky',
+        iconShadow: 'shadow-premium-sky/50',
+        hoverBorder: 'hover:border-premium-sky/40',
+        accentBg: 'bg-premium-sky/10',
+        accentText: 'text-premium-sky',
+    },
+    'premium-green': {
+        iconBg: 'bg-premium-green',
+        iconShadow: 'shadow-premium-green/50',
+        hoverBorder: 'hover:border-premium-green/40',
+        accentBg: 'bg-premium-green/10',
+        accentText: 'text-premium-green',
+    },
+    'premium-blue': {
+        iconBg: 'bg-premium-blue',
+        iconShadow: 'shadow-premium-blue/50',
+        hoverBorder: 'hover:border-premium-blue/40',
+        accentBg: 'bg-premium-blue/10',
+        accentText: 'text-premium-blue',
+    },
+    'premium-orange': {
+        iconBg: 'bg-premium-orange',
+        iconShadow: 'shadow-premium-orange/50',
+        hoverBorder: 'hover:border-premium-orange/40',
+        accentBg: 'bg-premium-orange/10',
+        accentText: 'text-premium-orange',
+    },
+    'premium-purple': {
+        iconBg: 'bg-premium-purple',
+        iconShadow: 'shadow-premium-purple/50',
+        hoverBorder: 'hover:border-premium-purple/40',
+        accentBg: 'bg-premium-purple/10',
+        accentText: 'text-premium-purple',
+    },
+    'premium-yellow': {
+        iconBg: 'bg-premium-yellow',
+        iconShadow: 'shadow-premium-yellow/50',
+        hoverBorder: 'hover:border-premium-yellow/40',
+        accentBg: 'bg-premium-yellow/10',
+        accentText: 'text-premium-yellow',
+    },
+} as const;
+
+const getThemeConfig = (theme: string) => {
+    const key = `premium-${theme}` as keyof typeof themeConfigs;
+    return themeConfigs[key] || themeConfigs['premium-red'];
+};
+
+const GAMES = Object.values(GAMES_REGISTRY);
 
 const container = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.2,
-    },
-  },
+    hidden: {opacity: 0},
+    show: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+        }
+    }
 };
 
 const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 28 } },
+    hidden: {opacity: 0, y: 30},
+    show: {opacity: 1, y: 0, transition: {type: 'spring' as const, damping: 25, stiffness: 200}}
 };
 
-export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
-  return (
-    <div className="flex flex-col items-center min-h-screen px-4 pt-10 pb-8 sm:p-6 bg-[#0a0502] text-[#e5e7eb] font-sans overflow-y-auto">
-      {/* Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,#3d0a0a55,transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_30%_at_80%_80%,#1a0a2e33,transparent)]" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
+export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
+    const {setCurrentGameId} = useGameSettings();
 
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md relative z-10"
-      >
-        {/* Header */}
-        <div className="text-center mb-8 sm:mb-10">
-          <motion.div
-            initial={{ scale: 0, rotate: -15 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: 'spring', damping: 18, stiffness: 260, delay: 0.1 }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-[1.25rem] bg-red-600/20 border border-red-500/30 mb-4 shadow-lg shadow-red-900/20"
-          >
-            <Zap className="w-8 h-8 text-red-500" />
-          </motion.div>
+    useEffect(() => {
+        setCurrentGameId(null);
+    }, []);
 
-          <motion.h1
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="text-[2.8rem] sm:text-[3.5rem] font-black tracking-[-0.04em] uppercase leading-[0.85] mb-3"
-            style={{ fontFamily: 'var(--font-display, "Unbounded", sans-serif)' }}
-          >
-            PARTY{' '}
-            <span className="text-red-500 not-italic">HUB</span>
-          </motion.h1>
+    const getGameStats = (gameId: string) => {
+        let total = 0;
+        const custom = storageService.getCustomWords(gameId).length;
+        const used = storageService.getUsedWords(gameId).length;
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
-            className="text-[10px] text-gray-500 uppercase tracking-[0.4em] font-bold"
-          >
-            Игры для компании
-          </motion.p>
+        switch (gameId) {
+            case 'just_one':
+                total = JUST_ONE_WORDS.length + custom;
+                break;
+            case 'alias':
+                total = ALIAS_CATEGORIES.flatMap(c => c.words).length + custom;
+                break;
+            case 'spy':
+                total = LOCATIONS_DATA.length + custom;
+                break;
+            case 'wavelength':
+                total = WAVELENGTH_CATEGORIES.length + custom;
+                break;
+            case 'fake_artist':
+                total = Object.values(FAKE_ARTIST_DATA_BY_DIFFICULTY).flat().length + custom;
+                break;
+            default:
+                return null;
+        }
+
+        return {total, remaining: Math.max(0, total - used)};
+    };
+
+    return (
+        <div className="min-h-screen pt-6 pb-24 px-6 relative overflow-hidden flex flex-col items-center">
+            <motion.div
+                initial={{opacity: 0, y: -20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.5}}
+                className="w-full max-w-md relative z-10"
+            >
+                <div className="absolute top-4 right-4 z-20">
+                    <button
+                        className="w-12 h-12 rounded-premium-sm glass-card flex items-center justify-center text-premium-yellow active:scale-90 transition-all border-none">
+                        <Zap className="w-5 h-5 fill-current"/>
+                    </button>
+                </div>
+
+                <div className="text-center px-4">
+                    <motion.div
+                        initial={{scale: 0.8, opacity: 0}}
+                        animate={{scale: 1, opacity: 1}}
+                        className="inline-flex items-center justify-center w-24 h-24 rounded-4xl glass-card mb-10 shadow-2xl relative mx-auto group cursor-pointer"
+                    >
+                        <div
+                            className="absolute inset-0 rounded-4xl bg-premium-red/30 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
+                        <div className="w-14 h-14 flex items-center justify-center relative">
+                            <div className="absolute inset-0 border-[3px] border-white/5 rounded-full"/>
+                            <div
+                                className="absolute inset-0 border-[3px] border-premium-red rounded-full border-t-transparent animate-[spin_1.5s_linear_infinite]"/>
+                            <div className="flex flex-wrap items-center justify-center gap-0.5 w-7 h-7">
+                                {[...Array(8)].map((_, r) => (
+                                    <div key={r} className="w-1.5 h-1.5 bg-premium-red rounded-full" style={{
+                                        transform: `rotate(${r * 45}deg) translateY(-10px)`
+                                    }}/>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <h1 className="text-[58px] font-black italic tracking-tighter uppercase leading-[0.7] mb-8 select-none">
+                        PARTY <span className="text-premium-red drop-shadow-[0_0_25px_rgba(255,46,77,0.5)]">HUB</span>
+                    </h1>
+                </div>
+
+                <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 pb-24">
+                    {GAMES.map((game) => {
+                        const Icon = game.icon;
+                        const stats = getGameStats(game.id);
+                        const themeCfg = getThemeConfig(game.theme);
+                        const countDisplay = stats ? `${stats.remaining} / ${stats.total}` : (game.id === 'mafia' ? '0 / ∞' : '');
+
+                        return (
+                            <motion.button
+                                key={game.id}
+                                variants={item}
+                                whileTap={{scale: 0.98}}
+                                onClick={() => onSelectGame(game.id)}
+                                className="w-full p-6 glass-card rounded-premium-lg flex items-center gap-6 transition-all duration-500 text-left relative group overflow-hidden border-white/10 hover:border-white/20"
+                            >
+                                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className="text-[24px] font-black italic uppercase tracking-tighter leading-none text-white group-hover:text-white transition-colors">{game.title}</h3>
+
+                                    </div>
+
+                                    <p className="text-sm text-white/60 font-medium leading-relaxed mb-5 max-w-[90%]">
+                                        {game.desc}
+                                    </p>
+
+                                    <div
+                                        className={`inline-flex self-start items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-premium-sm  opacity-80`}>
+                                        <div
+                                            className={`${themeCfg.accentBg} ${themeCfg.accentText}  border border-current flex  gap-2  p-2 rounded-premium-sm`}>
+                                            <Users className="w-3.5 h-3.5"/>
+                                            <span>{game.players}</span>
+                                        </div>
+                                        {countDisplay && (
+                                            <div
+                                                className={`${themeCfg.accentBg} ${themeCfg.accentText}  border border-current flex  gap-2  p-2 rounded-premium-sm`}>
+                                                    <span
+                                                        className="text-[10px] font-black  uppercase tracking-[0.2em]">{countDisplay}</span>
+                                            </div>
+                                        )}
+
+                                    </div>
+                                </div>
+
+                                <div className="relative shrink-0">
+                                    <div
+                                        className={`absolute inset-0 rounded-[28px] ${themeCfg.iconBg} blur-2xl opacity-10 group-hover:opacity-30 transition-opacity duration-500`}/>
+                                    <div
+                                        className={`w-20 h-20 rounded-3xl ${themeCfg.iconBg} flex items-center justify-center shadow-2xl relative z-10 overflow-hidden`}>
+                                        <div
+                                            className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"/>
+                                        <Icon
+                                            className="w-10 h-10 text-white relative z-20 transition-transform duration-500 group-hover:scale-110"/>
+                                    </div>
+                                </div>
+                            </motion.button>
+                        );
+                    })}
+                </motion.div>
+            </motion.div>
         </div>
-
-        {/* SpyHuntGame list */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="space-y-3"
-        >
-          {GAMES.map((game) => {
-            const Icon = game.icon;
-            return (
-              <motion.button
-                key={game.id}
-                variants={item}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => onSelectGame(game.id)}
-                className={`w-full p-4 sm:p-5 bg-white/5 border border-white/10 rounded-[2rem] flex items-center gap-4 ${game.hoverBorder} ${game.hoverBg} active:bg-white/10 transition-colors text-left`}
-              >
-                <div
-                  className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-[1rem] ${game.iconBg} flex items-center justify-center shadow-lg ${game.iconShadow} ${game.rotate} transition-transform duration-300 hover:rotate-0`}
-                >
-                  <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm sm:text-base font-black uppercase tracking-tight italic leading-tight truncate">
-                    {game.title}
-                  </h3>
-                  <p className="text-[11px] text-gray-500 font-medium mt-0.5 leading-tight truncate">
-                    {game.desc}
-                  </p>
-                </div>
-
-                <div className="shrink-0 flex flex-col items-end gap-1">
-                  <div className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-widest ${game.accentText}`}>
-                    <Users className="w-3 h-3" />
-                    <span>{game.players}</span>
-                  </div>
-                </div>
-              </motion.button>
-            );
-          })}
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="text-center text-[9px] text-gray-700 uppercase tracking-[0.3em] font-bold mt-8"
-        >
-          7 игр · передай друзьям
-        </motion.p>
-      </motion.div>
-    </div>
-  );
+    );
 };

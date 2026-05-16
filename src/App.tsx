@@ -3,118 +3,165 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import { MainMenu } from './components/MainMenu';
 import { Setup } from './components/Setup';
-import { RoleDistribution } from './components/RoleDistribution';
-import { SpyHuntGame } from './games/SpyHuntGame/SpyHuntGame';
-import { AliasGame } from './games/AliasGame/AliasGame';
-import { FakeArtistGame } from './games/FakeArtistGame/FakeArtistGame';
-import { FakeArtistDistribution } from './games/FakeArtistGame/components/FakeArtistDistribution';
-import { FakeArtistVoting } from './games/FakeArtistGame/components/FakeArtistVoting';
-import { ResistanceDistribution } from './games/ResistanceGame/components/ResistanceDistribution';
-import { ResistanceGame } from './games/ResistanceGame/ResistanceGame';
-import { WavelengthGame } from './games/WavelengthGame/WavelengthGame';
-import { TelestrationsGame } from './games/TelestrationsGame/TelestrationsGame';
-import { JustOneGame } from './games/JustOneGame/JustOneGame';
-import { Player, GameStatus } from './types';
-import { SPY_HUNT_INSTRUCTIONS } from './constants/spyHuntContent';
-import { FAKE_ARTIST_INSTRUCTIONS } from './constants/fakeArtistContent';
-import { RESISTANCE_INSTRUCTIONS } from './constants/resistanceContent';
-import { ALIAS_INSTRUCTIONS } from './constants/aliasContent';
-import { Shield, Palette, Brain, RotateCcw, Pencil, Lightbulb, Radio } from 'lucide-react';
-
+import { UniversalGameSettings } from './components/UniversalGameSettings';
+import { Player, GameStatus, GameState } from './types';
+import { storageService } from './services/storageService';
+import { Settings } from './components/Settings';
+import { Settings as SettingsIcon } from 'lucide-react';
 import { initSpyHunt, initFakeArtist, initResistance } from './utils/gameLogic';
+import { GameSettingsProvider, useGameSettings } from './contexts/GameSettingsContext';
+import { GAMES_REGISTRY, SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame, RoleDistribution, FakeArtistDistribution, ResistanceDistribution, FakeArtistVoting } from './registry/GameRegistry';
 
-export default function App() {
-  const [status, setStatus] = useState<any>('menu');
+function AppContent() {
+  const { difficulty, mode, rounds, timerSeconds, setDifficulty, setMode, setRounds, setTimerSeconds, currentGameId, setCurrentGameId } = useGameSettings();
+  const [status, setStatus] = useState<GameStatus>('menu');
   const [players, setPlayers] = useState<Player[]>([]);
-  const [gameState, setGameState] = useState<any>({
-    location: '', word: '', category: '', winner: null, canvasImage: ''
+  const [gameState, setGameState] = useState<GameState>({
+    players: [],
+    status: 'menu',
+    location: '', 
+    word: '', 
+    category: '', 
+    winner: null, 
+    canvasImage: '', 
+    rounds: 2
   });
 
-  const startGame = useCallback((playerNames: string[]) => {
-    switch (status) {
-      case 'setup': {
-        const { players: p, location } = initSpyHunt(playerNames);
-        setPlayers(p);
-        setGameState((prev: any) => ({ ...prev, location }));
-        setStatus('distributing');
-        break;
-      }
-      case 'fake_artist_setup': {
-        const { players: p } = initFakeArtist(playerNames);
-        setPlayers(p);
-        setStatus('fake_artist_distributing');
-        break;
-      }
-      case 'resistance_setup': {
-        const { players: p } = initResistance(playerNames);
-        setPlayers(p);
-        setStatus('resistance_distributing');
-        break;
-      }
-      case 'alias_setup':
-      case 'just_one_setup':
-      case 'telestrations_setup':
-      case 'wavelength_setup': {
-        const p = playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false }));
-        setPlayers(p);
-        const map: Record<string, GameStatus> = {
-          alias_setup: 'alias',
-          just_one_setup: 'just_one_playing',
-          telestrations_setup: 'telestrations_playing',
-          wavelength_setup: 'wavelength_playing'
-        };
-        setStatus(map[status]);
-        break;
-      }
-    }
+  const reset = useCallback(() => setStatus('menu'), []);
+
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [status]);
 
-  const handleFinishDistribution = (word?: string, category?: string) => {
-    if (status === 'distributing') setStatus('playing');
-    else if (status === 'fake_artist_distributing') {
-      setGameState({...gameState, word, category});
-      setStatus('fake_artist_playing');
-    } else setStatus('resistance_playing');
+  const startGame = useCallback((playerNames: string[]) => {
+    if (!currentGameId) return;
+    
+    storageService.savePlayers(playerNames);
+    
+    const config = GAMES_REGISTRY[currentGameId];
+    let initializedPlayers: Player[] = [];
+    
+    switch (currentGameId) {
+      case 'spy': {
+        const { players: p, location } = initSpyHunt(playerNames, difficulty, mode);
+        initializedPlayers = p;
+        setGameState(prev => ({ ...prev, location }));
+        break;
+      }
+      case 'fake_artist': {
+        const { players: p } = initFakeArtist(playerNames);
+        initializedPlayers = p;
+        break;
+      }
+      case 'resistance': {
+        const { players: p } = initResistance(playerNames);
+        initializedPlayers = p;
+        break;
+      }
+      default:
+        initializedPlayers = playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false }));
+    }
+
+    setPlayers(initializedPlayers);
+    setStatus(config.setupStatus);
+  }, [currentGameId, difficulty, mode]);
+
+  const handleMenuSelect = (gameId: string) => {
+    setCurrentGameId(gameId);
+    setStatus('setup');
   };
 
-  const handleMenuSelect = (id: string) => {
-    if (id === 'spy') setStatus('setup');
-    else if (id === 'fake_artist') setStatus('fake_artist_setup');
-    else if (id === 'resistance') setStatus('resistance_setup');
-    else if (id === 'alias') setStatus('alias_setup');
-    else if (id === 'just_one') setStatus('just_one_setup');
-    else if (id === 'telestrations') setStatus('telestrations_setup');
-    else if (id === 'wavelength') setStatus('wavelength_setup');
+  const renderGame = () => {
+    const playerNames = players.map(p => p.name);
+    
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white/50 font-black uppercase tracking-widest animate-pulse">Загрузка...</div>}>
+        {(() => {
+          switch (status) {
+            case 'alias_playing': return <AliasGame playerNames={playerNames} onBack={reset} />;
+            case 'just_one_playing': return <JustOneGame playerNames={playerNames} onBack={reset} />;
+            case 'telestrations_playing': return <TelestrationsGame playerNames={playerNames} onBack={reset} />;
+            case 'wavelength_playing': return <WavelengthGame playerNames={playerNames} onBack={reset} />;
+            case 'codenames_playing': return <CodenamesGame playerNames={playerNames} onBack={reset} />;
+            case 'decrypto_playing': return <DecryptoGame playerNames={playerNames} onBack={reset} />;
+            case 'mafia_playing': return <MafiaGame playerNames={playerNames} onBack={reset} />;
+            
+            case 'playing': return <SpyHuntGame players={players} location={gameState.location!} onRestart={() => setStatus('setup')} onFinish={reset} />;
+            case 'fake_artist_playing': return <FakeArtistGame players={players} word={gameState.word} category={gameState.category} rounds={gameState.rounds} timerSeconds={gameState.timerSeconds} onBack={reset} onFinish={(img) => { setGameState({...gameState, canvasImage: img}); setStatus('fake_artist_voting'); }} />;
+            case 'resistance_playing': return <ResistanceGame players={players} onBack={reset} onFinish={reset} />;
+            
+            case 'distributing': return <RoleDistribution players={players} location={gameState.location!} onFinish={() => setStatus('playing')} />;
+            case 'fake_artist_distributing': return <FakeArtistDistribution players={players} onFinish={(word, category, rounds, timerSeconds) => { setGameState({...gameState, word, category, rounds, timerSeconds}); setStatus('fake_artist_playing'); }} />;
+            case 'resistance_distributing': return <ResistanceDistribution players={players} onFinish={() => setStatus('resistance_playing')} />;
+            
+            case 'fake_artist_voting': return <FakeArtistVoting players={players} canvasImage={gameState.canvasImage} onReveal={reset} />;
+            
+            case 'setup': {
+              const config = GAMES_REGISTRY[currentGameId!];
+              return (
+                <Setup 
+                  onStart={startGame} 
+                  onBack={reset} 
+                  title={config.title} 
+                  subtitle={config.subtitle} 
+                  icon={config.icon} 
+                  themeColor={config.theme} 
+                  playerPlaceholder={config.placeholder} 
+                  addPlayerLabel="Добавить"
+                  instructions={config.instructions} 
+                  description={config.description}
+                  minPlayers={config.minPlayers} 
+                >
+                  <UniversalGameSettings 
+                    difficulty={difficulty}
+                    setDifficulty={setDifficulty}
+                    currentGameId={currentGameId!}
+                    mode={config.modes ? mode : undefined}
+                    setMode={config.modes ? setMode : undefined}
+                    rounds={rounds}
+                    setRounds={setRounds}
+                    timerSeconds={timerSeconds}
+                    setTimerSeconds={setTimerSeconds}
+                    modes={config.modes}
+                  />
+                </Setup>
+              );
+            }
+            case 'settings': return <Settings onBack={reset} />;
+            default: return (
+              <div className="relative">
+                <MainMenu onSelectGame={handleMenuSelect} />
+                <button 
+                  onClick={() => setStatus('settings')}
+                  className="fixed bottom-6 right-6 w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 active:scale-95 transition-all shadow-2xl backdrop-blur-xl z-50"
+                >
+                  <SettingsIcon className="w-6 h-6" />
+                </button>
+              </div>
+            );
+          }
+        })()}
+      </Suspense>
+    );
   };
-
-  const reset = () => setStatus('menu');
 
   return (
-      <div className="min-h-screen bg-black safe-top safe-bottom">
-        {status === 'menu' && <MainMenu onSelectGame={handleMenuSelect} />}
-        {status === 'setup' && <Setup onStart={startGame} onBack={reset} title="SPY HUNT" subtitle="Найдите шпиона" icon={Shield} themeColor="red" playerPlaceholder="Агент" addPlayerLabel="Добавить" instructions={SPY_HUNT_INSTRUCTIONS} minPlayers={4} />}
-        {status === 'fake_artist_setup' && <Setup onStart={startGame} onBack={reset} title="FAKE ARTIST" subtitle="Рисуйте вместе" icon={Palette} themeColor="emerald" playerPlaceholder="Художник" addPlayerLabel="Добавить" instructions={FAKE_ARTIST_INSTRUCTIONS} minPlayers={4} />}
-        {status === 'resistance_setup' && <Setup onStart={startGame} onBack={reset} title="RESISTANCE" subtitle="Свергните тиранию" icon={Shield} themeColor="sky" playerPlaceholder="Боец" addPlayerLabel="Добавить" instructions={RESISTANCE_INSTRUCTIONS} minPlayers={5} />}
-        {status === 'alias_setup' && <Setup onStart={startGame} onBack={reset} title="ALIAS" subtitle="Объясни быстрее" icon={Brain} themeColor="sky" playerPlaceholder="Игрок" addPlayerLabel="Добавить" instructions={ALIAS_INSTRUCTIONS} minPlayers={4} />}
-        {status === 'just_one_setup' && <Setup onStart={startGame} onBack={reset} title="JUST ONE" subtitle="Пойми намек" icon={Lightbulb} themeColor="yellow" playerPlaceholder="Игрок" addPlayerLabel="Добавить" instructions={[]} minPlayers={3} />}
-        {status === 'wavelength_setup' && <Setup onStart={startGame} onBack={reset} title="WAVELENGTH" subtitle="На одной волне" icon={Radio} themeColor="purple" playerPlaceholder="Игрок" addPlayerLabel="Добавить" instructions={[]} minPlayers={2} />}
-        {status === 'telestrations_setup' && <Setup onStart={startGame} onBack={reset} title="TELESTRATIONS" subtitle="Испорченный телефон" icon={Pencil} themeColor="orange" playerPlaceholder="Игрок" addPlayerLabel="Добавить" instructions={[]} minPlayers={4} />}
-
-        {status === 'distributing' && <RoleDistribution players={players} location={gameState.location} onFinish={() => setStatus('playing')} />}
-        {status === 'fake_artist_distributing' && <FakeArtistDistribution players={players} onFinish={handleFinishDistribution} />}
-        {status === 'resistance_distributing' && <ResistanceDistribution players={players} onFinish={() => setStatus('resistance_playing')} />}
-
-        {status === 'playing' && <SpyHuntGame players={players} location={gameState.location} onRestart={() => setStatus('setup')} onFinish={() => setStatus('menu')} />}
-        {status === 'fake_artist_playing' && <FakeArtistGame players={players} word={gameState.word} category={gameState.category} rounds={2} timerSeconds={0} onBack={reset} onFinish={(img) => { setGameState({...gameState, canvasImage: img}); setStatus('fake_artist_voting'); }} />}
-        {status === 'fake_artist_voting' && <FakeArtistVoting players={players} canvasImage={gameState.canvasImage} onReveal={reset} />}
-        {status === 'resistance_playing' && <ResistanceGame players={players} onBack={reset} onFinish={reset} />}
-        {status === 'alias' && <AliasGame playerNames={players.map(p => p.name)} onBack={reset} />}
-        {status === 'just_one_playing' && <JustOneGame playerNames={players.map(p => p.name)} onBack={reset} />}
-        {status === 'telestrations_playing' && <TelestrationsGame playerNames={players.map(p => p.name)} onBack={reset} />}
-        {status === 'wavelength_playing' && <WavelengthGame playerNames={players.map(p => p.name)} onBack={reset} />}
+    <div className="min-h-screen safe-top safe-bottom flex flex-col items-center">
+      <div className="w-full max-w-3xl min-h-screen relative flex flex-col shadow-2xl bg-black/20 backdrop-blur-3xl ring-1 ring-white/5">
+         {renderGame()}
       </div>
+    </div>
   );
 }
+
+export default function App() {
+  return (
+    <GameSettingsProvider>
+      <AppContent />
+    </GameSettingsProvider>
+  );
+}
+
