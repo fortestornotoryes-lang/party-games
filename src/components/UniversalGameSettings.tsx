@@ -3,6 +3,9 @@ import { motion } from 'motion/react';
 import { SectionLabel } from './UI';
 import { Difficulty, GameMode, GameModeOption } from '../types';
 import { Shield, Zap, Target, LucideIcon } from 'lucide-react';
+import { storageService } from '../services/storageService';
+import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
+import { FAKE_ARTIST_DATA_BY_DIFFICULTY, FakeArtistDifficulty } from '../constants/fakeArtistContent';
 
 // ─── universal setting row ────────────────────────────────────────────────────
 
@@ -98,11 +101,31 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
   difficultyLabel = 'Сложность',
   modeLabel = 'Режим игры',
 }) => {
+  const getRemainingWords = (d: Difficulty): number | undefined => {
+    if (currentGameId === 'spy') {
+      const used = storageService.getUsedWords('spy');
+      const pool = LOCATIONS_BY_DIFFICULTY[d as SpyDifficulty];
+      return pool ? pool.filter(l => !used.includes(l.name)).length : undefined;
+    }
+    if (currentGameId === 'fake_artist') {
+      const used = storageService.getUsedWords('fake_artist');
+      const pool = FAKE_ARTIST_DATA_BY_DIFFICULTY[d as FakeArtistDifficulty];
+      return pool ? pool.filter(w => !used.includes(w.word)).length : undefined;
+    }
+    return undefined;
+  };
+
   const getDiffSublabel = (d: Difficulty): string | undefined => {
+    const remaining = getRemainingWords(d);
+
     switch (currentGameId) {
       case 'telestrations': return d === 'easy' ? '90с / 45с' : d === 'medium' ? '60с / 30с' : '45с / 25с';
-      case 'spy':           return d === 'easy' ? '10 мин'    : d === 'medium' ? '8 мин'     : '5 мин';
-      case 'alias':         return d === 'easy' ? '90 сек'    : d === 'medium' ? '60 сек'    : '40 сек';
+      case 'spy': {
+        const time = d === 'easy' ? '10 мин' : d === 'medium' ? '8 мин' : '5 мин';
+        return remaining !== undefined ? `${time} · ${remaining}` : time;
+      }
+      case 'alias': return d === 'easy' ? '90 сек' : d === 'medium' ? '60 сек' : '40 сек';
+      case 'fake_artist': return remaining !== undefined ? `${remaining} сл` : undefined;
       default: return undefined;
     }
   };
