@@ -42,6 +42,7 @@ export default function App() {
     winner: null as 'resistance' | 'spies' | null,
     rounds: 2,
     timerSeconds: 0,
+    canvasImage: '',
   });
 
   const startGame = useCallback((playerNames: string[]) => {
@@ -146,7 +147,7 @@ export default function App() {
   const resetToMenu = () => {
     setStatus('menu');
     setPlayers([]);
-    setGameState({ location: '', word: '', category: '', winner: null, rounds: 2, timerSeconds: 0 });
+    setGameState({ location: '', word: '', category: '', winner: null, rounds: 2, timerSeconds: 0, canvasImage: '' });
   };
 
   const restartGame = (type: 'spy' | 'fake' | 'resistance') => {
@@ -156,7 +157,7 @@ export default function App() {
       setGameState(prev => ({ ...prev, location: '' }));
     } else if (type === 'fake') {
       setStatus('fake_artist_setup');
-      setGameState(prev => ({ ...prev, word: '', category: '', rounds: 2, timerSeconds: 0 }));
+      setGameState(prev => ({ ...prev, word: '', category: '', rounds: 2, timerSeconds: 0, canvasImage: '' }));
     } else {
       setStatus('resistance_setup');
       setGameState(prev => ({ ...prev, winner: null }));
@@ -284,12 +285,16 @@ export default function App() {
           rounds={gameState.rounds}
           timerSeconds={gameState.timerSeconds}
           onBack={resetToMenu}
-          onFinish={handleFinishGame}
+          onFinish={(imageUrl) => {
+            setGameState(prev => ({ ...prev, canvasImage: imageUrl }));
+            setStatus('fake_artist_voting');
+          }}
         />
       )}
       {status === 'fake_artist_voting' && (
         <FakeArtistVoting
           players={players}
+          canvasImage={gameState.canvasImage}
           onReveal={() => setStatus('fake_artist_result')}
         />
       )}

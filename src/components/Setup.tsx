@@ -131,6 +131,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
                 type="text"
                 value={player.name}
                 onChange={e => onChange(player.id, e.target.value)}
+                autoComplete="off"
                 className={`flex-1 min-w-0 bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 focus:outline-none ${config.focus} transition-colors text-base font-medium placeholder:text-gray-700`}
                 placeholder={`${placeholder} ${index + 1}`}
             />

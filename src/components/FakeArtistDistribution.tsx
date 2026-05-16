@@ -29,7 +29,7 @@ export const FakeArtistDistribution: React.FC<FakeArtistDistributionProps> = ({ 
   const [word, setWord] = useState('');
   const [category, setCategory] = useState('');
 
-  const [selectedDifficulty, setSelectedDifficulty] = useState<FakeArtistDifficulty | null>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<FakeArtistDifficulty>('easy');
   const [selectedRounds, setSelectedRounds] = useState(2);
   const [selectedTimer, setSelectedTimer] = useState(0);
 

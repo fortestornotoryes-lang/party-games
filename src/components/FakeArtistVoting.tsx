@@ -5,10 +5,11 @@ import { Player } from '../types';
 
 interface FakeArtistVotingProps {
   players: Player[];
+  canvasImage: string;
   onReveal: () => void;
 }
 
-export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, onReveal }) => {
+export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, canvasImage, onReveal }) => {
   const [voted, setVoted] = useState<string | null>(null);
 
   return (
@@ -39,6 +40,24 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, onR
             Рисование закончено. Обсудите между собой — кто из вас самозванец?
           </p>
         </div>
+
+        {/* Drawing */}
+        {canvasImage && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.15 }}
+            className="w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-lg"
+          >
+            <img
+              src={canvasImage}
+              alt=""
+              draggable={false}
+              className="w-full block select-none"
+              style={{ maxHeight: '42vh', objectFit: 'contain' }}
+            />
+          </motion.div>
+        )}
 
         {/* Players to vote on */}
         <div className="space-y-2">

@@ -17,7 +17,7 @@ interface FakeArtistGameProps {
   rounds: number;
   timerSeconds: number;
   onBack: () => void;
-  onFinish: () => void;
+  onFinish: (imageUrl: string) => void;
 }
 
 const PLAYER_COLORS = [
@@ -33,6 +33,7 @@ const PLAYER_COLORS = [
 export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, category, rounds, timerSeconds, onBack, onFinish }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const redrawRef = useRef<() => void>(() => {});
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<{ x: number; y: number }[] | null>(null);
   const [turnIndex, setTurnIndex] = useState(0);
@@ -45,12 +46,26 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
 
   const totalTurns = players.length * rounds;
   const currentPlayer = players[turnIndex % players.length];
-  const playerColor = PLAYER_COLORS[turnIndex % PLAYER_COLORS.length];
+  const playerColor = PLAYER_COLORS[turnIndex % players.length];
 
   const advanceTurn = useCallback(() => {
     const nextIdx = turnIndex + 1;
     if (nextIdx >= totalTurns) {
-      onFinish();
+      let imageUrl = '';
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const temp = document.createElement('canvas');
+        temp.width = canvas.width;
+        temp.height = canvas.height;
+        const ctx = temp.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, temp.width, temp.height);
+          ctx.drawImage(canvas, 0, 0);
+          imageUrl = temp.toDataURL('image/png');
+        }
+      }
+      onFinish(imageUrl);
     } else {
       setTurnIndex(nextIdx);
       setHasDrawnThisTurn(false);
@@ -100,7 +115,7 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
       canvas.height = rect.height * dpr;
       const ctx = canvas.getContext('2d');
       if (ctx) ctx.scale(dpr, dpr);
-      redraw();
+      redrawRef.current();
     });
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
@@ -132,6 +147,7 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
     }
   };
 
+  redrawRef.current = redraw;
   useEffect(() => { redraw(); }, [strokes, currentStroke]);
 
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
@@ -246,7 +262,7 @@ export const FakeArtistGame: React.FC<FakeArtistGameProps> = ({ players, word, c
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
         >
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white" />
           <AnimatePresence>
             {timeExpired && (
               <motion.div
