@@ -5,6 +5,7 @@ import { PrimaryButton } from '../../components/UI';
 import { Grid, Eye, EyeOff, User, Users, AlertTriangle, Zap } from 'lucide-react';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface CodenamesGameProps {
   playerNames: string[];
@@ -182,7 +183,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
   return (
     <div className="flex flex-col min-h-screen text-white pb-20">
       <GameHeader 
-        title="КОДОВЫЕ ИМЕНА" 
+        title={GAMES_REGISTRY.codenames.title}
         subtitle="Битва шпионов" 
         icon={Grid} 
         themeColor="text-emerald-500 bg-emerald-500/90 border-emerald-500/30" 

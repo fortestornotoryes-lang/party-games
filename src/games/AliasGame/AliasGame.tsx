@@ -8,6 +8,8 @@ import { ALIAS_CATEGORIES } from '../../constants/aliasContent';
 import { GameHeader } from '../../components/GameHeader';
 import { useTimer } from '../../hooks/useTimer';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
 
 interface Team {
   name: string;
@@ -21,6 +23,7 @@ interface AliasGameProps {
 }
 
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
+  const { difficulty } = useGameSettings();
   const [teams, setTeams] = useState<Team[]>([]);
   const [currentTeamIdx, setCurrentTeamIdx] = useState(0);
   const [phase, setPhase] = useState<'start' | 'playing' | 'round_end' | 'game_over'>('start');
@@ -33,12 +36,17 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   });
 
   const getAvailableWords = () => {
-    const staticWords = ALIAS_CATEGORIES.flatMap(c => c.words);
+    const targetCategories = ALIAS_CATEGORIES.filter(c => {
+      if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
+      if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
+      return true;
+    });
+    const staticWords = targetCategories.flatMap(c => c.words);
     const customWords = storageService.getCustomWords('alias');
     const used = storageService.getUsedWords('alias');
     const all = [...staticWords, ...customWords];
     let available = all.filter(w => !used.includes(w));
-    
+
     if (available.length === 0) {
       storageService.resetUsedWords('alias');
       available = all;
@@ -119,7 +127,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   return (
     <div className="flex flex-col h-screen bg-[#0a0502]">
       <GameHeader 
-        title="ALIAS" 
+        title={GAMES_REGISTRY.alias.title}
         subtitle="Объясни быстрее" 
         icon={Brain} 
         themeColor="border-sky-500/50 text-sky-400"
@@ -143,7 +151,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                     {teams[currentTeamIdx].name}
                   </h3>
                 </div>
-                <p className="text-xl font-bold text-white/40 uppercase tracking-widest">Твой черед объяснять!</p>
+                <p className="text-xl font-bold text-white/80 uppercase tracking-widest">Твой черед объяснять!</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">

@@ -5,9 +5,11 @@ import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { LOCATIONS, QUESTION_IDEAS, GAME_DURATION } from '../../constants/spyHuntContent';
+import { LOCATIONS, QUESTION_IDEAS, GAME_DURATION_BY_DIFFICULTY } from '../../constants/spyHuntContent';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface GameProps {
   players: Player[];
@@ -17,7 +19,9 @@ interface GameProps {
 }
 
 export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart, onFinish }) => {
-  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+  const { difficulty } = useGameSettings();
+  const gameDuration = GAME_DURATION_BY_DIFFICULTY[(difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'] ?? 480;
+  const [timeLeft, setTimeLeft] = useState(gameDuration);
   const [showLocations, setShowLocations] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [phase, setPhase] = useState<'playing' | 'reveal'>('playing');
@@ -50,7 +54,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
   return (
     <div className="flex flex-col min-h-screen bg-[#060807] text-[#e5e7eb] font-sans pb-10">
       <GameHeader 
-        title="SPY HUNT" 
+        title={GAMES_REGISTRY.spy.title}
         subtitle={phase === 'playing' ? "Идет поиск..." : "Результаты"} 
         icon={Skull} 
         themeColor="border-red-500/50 text-red-400"

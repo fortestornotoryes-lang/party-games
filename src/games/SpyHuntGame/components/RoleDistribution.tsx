@@ -38,10 +38,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
           transition={{ duration: 0.3 }}
           className="w-full max-w-sm space-y-8 flex flex-col items-center"
         >
-          <div className="text-center space-y-1">
-              <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-bold">Личный доступ</p>
-              <h3 className="text-2xl font-black text-white/50 italic tracking-tighter uppercase">{currentPlayer.name}</h3>
-          </div>
+
 
           <div className="w-full aspect-[4/5] bg-white/5 border-2 border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden shadow-2xl" onClick={() => setIsRevealed(true)}>
             {!isRevealed ? (

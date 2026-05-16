@@ -43,7 +43,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-red/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,46,77,0.15),transparent_70%)]',
         focus: 'focus:border-premium-red/50',
-        addHover: 'hover:bg-premium-red/5 hover:text-white/40 hover:border-premium-red/20',
+        addHover: 'hover:bg-premium-red/5 hover:text-white/80 hover:border-premium-red/20',
         closeHover: 'hover:bg-premium-red/10 hover:text-premium-red',
         indexBg: 'bg-premium-red/20 text-premium-red border-premium-red/30',
     },
@@ -55,7 +55,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-green/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(0,216,138,0.15),transparent_70%)]',
         focus: 'focus:border-premium-green/50',
-        addHover: 'hover:bg-premium-green/5 hover:text-white/40 hover:border-premium-green/20',
+        addHover: 'hover:bg-premium-green/5 hover:text-white/80 hover:border-premium-green/20',
         closeHover: 'hover:bg-premium-green/10 hover:text-premium-green',
         indexBg: 'bg-premium-green/20 text-premium-green border-premium-green/30',
     },
@@ -67,7 +67,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-sky/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(31,182,255,0.15),transparent_70%)]',
         focus: 'focus:border-premium-sky/50',
-        addHover: 'hover:bg-premium-sky/5 hover:text-white/40 hover:border-premium-sky/20',
+        addHover: 'hover:bg-premium-sky/5 hover:text-white/80 hover:border-premium-sky/20',
         closeHover: 'hover:bg-premium-sky/10 hover:text-premium-sky',
         indexBg: 'bg-premium-sky/20 text-premium-sky border-premium-sky/30',
     },
@@ -79,7 +79,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-orange/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,138,31,0.15),transparent_70%)]',
         focus: 'focus:border-premium-orange/50',
-        addHover: 'hover:bg-premium-orange/5 hover:text-white/40 hover:border-premium-orange/20',
+        addHover: 'hover:bg-premium-orange/5 hover:text-white/80 hover:border-premium-orange/20',
         closeHover: 'hover:bg-premium-orange/10 hover:text-premium-orange',
         indexBg: 'bg-premium-orange/20 text-premium-orange border-premium-orange/30',
     },
@@ -91,7 +91,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-purple/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(199,123,255,0.15),transparent_70%)]',
         focus: 'focus:border-premium-purple/50',
-        addHover: 'hover:bg-premium-purple/5 hover:text-white/40 hover:border-premium-purple/20',
+        addHover: 'hover:bg-premium-purple/5 hover:text-white/80 hover:border-premium-purple/20',
         closeHover: 'hover:bg-premium-purple/10 hover:text-premium-purple',
         indexBg: 'bg-premium-purple/20 text-premium-purple border-premium-purple/30',
     },
@@ -103,7 +103,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-yellow/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,216,77,0.15),transparent_70%)]',
         focus: 'focus:border-premium-yellow/50',
-        addHover: 'hover:bg-premium-yellow/5 hover:text-white/40 hover:border-premium-yellow/20',
+        addHover: 'hover:bg-premium-yellow/5 hover:text-white/80 hover:border-premium-yellow/20',
         closeHover: 'hover:bg-premium-yellow/10 hover:text-premium-yellow',
         indexBg: 'bg-premium-yellow/20 text-premium-yellow border-premium-yellow/30',
     },
@@ -115,7 +115,7 @@ const colorConfig: Record<GameTheme, {
         shadow: 'shadow-premium-blue/40',
         gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(63,123,255,0.15),transparent_70%)]',
         focus: 'focus:border-premium-blue/50',
-        addHover: 'hover:bg-premium-blue/5 hover:text-white/40 hover:border-premium-blue/20',
+        addHover: 'hover:bg-premium-blue/5 hover:text-white/80 hover:border-premium-blue/20',
         closeHover: 'hover:bg-premium-blue/10 hover:text-premium-blue',
         indexBg: 'bg-premium-blue/20 text-premium-blue border-premium-blue/30',
     },
@@ -227,7 +227,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                     <div className="flex items-center justify-between mb-10">
                         <button 
                             onClick={onBack}
-                            className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-white active:scale-90 transition-all border-none"
+                            className="w-12 h-12 z-50 rounded-full glass-card flex items-center justify-center text-white active:scale-90 transition-all border-none"
                         >
                             <ArrowLeft className="w-6 h-6" />
                         </button>
@@ -253,7 +253,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className={`w-1 h-3 rounded-full ${config.text} bg-current`} />
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 italic">
                                     {subtitle}
                                 </span>
                             </div>
@@ -269,13 +269,13 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                     <div className="flex items-center justify-between mb-6 px-1">
                         <div className="flex items-center gap-3">
                              <Users className={`w-4 h-4 ${config.text}`} />
-                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">УЧАСТНИКИ</span>
+                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">УЧАСТНИКИ</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <button onClick={shufflePlayers} className="text-white/20 hover:text-white/50 active:scale-90 transition-all">
                                 <Shuffle className="w-5 h-5" />
                             </button>
-                            <div className={`px-4 py-1 rounded-premium-sm border border-white/5 bg-white/3 text-[11px] font-black italic text-white/40 tracking-tighter`}>
+                            <div className={`px-4 py-1 rounded-premium-sm border border-white/5 bg-white/3 text-[11px] font-black italic text-white/80 tracking-tighter`}>
                                 {players.length} / {maxPlayers}
                             </div>
                         </div>
@@ -311,14 +311,13 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
             </motion.div>
 
             {/* Footer Buttons */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 p-6 pb-10 bg-gradient-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent pt-12">
+            <div className="fixed bottom-0 left-0 right-0 z-50 p-6 pb-10 bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent pt-12">
                 <div className="grid grid-cols-[1fr_2fr] gap-5 max-w-md mx-auto">
                     <button 
                         onClick={() => setShowInstructions(true)} 
                         className="h-16 glass-card rounded-premium-md flex items-center justify-center gap-3 text-white/80 active:scale-95 transition-all group border-white/5"
                     >
                         <HelpCircle className="w-7 h-7 transition-colors group-hover:text-white/60" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] italic group-hover:text-white/60">БРИФ</span>
                     </button>
                     
                     <button 
@@ -326,7 +325,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                         onClick={() => onStart(players.map(p => p.name))} 
                         className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-linear-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         <Play className="w-6 h-6 fill-current relative z-10" />
                         <span className="text-2xl font-black uppercase tracking-tighter italic relative z-10 leading-none">СТАРТ</span>
                     </button>

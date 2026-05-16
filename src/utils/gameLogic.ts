@@ -1,5 +1,5 @@
 import { Player } from '../types';
-import { LOCATIONS_DATA } from '../constants/spyHuntContent';
+import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
 import { shuffle } from './random';
 import { storageService } from '../services/storageService';
 
@@ -8,12 +8,13 @@ export const generateId = () => Math.random().toString(36).substr(2, 9);
 export const initSpyHunt = (playerNames: string[], difficulty: string = 'medium', mode: string = 'classic') => {
   const custom = storageService.getCustomWords('spy');
   const used = storageService.getUsedWords('spy');
-  
-  const defaultRoles = ["Агент", "Специалист", "Наблюдатель", "Сотрудник", "Гость", "Персонал", "Охранник"];
-  
+
+  const defaultRoles = ['Агент', 'Специалист', 'Наблюдатель', 'Сотрудник', 'Гость', 'Персонал', 'Охранник'];
+  const diffKey = (difficulty as SpyDifficulty) in LOCATIONS_BY_DIFFICULTY ? difficulty as SpyDifficulty : 'medium';
+
   const allLocations = [
-    ...LOCATIONS_DATA,
-    ...custom.map(name => ({ name, roles: defaultRoles }))
+    ...LOCATIONS_BY_DIFFICULTY[diffKey],
+    ...custom.map(name => ({ name, roles: defaultRoles, difficulty: diffKey }))
   ];
 
   let available = allLocations.filter(l => !used.includes(l.name));

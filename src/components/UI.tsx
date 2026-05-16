@@ -75,7 +75,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     blue: "bg-premium-blue text-white shadow-[0_20px_50px_rgba(63,123,255,0.3)]",
     emerald: "bg-premium-green text-white shadow-[0_20px_50px_rgba(0,216,138,0.3)]",
     purple: "bg-premium-purple text-white shadow-[0_20px_50px_rgba(199,123,255,0.3)]",
-    outline: "bg-transparent text-white/40 border border-white/5 hover:bg-white/5",
+    outline: "bg-transparent text-white/80 border border-white/5 hover:bg-white/5",
   };
 
   return (
@@ -181,7 +181,7 @@ export const Typography = {
     </h2>
   ),
   Description: ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <p className={`text-sm text-white/40 leading-relaxed font-medium ${className}`}>
+    <p className={`text-sm text-white/80 leading-relaxed font-medium ${className}`}>
       {children}
     </p>
   )

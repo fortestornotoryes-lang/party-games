@@ -30,10 +30,10 @@ const ResistanceDistribution = lazy(() => import('../games/ResistanceGame/compon
 const FakeArtistVoting = lazy(() => import('../games/FakeArtistGame/components/FakeArtistVoting').then(m => ({ default: m.FakeArtistVoting })));
 
 export const GAMES_REGISTRY: Record<string, GameMetadata> = {
-  spy: { 
-    id: 'spy', 
-    title: 'ШПИОН', 
-    subtitle: 'Поиск тайного агента', 
+  spy: {
+    id: 'spy',
+    title: 'SPY HUNT',
+    subtitle: 'Поиск тайного агента',
     icon: Shield, 
     theme: 'red', 
     placeholder: 'Игрок', 
@@ -51,8 +51,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   fake_artist: { 
     id: 'fake_artist', 
-    title: 'АРТ-ОБМАН', 
-    subtitle: 'Найдите фейкового автора', 
+    title: 'FAKE ARTIST',
+    subtitle: 'Найдите фейкового автора',
     icon: Palette, 
     theme: 'emerald', 
     placeholder: 'Игрок', 
@@ -65,8 +65,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   resistance: { 
     id: 'resistance', 
-    title: 'СОПРОТИВЛЕНИЕ', 
-    subtitle: 'Свергните тиранию', 
+    title: 'RESISTANCE',
+    subtitle: 'Свергните тиранию',
     icon: Shield, 
     theme: 'sky', 
     players: '5–10',
@@ -79,8 +79,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   alias: { 
     id: 'alias', 
-    title: 'АЛИАС', 
-    subtitle: 'Объясни быстрее всех', 
+    title: 'ALIAS',
+    subtitle: 'Объясни быстрее всех',
     icon: Brain, 
     theme: 'sky', 
     placeholder: 'Игрок', 
@@ -92,8 +92,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   just_one: { 
     id: 'just_one', 
-    title: 'ПРОСТО СЛОВО', 
-    subtitle: 'Пойми намек команды', 
+    title: 'JUST ONE',
+    subtitle: 'Пойми намек команды',
     icon: Lightbulb, 
     theme: 'yellow', 
     placeholder: 'Игрок', 
@@ -105,8 +105,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   telestrations: { 
     id: 'telestrations', 
-    title: 'ТЕЛЕФОН', 
-    subtitle: 'Испорченный рисунок', 
+    title: 'TELESTRATIONS',
+    subtitle: 'Испорченный рисунок',
     icon: Pencil, 
     theme: 'orange', 
     placeholder: 'Игрок', 
@@ -118,8 +118,8 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   wavelength: { 
     id: 'wavelength', 
-    title: 'ВОЛНА', 
-    subtitle: 'На одной волне', 
+    title: 'WAVELENGTH',
+    subtitle: 'На одной волне',
     icon: Radio, 
     theme: 'purple', 
     placeholder: 'Игрок', 
@@ -131,7 +131,7 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   codenames: {
     id: 'codenames',
-    title: 'КОДОВЫЕ ИМЕНА',
+    title: 'CODENAMES',
     subtitle: 'Битва шпионов',
     icon: Grid,
     theme: 'emerald',
@@ -149,7 +149,7 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   decrypto: {
     id: 'decrypto',
-    title: 'ДЕКРИПТО',
+    title: 'DECRYPTO',
     subtitle: 'Коды и перехваты',
     icon: Key,
     theme: 'purple',
@@ -167,7 +167,7 @@ export const GAMES_REGISTRY: Record<string, GameMetadata> = {
   },
   mafia: {
     id: 'mafia',
-    title: 'МАФИЯ',
+    title: 'MAFIA',
     subtitle: 'Город засыпает...',
     icon: Users,
     theme: 'orange',

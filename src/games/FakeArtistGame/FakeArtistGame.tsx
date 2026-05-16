@@ -7,6 +7,7 @@ import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface Props {
   players: Player[];
@@ -130,7 +131,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
   return (
     <div className="flex flex-col min-h-screen bg-[#060807] overflow-hidden select-none relative">
        <GameHeader
-          title="FAKE ARTIST"
+          title={GAMES_REGISTRY.fake_artist.title}
           subtitle={`Ход ${turnIndex + 1} / ${players.length * rounds}`}
           icon={Palette}
           themeColor="border-emerald-500/50 text-emerald-400"
@@ -149,20 +150,13 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
               </div>
               <div className="text-right space-y-1">
                   {timerSeconds > 0 && (
-                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-white/40'}`}>
+                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-white/80'}`}>
                         {timeLeft}с
                      </p>
                   )}
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Тема</p>
                   <h3 className="text-xl font-black italic uppercase text-emerald-500 leading-none">{category}</h3>
               </div>
-          </div>
-
-          <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
-             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60 mb-1">Секретное слово</p>
-             <p className="text-xl font-black italic uppercase tracking-tight">
-               {players[turnIndex % players.length].isSpy ? 'ТЫ САМОЗВАНЕЦ' : word}
-             </p>
           </div>
 
           <GameCard className="w-full flex-1 p-0 overflow-hidden relative border-emerald-500/20">
@@ -213,7 +207,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
-               className="absolute inset-0 bg-[#060807] z-10 flex flex-col items-center justify-center p-6 space-y-8"
+               className="absolute inset-0 bg-[#060807] z-10 flex flex-col items-center justify-between pt-20 p-6 space-y-8"
             >
                <div className="text-center space-y-4">
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 
@@ -33,6 +33,12 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
 }) => {
   const themeConfig = themes[theme] || themes.red;
 
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -40,7 +46,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex flex-col bg-[#0B0915]/98 backdrop-blur-3xl overflow-y-auto"
+          className="fixed inset-0 z-[100] flex flex-col bg-[#0B0915]/98 overflow-y-auto"
         >
           <div className="w-full max-w-lg mx-auto p-8 flex flex-col min-h-screen">
             <div className="mb-12 flex justify-start">
@@ -55,7 +61,6 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
             <div className="mb-12">
               <div className="flex items-center gap-4 mb-4">
                  <div className={`w-8 h-0.5 rounded-full ${themeConfig.accent} bg-current opacity-60`} />
-                 <span className={`text-[11px] font-black tracking-[0.5em] uppercase ${themeConfig.accent} italic`}>БРИФИНГ</span>
               </div>
               <h2 className="text-[54px] font-black italic uppercase tracking-tighter leading-[0.8] text-white mb-8 pr-12">
                 {title}
@@ -79,7 +84,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                   </div>
                   <div className="pt-1">
                     <h4 className="text-[17px] font-black text-white uppercase tracking-tighter mb-2 italic">{item.title}</h4>
-                    <p className="text-sm text-white/40 leading-relaxed font-medium">{item.content}</p>
+                    <p className="text-sm text-white/80 leading-relaxed font-medium">{item.content}</p>
                   </div>
                 </motion.div>
               ))}

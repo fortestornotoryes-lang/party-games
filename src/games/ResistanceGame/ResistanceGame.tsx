@@ -6,6 +6,7 @@ import { Player } from '../../types';
 import { MISSION_SIZES } from '../../constants/resistanceContent';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface ResistanceGameProps {
   players: Player[];
@@ -91,7 +92,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
   return (
     <div className="flex flex-col min-h-screen bg-[#060807] text-[#e5e7eb] font-sans pb-10">
        <GameHeader 
-          title="RESISTANCE" 
+          title={GAMES_REGISTRY.resistance.title}
           subtitle={`Миссия ${missionIndex + 1}`} 
           icon={Shield} 
           themeColor="border-blue-500/50 text-blue-400"

@@ -1,11 +1,73 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { SectionLabel } from './UI';
-import { Difficulty, GameMode } from '../types';
+import { Difficulty, GameMode, GameModeOption } from '../types';
 import { Shield, Zap, Target, LucideIcon } from 'lucide-react';
-import { contentService } from '../services/contentService';
 
-import { GameModeOption } from '../types';
+// ─── universal setting row ────────────────────────────────────────────────────
+
+const colorStyles = {
+  green:  'bg-premium-green/10  border-premium-green/40  text-premium-green  shadow-[0_0_20px_rgba(0,216,138,0.12)]',
+  sky:    'bg-premium-sky/10    border-premium-sky/40    text-premium-sky    shadow-[0_0_20px_rgba(31,182,255,0.12)]',
+  red:    'bg-premium-red/10    border-premium-red/40    text-premium-red    shadow-[0_0_20px_rgba(255,46,77,0.12)]',
+  orange: 'bg-premium-orange/10 border-premium-orange/40 text-premium-orange shadow-[0_0_20px_rgba(255,138,31,0.12)]',
+  purple: 'bg-premium-purple/10 border-premium-purple/40 text-premium-purple shadow-[0_0_20px_rgba(199,123,255,0.12)]',
+} as const;
+
+type OptionColor = keyof typeof colorStyles;
+
+interface SettingOption {
+  value: string | number;
+  label: string;
+  sublabel?: string;
+  color?: OptionColor;
+}
+
+interface SettingRowProps {
+  label: string;
+  icon: LucideIcon;
+  options: SettingOption[];
+  value: string | number;
+  onChange: (v: any) => void;
+  color?: OptionColor;
+}
+
+const SettingRow: React.FC<SettingRowProps> = ({ label, icon: Icon, options, value, onChange, color = 'green' }) => (
+  <div>
+    <div className="flex items-center gap-3 mb-6 px-1">
+      <Icon className="w-4 h-4 text-white/20" />
+      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">{label}</span>
+    </div>
+    <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}>
+      {options.map((opt) => {
+        const isActive = value === opt.value;
+        return (
+          <motion.button
+            key={opt.value}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onChange(opt.value)}
+            className={`flex flex-col items-center justify-center rounded-premium-md transition-all border h-14 ${
+              isActive
+                ? colorStyles[opt.color ?? color]
+                : 'glass-card border-white/5 text-white/20 opacity-60'
+            }`}
+          >
+            <span className={`text-[13px] font-black italic uppercase tracking-tighter ${isActive ? '' : 'text-white/80'}`}>
+              {opt.label}
+            </span>
+            {opt.sublabel && (
+              <span className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${isActive ? 'opacity-80' : 'text-white/20'}`}>
+                {opt.sublabel}
+              </span>
+            )}
+          </motion.button>
+        );
+      })}
+    </div>
+  </div>
+);
+
+// ─── main component ───────────────────────────────────────────────────────────
 
 interface UniversalGameSettingsProps {
   difficulty: Difficulty;
@@ -34,86 +96,42 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
   setTimerSeconds,
   modes = [],
   difficultyLabel = 'Сложность',
-  modeLabel = 'Режим игры'
+  modeLabel = 'Режим игры',
 }) => {
-  const getDiffExtraInfo = (d: Difficulty) => {
+  const getDiffSublabel = (d: Difficulty): string | undefined => {
     switch (currentGameId) {
-      case 'telestrations':
-        if (d === 'easy') return '90с / 45с';
-        if (d === 'medium') return '60с / 30с';
-        return '45с / 25с';
-      case 'spy':
-        if (d === 'easy') return '10 мин';
-        if (d === 'medium') return '8 мин';
-        return '5 мин';
-      case 'alias':
-        if (d === 'easy') return '90 сек';
-        if (d === 'medium') return '60 сек';
-        return '40 сек';
-      default: return null;
+      case 'telestrations': return d === 'easy' ? '90с / 45с' : d === 'medium' ? '60с / 30с' : '45с / 25с';
+      case 'spy':           return d === 'easy' ? '10 мин'    : d === 'medium' ? '8 мин'     : '5 мин';
+      case 'alias':         return d === 'easy' ? '90 сек'    : d === 'medium' ? '60 сек'    : '40 сек';
+      default: return undefined;
     }
   };
 
-  const getRemainingCount = (d: Difficulty) => {
-    if (!currentGameId || currentGameId === 'spy') return null;
-    return contentService.getRemainingWordsCount(currentGameId, d);
-  };
+  const difficultyOptions: SettingOption[] = [
+    { value: 'easy',   label: 'ЛЕГКО', sublabel: getDiffSublabel('easy'),   color: 'green' },
+    { value: 'medium', label: 'НОРМА', sublabel: getDiffSublabel('medium'), color: 'sky'   },
+    { value: 'hard',   label: 'ПРОФИ', sublabel: getDiffSublabel('hard'),   color: 'red'   },
+  ];
 
   return (
     <div className="space-y-12 mb-10">
-      <div>
-        <div className="flex items-center gap-3 mb-6 px-1">
-           <Target className="w-4 h-4 text-white/20" />
-           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">{difficultyLabel}</span>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => {
-            const extra = getDiffExtraInfo(d);
-            const isActive = difficulty === d;
-            
-            return (
-              <motion.button
-                key={d}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setDifficulty(d)}
-                className={`flex flex-col items-center justify-center py-6 rounded-premium-md transition-all relative overflow-hidden h-24 ${
-                  isActive
-                    ? d === 'easy' ? 'bg-premium-green/10 border-premium-green/40 text-premium-green shadow-[0_0_30px_rgba(0,216,138,0.15)] border' :
-                      d === 'medium' ? 'bg-premium-sky/10 border-premium-sky/40 text-premium-sky shadow-[0_0_30px_rgba(31,182,255,0.15)] border' :
-                      'bg-premium-red/10 border-premium-red/40 text-premium-red shadow-[0_0_30px_rgba(255,46,77,0.15)] border'
-                    : 'glass-card border-white/5 opacity-60 hover:opacity-60 border'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="active-diff-bg"
-                    className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none"
-                  />
-                )}
-                <span className={`text-[13px] font-black italic uppercase tracking-tighter mb-0.5 ${isActive ? '' : 'text-white/40'}`}>
-                  {d === 'easy' ? 'ЛЕГКО' : d === 'medium' ? 'НОРМА' : 'ПРОФИ'}
-                </span>
-                {extra && (
-                  <span className={`text-[9px] font-bold uppercase tracking-widest ${isActive ? 'opacity-80' : 'text-white/20'}`}>
-                    {extra}
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
-      </div>
+      <SettingRow
+        label={difficultyLabel}
+        icon={Target}
+        options={difficultyOptions}
+        value={difficulty}
+        onChange={setDifficulty}
+      />
 
       {modes.length > 0 && setMode && (
         <div>
-           <div className="flex items-center gap-3 mb-6 px-1">
-              <Zap className="w-4 h-4 text-white/20" />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">{modeLabel}</span>
-           </div>
+          <div className="flex items-center gap-3 mb-6 px-1">
+            <Zap className="w-4 h-4 text-white/20" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">{modeLabel}</span>
+          </div>
           <div className="flex flex-col gap-4">
             {modes.map((m) => {
               const isActive = mode === m.id;
-              
               return (
                 <motion.button
                   key={m.id}
@@ -122,7 +140,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                   className={`p-6 rounded-premium-lg border transition-all text-left flex items-center gap-6 relative overflow-hidden ${
                     isActive
                       ? 'bg-premium-red/10 border-premium-red/40 text-white shadow-[0_0_30px_rgba(255,46,77,0.15)]'
-                      : 'glass-card border-white/5 text-white/80 hover:bg-white/5'
+                      : 'glass-card border-white/5 text-white/80'
                   }`}
                 >
                   <div className={`w-14 h-14 shrink-0 rounded-[18px] flex items-center justify-center transition-all ${
@@ -130,7 +148,6 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                   }`}>
                     <m.icon className="w-7 h-7" />
                   </div>
-                  
                   <div className="flex-1">
                     <div className="text-[17px] font-black italic uppercase tracking-tight mb-1 text-white opacity-90">{m.name}</div>
                     <div className="text-[12px] font-medium leading-tight opacity-60 italic">{m.desc}</div>
@@ -142,44 +159,30 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         </div>
       )}
 
-      {currentGameId === 'fake_artist' && setRounds && setTimerSeconds && (
-        <div className="space-y-12">
-          <div>
-            <div className="flex items-center gap-3 mb-6 px-1">
-               <Shield className="w-4 h-4 text-white/20" />
-               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Раунды</span>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3].map(r => (
-                <button
-                  key={r}
-                  onClick={() => setRounds(r)}
-                  className={`py-6 rounded-premium-md text-[11px] font-black uppercase tracking-[0.2em] italic border transition-all ${rounds === r ? 'bg-premium-green/10 border-premium-green/40 text-premium-green shadow-[0_0_30px_rgba(0,216,138,0.15)]' : 'glass-card border-white/5 text-white/20 opacity-60'}`}
-                >
-                  {r} {r === 1 ? 'КРУГ' : 'КРУГА'}
-                </button>
-              ))}
-            </div>
-          </div>
+      {currentGameId === 'fake_artist' && setRounds && (
+        <SettingRow
+          label="Раунды"
+          icon={Shield}
+          color="green"
+          value={rounds ?? 2}
+          onChange={setRounds}
+          options={[1, 2, 3].map(r => ({ value: r, label: `${r} ${r === 1 ? 'КРУГ' : 'КРУГА'}` }))}
+        />
+      )}
 
-          <div>
-            <div className="flex items-center gap-3 mb-6 px-1">
-               <Zap className="w-4 h-4 text-white/20" />
-               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Таймер хода</span>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {[0, 15, 30].map(s => (
-                <button
-                  key={s}
-                  onClick={() => setTimerSeconds(s)}
-                  className={`py-6 rounded-premium-md text-[11px] font-black uppercase tracking-[0.2em] italic border transition-all h-16 flex items-center justify-center ${timerSeconds === s ? 'bg-premium-green/10 border-premium-green/40 text-premium-green shadow-[0_0_30px_rgba(0,216,138,0.15)]' : 'glass-card border-white/5 text-white/20 opacity-60'}`}
-                >
-                  {s === 0 ? '∞' : `${s} СЕК`}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+      {currentGameId === 'fake_artist' && setTimerSeconds && (
+        <SettingRow
+          label="Таймер хода"
+          icon={Zap}
+          color="green"
+          value={timerSeconds ?? 0}
+          onChange={setTimerSeconds}
+          options={[
+            { value: 0,  label: '∞' },
+            { value: 15, label: '15 СЕК' },
+            { value: 30, label: '30 СЕК' },
+          ]}
+        />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Users, Shield, Moon, Sun } from 'lucide-react';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface Props {
   playerNames: string[];
@@ -19,7 +20,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
       </motion.div>
 
       <div className="space-y-2">
-        <h2 className="text-3xl font-black italic uppercase tracking-tighter">МАФИЯ</h2>
+        <h2 className="text-3xl font-black italic uppercase tracking-tighter">{GAMES_REGISTRY.mafia.title}</h2>
         <p className="text-gray-500 uppercase tracking-[0.2em] text-[10px] font-bold">Город засыпает...</p>
       </div>
 

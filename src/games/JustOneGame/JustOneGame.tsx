@@ -4,9 +4,11 @@ import { Lightbulb, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { JUST_ONE_WORDS } from '../../constants/justOneContent';
+import { JUST_ONE_DATA_BY_DIFFICULTY } from '../../constants/justOneContent';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
 
 interface JustOneGameProps {
   playerNames: string[];
@@ -14,6 +16,7 @@ interface JustOneGameProps {
 }
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
+  const { difficulty } = useGameSettings();
   const [guesserIdx, setGuesserIdx] = useState(0);
   const [word, setWord] = useState('');
   const [hints, setHints] = useState<{ [playerName: string]: string }>({});
@@ -30,7 +33,8 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   const generateNewWord = () => {
     const custom = storageService.getCustomWords('just_one');
     const used = storageService.getUsedWords('just_one');
-    const allWords = [...JUST_ONE_WORDS, ...custom];
+    const difficultyWords = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] ?? JUST_ONE_DATA_BY_DIFFICULTY.medium;
+    const allWords = [...difficultyWords, ...custom];
     
     let available = allWords.filter(w => !used.includes(w));
     
@@ -99,7 +103,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   return (
     <div className="flex flex-col h-screen bg-[#07050a]">
       <GameHeader 
-        title="JUST ONE" 
+        title={GAMES_REGISTRY.just_one.title}
         subtitle="Пойми намек" 
         icon={Lightbulb} 
         themeColor="border-yellow-500/50 text-yellow-500"
@@ -132,7 +136,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               </div>
 
               <GameCard className="text-center bg-white/[0.02]">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Отгадывает</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/80 mb-1">Отгадывает</p>
                 <h3 className="text-2xl font-black italic uppercase text-yellow-500">{guesser}</h3>
               </GameCard>
 
@@ -234,7 +238,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                     <h2 className="text-6xl font-black italic uppercase tracking-tighter text-red-500">ОШИБКА</h2>
                   </>
                 )}
-                <p className="text-xl font-bold uppercase tracking-widest text-white/40">Загаданное слово:</p>
+                <p className="text-xl font-bold uppercase tracking-widest text-white/80">Загаданное слово:</p>
                 <div className="text-5xl font-black italic uppercase tracking-tighter">{word}</div>
                 {!isCorrect && <p className="text-xl font-bold uppercase tracking-widest text-red-400/60">Твой ответ: {guess}</p>}
               </div>

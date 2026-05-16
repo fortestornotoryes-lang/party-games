@@ -4,7 +4,6 @@ import {Shield, Zap, Users, Brain, Palette, RotateCcw, Pencil, Lightbulb, PartyP
 
 import {storageService} from '../services/storageService';
 import {useGameSettings} from '../contexts/GameSettingsContext';
-import {SectionLabel, Badge, Typography, PageWrapper, ParallaxBackground} from './UI';
 import {JUST_ONE_WORDS} from '../constants/justOneContent';
 import {ALIAS_CATEGORIES} from '../constants/aliasContent';
 import {LOCATIONS_DATA} from '../constants/spyHuntContent';
@@ -146,10 +145,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                     <motion.div
                         initial={{scale: 0.8, opacity: 0}}
                         animate={{scale: 1, opacity: 1}}
-                        className="inline-flex items-center justify-center w-24 h-24 rounded-4xl glass-card mb-10 shadow-2xl relative mx-auto group cursor-pointer"
+                        className="inline-flex items-center justify-center w-24 h-24 rounded-4xl glass-card mb-10 shadow-2xl relative mx-auto cursor-pointer"
                     >
-                        <div
-                            className="absolute inset-0 rounded-4xl bg-premium-red/30 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
                         <div className="w-14 h-14 flex items-center justify-center relative">
                             <div className="absolute inset-0 border-[3px] border-white/5 rounded-full"/>
                             <div
@@ -165,7 +162,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                     </motion.div>
 
                     <h1 className="text-[58px] font-black italic tracking-tighter uppercase leading-[0.7] mb-8 select-none">
-                        PARTY <span className="text-premium-red drop-shadow-[0_0_25px_rgba(255,46,77,0.5)]">HUB</span>
+                        PARTY <span className="text-premium-red">HUB</span>
                     </h1>
                 </div>
 
@@ -214,9 +211,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
 
                                 <div className="relative shrink-0">
                                     <div
-                                        className={`absolute inset-0 rounded-[28px] ${themeCfg.iconBg} blur-2xl opacity-10 group-hover:opacity-30 transition-opacity duration-500`}/>
-                                    <div
-                                        className={`w-20 h-20 rounded-3xl ${themeCfg.iconBg} flex items-center justify-center shadow-2xl relative z-10 overflow-hidden`}>
+                                        className={`w-20 h-20 rounded-3xl ${themeCfg.iconBg} flex items-center justify-center relative overflow-hidden`}>
                                         <div
                                             className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"/>
                                         <Icon

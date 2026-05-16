@@ -3,7 +3,7 @@ import { ALIAS_CATEGORIES } from '../constants/aliasContent';
 import { JUST_ONE_DATA_BY_DIFFICULTY } from '../constants/justOneContent';
 import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../constants/wavelengthContent';
 import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '../constants/fakeArtistContent';
-import { LOCATIONS } from '../constants/spyHuntContent';
+import { LOCATIONS, LOCATIONS_BY_DIFFICULTY } from '../constants/spyHuntContent';
 import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../constants/telestrationsContent';
 import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesContent';
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
@@ -137,7 +137,7 @@ export const contentService = {
         total = (TELESTRATIONS_WORDS[difficulty] || TELESTRATIONS_WORDS.medium).length + custom.length;
         break;
       case 'spy':
-        total = LOCATIONS.length;
+        total = (LOCATIONS_BY_DIFFICULTY[difficulty] ?? LOCATIONS_BY_DIFFICULTY.medium).length + custom.length;
         break;
       case 'codenames':
         total = (CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium).length + custom.length;

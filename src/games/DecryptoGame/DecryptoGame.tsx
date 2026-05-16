@@ -5,6 +5,7 @@ import { PrimaryButton } from '../../components/UI';
 import { Users, KeyRound, AlertOctagon, CheckCircle2, Key } from 'lucide-react';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface DecryptoGameProps {
   playerNames: string[];
@@ -205,7 +206,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
   return (
     <div className="flex flex-col min-h-screen text-white pb-20">
       <GameHeader 
-        title="ДЕКРИПТО" 
+        title={GAMES_REGISTRY.decrypto.title}
         subtitle="Коды и перехваты" 
         icon={Key} 
         themeColor="text-purple-500 bg-purple-500/10 border-purple-500/30" 

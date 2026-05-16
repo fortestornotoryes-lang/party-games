@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Ghost, Users, Eye } from 'lucide-react';
+import { Ghost, Users, Maximize2, X } from 'lucide-react';
 import { Player } from '../../../types';
 
 interface FakeArtistVotingProps {
@@ -11,26 +11,53 @@ interface FakeArtistVotingProps {
 
 export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, canvasImage, onReveal }) => {
   const [revealed, setRevealed] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const spy = players.find(p => p.isSpy);
+
+  useEffect(() => {
+    if (!fullscreen) return;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, [fullscreen]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#0a0502] text-gray-200 overflow-hidden">
       <div className="w-full max-w-md flex flex-col gap-8">
-        <div className="text-center space-y-3">
-          <Users className="w-12 h-12 text-violet-400 mx-auto" />
-          <h1 className="text-4xl font-black italic uppercase">Обсуждение</h1>
-          <p className="text-gray-400 text-sm">Кто из вас самозванец?</p>
-        </div>
-
         {canvasImage && (
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+            className="w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative group"
           >
             <img src={canvasImage} alt="Final" className="w-full h-auto max-h-[40vh] object-contain bg-white" />
+            <button
+              onClick={() => setFullscreen(true)}
+              className="absolute top-3 right-3 w-9 h-9 bg-black/50 rounded-xl flex items-center justify-center text-white/80 active:scale-90 transition-all"
+            >
+              <Maximize2 className="w-4 h-4" />
+            </button>
           </motion.div>
         )}
+
+        <AnimatePresence>
+          {fullscreen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+              onClick={() => setFullscreen(false)}
+            >
+              <img src={canvasImage} alt="Full" className="w-full h-full object-contain" />
+              <button
+                onClick={() => setFullscreen(false)}
+                className="absolute top-5 right-5 w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center text-white active:scale-90 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence mode="wait">
           {!revealed ? (

@@ -4,9 +4,11 @@ import { Radio, RotateCcw, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { feedbackService } from '../../services/feedbackService';
 import { storageService } from '../../services/storageService';
-import { WAVELENGTH_CATEGORIES } from '../../constants/wavelengthContent';
+import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../../constants/wavelengthContent';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface WavelengthGameProps {
   playerNames: string[];
@@ -14,6 +16,7 @@ interface WavelengthGameProps {
 }
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onBack }) => {
+  const { difficulty } = useGameSettings();
   const [phase, setPhase] = useState<'pass' | 'clue' | 'guessing' | 'reveal'>('pass');
   const [currentPair, setCurrentPair] = useState<string[]>(['', '']);
   const [targetValue, setTargetValue] = useState(50);
@@ -27,10 +30,10 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const startNewRound = () => {
     const custom = storageService.getCustomWords('wavelength');
     const used = storageService.getUsedWords('wavelength');
-    
-    // Custom wavelength categories are expected to be "Start - End" or simplified
+    const difficultyPairs = WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] ?? WAVELENGTH_DATA_BY_DIFFICULTY.medium;
+
     const all = [
-      ...WAVELENGTH_CATEGORIES,
+      ...difficultyPairs,
       ...custom.map(w => w.split(' - ').length === 2 ? w.split(' - ') : [w, '...'])
     ];
 
@@ -91,7 +94,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   return (
     <div className="flex flex-col h-screen bg-[#07050a]">
       <GameHeader 
-        title="WAVELENGTH" 
+        title={GAMES_REGISTRY.wavelength.title}
         subtitle="На одной волне" 
         icon={Radio} 
         themeColor="border-purple-500/50 text-purple-400"
@@ -135,7 +138,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
                                 <div className="h-8 w-1 bg-white" />
                             </motion.div>
                         </div>
-                        <div className="flex justify-between mt-4 text-[10px] font-black uppercase tracking-widest text-white/40">
+                        <div className="flex justify-between mt-4 text-[10px] font-black uppercase tracking-widest text-white/80">
                             <span>{currentPair[0]}</span>
                             <span>{currentPair[1]}</span>
                         </div>
