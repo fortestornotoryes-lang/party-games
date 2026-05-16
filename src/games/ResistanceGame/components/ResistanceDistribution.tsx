@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, EyeOff, CheckCircle2, Skull, Users } from 'lucide-react';
-import { Player } from '../types';
+import { Player } from '../../../types';
 
 interface ResistanceDistributionProps {
   players: Player[];

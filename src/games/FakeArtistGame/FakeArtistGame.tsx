@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, CheckCircle2, Home, Brush, HelpCircle, X, Undo2, Timer } from 'lucide-react';
-import { Player } from '../types';
-import { FAKE_ARTIST_INSTRUCTIONS } from '../constants/fakeArtistContent';
-import { InstructionsModal } from './InstructionsModal';
+import { Player } from '../../types';
+import { FAKE_ARTIST_INSTRUCTIONS } from '../../constants/fakeArtistContent';
+import { InstructionsModal } from '../../components/InstructionsModal';
 
 interface Stroke {
   points: { x: number; y: number }[];

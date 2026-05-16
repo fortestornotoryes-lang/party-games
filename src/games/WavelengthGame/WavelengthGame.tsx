@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useCountdown } from '../hooks/useCountdown';
+import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import { RotateCcw, Home, HelpCircle, X, CheckCircle2, Eye, EyeOff, Timer, History } from 'lucide-react';
-import { WAVELENGTH_INSTRUCTIONS, WAVELENGTH_CATEGORIES } from '../constants/wavelengthContent';
-import { shuffle } from '../utils/random';
-import { InstructionsModal } from './InstructionsModal';
+import { WAVELENGTH_INSTRUCTIONS, WAVELENGTH_CATEGORIES } from '../../constants/wavelengthContent';
+import { shuffle } from '../../utils/random';
+import { InstructionsModal } from '../../components/InstructionsModal';
 
 interface WavelengthGameProps {
   playerNames: string[];

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useCountdown } from '../hooks/useCountdown';
+import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, SkipForward, CheckCircle2, RotateCcw, Home, Brain, Zap, Trophy, Target, ArrowRight, Shuffle, ChevronRight, ChevronLeft } from 'lucide-react';
-import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../constants/aliasContent';
-import { shuffle } from '../utils/random';
+import { ALIAS_CATEGORIES, WordCategory, ALIAS_INSTRUCTIONS } from '../../constants/aliasContent';
+import { shuffle } from '../../utils/random';
 
 interface AliasGameProps {
   playerNames: string[];

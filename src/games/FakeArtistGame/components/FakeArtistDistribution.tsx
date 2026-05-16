@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, Ghost, Palette, ChevronRight } from 'lucide-react';
-import { Player } from '../types';
+import { Player } from '../../../types';
 import {
   FAKE_ARTIST_DATA_BY_DIFFICULTY,
   FAKE_ARTIST_DIFFICULTY_CONFIG,
   FakeArtistDifficulty,
-} from '../constants/fakeArtistContent';
+} from '../../../constants/fakeArtistContent';
 
 interface FakeArtistDistributionProps {
   players: Player[];

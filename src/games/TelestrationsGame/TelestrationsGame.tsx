@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useCountdown } from '../hooks/useCountdown';
+import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } from 'lucide-react';
-import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../constants/telestrationsContent';
-import { shuffle } from '../utils/random';
-import { InstructionsModal } from './InstructionsModal';
-import { DrawingCanvas } from './DrawingCanvas';
+import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
+import { shuffle } from '../../utils/random';
+import { InstructionsModal } from '../../components/InstructionsModal';
+import { DrawingCanvas } from '../../components/DrawingCanvas';
 
 interface TelestrationsGameProps {
   playerNames: string[];

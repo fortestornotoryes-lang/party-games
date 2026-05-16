@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, ArrowRight, RotateCcw, Home, HelpCircle, X, CheckCircle2, ShieldAlert, Users, Brain } from 'lucide-react';
-import { JUST_ONE_INSTRUCTIONS, JUST_ONE_WORDS } from '../constants/justOneContent';
-import { InstructionsModal } from './InstructionsModal';
+import { JUST_ONE_INSTRUCTIONS, JUST_ONE_WORDS } from '../../constants/justOneContent';
+import { InstructionsModal } from '../../components/InstructionsModal';
 
 interface JustOneGameProps {
   playerNames: string[];

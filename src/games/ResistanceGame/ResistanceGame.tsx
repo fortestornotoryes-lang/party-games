@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Skull, CheckCircle2, XCircle, Users, ArrowRight, Home, HelpCircle, X, ChevronRight } from 'lucide-react';
-import { Player } from '../types';
-import { RESISTANCE_INSTRUCTIONS, MISSION_SIZES } from '../constants/resistanceContent';
-import { InstructionsModal } from './InstructionsModal';
+import { Player } from '../../types';
+import { RESISTANCE_INSTRUCTIONS, MISSION_SIZES } from '../../constants/resistanceContent';
+import { InstructionsModal } from '../../components/InstructionsModal';
 
 interface ResistanceGameProps {
   players: Player[];

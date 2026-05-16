@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Ghost, Palette, RotateCcw, Skull } from 'lucide-react';
-import { Player } from '../types';
+import { Player } from '../../../types';
 
 interface FakeArtistResultProps {
   players: Player[];
