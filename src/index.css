@@ -14,7 +14,7 @@
 
   body {
     @apply  text-gray-200 antialiased selection:bg-red-500/30 selection:text-red-200;
-  }
+  } 
 
   /* Custom scrollbar for a more professional feel */
   ::-webkit-scrollbar {
