@@ -134,39 +134,14 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                 transition={{duration: 0.5}}
                 className="w-full max-w-md relative z-10"
             >
-                <div className="absolute top-4 right-4 z-20">
-                    <button
-                        className="w-12 h-12 rounded-premium-sm glass-card flex items-center justify-center text-premium-yellow active:scale-90 transition-all border-none">
-                        <Zap className="w-5 h-5 fill-current"/>
-                    </button>
-                </div>
 
                 <div className="text-center px-4">
-                    <motion.div
-                        initial={{scale: 0.8, opacity: 0}}
-                        animate={{scale: 1, opacity: 1}}
-                        className="inline-flex items-center justify-center w-24 h-24 rounded-4xl glass-card mb-10 shadow-2xl relative mx-auto cursor-pointer"
-                    >
-                        <div className="w-14 h-14 flex items-center justify-center relative">
-                            <div className="absolute inset-0 border-[3px] border-white/5 rounded-full"/>
-                            <div
-                                className="absolute inset-0 border-[3px] border-premium-red rounded-full border-t-transparent animate-[spin_1.5s_linear_infinite]"/>
-                            <div className="flex flex-wrap items-center justify-center gap-0.5 w-7 h-7">
-                                {[...Array(8)].map((_, r) => (
-                                    <div key={r} className="w-1.5 h-1.5 bg-premium-red rounded-full" style={{
-                                        transform: `rotate(${r * 45}deg) translateY(-10px)`
-                                    }}/>
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
-
                     <h1 className="text-[58px] font-black italic tracking-tighter uppercase leading-[0.7] mb-8 select-none">
                         PARTY <span className="text-premium-red">HUB</span>
                     </h1>
                 </div>
 
-                <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 pb-24">
+                <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
                     {GAMES.map((game) => {
                         const Icon = game.icon;
                         const stats = getGameStats(game.id);
@@ -179,7 +154,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                                 variants={item}
                                 whileTap={{scale: 0.98}}
                                 onClick={() => onSelectGame(game.id)}
-                                className="w-full p-6 glass-card rounded-premium-lg flex items-center gap-6 transition-all duration-500 text-left relative group overflow-hidden border-white/10 hover:border-white/20"
+                                className="w-full p-6 glass-card rounded-premium-lg flex items-center gap-6 text-left relative group overflow-hidden transition-all duration-500 bg-white/[0.01] backdrop-blur-3xl 0 hover:bg-white/[0.06]"
                             >
                                 <div className="flex-1 min-w-0 flex flex-col justify-center">
                                     <div className="flex items-center justify-between mb-2">

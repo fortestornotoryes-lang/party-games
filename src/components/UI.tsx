@@ -165,7 +165,7 @@ export const IconButton: React.FC<{
 export const TextInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => (
   <input 
     {...props}
-    className={`h-14 glass-card rounded-premium-md px-6 text-base font-semibold outline-none transition-all placeholder:text-white/10 w-full focus:ring-1 focus:ring-white/20 border-white/10 ${props.className || ''}`}
+    className={`h-9 glass-card rounded-premium-md px-6 text-base font-semibold outline-none transition-all placeholder:text-white/10 w-full focus:ring-1 focus:ring-white/20 border-white/10 ${props.className || ''}`}
   />
 );
 

@@ -157,7 +157,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
         >
             <div 
                 onPointerDown={e => dragControls.start(e)} 
-                className="w-5 h-14 shrink-0 flex items-center justify-center text-white/10 hover:text-white/80 cursor-grab active:cursor-grabbing touch-none select-none"
+                className="w-5 h-9 shrink-0 flex items-center justify-center text-white/10 hover:text-white/80 cursor-grab active:cursor-grabbing touch-none select-none"
             >
                 <GripVertical className="w-5 h-5" />
             </div>
@@ -171,7 +171,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
                     value={player.name}
                     onChange={e => onChange(player.id, e.target.value)}
                     autoComplete="off"
-                    className={`h-14 px-6 glass-card rounded-premium-md w-full text-base font-semibold placeholder:text-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-white/20 ${config.focus}`}
+                    className={`h-9 px-6 glass-card rounded-premium-md w-full text-base font-semibold placeholder:text-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-white/20 ${config.focus}`}
                     placeholder={`${placeholder} ${index + 1}`}
                 />
             </div>
@@ -179,7 +179,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
             <button 
                 onClick={() => onRemove(player.id)} 
                 disabled={!canRemove}
-                className={`w-12 h-14 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
             >
                 <UserMinus className="w-5 h-5" />
             </button>
@@ -219,7 +219,6 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
     return (
         <div className="min-h-screen pt-6 pb-32 px-6 relative flex flex-col items-center">
             {/* Ambient Background Gradient */}
-            <div className={`fixed inset-x-0 top-0 h-[60vh] transition-colors duration-700 ${config.gradient} pointer-events-none opacity-60`} />
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
                 {/* Header Section */}
@@ -232,14 +231,14 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                             <ArrowLeft className="w-6 h-6" />
                         </button>
 
-                        <div className={`w-14 h-14 rounded-[20px] glass-card flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.5)] border-white/10`}>
+                        <div className={`w-12 h-12 rounded-[20px] glass-card flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.5)] border-white/10`}>
                             <div className={`absolute inset-0 rounded-[20px] blur-xl opacity-20 ${config.bg}`} />
                             <Icon className={`w-7 h-7 ${config.text} relative z-10`} />
                         </div>
                     </div>
 
                     <div className="px-1">
-                        <h2 className="text-[52px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
+                        <h2 className="text-[42px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
                             {titleWords.length > 1 ? (
                                 <>
                                     {titleWords.slice(0, -1).join(' ')} <br />
@@ -299,7 +298,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                     {players.length < maxPlayers && (
                         <button 
                             onClick={addPlayer} 
-                            className={`w-full mt-4 h-16 border-2 border-dashed border-white/5 rounded-premium-lg flex items-center justify-center gap-4 text-[11px] font-black uppercase tracking-[0.4em] text-white/10 transition-all ${config.addHover} hover:border-dashed`}
+                            className={`w-full mt-4 h-12 border-2 border-dashed border-white/25 rounded-premium-lg flex items-center justify-center gap-4 text-[11px] font-black uppercase tracking-[0.4em] text-white/50 transition-all ${config.addHover} hover:border-dashed`}
                         >
                             <UserPlus className="w-5 h-5" />
                             <span>Добавить</span>
