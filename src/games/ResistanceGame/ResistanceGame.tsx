@@ -201,7 +201,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                        </div>
                     </div>
 
-                    <PrimaryButton onClick={() => onFinish(winner!)} icon={RotateCcw} variant="colored">ЗАНОВО</PrimaryButton>
+                    <PrimaryButton onClick={() => onFinish(winner!)} icon={RotateCcw} variant="blue">ЗАНОВО</PrimaryButton>
                 </motion.div>
             )}
           </AnimatePresence>

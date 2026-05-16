@@ -250,7 +250,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                 </p>
               </div>
 
-              <PrimaryButton onClick={onBack} icon={RotateCcw} variant="colored">
+              <PrimaryButton onClick={onBack} icon={RotateCcw} variant="emerald">
                 В ГЛАВНОЕ МЕНЮ
               </PrimaryButton>
             </motion.div>
