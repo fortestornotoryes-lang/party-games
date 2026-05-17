@@ -217,13 +217,13 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
     const titleWords = title.split(' ');
 
     return (
-        <div className="min-h-screen pt-6 pb-32 px-6 relative flex flex-col items-center">
+        <div className="min-h-screen pt-6 pb-24 px-6 relative flex flex-col items-center">
             {/* Ambient Background Gradient */}
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
                 {/* Header Section */}
                 <div className="relative mb-12">
-                    <div className="flex items-center justify-between mb-10">
+                    <div className="flex items-center justify-between mb-4">
                         <button 
                             onClick={onBack}
                             className="w-12 h-12 z-50 rounded-full glass-card flex items-center justify-center text-white active:scale-90 transition-all border-none"
@@ -238,7 +238,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                     </div>
 
                     <div className="px-1">
-                        <h2 className="text-[42px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
+                        <h2 className="text-[42px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8 text-center">
                             {titleWords.length > 1 ? (
                                 <>
                                     {titleWords.slice(0, -1).join(' ')} <br />
@@ -310,7 +310,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
             </motion.div>
 
             {/* Footer Buttons */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 p-6 pb-10 bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent pt-12">
+            <div className="fixed bottom-0 left-0 right-0 z-50 p-6  bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent">
                 <div className="grid grid-cols-[1fr_2fr] gap-5 max-w-md mx-auto">
                     <button 
                         onClick={() => setShowInstructions(true)} 
