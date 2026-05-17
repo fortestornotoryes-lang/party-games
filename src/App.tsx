@@ -14,6 +14,8 @@ import { Settings as SettingsIcon } from 'lucide-react';
 import { initSpyHunt, initFakeArtist, initResistance } from './utils/gameLogic';
 import { GameSettingsProvider, useGameSettings } from './contexts/GameSettingsContext';
 import { GAMES_REGISTRY, SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame, RoleDistribution, FakeArtistDistribution, ResistanceDistribution, FakeArtistVoting } from './registry/GameRegistry';
+import { GAME_INSTRUCTIONS } from './constants/instructions';
+import { GameKey } from './types/games';
 
 function AppContent() {
   const { difficulty, mode, rounds, timerSeconds, setDifficulty, setMode, setRounds, setTimerSeconds, currentGameId, setCurrentGameId } = useGameSettings();
@@ -111,7 +113,7 @@ function AppContent() {
                   themeColor={config.theme} 
                   playerPlaceholder={config.placeholder} 
                   addPlayerLabel="Добавить"
-                  instructions={config.instructions} 
+                  instructions={GAME_INSTRUCTIONS[currentGameId as GameKey] ?? []}
                   description={config.description}
                   minPlayers={config.minPlayers} 
                 >

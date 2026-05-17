@@ -5,7 +5,9 @@ import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } fro
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { TELESTRATIONS_INSTRUCTIONS, WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
+import { WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
+import { GAME_INSTRUCTIONS } from '../../constants/instructions';
+import { GameKey } from '../../types/games';
 import { shuffle } from '../../utils/random';
 import { InstructionsModal } from '../../components/InstructionsModal';
 import { DrawingCanvas } from '../../components/DrawingCanvas';
@@ -506,7 +508,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
       <InstructionsModal
         open={showInstructions}
-        instructions={TELESTRATIONS_INSTRUCTIONS}
+        instructions={GAME_INSTRUCTIONS[GameKey.Telestrations]}
         onClose={() => setShowInstructions(false)}
         theme="orange"
       />

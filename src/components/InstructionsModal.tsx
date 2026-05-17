@@ -16,7 +16,7 @@ type ModalTheme = keyof typeof themes;
 
 interface InstructionsModalProps {
   open: boolean;
-  instructions: { title: string; content: string }[];
+  instructions: readonly { title: string; content: string }[];
   onClose: () => void;
   title?: string;
   theme: ModalTheme;

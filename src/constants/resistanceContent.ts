@@ -1,9 +1,4 @@
-export const RESISTANCE_INSTRUCTIONS = [
-  {
-    title: "Суть игры",
-    content: "Игроки делятся на Сопротивление (синие) и Шпионов (красные). Сопротивление хочет успешно выполнить 3 миссии, Шпионы — завалить 3 миссии."
-  }
-];
+
 
 export const MISSION_SIZES: Record<number, number[]> = {
   5: [2, 3, 2, 3, 3],

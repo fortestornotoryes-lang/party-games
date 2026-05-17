@@ -1,15 +1,6 @@
 import React, { lazy } from 'react';
 import { Shield, Palette, Brain, Pencil, Lightbulb, Radio, Target, Zap, Shield as ShieldIcon, Grid, Key, LucideIcon, Users } from 'lucide-react';
 import { GameStatus, GameMetadata } from '../types';
-import { SPY_HUNT_INSTRUCTIONS } from '../constants/spyHuntContent';
-import { FAKE_ARTIST_INSTRUCTIONS } from '../constants/fakeArtistContent';
-import { RESISTANCE_INSTRUCTIONS } from '../constants/resistanceContent';
-import { ALIAS_INSTRUCTIONS } from '../constants/aliasContent';
-import { JUST_ONE_INSTRUCTIONS } from '../constants/justOneContent';
-import { WAVELENGTH_INSTRUCTIONS } from '../constants/wavelengthContent';
-import { TELESTRATIONS_INSTRUCTIONS } from '../constants/telestrationsContent';
-import { CODENAMES_INSTRUCTIONS } from '../constants/codenamesContent';
-import { DECRYPTO_INSTRUCTIONS } from '../constants/decryptoContent';
 import { GameKey, GamesRegistryMap } from '../types/games';
 // Lazy load game components
 const SpyHuntGame = lazy(() => import('../games/SpyHuntGame/SpyHuntGame').then(m => ({ default: m.SpyHuntGame })));
