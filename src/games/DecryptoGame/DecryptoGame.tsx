@@ -325,8 +325,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                             {num}
                                         </div>
                                         <input
-                                            type="text"
                                             required
+                                            type="number"
+                                            inputMode={"decimal"}
                                             value={clues[i]}
                                             onChange={(e) => {
                                                 const newClues = [...clues];
@@ -540,15 +541,6 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                 ИТОГИ РАУНДА
                             </h2>
 
-                            <div
-                                className="bg-white/5 border border-white/10 p-8 rounded-[2rem] w-full shadow-2xl relative overflow-hidden">
-                                <div
-                                    className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
-                                <p className="text-xs text-gray-500 uppercase font-black tracking-widest mb-4">Истинный
-                                    код {activeTeam === 'red' ? 'Красных' : 'Синих'}</p>
-                                <h3 className="text-6xl font-black text-emerald-400 tracking-[0.25em]">{currentCode.join('')}</h3>
-                            </div>
-
                             <div className="space-y-3 mt-8 w-full">
                                 {round > 1 && (
                                     <div
@@ -574,7 +566,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                     {teamGuess.join('') === currentCode.join('') &&
                                         <div className="absolute inset-0 bg-emerald-500/10"></div>}
                                     <div className="flex justify-between items-center w-full z-10">
-                                        <span className="text-xs text-gray-400 uppercase font-bold text-left">Своя команда<br/><span
+                                        <span className="text-xs text-gray-400 uppercase font-bold text-left">Твоя команда<br/><span
                                             className="text-white text-2xl tracking-[0.2em]">{teamGuess.join('')}</span></span>
                                         {teamGuess.join('') === currentCode.join('') ? (
                                             <span

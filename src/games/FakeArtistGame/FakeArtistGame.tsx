@@ -54,7 +54,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
     if (!canvas || !container) return;
 
     const initCanvas = () => {
-      const rect = container.getBoundingClientRect();
+      const rect = canvas.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
       const dpr = window.devicePixelRatio || 2;
       const ctx = canvas.getContext('2d');
@@ -68,7 +68,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
     };
 
     const ro = new ResizeObserver(initCanvas);
-    ro.observe(container);
+    ro.observe(canvas);
     initCanvas();
     return () => ro.disconnect();
   }, []);
@@ -159,7 +159,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
               </div>
           </div>
 
-          <GameCard className="w-full flex-1 p-0 overflow-hidden relative border-emerald-500/20">
+          <GameCard className="w-full flex-1 !p-0 overflow-hidden relative border-emerald-500/20">
              <div
                ref={containerRef}
                className="w-full h-full"
