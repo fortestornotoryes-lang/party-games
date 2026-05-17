@@ -27,11 +27,11 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     if (key === 'sounds') feedbackService.playSound('click');
   };
 
-  const SettingToggle = ({ label, value, onToggle, desc }: { label: string, value: boolean, onToggle: () => void, desc: string }) => (
+  const SettingToggle = ({ label, value, onToggle, description }: { label: string, value: boolean, onToggle: () => void, description: string }) => (
     <div className="flex items-center justify-between py-2">
       <div>
         <p className="text-sm font-bold">{label}</p>
-        <p className="text-[10px] text-gray-500 uppercase font-black">{desc}</p>
+        <p className="text-[10px] text-gray-500 uppercase font-black">{description}</p>
       </div>
       <button 
         onClick={onToggle}
@@ -107,20 +107,20 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <GameCard title="Эффекты и Отклик">
               <div className="space-y-4 divide-y divide-white/5">
                 <SettingToggle 
-                  label="Визуальные эффекты" 
-                  desc="Конфетти и анимации"
+                  label="Визуальные эффекты"
+                  description="Конфетти и анимации"
                   value={!!settings.visualEffects} 
                   onToggle={() => toggleSetting('visualEffects')} 
                 />
                 <SettingToggle 
-                  label="Вибрация" 
-                  desc="Тактильный отклик"
+                  label="Вибрация"
+                  description="Тактильный отклик"
                   value={!!settings.vibration} 
                   onToggle={() => toggleSetting('vibration')} 
                 />
                 <SettingToggle 
-                  label="Звуки" 
-                  desc="Звуковые эффекты"
+                  label="Звуки"
+                  description="Звуковые эффекты"
                   value={!!settings.sounds} 
                   onToggle={() => toggleSetting('sounds')} 
                 />

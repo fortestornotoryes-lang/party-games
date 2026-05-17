@@ -52,7 +52,7 @@ export type GameTheme = 'red' | 'emerald' | 'sky' | 'yellow' | 'orange' | 'purpl
 export interface GameModeOption {
   id: string;
   name: string;
-  desc: string;
+  description: string;
   icon: any; // Using any for icon component as they are from lucide-react
 }
 
@@ -69,7 +69,7 @@ export interface GameMetadata {
   setupStatus: GameStatus;
   modes?: GameModeOption[];
   players?: string; // Range of players for display
-  desc: string; // Brief description for menu
+  description: string; // Brief description for menu
 }
 
 export interface GameState {

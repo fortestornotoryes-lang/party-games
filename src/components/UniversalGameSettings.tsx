@@ -4,8 +4,14 @@ import { SectionLabel } from './UI';
 import { Difficulty, GameMode, GameModeOption } from '../types';
 import { Shield, Zap, Target, LucideIcon } from 'lucide-react';
 import { storageService } from '../services/storageService';
-import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
+import { LOCATIONS_BY_DIFFICULTY, GAME_DURATION_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
 import { FAKE_ARTIST_DATA_BY_DIFFICULTY, FakeArtistDifficulty } from '../constants/fakeArtistContent';
+import { ALIAS_CATEGORIES, ALIAS_DIFFICULTY_CONFIG, AliasDifficulty } from '../constants/aliasContent';
+import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG, WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS_BY_DIFFICULTY } from '../constants/telestrationsContent';
+import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../constants/wavelengthContent';
+import { JUST_ONE_DATA_BY_DIFFICULTY } from '../constants/justOneContent';
+import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS_BY_DIFFICULTY } from '../constants/codenamesContent';
+import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS_BY_DIFFICULTY } from '../constants/decryptoContent';
 
 // ─── universal setting row ────────────────────────────────────────────────────
 
@@ -112,6 +118,53 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
       const pool = FAKE_ARTIST_DATA_BY_DIFFICULTY[d as FakeArtistDifficulty];
       return pool ? pool.filter(w => !used.includes(w.word)).length : undefined;
     }
+    if (currentGameId === 'alias') {
+      const used = storageService.getUsedWords('alias');
+      const custom = storageService.getCustomWords('alias');
+      const cats = ALIAS_CATEGORIES.filter(c => {
+        if (d === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
+        if (d === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
+        return true;
+      });
+      const all = [...cats.flatMap(c => c.words), ...custom];
+      return all.filter(w => !used.includes(w)).length;
+    }
+    if (currentGameId === 'telestrations') {
+      const used = storageService.getUsedWords('telestrations');
+      const custom = storageService.getCustomWords('telestrations');
+      const pool = TELESTRATIONS_WORDS_BY_DIFFICULTY[d as 'easy' | 'medium' | 'hard'];
+      const all = [...pool, ...custom];
+      return all.filter(w => !used.includes(w)).length;
+    }
+    if (currentGameId === 'wavelength') {
+      const used = storageService.getUsedWords('wavelength');
+      const custom = storageService.getCustomWords('wavelength');
+      const pool = (WAVELENGTH_DATA_BY_DIFFICULTY[d as 'easy' | 'medium' | 'hard'] || WAVELENGTH_DATA_BY_DIFFICULTY.medium) as string[][];
+      const customPairs = custom.map(w => w.split(' - '));
+      const all = [...pool, ...customPairs];
+      return all.filter(pair => !used.includes(pair.join(' - '))).length;
+    }
+    if (currentGameId === 'just_one') {
+      const used = storageService.getUsedWords('just_one');
+      const custom = storageService.getCustomWords('just_one');
+      const pool = JUST_ONE_DATA_BY_DIFFICULTY[d as 'easy' | 'medium' | 'hard'] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
+      const all = [...pool, ...custom];
+      return all.filter(w => !used.includes(w)).length;
+    }
+    if (currentGameId === 'codenames') {
+      const used = storageService.getUsedWords('codenames');
+      const custom = storageService.getCustomWords('codenames');
+      const pool = CODENAMES_WORDS_BY_DIFFICULTY[d as 'easy' | 'medium' | 'hard'] || CODENAMES_WORDS_BY_DIFFICULTY.medium;
+      const all = [...pool, ...custom];
+      return all.filter(w => !used.includes(w)).length;
+    }
+    if (currentGameId === 'decrypto') {
+      const used = storageService.getUsedWords('decrypto');
+      const custom = storageService.getCustomWords('decrypto');
+      const pool = DECRYPTO_WORDS_BY_DIFFICULTY[d as 'easy' | 'medium' | 'hard'] || DECRYPTO_WORDS_BY_DIFFICULTY.medium;
+      const all = [...pool, ...custom];
+      return all.filter(w => !used.includes(w)).length;
+    }
     return undefined;
   };
 
@@ -119,13 +172,25 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
     const remaining = getRemainingWords(d);
 
     switch (currentGameId) {
-      case 'telestrations': return d === 'easy' ? '90с / 45с' : d === 'medium' ? '60с / 30с' : '45с / 25с';
-      case 'spy': {
-        const time = d === 'easy' ? '10 мин' : d === 'medium' ? '8 мин' : '5 мин';
-        return remaining !== undefined ? `${time} · ${remaining}` : time;
+      case 'telestrations': {
+        const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d as 'easy' | 'medium' | 'hard'];
+        const timeStr = `${cfg.drawTime}с / ${cfg.guessTime}с`;
+        return remaining !== undefined ? `${timeStr} · ${remaining}` : timeStr;
       }
-      case 'alias': return d === 'easy' ? '90 сек' : d === 'medium' ? '60 сек' : '40 сек';
-      case 'fake_artist': return remaining !== undefined ? `${remaining} сл` : undefined;
+      case 'spy': {
+        const mins = Math.floor(GAME_DURATION_BY_DIFFICULTY[d as SpyDifficulty] / 60);
+        return remaining !== undefined ? `${mins} мин · ${remaining}` : `${mins} мин`;
+      }
+      case 'alias': {
+        const { roundTime } = ALIAS_DIFFICULTY_CONFIG[d as AliasDifficulty];
+        return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
+      }
+      case 'fake_artist':
+      case 'wavelength':
+      case 'just_one':
+      case 'codenames':
+      case 'decrypto':
+        return remaining !== undefined ? `${remaining} сл` : undefined;
       default: return undefined;
     }
   };
@@ -173,7 +238,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                   </div>
                   <div className="flex-1">
                     <div className="text-[17px] font-black italic uppercase tracking-tight mb-1 text-white opacity-90">{m.name}</div>
-                    <div className="text-[12px] font-medium leading-tight opacity-60 italic">{m.desc}</div>
+                    <div className="text-[12px] font-medium leading-tight opacity-60 italic">{m.description}</div>
                   </div>
                 </motion.button>
               );
@@ -190,6 +255,21 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
           value={rounds ?? 2}
           onChange={setRounds}
           options={[1, 2, 3].map(r => ({ value: r, label: `${r} ${r === 1 ? 'КРУГ' : 'КРУГА'}` }))}
+        />
+      )}
+
+      {currentGameId === 'telestrations' && setRounds && (
+        <SettingRow
+          label="Раунды цепочки"
+          icon={Shield}
+          color="orange"
+          value={rounds ?? 1}
+          onChange={setRounds}
+          options={[
+            { value: 1, label: '1 КР.', color: 'orange' },
+            { value: 2, label: '2 КР.', color: 'orange' },
+            { value: 3, label: '3 КР.', color: 'orange' },
+          ]}
         />
       )}
 

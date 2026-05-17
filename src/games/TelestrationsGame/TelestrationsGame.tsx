@@ -14,6 +14,7 @@ interface TelestrationsGameProps {
   playerNames: string[];
   onBack: () => void;
   initialDifficulty?: Difficulty;
+  initialRounds?: number;
 }
 
 type Step = {
@@ -23,7 +24,7 @@ type Step = {
 };
 
 
-export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty }) => {
+export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty, initialRounds }) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -41,11 +42,12 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     }
     const word = available[Math.floor(Math.random() * available.length)];
     storageService.markWordAsUsed('telestrations', word);
-    return { word, difficulty: initialDifficulty };
+    return { word, difficulty: initialDifficulty, rounds: initialRounds ?? 1 };
   });
 
   const [phase, setPhase] = useState<'setup' | 'start' | 'action' | 'transition' | 'gallery'>(initState ? 'start' : 'setup');
   const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
+  const [selectedRounds, setSelectedRounds] = useState(initState?.rounds ?? 1);
   const [initialWord, setInitialWord] = useState(initState?.word ?? '');
   const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
 
@@ -57,25 +59,24 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const currentPlayer = shuffledPlayers[currentRound];
   const isDrawingRound = currentRound % 2 === 0;
 
-  const handleStartGame = (selectedDiff: Difficulty) => {
-    const staticWords = WORDS_BY_DIFFICULTY[selectedDiff];
+  const handleStartGame = () => {
+    const staticWords = WORDS_BY_DIFFICULTY[difficulty];
     const custom = storageService.getCustomWords('telestrations');
     const used = storageService.getUsedWords('telestrations');
-    
+
     const all = [...staticWords, ...custom];
     let available = all.filter(w => !used.includes(w));
-    
+
     if (available.length === 0) {
       storageService.resetUsedWords('telestrations');
       available = all;
     }
 
     const word = available[Math.floor(Math.random() * available.length)];
-    setDifficulty(selectedDiff);
     setInitialWord(word);
     setCurrentWord(word);
     storageService.markWordAsUsed('telestrations', word);
-    
+
     setShuffledPlayers(shuffle(playerNames));
     setSteps([]);
     setCurrentRound(0);
@@ -104,7 +105,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     if (type === 'guess') setCurrentWord(content);
     const newSteps: Step[] = [...steps, { type, content, author: currentPlayer }];
     setSteps(newSteps);
-    if (currentRound === shuffledPlayers.length - 1) {
+    if (currentRound === shuffledPlayers.length * selectedRounds - 1) {
       feedbackService.playSound('success');
       feedbackService.vibrate([50, 30, 50, 30, 50]);
       if (settings.visualEffects) {
@@ -144,7 +145,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
             <p className="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">
               {phase === 'setup'
                 ? `${playerNames.length} игроков`
-                : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === 'action' || phase === 'transition' ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`
+                : `${currentRound + 1}/${shuffledPlayers.length * selectedRounds} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === 'action' || phase === 'transition' ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`
               }
             </p>
           </div>
@@ -163,7 +164,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
       <div className="flex-1 relative min-h-0">
         <AnimatePresence mode="wait">
 
-          {/* ── SETUP (difficulty picker) ── */}
+          {/* ── SETUP ── */}
           {phase === 'setup' && (
             <motion.div
               key="setup"
@@ -177,27 +178,55 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 mb-1">
                   <Pencil className="w-7 h-7 text-orange-500" />
                 </div>
-                <h3 className="text-3xl font-black italic uppercase tracking-tighter">Сложность</h3>
-                <p className="text-gray-500 text-sm">Определяет слова и время на ход</p>
+                <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
+                <p className="text-gray-500 text-sm">{playerNames.length} игроков</p>
               </div>
 
+              {/* Rounds */}
+              <div className="w-full max-w-sm">
+                <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3 text-center">Раунды цепочки</p>
+                <div className="flex gap-3">
+                  {[1, 2, 3].map(r => (
+                    <motion.button
+                      key={r}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setSelectedRounds(r)}
+                      className={`flex-1 py-4 rounded-2xl font-black text-lg border transition-all ${
+                        selectedRounds === r
+                          ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
+                          : 'bg-white/5 border-white/10 text-gray-500'
+                      }`}
+                    >
+                      {r}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Difficulty */}
               <div className="w-full max-w-sm space-y-3">
+                <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3 text-center">Сложность</p>
                 {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => {
                   const cfg = DIFFICULTY_CONFIG[diff];
+                  const isSelected = difficulty === diff;
                   return (
                     <motion.button
                       key={diff}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => handleStartGame(diff)}
-                      className={`w-full p-5 rounded-[2rem] border ${cfg.border} ${cfg.bg} text-left flex items-center gap-4 active:opacity-80 transition-opacity`}
+                      onClick={() => setDifficulty(diff)}
+                      className={`w-full p-4 rounded-[2rem] border text-left flex items-center gap-4 transition-all ${
+                        isSelected
+                          ? `${cfg.border} ${cfg.bg}`
+                          : 'border-white/10 bg-white/5 opacity-50'
+                      }`}
                     >
-                      <span className="text-3xl leading-none">{cfg.emoji}</span>
+                      <span className="text-2xl leading-none">{cfg.emoji}</span>
                       <div className="flex-1 min-w-0">
-                        <h4 className={`text-xl font-black uppercase italic ${cfg.text}`}>{cfg.label}</h4>
-                        <p className="text-xs text-gray-500 mt-0.5 leading-tight">{cfg.desc}</p>
+                        <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-gray-400'}`}>{cfg.label}</h4>
+                        <p className="text-xs text-gray-500 mt-0.5 leading-tight">{cfg.description}</p>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className={`text-lg font-black tabular-nums ${cfg.text}`}>{cfg.drawTime}с</p>
+                        <p className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-gray-600'}`}>{cfg.drawTime}с</p>
                         <p className="text-[9px] text-gray-600 uppercase font-bold tracking-widest">рисунок</p>
                       </div>
                     </motion.button>
@@ -205,9 +234,14 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 })}
               </div>
 
-              <p className="text-[10px] text-gray-700 uppercase tracking-widest font-bold">
-                {playerNames.length} игроков
-              </p>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={handleStartGame}
+                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
+              >
+                <span>Начать</span>
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
             </motion.div>
           )}
 

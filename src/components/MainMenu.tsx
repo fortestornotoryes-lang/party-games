@@ -147,7 +147,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                                     </div>
 
                                     <p className="text-sm text-white/60 font-medium leading-relaxed mb-5 max-w-[90%]">
-                                        {game.desc}
+                                        {game.description}
                                     </p>
 
                                     <div

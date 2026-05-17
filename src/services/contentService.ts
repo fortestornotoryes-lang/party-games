@@ -33,18 +33,35 @@ export const contentService = {
   getCodenamesWords(difficulty: Difficulty): string[] {
     const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
     const custom = storageService.getCustomWords('codenames');
+    const used = storageService.getUsedWords('codenames');
     const all = [...pool, ...custom];
-    
-    // Shuffle and pick 25
-    return [...all].sort(() => Math.random() - 0.5).slice(0, 25);
+
+    let available = all.filter(w => !used.includes(w));
+    if (available.length < 25) {
+      storageService.resetUsedWords('codenames');
+      available = all;
+    }
+
+    const selected = [...available].sort(() => Math.random() - 0.5).slice(0, 25);
+    selected.forEach(w => storageService.markWordAsUsed('codenames', w));
+    return selected;
   },
 
   getDecryptoWords(difficulty: Difficulty, count: number = 4): string[] {
     const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
     const custom = storageService.getCustomWords('decrypto');
+    const used = storageService.getUsedWords('decrypto');
     const all = [...pool, ...custom];
-    
-    return [...all].sort(() => Math.random() - 0.5).slice(0, count);
+
+    let available = all.filter(w => !used.includes(w));
+    if (available.length < count) {
+      storageService.resetUsedWords('decrypto');
+      available = all;
+    }
+
+    const selected = [...available].sort(() => Math.random() - 0.5).slice(0, count);
+    selected.forEach(w => storageService.markWordAsUsed('decrypto', w));
+    return selected;
   },
 
   getJustOneWord(difficulty: Difficulty): string {
@@ -106,9 +123,6 @@ export const contentService = {
     return item;
   },
 
-  getSpyHuntLocations(): string[] {
-    return LOCATIONS;
-  },
 
   getRemainingWordsCount(gameId: string, difficulty: Difficulty): number {
     let total = 0;

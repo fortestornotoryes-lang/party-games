@@ -1,0 +1,43 @@
+import { ComponentType } from 'react';
+
+export enum GameKey {
+    Spy = 'spy',
+    FakeArtist = 'fake_artist',
+    Resistance = 'resistance',
+    Alias = 'alias',
+    JustOne = 'just_one',
+    Telestrations = 'telestrations',
+    Wavelength = 'wavelength',
+    Codenames = 'codenames',
+    Decrypto = 'decrypto',
+    Mafia = 'mafia'
+}
+
+export interface InstructionItem {
+    readonly title: string;
+    readonly content: string;
+}
+
+export interface GameMode {
+    readonly id: string;
+    readonly name: string;
+    readonly description: string;
+    readonly icon: ComponentType<any>;
+}
+
+export interface GameMetadata {
+    readonly id: GameKey;
+    readonly title: string;
+    readonly subtitle: string;
+    readonly icon: ComponentType<any>;
+    readonly theme: string;
+    readonly placeholder: string;
+    readonly description?: string;
+    readonly players: string;
+    readonly minPlayers: number;
+    readonly setupStatus: string;
+    readonly modes?: readonly GameMode[];
+}
+
+export type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
+export type GamesRegistryMap = Record<GameKey, GameMetadata>;

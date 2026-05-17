@@ -4,7 +4,7 @@ import { Brain, Play, CheckCircle, XCircle, RotateCcw, Zap, Trophy } from 'lucid
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { ALIAS_CATEGORIES } from '../../constants/aliasContent';
+import { ALIAS_CATEGORIES, ALIAS_DIFFICULTY_CONFIG } from '../../constants/aliasContent';
 import { GameHeader } from '../../components/GameHeader';
 import { useTimer } from '../../hooks/useTimer';
 import { PrimaryButton, GameCard } from '../../components/UI';
@@ -30,8 +30,10 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [currentWord, setCurrentWord] = useState('');
   const [roundScore, setRoundScore] = useState(0);
 
+  const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
+
   const { timeLeft, start: startTimer, reset: resetTimer } = useTimer({
-    initialTime: 60,
+    initialTime: roundTime,
     onTimeUp: () => setPhase('round_end')
   });
 
@@ -64,7 +66,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   }, [playerNames]);
 
   const startRound = () => {
-    resetTimer(60);
+    resetTimer(roundTime);
     setRoundScore(0);
     nextWord();
     setPhase('playing');
@@ -184,7 +186,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                 <div className="relative w-24 h-24">
                   <svg className="w-full h-full -rotate-90">
                     <circle cx="48" cy="48" r="44" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-white/5" />
-                    <circle cx="48" cy="48" r="44" stroke="currentColor" strokeWidth="4" fill="transparent" className={timeLeft <= 10 ? 'text-red-500' : 'text-sky-500'} strokeDasharray={276} strokeDashoffset={276 - (276 * timeLeft) / 60} strokeLinecap="round" />
+                    <circle cx="48" cy="48" r="44" stroke="currentColor" strokeWidth="4" fill="transparent" className={timeLeft <= 10 ? 'text-red-500' : 'text-sky-500'} strokeDasharray={276} strokeDashoffset={276 - (276 * timeLeft) / roundTime} strokeLinecap="round" />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className={`text-3xl font-black tabular-nums ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
