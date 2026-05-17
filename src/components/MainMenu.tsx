@@ -75,21 +75,6 @@ const getThemeConfig = (theme: string) => {
 
 const GAMES = Object.values(GAMES_REGISTRY);
 
-const container = {
-    hidden: {opacity: 0},
-    show: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2
-        }
-    }
-};
-
-const item = {
-    hidden: {opacity: 0, y: 30},
-    show: {opacity: 1, y: 0, transition: {type: 'spring' as const, damping: 25, stiffness: 200}}
-};
 
 export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
     const {setCurrentGameId} = useGameSettings();
@@ -128,20 +113,20 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
 
     return (
         <div className="min-h-screen pt-6 pb-24 px-6 relative overflow-hidden flex flex-col items-center">
-            <motion.div
-                initial={{opacity: 0, y: -20}}
-                animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.5}}
-                className="w-full max-w-md relative z-10"
-            >
+            <div className="w-full max-w-md relative z-10">
 
-                <div className="text-center px-4">
+                <motion.div
+                    initial={{opacity: 0, y: -16}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{duration: 0.4}}
+                    className="text-center px-4"
+                >
                     <h1 className="text-[58px] font-black italic tracking-tighter uppercase leading-[0.7] mb-8 select-none">
                         PARTY <span className="text-premium-red">HUB</span>
                     </h1>
-                </div>
+                </motion.div>
 
-                <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
+                <div className="space-y-6">
                     {GAMES.map((game) => {
                         const Icon = game.icon;
                         const stats = getGameStats(game.id);
@@ -151,7 +136,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                         return (
                             <motion.button
                                 key={game.id}
-                                variants={item}
                                 whileTap={{scale: 0.98}}
                                 onClick={() => onSelectGame(game.id)}
                                 className="w-full p-6 glass-card rounded-premium-lg flex items-center gap-6 text-left relative group overflow-hidden transition-all duration-500 bg-white/[0.01] backdrop-blur-3xl 0 hover:bg-white/[0.06]"
@@ -196,8 +180,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                             </motion.button>
                         );
                     })}
-                </motion.div>
-            </motion.div>
+                </div>
+            </div>
         </div>
     );
 };

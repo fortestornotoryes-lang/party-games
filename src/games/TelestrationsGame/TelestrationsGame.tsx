@@ -13,6 +13,7 @@ import { DrawingCanvas } from '../../components/DrawingCanvas';
 interface TelestrationsGameProps {
   playerNames: string[];
   onBack: () => void;
+  initialDifficulty?: Difficulty;
 }
 
 type Step = {
@@ -22,14 +23,31 @@ type Step = {
 };
 
 
-export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack }) => {
+export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty }) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
-  const [phase, setPhase] = useState<'setup' | 'start' | 'action' | 'transition' | 'gallery'>('setup');
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
-  const [initialWord, setInitialWord] = useState('');
-  const [currentWord, setCurrentWord] = useState('');
+
+  const [initState] = useState(() => {
+    if (!initialDifficulty) return null;
+    const staticWords = WORDS_BY_DIFFICULTY[initialDifficulty];
+    const custom = storageService.getCustomWords('telestrations');
+    const used = storageService.getUsedWords('telestrations');
+    const all = [...staticWords, ...custom];
+    let available = all.filter(w => !used.includes(w));
+    if (available.length === 0) {
+      storageService.resetUsedWords('telestrations');
+      available = [...staticWords, ...custom];
+    }
+    const word = available[Math.floor(Math.random() * available.length)];
+    storageService.markWordAsUsed('telestrations', word);
+    return { word, difficulty: initialDifficulty };
+  });
+
+  const [phase, setPhase] = useState<'setup' | 'start' | 'action' | 'transition' | 'gallery'>(initState ? 'start' : 'setup');
+  const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
+  const [initialWord, setInitialWord] = useState(initState?.word ?? '');
+  const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
 
   const [showInstructions, setShowInstructions] = useState(false);
   const [wordRevealed, setWordRevealed] = useState(false);

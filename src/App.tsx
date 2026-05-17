@@ -83,7 +83,7 @@ function AppContent() {
           switch (status) {
             case 'alias_playing': return <AliasGame playerNames={playerNames} onBack={reset} />;
             case 'just_one_playing': return <JustOneGame playerNames={playerNames} onBack={reset} />;
-            case 'telestrations_playing': return <TelestrationsGame playerNames={playerNames} onBack={reset} />;
+            case 'telestrations_playing': return <TelestrationsGame playerNames={playerNames} onBack={reset} initialDifficulty={difficulty} />;
             case 'wavelength_playing': return <WavelengthGame playerNames={playerNames} onBack={reset} />;
             case 'codenames_playing': return <CodenamesGame playerNames={playerNames} onBack={reset} />;
             case 'decrypto_playing': return <DecryptoGame playerNames={playerNames} onBack={reset} />;
