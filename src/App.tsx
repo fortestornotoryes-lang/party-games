@@ -71,7 +71,7 @@ function AppContent() {
     setStatus(config.setupStatus);
   }, [currentGameId, difficulty, mode]);
 
-  const handleMenuSelect = (gameId: string) => {
+  const handleMenuSelect = (gameId: GameKey) => {
     setCurrentGameId(gameId);
     setStatus('setup');
   };

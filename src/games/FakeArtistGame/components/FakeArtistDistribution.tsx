@@ -2,9 +2,9 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, Ghost, EyeOff } from 'lucide-react';
 import { Player } from '../../../types';
-import { storageService } from '../../../services/storageService';
+import { contentService } from '../../../services/contentService';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
-import { FAKE_ARTIST_DATA_BY_DIFFICULTY, FakeArtistDifficulty } from '../../../constants/fakeArtistContent';
+import { FakeArtistDifficulty } from '../../../constants/fakeArtistContent';
 
 interface Props {
   players: Player[];
@@ -20,21 +20,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
 
   useEffect(() => {
     const diff = (difficulty as FakeArtistDifficulty) ?? 'easy';
-    const staticPool = FAKE_ARTIST_DATA_BY_DIFFICULTY[diff] ?? FAKE_ARTIST_DATA_BY_DIFFICULTY['easy'];
-    const custom = storageService.getCustomWords('fake_artist');
-    const used = storageService.getUsedWords('fake_artist');
-
-    const pool = [...staticPool, ...custom.map(w => ({ word: w, category: 'Своё' }))];
-    let available = pool.filter(item => !used.includes(item.word));
-    if (available.length === 0) {
-      storageService.resetUsedWords('fake_artist');
-      available = pool;
-    }
-
-    const item = available[Math.floor(Math.random() * available.length)];
+    const item = contentService.getFakeArtistWord(diff);
     setWord(item.word);
     setCategory(item.category);
-    storageService.markWordAsUsed('fake_artist', item.word);
   }, [difficulty]);
 
   const next = () => {

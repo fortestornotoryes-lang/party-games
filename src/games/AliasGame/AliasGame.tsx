@@ -4,7 +4,9 @@ import { Brain, Play, CheckCircle, XCircle, RotateCcw, Zap, Trophy } from 'lucid
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { ALIAS_CATEGORIES, ALIAS_DIFFICULTY_CONFIG } from '../../constants/aliasContent';
+import { contentService } from '../../services/contentService';
+import { ALIAS_DIFFICULTY_CONFIG } from '../../constants/aliasContent';
+import { GameKey } from '../../types/games';
 import { GameHeader } from '../../components/GameHeader';
 import { useTimer } from '../../hooks/useTimer';
 import { PrimaryButton } from '../../components/UI';
@@ -28,18 +30,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     onTimeUp: () => setPhase('round_end'),
   });
 
-  const getAvailableWords = () => {
-    const targetCategories = ALIAS_CATEGORIES.filter(c => {
-      if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
-      if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
-      return true;
-    });
-    const all = [...targetCategories.flatMap(c => c.words), ...storageService.getCustomWords('alias')];
-    const used = storageService.getUsedWords('alias');
-    let available = all.filter(w => !used.includes(w));
-    if (available.length === 0) { storageService.resetUsedWords('alias'); available = all; }
-    return available;
-  };
+  const getAvailableWords = () => contentService.getAliasWords(difficulty);
 
   useEffect(() => {
     const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
@@ -54,7 +45,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     const available = getAvailableWords();
     const word = available[Math.floor(Math.random() * available.length)];
     setCurrentWord(word);
-    storageService.markWordAsUsed('alias', word);
+    storageService.markWordAsUsed(GameKey.Alias, word);
   };
 
   const startRound = () => {

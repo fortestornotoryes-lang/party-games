@@ -4,7 +4,7 @@ import { Radio, RotateCcw, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { feedbackService } from '../../services/feedbackService';
 import { storageService } from '../../services/storageService';
-import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../../constants/wavelengthContent';
+import { contentService } from '../../services/contentService';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
@@ -28,26 +28,8 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   }, [psychicIdx]);
 
   const startNewRound = () => {
-    const custom = storageService.getCustomWords('wavelength');
-    const used = storageService.getUsedWords('wavelength');
-    const difficultyPairs = WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] ?? WAVELENGTH_DATA_BY_DIFFICULTY.medium;
-
-    const all = [
-      ...difficultyPairs,
-      ...custom.map(w => w.split(' - ').length === 2 ? w.split(' - ') : [w, '...'])
-    ];
-
-    let available = all.filter(pair => !used.includes(pair.join(' - ')));
-
-    if (available.length === 0) {
-      storageService.resetUsedWords('wavelength');
-      available = all;
-    }
-
-    const pair = available[Math.floor(Math.random() * available.length)];
+    const pair = contentService.getWavelengthPair(difficulty);
     setCurrentPair(pair);
-    storageService.markWordAsUsed('wavelength', pair.join(' - '));
-
     setTargetValue(Math.floor(Math.random() * 90) + 5);
     setGuessValue(50);
     setPhase('pass');

@@ -5,7 +5,8 @@ import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } fro
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { WORDS_BY_DIFFICULTY, DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
+import { contentService } from '../../services/contentService';
+import { DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
 import { GAME_INSTRUCTIONS } from '../../constants/instructions';
 import { GameKey } from '../../types/games';
 import { shuffle } from '../../utils/random';
@@ -33,17 +34,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
   const [initState] = useState(() => {
     if (!initialDifficulty) return null;
-    const staticWords = WORDS_BY_DIFFICULTY[initialDifficulty];
-    const custom = storageService.getCustomWords('telestrations');
-    const used = storageService.getUsedWords('telestrations');
-    const all = [...staticWords, ...custom];
-    let available = all.filter(w => !used.includes(w));
-    if (available.length === 0) {
-      storageService.resetUsedWords('telestrations');
-      available = [...staticWords, ...custom];
-    }
-    const word = available[Math.floor(Math.random() * available.length)];
-    storageService.markWordAsUsed('telestrations', word);
+    const word = contentService.getTelestrationsWord(initialDifficulty);
     return { word, difficulty: initialDifficulty, rounds: initialRounds ?? 1 };
   });
 
@@ -62,23 +53,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const isDrawingRound = currentRound % 2 === 0;
 
   const handleStartGame = () => {
-    const staticWords = WORDS_BY_DIFFICULTY[difficulty];
-    const custom = storageService.getCustomWords('telestrations');
-    const used = storageService.getUsedWords('telestrations');
-
-    const all = [...staticWords, ...custom];
-    let available = all.filter(w => !used.includes(w));
-
-    if (available.length === 0) {
-      storageService.resetUsedWords('telestrations');
-      available = all;
-    }
-
-    const word = available[Math.floor(Math.random() * available.length)];
+    const word = contentService.getTelestrationsWord(difficulty);
     setInitialWord(word);
     setCurrentWord(word);
-    storageService.markWordAsUsed('telestrations', word);
-
     setShuffledPlayers(shuffle(playerNames));
     setSteps([]);
     setCurrentRound(0);

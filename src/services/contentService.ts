@@ -1,9 +1,10 @@
 import { Difficulty } from '../types';
+import { GameKey } from '../types/games';
 import { ALIAS_CATEGORIES } from '../constants/aliasContent';
 import { JUST_ONE_DATA_BY_DIFFICULTY } from '../constants/justOneContent';
 import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../constants/wavelengthContent';
 import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '../constants/fakeArtistContent';
-import { LOCATIONS, LOCATIONS_BY_DIFFICULTY } from '../constants/spyHuntContent';
+import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
 import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../constants/telestrationsContent';
 import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesContent';
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
@@ -16,15 +17,15 @@ export const contentService = {
       if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
       return true;
     });
-    
+
     const staticWords = targetCategories.flatMap(c => c.words);
-    const customWords = storageService.getCustomWords('alias');
-    const used = storageService.getUsedWords('alias');
+    const customWords = storageService.getCustomWords(GameKey.Alias);
+    const used = storageService.getUsedWords(GameKey.Alias);
     const all = [...staticWords, ...customWords];
-    
+
     let available = all.filter(w => !used.includes(w));
     if (available.length === 0) {
-      storageService.resetUsedWords('alias');
+      storageService.resetUsedWords(GameKey.Alias);
       available = all;
     }
     return available;
@@ -32,138 +33,159 @@ export const contentService = {
 
   getCodenamesWords(difficulty: Difficulty): string[] {
     const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
-    const custom = storageService.getCustomWords('codenames');
-    const used = storageService.getUsedWords('codenames');
+    const custom = storageService.getCustomWords(GameKey.Codenames);
+    const used = storageService.getUsedWords(GameKey.Codenames);
     const all = [...pool, ...custom];
 
     let available = all.filter(w => !used.includes(w));
     if (available.length < 25) {
-      storageService.resetUsedWords('codenames');
+      storageService.resetUsedWords(GameKey.Codenames);
       available = all;
     }
 
     const selected = [...available].sort(() => Math.random() - 0.5).slice(0, 25);
-    selected.forEach(w => storageService.markWordAsUsed('codenames', w));
+    selected.forEach(w => storageService.markWordAsUsed(GameKey.Codenames, w));
     return selected;
   },
 
   getDecryptoWords(difficulty: Difficulty, count: number = 4): string[] {
     const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
-    const custom = storageService.getCustomWords('decrypto');
-    const used = storageService.getUsedWords('decrypto');
+    const custom = storageService.getCustomWords(GameKey.Decrypto);
+    const used = storageService.getUsedWords(GameKey.Decrypto);
     const all = [...pool, ...custom];
 
     let available = all.filter(w => !used.includes(w));
     if (available.length < count) {
-      storageService.resetUsedWords('decrypto');
+      storageService.resetUsedWords(GameKey.Decrypto);
       available = all;
     }
 
     const selected = [...available].sort(() => Math.random() - 0.5).slice(0, count);
-    selected.forEach(w => storageService.markWordAsUsed('decrypto', w));
+    selected.forEach(w => storageService.markWordAsUsed(GameKey.Decrypto, w));
     return selected;
   },
 
   getJustOneWord(difficulty: Difficulty): string {
-    const difficultyWords = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
-    const custom = storageService.getCustomWords('just_one');
-    const used = storageService.getUsedWords('just_one');
-    const all = [...difficultyWords, ...custom];
-    
+    const pool = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
+    const custom = storageService.getCustomWords(GameKey.JustOne);
+    const used = storageService.getUsedWords(GameKey.JustOne);
+    const all = [...pool, ...custom];
+
     let available = all.filter(w => !used.includes(w));
     if (available.length === 0) {
-      storageService.resetUsedWords('just_one');
+      storageService.resetUsedWords(GameKey.JustOne);
       available = all;
     }
-    
+
     const word = available[Math.floor(Math.random() * available.length)];
-    storageService.markWordAsUsed('just_one', word);
+    storageService.markWordAsUsed(GameKey.JustOne, word);
     return word;
   },
 
   getWavelengthPair(difficulty: Difficulty): string[] {
-    const pool = WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] || WAVELENGTH_DATA_BY_DIFFICULTY.medium;
-    const custom = storageService.getCustomWords('wavelength');
-    const used = storageService.getUsedWords('wavelength');
-    
+    const pool = (WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] || WAVELENGTH_DATA_BY_DIFFICULTY.medium) as string[][];
+    const custom = storageService.getCustomWords(GameKey.Wavelength);
+    const used = storageService.getUsedWords(GameKey.Wavelength);
+
     const all = [
       ...pool,
-      ...custom.map(w => w.split(' - ').length === 2 ? w.split(' - ') : [w, '...'])
+      ...custom.map(w => w.split(' - ').length === 2 ? w.split(' - ') : [w, '...']),
     ];
 
     let available = all.filter(pair => !used.includes(pair.join(' - ')));
     if (available.length === 0) {
-      storageService.resetUsedWords('wavelength');
+      storageService.resetUsedWords(GameKey.Wavelength);
       available = all;
     }
 
     const pair = available[Math.floor(Math.random() * available.length)];
-    storageService.markWordAsUsed('wavelength', pair.join(' - '));
+    storageService.markWordAsUsed(GameKey.Wavelength, pair.join(' - '));
     return pair;
   },
 
-  getFakeArtistWord(difficulty: Difficulty): { word: string, category: string } {
+  getTelestrationsWord(difficulty: Difficulty): string {
+    const pool = TELESTRATIONS_WORDS[difficulty] || TELESTRATIONS_WORDS.medium;
+    const custom = storageService.getCustomWords(GameKey.Telestrations);
+    const used = storageService.getUsedWords(GameKey.Telestrations);
+    const all = [...pool, ...custom];
+
+    let available = all.filter(w => !used.includes(w));
+    if (available.length === 0) {
+      storageService.resetUsedWords(GameKey.Telestrations);
+      available = all;
+    }
+
+    const word = available[Math.floor(Math.random() * available.length)];
+    storageService.markWordAsUsed(GameKey.Telestrations, word);
+    return word;
+  },
+
+  getFakeArtistWord(difficulty: Difficulty): { word: string; category: string } {
     const staticPool = FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty];
-    const custom = storageService.getCustomWords('fake_artist');
-    const used = storageService.getUsedWords('fake_artist');
-    
-    const pool = [
-      ...staticPool,
-      ...custom.map(w => ({ word: w, category: 'Своё' }))
-    ];
+    const custom = storageService.getCustomWords(GameKey.FakeArtist);
+    const used = storageService.getUsedWords(GameKey.FakeArtist);
+
+    const pool = [...staticPool, ...custom.map(w => ({ word: w, category: 'Своё' }))];
 
     let available = pool.filter(item => !used.includes(item.word));
     if (available.length === 0) {
-      storageService.resetUsedWords('fake_artist');
+      storageService.resetUsedWords(GameKey.FakeArtist);
       available = pool;
     }
 
     const item = available[Math.floor(Math.random() * available.length)];
-    storageService.markWordAsUsed('fake_artist', item.word);
+    storageService.markWordAsUsed(GameKey.FakeArtist, item.word);
     return item;
   },
 
-
-  getRemainingWordsCount(gameId: string, difficulty: Difficulty): number {
-    let total = 0;
+  getWordStats(gameId: GameKey, difficulty: Difficulty): { total: number; remaining: number } {
+    const used = storageService.getUsedWords(gameId);
     const custom = storageService.getCustomWords(gameId);
-    
+
     switch (gameId) {
-      case 'alias': {
+      case GameKey.Alias: {
         const cats = ALIAS_CATEGORIES.filter(c => {
           if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
           if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
           return true;
         });
-        total = cats.flatMap(c => c.words).length + custom.length;
-        break;
+        const all = [...cats.flatMap(c => c.words), ...custom];
+        return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
       }
-      case 'just_one':
-        total = (JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium).length + custom.length;
-        break;
-      case 'wavelength':
-        total = (WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] || WAVELENGTH_DATA_BY_DIFFICULTY.medium).length + custom.length;
-        break;
-      case 'fake_artist':
-        total = (FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty] || FAKE_ARTIST_DATA_BY_DIFFICULTY.medium).length + custom.length;
-        break;
-      case 'telestrations':
-        total = (TELESTRATIONS_WORDS[difficulty] || TELESTRATIONS_WORDS.medium).length + custom.length;
-        break;
-      case 'spy':
-        total = (LOCATIONS_BY_DIFFICULTY[difficulty] ?? LOCATIONS_BY_DIFFICULTY.medium).length + custom.length;
-        break;
-      case 'codenames':
-        total = (CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium).length + custom.length;
-        break;
-      case 'decrypto':
-        total = (DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium).length + custom.length;
-        break;
+      case GameKey.JustOne: {
+        const all = [...(JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium), ...custom];
+        return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.Wavelength: {
+        const pool = (WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] || WAVELENGTH_DATA_BY_DIFFICULTY.medium) as string[][];
+        const customPairs = custom.map(w => w.split(' - ').length === 2 ? w.split(' - ') : [w, '...']);
+        const all = [...pool, ...customPairs];
+        return { total: all.length, remaining: all.filter(pair => !used.includes(pair.join(' - '))).length };
+      }
+      case GameKey.FakeArtist: {
+        const pool = FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty];
+        const allNames = [...pool.map(i => i.word), ...custom];
+        return { total: allNames.length, remaining: allNames.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.Telestrations: {
+        const all = [...(TELESTRATIONS_WORDS[difficulty] || TELESTRATIONS_WORDS.medium), ...custom];
+        return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.Spy: {
+        const pool = LOCATIONS_BY_DIFFICULTY[difficulty as SpyDifficulty] ?? LOCATIONS_BY_DIFFICULTY.medium;
+        const allNames = [...pool.map(l => l.name), ...custom];
+        return { total: allNames.length, remaining: allNames.filter(n => !used.includes(n)).length };
+      }
+      case GameKey.Codenames: {
+        const all = [...(CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium), ...custom];
+        return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.Decrypto: {
+        const all = [...(DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium), ...custom];
+        return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
+      }
       default:
-        return 0;
+        return { total: 0, remaining: 0 };
     }
-
-    const usedCount = storageService.getUsedWords(gameId).length;
-    return Math.max(0, total - usedCount);
-  }
+  },
 };

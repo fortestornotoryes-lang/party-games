@@ -2,17 +2,13 @@ import React, {useEffect} from 'react';
 import {motion} from 'motion/react';
 import {Users, ChevronRight} from 'lucide-react';
 
-import {storageService} from '../services/storageService';
 import {useGameSettings} from '../contexts/GameSettingsContext';
-import {JUST_ONE_WORDS} from '../constants/justOneContent';
-import {ALIAS_CATEGORIES} from '../constants/aliasContent';
-import {LOCATIONS_DATA} from '../constants/spyHuntContent';
-import {WAVELENGTH_CATEGORIES} from '../constants/wavelengthContent';
-import {FAKE_ARTIST_DATA_BY_DIFFICULTY} from '../constants/fakeArtistContent';
+import {contentService} from '../services/contentService';
+import {GameKey} from '../types/games';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
 
 interface MainMenuProps {
-    onSelectGame: (gameId: string) => void;
+    onSelectGame: (gameId: GameKey) => void;
 }
 
 const themeConfigs = {
@@ -74,32 +70,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
         setCurrentGameId(null);
     }, []);
 
-    const getGameStats = (gameId: string) => {
-        let total = 0;
-        const custom = storageService.getCustomWords(gameId).length;
-        const used = storageService.getUsedWords(gameId).length;
-
-        switch (gameId) {
-            case 'just_one':
-                total = JUST_ONE_WORDS.length + custom;
-                break;
-            case 'alias':
-                total = ALIAS_CATEGORIES.flatMap(c => c.words).length + custom;
-                break;
-            case 'spy':
-                total = LOCATIONS_DATA.length + custom;
-                break;
-            case 'wavelength':
-                total = WAVELENGTH_CATEGORIES.length + custom;
-                break;
-            case 'fake_artist':
-                total = Object.values(FAKE_ARTIST_DATA_BY_DIFFICULTY).flat().length + custom;
-                break;
-            default:
-                return null;
-        }
-
-        return {total, remaining: Math.max(0, total - used)};
+    const getGameStats = (gameId: GameKey) => {
+        const stats = contentService.getWordStats(gameId, 'medium');
+        return stats.total > 0 ? stats : null;
     };
 
     return (

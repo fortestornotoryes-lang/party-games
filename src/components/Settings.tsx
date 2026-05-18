@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Save, Plus, Trash2, Settings as SettingsIcon, Database, RefreshCw } from 'lucide-react';
 import { storageService, GameSettings } from '../services/storageService';
 import { feedbackService } from '../services/feedbackService';
+import { GameKey } from '../types/games';
 import { PrimaryButton, GameCard, SectionLabel, IconButton, TextInput, PageWrapper, Typography, TabButton } from './UI';
 
 interface SettingsProps {
@@ -12,7 +13,7 @@ interface SettingsProps {
 export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'words'>('general');
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
-  const [selectedGame, setSelectedGame] = useState('just_one');
+  const [selectedGame, setSelectedGame] = useState<GameKey>(GameKey.JustOne);
   const [newWord, setNewWord] = useState('');
   const [customWords, setCustomWords] = useState<string[]>(storageService.getCustomWords(selectedGame));
   const [usedWordsCount, setUsedWordsCount] = useState(storageService.getUsedWords(selectedGame).length);
@@ -45,11 +46,11 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     </div>
   );
 
-  const games = [
-    { id: 'just_one', name: 'Просто Слово' },
-    { id: 'spy', name: 'Найди Шпиона' },
-    { id: 'alias', name: 'Алиас' },
-    { id: 'fake_artist', name: 'Арт-Обман' },
+  const games: { id: GameKey; name: string }[] = [
+    { id: GameKey.JustOne, name: 'Просто Слово' },
+    { id: GameKey.Spy, name: 'Найди Шпиона' },
+    { id: GameKey.Alias, name: 'Алиас' },
+    { id: GameKey.FakeArtist, name: 'Арт-Обман' },
   ];
 
   const handleAddWord = () => {
@@ -72,7 +73,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     }
   };
 
-  const handleGameChange = (gameId: string) => {
+  const handleGameChange = (gameId: GameKey) => {
     setSelectedGame(gameId);
     setCustomWords(storageService.getCustomWords(gameId));
     setUsedWordsCount(storageService.getUsedWords(gameId).length);

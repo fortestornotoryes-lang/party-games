@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Difficulty, GameMode } from '../types';
+import { GameKey } from '../types/games';
 import { storageService } from '../services/storageService';
 
 interface GameSettingsContextType {
@@ -11,8 +12,8 @@ interface GameSettingsContextType {
   setMode: (m: GameMode) => void;
   setRounds: (r: number) => void;
   setTimerSeconds: (s: number) => void;
-  currentGameId: string | null;
-  setCurrentGameId: (id: string | null) => void;
+  currentGameId: GameKey | null;
+  setCurrentGameId: (id: GameKey | null) => void;
 }
 
 const GameSettingsContext = createContext<GameSettingsContextType | undefined>(undefined);
@@ -29,7 +30,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [mode, setModeState] = useState<GameMode>('classic');
   const [rounds, setRoundsState] = useState<number>(2);
   const [timerSeconds, setTimerSecondsState] = useState<number>(30);
-  const [currentGameId, setCurrentGameId] = useState<string | null>(null);
+  const [currentGameId, setCurrentGameId] = useState<GameKey | null>(null);
 
   // Load config when game changes
   useEffect(() => {

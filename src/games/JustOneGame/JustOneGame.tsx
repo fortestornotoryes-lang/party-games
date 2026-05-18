@@ -4,7 +4,7 @@ import { Lightbulb, CheckCircle, XCircle, RotateCcw, Send } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
-import { JUST_ONE_DATA_BY_DIFFICULTY } from '../../constants/justOneContent';
+import { contentService } from '../../services/contentService';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
@@ -26,15 +26,8 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   useEffect(() => { generateNewWord(); }, [guesserIdx]);
 
   const generateNewWord = () => {
-    const custom = storageService.getCustomWords('just_one');
-    const used = storageService.getUsedWords('just_one');
-    const diffWords = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] ?? JUST_ONE_DATA_BY_DIFFICULTY.medium;
-    const allWords = [...diffWords, ...custom];
-    let available = allWords.filter(w => !used.includes(w));
-    if (available.length === 0) { storageService.resetUsedWords('just_one'); available = allWords; }
-    const newWord = available[Math.floor(Math.random() * available.length)];
+    const newWord = contentService.getJustOneWord(difficulty);
     setWord(newWord);
-    storageService.markWordAsUsed('just_one', newWord);
     setHints({});
     setLocalHints({});
     setGuess('');

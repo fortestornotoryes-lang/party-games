@@ -1,6 +1,4 @@
-/**
- * Storage Service for managing persistence via localStorage
- */
+import { GameKey } from '../types/games';
 
 const STORAGE_KEYS = {
   PLAYERS: 'party_app_players',
@@ -31,12 +29,12 @@ export const storageService = {
   },
 
   // Used Words
-  getUsedWords: (gameId: string): string[] => {
+  getUsedWords: (gameId: GameKey): string[] => {
     const data = localStorage.getItem(STORAGE_KEYS.USED_WORDS);
     const used: GameDictionary = data ? JSON.parse(data) : {};
     return used[gameId] || [];
   },
-  markWordAsUsed: (gameId: string, word: string) => {
+  markWordAsUsed: (gameId: GameKey, word: string) => {
     const data = localStorage.getItem(STORAGE_KEYS.USED_WORDS);
     const used: GameDictionary = data ? JSON.parse(data) : {};
     if (!used[gameId]) used[gameId] = [];
@@ -45,7 +43,7 @@ export const storageService = {
       localStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
     }
   },
-  resetUsedWords: (gameId: string) => {
+  resetUsedWords: (gameId: GameKey) => {
     const data = localStorage.getItem(STORAGE_KEYS.USED_WORDS);
     const used: GameDictionary = data ? JSON.parse(data) : {};
     used[gameId] = [];
@@ -53,12 +51,12 @@ export const storageService = {
   },
 
   // Custom Words
-  getCustomWords: (gameId: string): string[] => {
+  getCustomWords: (gameId: GameKey): string[] => {
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS);
     const custom: GameDictionary = data ? JSON.parse(data) : {};
     return custom[gameId] || [];
   },
-  addCustomWord: (gameId: string, word: string) => {
+  addCustomWord: (gameId: GameKey, word: string) => {
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS);
     const custom: GameDictionary = data ? JSON.parse(data) : {};
     if (!custom[gameId]) custom[gameId] = [];
@@ -67,7 +65,7 @@ export const storageService = {
       localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
     }
   },
-  removeCustomWord: (gameId: string, word: string) => {
+  removeCustomWord: (gameId: GameKey, word: string) => {
     const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS);
     const custom: GameDictionary = data ? JSON.parse(data) : {};
     if (custom[gameId]) {
