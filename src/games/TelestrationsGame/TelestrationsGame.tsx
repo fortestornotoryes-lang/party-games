@@ -58,7 +58,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const [guess, setGuess] = useState('');
   const [timeLeft, setTimeLeft] = useCountdown(phase === 'action');
 
-  const currentPlayer = shuffledPlayers[currentRound];
+  const currentPlayer = shuffledPlayers[currentRound % shuffledPlayers.length];
   const isDrawingRound = currentRound % 2 === 0;
 
   const handleStartGame = () => {
