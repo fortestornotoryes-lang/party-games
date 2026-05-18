@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 const themes = {
   orange:  { accent: 'text-premium-orange',  bg: 'bg-premium-orange/10', glow: 'shadow-premium-orange/20' },
   purple:  { accent: 'text-premium-purple',  bg: 'bg-premium-purple/10', glow: 'shadow-premium-purple/20' },
-  emerald: { accent: 'text-premium-green', bg: 'bg-premium-green/10', glow: 'shadow-premium-green/20' },
+  green: { accent: 'text-premium-green', bg: 'bg-premium-green/10', glow: 'shadow-premium-green/20' },
   red:     { accent: 'text-premium-red',     bg: 'bg-premium-red/10', glow: 'shadow-premium-red/20' },
   blue:    { accent: 'text-premium-blue',    bg: 'bg-premium-blue/10', glow: 'shadow-premium-blue/20' },
   sky:     { accent: 'text-premium-sky',     bg: 'bg-premium-sky/10', glow: 'shadow-premium-sky/20' },

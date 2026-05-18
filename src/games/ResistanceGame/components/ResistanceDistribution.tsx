@@ -38,7 +38,7 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                                 <h4 className="text-4xl font-black text-premium-blue italic">СОПРОТИВЛЕНИЕ</h4>
                             </div>
                         )}
-                        <button onClick={next} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase">Усвоено</button>
+                        <button onClick={next} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase">ЛАДУШКИ</button>
                     </div>
                 )}
             </div>

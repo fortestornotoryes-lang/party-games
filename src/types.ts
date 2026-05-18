@@ -47,7 +47,7 @@ export type GameStatus =
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type GameMode = 'classic' | 'double_agent' | 'mole' | string;
 
-export type GameTheme = 'red' | 'emerald' | 'green' | 'sky' | 'yellow' | 'orange' | 'purple' | 'blue';
+export type GameTheme = 'red'  | 'green' | 'sky' | 'yellow' | 'orange' | 'purple' | 'blue';
 
 export interface GameModeOption {
   id: string;

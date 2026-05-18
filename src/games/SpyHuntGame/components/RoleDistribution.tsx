@@ -1,6 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { EyeOff, MapPin, Ghost, Shield } from 'lucide-react';
+import { MapPin, Ghost, Shield, Fingerprint } from 'lucide-react';
 import { Player } from '../../../types';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
 
@@ -14,151 +14,243 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
   const { difficulty } = useGameSettings();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const currentPlayer = players[currentIndex];
   const isLastPlayer = currentIndex === players.length - 1;
+  const roleType = currentPlayer.isSpy ? 'spy' : currentPlayer.role === 'Предатель' ? 'traitor' : 'agent';
 
   const nextPlayer = () => {
     if (isLastPlayer) onFinish();
     else {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex(i => i + 1);
       setIsRevealed(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6  selection:bg-premium-red/30 overflow-hidden select-none">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden select-none">
+
+      {/* Progress dots */}
+      <div className="flex gap-2 mb-8">
+        {players.map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              width: i === currentIndex ? 24 : 6,
+              opacity: i < currentIndex ? 0.2 : i === currentIndex ? 1 : 0.35,
+            }}
+            transition={{ duration: 0.3 }}
+            className={`h-1.5 rounded-full ${i === currentIndex ? 'bg-premium-red' : 'bg-white/20'}`}
+          />
+        ))}
+      </div>
+
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={currentIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-          className="w-full max-w-sm space-y-8 flex flex-col items-center"
+          initial={{ opacity: 0, scale: 0.92, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.92, y: -20 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+          className="w-full max-w-sm"
         >
-
-
-          <div className="w-full aspect-[4/5] bg-white/5 border-2 border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden shadow-2xl" onClick={() => setIsRevealed(true)}>
+          <AnimatePresence mode="wait">
             {!isRevealed ? (
-              <div className="text-center space-y-6 px-10">
-                <div className="w-24 h-24 bg-premium-red/10 rounded-full flex items-center justify-center border border-premium-red/20 mx-auto">
-                   <EyeOff className="w-10 h-10 text-premium-red/40 animate-pulse" />
+              /* ── LOCKED ── */
+              <motion.div
+                key="locked"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+                onClick={() => setIsRevealed(true)}
+                className="w-full aspect-[3/4] rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"
+                style={{
+                  background: 'linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.018) 100%)',
+                  border: '1.5px solid rgba(255,255,255,0.09)',
+                  boxShadow: '0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)',
+                }}
+              >
+                {/* Grid texture */}
+                <div className="absolute inset-0 opacity-[0.022]" style={{
+                  backgroundImage: 'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
+                }} />
+
+                {/* Corner brackets */}
+                <div className="absolute top-5 left-5 w-5 h-5 border-t-2 border-l-2 border-white/[0.12] rounded-tl-md" />
+                <div className="absolute top-5 right-5 w-5 h-5 border-t-2 border-r-2 border-white/[0.12] rounded-tr-md" />
+                <div className="absolute bottom-5 left-5 w-5 h-5 border-b-2 border-l-2 border-white/[0.12] rounded-bl-md" />
+                <div className="absolute bottom-5 right-5 w-5 h-5 border-b-2 border-r-2 border-white/[0.12] rounded-br-md" />
+
+                <div className="text-center space-y-7 px-10 relative z-10">
+                  <motion.div
+                    animate={{ opacity: [0.3, 0.65, 0.3] }}
+                    transition={{ duration: 2.2, repeat: Infinity }}
+                    className="mx-auto w-[72px] h-[72px] rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center"
+                  >
+                    <Fingerprint className="w-9 h-9 text-white/35" />
+                  </motion.div>
+
+                  <div>
+                    <p className="text-[9px] uppercase font-black text-white/[0.22] tracking-[0.45em] mb-2">Игрок</p>
+                    <h4 className="text-[42px] font-black italic text-white tracking-tighter leading-none">{currentPlayer.name}</h4>
+                  </div>
+
+                  <p className="text-[9px] uppercase font-bold text-white/[0.18] tracking-[0.25em] leading-relaxed">
+                    Нажми чтобы<br />увидеть роль
+                  </p>
                 </div>
-                <div className="space-y-2">
-                   <p className="text-[10px] uppercase font-black text-premium-red tracking-[0.2em]">Передай устройство</p>
-                   <h4 className="text-3xl font-black text-white italic">{currentPlayer.name}</h4>
-                </div>
-                <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest leading-relaxed">Нажми, когда будешь один, чтобы увидеть роль</p>
-              </div>
+              </motion.div>
             ) : (
-                <div className="p-8 text-center space-y-8 relative z-10 w-full">
-                  {currentPlayer.isSpy ? (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                          <Ghost className="w-20 h-20 text-premium-red mx-auto" />
-                          <h4 className="text-6xl font-black text-premium-red italic leading-none">
-                             {"ШПИОН".split('').map((char, i) => (
-                               <motion.span
-                                 key={i}
-                                 initial={{ opacity: 0, scale: 2, filter: 'blur(10px)' }}
-                                 animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                                 transition={{ delay: 0.1 + i * 0.05, type: 'spring' }}
-                                 className="inline-block"
-                               >
-                                 {char}
-                               </motion.span>
-                             ))}
-                          </h4>
-                          <p className="text-white/40 text-sm">Локация неизвестна. Твоя задача — не выдать себя и узнать место.</p>
-                          {difficulty === 'easy' && (
-                            <div className="p-3 bg-premium-red/10 border border-premium-red/30 rounded-xl">
-                              <p className="text-[8px] font-black uppercase text-premium-red mb-1">Легкий уровень (подсказка):</p>
-                              <p className="text-xs text-premium-red/70 font-bold">Букв в названии: {location.length}</p>
-                            </div>
-                          )}
-                      </motion.div>
-                  ) : currentPlayer.role === 'Предатель' ? (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                          <div className="space-y-2">
-                             <Shield className="w-12 h-12 text-premium-sky mx-auto" />
-                             <p className="text-[10px] uppercase text-premium-sky/50 font-black">Твой секрет:</p>
-                             <h2 className="text-5xl font-black text-white italic leading-none uppercase">
-                                {"ПРЕДАТЕЛЬ".split('').map((char, i) => (
-                                  <motion.span
-                                    key={i}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 + i * 0.03 }}
-                                    className="inline-block"
-                                  >
-                                    {char}
-                                  </motion.span>
-                                ))}
-                             </h2>
+              /* ── REVEALED ── */
+              <motion.div
+                key="revealed"
+                initial={{ scale: 0.82, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+                className="w-full aspect-[3/4] rounded-[2.5rem] flex flex-col relative overflow-hidden"
+                style={{
+                  border: `1.5px solid ${
+                    roleType === 'spy' ? 'rgba(255,46,77,0.45)'
+                    : roleType === 'traitor' ? 'rgba(249,115,22,0.4)'
+                    : 'rgba(34,197,94,0.32)'
+                  }`,
+                  boxShadow: roleType === 'spy'
+                    ? '0 0 80px rgba(255,46,77,0.22), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,46,77,0.12)'
+                    : roleType === 'traitor'
+                    ? '0 0 70px rgba(249,115,22,0.15), 0 32px 64px rgba(0,0,0,0.55)'
+                    : '0 0 70px rgba(34,197,94,0.12), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(34,197,94,0.08)',
+                }}
+              >
+                {/* Gradient bg */}
+                <div className={`absolute inset-0 ${
+                  roleType === 'spy' ? 'bg-gradient-to-b from-premium-red/[0.22] via-premium-red/[0.06] to-black/70'
+                  : roleType === 'traitor' ? 'bg-gradient-to-b from-premium-orange/20 via-premium-orange/[0.05] to-black/70'
+                  : 'bg-gradient-to-b from-premium-green/[0.15] via-premium-green/[0.05] to-black/70'
+                }`} />
+
+                {/* Top glow */}
+                <div
+                  className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl pointer-events-none opacity-60"
+                  style={{
+                    background: roleType === 'spy' ? 'rgba(255,46,77,0.3)' : roleType === 'traitor' ? 'rgba(249,115,22,0.22)' : 'rgba(34,197,94,0.18)',
+                  }}
+                />
+
+                <div className="relative z-10 flex flex-col flex-1 p-7 items-center text-center">
+
+                  {/* ── SPY ── */}
+                  {roleType === 'spy' && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">Секретная роль</p>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                      </div>
+
+                      <div className="space-y-3">
+                        <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 2.5, repeat: Infinity }}>
+                          <Ghost className="w-[88px] h-[88px] text-premium-red mx-auto" style={{ filter: 'drop-shadow(0 0 20px rgba(255,46,77,0.5))' }} />
+                        </motion.div>
+                        <h3
+                          className="text-[68px] font-black italic text-premium-red tracking-tighter leading-none"
+                          style={{ textShadow: '0 0 48px rgba(255,46,77,0.45)' }}
+                        >
+                          ШПИОН
+                        </h3>
+                        <p className="text-white/30 text-[11px] leading-relaxed">
+                          Локация неизвестна.<br />Не выдай себя — узнай место.
+                        </p>
+                        {difficulty === 'easy' && (
+                          <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
+                            <p className="text-[8px] font-black uppercase text-premium-red/55 mb-0.5">Подсказка</p>
+                            <p className="text-xs text-premium-red font-black">Букв в названии: {location.length}</p>
                           </div>
-                          <div className="pt-6 border-t border-white/5 space-y-4">
-                              <div>
-                                <p className="text-[10px] uppercase text-premium-green/50 font-black mb-1">Локация (ты ее знаешь):</p>
-                                <h3 className="text-2xl font-black text-white italic underline">
-                                   {location.split(' ').map((word, i) => (
-                                     <motion.span
-                                       key={i}
-                                       initial={{ opacity: 0, y: 10 }}
-                                       animate={{ opacity: 1, y: 0 }}
-                                       transition={{ delay: 0.5 + i * 0.1 }}
-                                       className="inline-block mr-2"
-                                     >
-                                       {word}
-                                     </motion.span>
-                                   ))}
-                                </h3>
-                              </div>
-                              <p className="text-white/40 text-[10px] font-medium leading-relaxed">Помогай шпиону! Твоя задача — отводить подозрения от него и запутать остальных.</p>
-                          </div>
-                      </motion.div>
-                  ) : (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                          <div className="space-y-2">
-                             <MapPin className="w-12 h-12 text-premium-green mx-auto" />
-                             <p className="text-[10px] uppercase text-premium-green/50 font-black">Локация:</p>
-                             <h2 className="text-3xl font-black text-white uppercase italic leading-none">
-                                {location.split(' ').map((word, i) => (
-                                  <motion.span
-                                    key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 + i * 0.1 }}
-                                    className="inline-block mr-2"
-                                  >
-                                    {word}
-                                  </motion.span>
-                                ))}
-                             </h2>
-                          </div>
-                          <div className="pt-6 border-t border-white/5">
-                              <p className="text-[10px] uppercase text-white/30 font-black mb-1">Твоя роль:</p>
-                              <h3 className="text-2xl font-black text-premium-green italic uppercase">
-                                 {currentPlayer.role.split(' ').map((word, i) => (
-                                   <motion.span
-                                     key={i}
-                                     initial={{ opacity: 0, scale: 0.8 }}
-                                     animate={{ opacity: 1, scale: 1 }}
-                                     transition={{ delay: 0.5 + i * 0.1, type: 'spring' }}
-                                     className="inline-block mr-2"
-                                   >
-                                     {word}
-                                   </motion.span>
-                                 ))}
-                              </h3>
-                          </div>
-                      </motion.div>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={nextPlayer}
+                        className="w-full py-4 bg-premium-red rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
+                        style={{ boxShadow: '0 8px 32px rgba(255,46,77,0.35)' }}
+                      >
+                        {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                      </button>
+                    </motion.div>
                   )}
-                  <button onClick={(e) => { e.stopPropagation(); nextPlayer(); }} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95 transition-all">Усвоено</button>
+
+                  {/* ── TRAITOR ── */}
+                  {roleType === 'traitor' && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-orange/50">Секретная роль</p>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                      </div>
+
+                      <div className="space-y-4">
+                        <Shield className="w-[72px] h-[72px] text-premium-orange mx-auto" style={{ filter: 'drop-shadow(0 0 16px rgba(249,115,22,0.45))' }} />
+                        <h3 className="text-[52px] font-black italic text-premium-orange tracking-tighter leading-none">
+                          ПРЕДАТЕЛЬ
+                        </h3>
+                        <div className="px-4 py-3 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
+                          <p className="text-[8px] font-black uppercase text-premium-orange/50 tracking-widest mb-1">Твоя локация</p>
+                          <p className="text-xl font-black italic text-white uppercase">{location}</p>
+                        </div>
+                        <p className="text-white/25 text-[10px] leading-relaxed">
+                          Помогай шпиону, запутывай остальных
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={nextPlayer}
+                        className="w-full py-4 bg-premium-orange rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
+                        style={{ boxShadow: '0 8px 32px rgba(249,115,22,0.25)' }}
+                      >
+                        {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                      </button>
+                    </motion.div>
+                  )}
+
+                  {/* ── AGENT ── */}
+                  {roleType === 'agent' && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-green/50">Агент</p>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                      </div>
+
+                      <div className="space-y-4">
+                        <MapPin className="w-[72px] h-[72px] text-premium-green mx-auto" style={{ filter: 'drop-shadow(0 0 16px rgba(34,197,94,0.4))' }} />
+                        <div className="space-y-1">
+                          <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-green/50">Секретная локация</p>
+                          <h3
+                            className="text-[40px] font-black italic text-white uppercase tracking-tighter leading-tight"
+                            style={{ textShadow: '0 0 32px rgba(34,197,94,0.22)' }}
+                          >
+                            {location}
+                          </h3>
+                        </div>
+                        <div className="px-4 py-3 bg-premium-green/10 border border-premium-green/20 rounded-2xl">
+                          <p className="text-[8px] font-black uppercase text-white/[0.22] tracking-widest mb-1">Твоя роль</p>
+                          <p className="text-base font-black italic text-premium-green uppercase">{currentPlayer.role}</p>
+                        </div>
+                        <p className="text-white/[0.22] text-[10px]">Вычисли шпиона, не раскрывая локацию</p>
+                      </div>
+
+                      <button
+                        onClick={nextPlayer}
+                        className="w-full py-4 bg-premium-green rounded-[18px] font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
+                        style={{ boxShadow: '0 8px 32px rgba(34,197,94,0.22)' }}
+                      >
+                        {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                      </button>
+                    </motion.div>
+                  )}
+
                 </div>
-              )}
-            </div>
-          </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </AnimatePresence>
     </div>
   );

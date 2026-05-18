@@ -47,7 +47,7 @@ const colorConfig: Record<GameTheme, {
         closeHover: 'hover:bg-premium-red/10 hover:text-premium-red',
         indexBg: 'bg-premium-red/20 text-premium-red border-premium-red/30',
     },
-    emerald: {
+    green: {
         bg: 'bg-premium-green/10',
         border: 'border-premium-green/30',
         text: 'text-premium-green',
