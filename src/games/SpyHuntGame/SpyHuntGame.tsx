@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, List, RotateCcw, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Skull } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -52,12 +52,12 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
   const spy = players.find(p => p.isSpy);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#060807] text-[#e5e7eb] font-sans pb-10">
+    <div className="flex flex-col min-h-screen pb-10">
       <GameHeader 
         title={GAMES_REGISTRY.spy.title}
         subtitle={phase === 'playing' ? "Идет поиск..." : "Результаты"} 
         icon={Skull} 
-        themeColor="border-red-500/50 text-red-400"
+        themeColor="border-premium-red/50 text-premium-red"
         onBack={onRestart}
       />
 
@@ -71,8 +71,8 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
             className="p-6 space-y-6 flex-1 overflow-y-auto max-w-2xl mx-auto w-full"
           >
             <div className="flex justify-center">
-              <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${timeLeft < 60 ? 'border-red-500 bg-red-500/10' : 'border-white/10 bg-white/5 shadow-2xl shadow-red-500/10'}`}>
-                <Timer className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`} />
+              <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${timeLeft < 60 ? 'border-premium-red bg-premium-red/10' : 'border-white/10 bg-white/5'}`}>
+                <Timer className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`} />
                 <span className="text-3xl font-black italic tracking-tighter">
                   {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}{timeLeft % 60}
                 </span>
@@ -82,7 +82,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
             <div className="space-y-3">
               <button onClick={() => setShowQuestions(!showQuestions)} className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all">
                 <div className="flex items-center space-x-3">
-                    <MessageSquare className="w-4 h-4 text-red-500" />
+                    <MessageSquare className="w-4 h-4 text-premium-red" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Идеи для вопросов</span>
                 </div>
                 {showQuestions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -96,7 +96,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
 
               <button onClick={() => setShowLocations(!showLocations)} className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all">
                 <div className="flex items-center space-x-3">
-                    <List className="w-4 h-4 text-sky-500" />
+                    <List className="w-4 h-4 text-premium-sky" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Возможные локации</span>
                 </div>
                 {showLocations ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -118,7 +118,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
               <div className="grid grid-cols-2 gap-3">
                 {players.map((p) => (
                     <GameCard key={p.id} className="p-4 flex items-center space-x-3 border-white/5">
-                        <div className="w-2 h-2 rounded-full bg-red-500/40" />
+                        <div className="w-2 h-2 rounded-full bg-premium-red/40" />
                         <span className="text-sm font-black italic uppercase tracking-tight truncate">{p.name}</span>
                     </GameCard>
                 ))}
@@ -126,7 +126,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
             </div>
 
             <div className="pt-8">
-              <PrimaryButton onClick={() => setPhase('reveal')} icon={Skull} className="bg-red-600 !text-white shadow-red-900/40">
+              <PrimaryButton onClick={() => setPhase('reveal')} icon={Skull} className="bg-premium-red !text-white shadow-premium-red/30">
                 РАЗОБЛАЧИТЬ
               </PrimaryButton>
             </div>
@@ -139,17 +139,17 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
             className="p-6 flex-1 flex flex-col items-center justify-center space-y-12 max-w-md mx-auto w-full"
           >
             <div className="text-center space-y-4">
-               <Skull className="w-24 h-24 text-red-600 mx-auto animate-pulse" />
+               <Skull className="w-24 h-24 text-premium-red mx-auto animate-pulse" />
                <h2 className="text-5xl font-black italic uppercase text-white tracking-tighter">Шпион раскрыт</h2>
             </div>
 
-            <GameCard className="w-full p-10 text-center border-red-500/40 bg-red-500/5 space-y-6">
+            <GameCard className="w-full p-10 text-center border-premium-red/40 bg-premium-red/5 space-y-6">
                <div className="space-y-2">
-                  <p className="text-[10px] font-black text-red-500/60 uppercase tracking-widest">Агент 00</p>
+                  <p className="text-[10px] font-black text-premium-red/60 uppercase tracking-widest">Агент 00</p>
                   <h3 className="text-5xl font-black italic text-white uppercase break-words px-4">{spy?.name}</h3>
                </div>
-               <div className="pt-6 border-t border-red-500/20">
-                  <p className="text-[10px] font-black text-emerald-500/60 uppercase tracking-widest">Секретная локация</p>
+               <div className="pt-6 border-t border-premium-red/20">
+                  <p className="text-[10px] font-black text-premium-green/60 uppercase tracking-widest">Секретная локация</p>
                   <p className="text-2xl font-black italic text-white uppercase">{location}</p>
                </div>
             </GameCard>

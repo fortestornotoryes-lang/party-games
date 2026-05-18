@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'motion/react';
 import { Shield, Skull, RotateCcw, Award } from 'lucide-react';
 import { Player } from '../../../types';
@@ -13,8 +13,8 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
   const spies = players.filter(p => p.isSpy);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#0a0502] text-[#e5e7eb] font-sans overflow-hidden">
-       <div className={`fixed inset-0 pointer-events-none transition-colors duration-2000 ${winner === 'resistance' ? 'bg-blue-950/20' : 'bg-red-950/20'}`} />
+    <div className="flex flex-col items-center justify-center min-h-screen p-6   overflow-hidden">
+       <div className={`fixed inset-0 pointer-events-none transition-colors duration-2000 ${winner === 'resistance' ? 'bg-premium-blue/10' : 'bg-premium-red/10'}`} />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -25,7 +25,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className={`w-32 h-32 rounded-[2.5rem] mx-auto flex items-center justify-center shadow-2xl ${winner === 'resistance' ? 'bg-blue-600 shadow-blue-500/40' : 'bg-red-600 shadow-red-500/40'}`}
+            className={`w-32 h-32 rounded-[2.5rem] mx-auto flex items-center justify-center shadow-2xl ${winner === 'resistance' ? 'bg-premium-blue shadow-premium-blue/40' : 'bg-premium-red shadow-premium-red/40'}`}
           >
             {winner === 'resistance' ? <Shield className="w-16 h-16 text-white" /> : <Skull className="w-16 h-16 text-white" />}
           </motion.div>
@@ -33,11 +33,11 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
           <div className="space-y-2">
             <h1 className="text-6xl font-black uppercase tracking-tight italic leading-none">
               Победа<br/>
-              <span className={winner === 'resistance' ? 'text-blue-500' : 'text-red-500'}>
+              <span className={winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}>
                 {winner === 'resistance' ? 'Свободы' : 'Хаоса'}
               </span>
             </h1>
-            <p className="text-[12px] text-gray-500 uppercase tracking-[0.4em] font-black mt-4">
+            <p className="text-[12px] text-white/30 uppercase tracking-[0.4em] font-black mt-4">
               Мир уже не будет прежним
             </p>
           </div>
@@ -45,7 +45,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
 
         <div className="space-y-4">
           <div className="p-6 bg-white/5 border border-white/10 rounded-[2rem] space-y-4">
-             <div className="flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-gray-500">
+             <div className="flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-white/30">
                <span>Шпионы этой игры</span>
                <Award className="w-4 h-4" />
              </div>
@@ -54,7 +54,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
                  <motion.div 
                    key={spy.id}
                    whileHover={{ scale: 1.05 }}
-                   className="px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-xl"
+                   className="px-4 py-2 bg-premium-red/10 border border-premium-red/30 rounded-xl"
                  >
                    <span className="text-white font-bold">{spy.name}</span>
                  </motion.div>

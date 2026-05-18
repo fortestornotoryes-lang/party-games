@@ -1,4 +1,5 @@
 import { ComponentType } from 'react';
+import {GameTheme} from "@/src/types.ts";
 
 export enum GameKey {
     Spy = 'spy',
@@ -30,7 +31,7 @@ export interface GameMetadata {
     readonly title: string;
     readonly subtitle: string;
     readonly icon: ComponentType<any>;
-    readonly theme: string;
+    readonly theme:  GameTheme;
     readonly placeholder: string;
     readonly description?: string;
     readonly players: string;

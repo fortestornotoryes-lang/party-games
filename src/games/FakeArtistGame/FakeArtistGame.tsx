@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+﻿import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, Brush, Undo2, Send } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -129,12 +129,12 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#060807] overflow-hidden select-none relative">
+    <div className="flex flex-col min-h-screen  overflow-hidden select-none relative">
        <GameHeader
           title={GAMES_REGISTRY.fake_artist.title}
           subtitle={`Ход ${turnIndex + 1} / ${players.length * rounds}`}
           icon={Palette}
-          themeColor="border-emerald-500/50 text-emerald-400"
+          themeColor="border-premium-green/50 text-premium-green"
           onBack={onBack}
        />
 
@@ -150,16 +150,16 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
               </div>
               <div className="text-right space-y-1">
                   {timerSeconds > 0 && (
-                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-white/80'}`}>
+                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}>
                         {timeLeft}с
                      </p>
                   )}
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Тема</p>
-                  <h3 className="text-xl font-black italic uppercase text-emerald-500 leading-none">{category}</h3>
+                  <h3 className="text-xl font-black italic uppercase text-premium-green leading-none">{category}</h3>
               </div>
           </div>
 
-          <GameCard className="w-full flex-1 !p-0 overflow-hidden relative border-emerald-500/20">
+          <GameCard className="w-full flex-1 !p-0 overflow-hidden relative border-premium-green/20">
              <div
                ref={containerRef}
                className="w-full h-full"
@@ -192,7 +192,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
              <PrimaryButton
                disabled={!hasDrawn}
                onClick={confirm}
-               className="bg-emerald-500 !text-black flex-1 font-semibold"
+               className="bg-premium-green !text-black flex-1 font-semibold"
              >
                ПОДТВЕРДИТЬ
              </PrimaryButton>
@@ -207,16 +207,16 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
-               className="absolute inset-0 bg-[#060807] z-10 flex flex-col items-center justify-between pt-20 p-6 space-y-8"
+               className="absolute inset-0  z-10 flex flex-col items-center justify-between pt-20 p-6 space-y-8"
             >
                <div className="text-center space-y-4">
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
                   <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
                </div>
 
-               <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-emerald-500/20 bg-emerald-500/5">
-                  <Palette className="w-16 h-16 text-emerald-500 animate-pulse" />
-                  <p className="text-xs text-center text-gray-400 px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
+               <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-premium-green/20 bg-premium-green/5">
+                  <Palette className="w-16 h-16 text-premium-green animate-pulse" />
+                  <p className="text-xs text-center text-white/40 px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
                </GameCard>
 
                <PrimaryButton onClick={() => setIsTransitioning(false)} className="bg-white !text-black">

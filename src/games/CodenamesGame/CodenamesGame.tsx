@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton } from '../../components/UI';
@@ -186,7 +186,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
         title={GAMES_REGISTRY.codenames.title}
         subtitle="Битва шпионов" 
         icon={Grid} 
-        themeColor="text-emerald-500 bg-emerald-500/90 border-emerald-500/30" 
+        themeColor="text-premium-green bg-premium-green/90 border-premium-green/30" 
         onBack={onBack} 
       />
       
@@ -201,19 +201,19 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6 flex-1 flex flex-col justify-center"
             >
-              <h2 className="text-2xl font-black text-center mb-6 uppercase tracking-widest text-emerald-400">Команды</h2>
+              <h2 className="text-2xl font-black text-center mb-6 uppercase tracking-widest text-premium-green">Команды</h2>
               
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl">
-                  <h3 className="text-red-400 font-bold mb-2 uppercase text-xs flex items-center gap-2"><Users className="w-4 h-4"/> Красные</h3>
-                  <p className="font-bold border-b border-red-500/20 pb-2 mb-2"><span className="text-xs text-red-500/50 uppercase block">Капитан</span>{redCaptain}</p>
-                  <p className="text-sm text-red-300 opacity-80">{redTeam.join(', ')}</p>
+                <div className="p-4 bg-premium-red/10 border border-premium-red/30 rounded-2xl">
+                  <h3 className="text-premium-red font-bold mb-2 uppercase text-xs flex items-center gap-2"><Users className="w-4 h-4"/> Красные</h3>
+                  <p className="font-bold border-b border-premium-red/20 pb-2 mb-2"><span className="text-xs text-premium-red/50 uppercase block">Капитан</span>{redCaptain}</p>
+                  <p className="text-sm text-premium-red/70 opacity-80">{redTeam.join(', ')}</p>
                 </div>
                 
-                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl">
-                  <h3 className="text-blue-400 font-bold mb-2 uppercase text-xs flex items-center gap-2"><Users className="w-4 h-4"/> Синие</h3>
-                  <p className="font-bold border-b border-blue-500/20 pb-2 mb-2"><span className="text-xs text-blue-500/50 uppercase block">Капитан</span>{blueCaptain}</p>
-                  <p className="text-sm text-blue-300 opacity-80">{blueTeam.join(', ')}</p>
+                <div className="p-4 bg-premium-blue/10 border border-premium-blue/30 rounded-2xl">
+                  <h3 className="text-premium-blue font-bold mb-2 uppercase text-xs flex items-center gap-2"><Users className="w-4 h-4"/> Синие</h3>
+                  <p className="font-bold border-b border-premium-blue/20 pb-2 mb-2"><span className="text-xs text-premium-blue/50 uppercase block">Капитан</span>{blueCaptain}</p>
+                  <p className="text-sm text-premium-blue/70 opacity-80">{blueTeam.join(', ')}</p>
                 </div>
               </div>
               
@@ -229,21 +229,21 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               exit={{ opacity: 0, scale: 1.1 }}
               className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
             >
-              <div className={`p-8 rounded-[2rem] ${turn === 'red' ? 'bg-red-500/10 border-red-500/20' : 'bg-blue-500/10 border-blue-500/20'} border shadow-2xl`}>
-                 <User className={`w-24 h-24 ${turn === 'red' ? 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`} />
+              <div className={`p-8 rounded-[2rem] ${turn === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
+                 <User className={`w-24 h-24 ${turn === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`} />
               </div>
               <div>
-                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2 font-bold">Передайте телефон капитану</p>
-                <h2 className={`text-5xl font-black uppercase tracking-tight ${turn === 'red' ? 'text-red-400' : 'text-blue-400'}`}>{currentCaptain}</h2>
+                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте телефон капитану</p>
+                <h2 className={`text-5xl font-black uppercase tracking-tight ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>{currentCaptain}</h2>
                 <div className="mt-4">
-                  <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${turn === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                  <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${turn === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                     Команда {turn === 'red' ? 'Красных' : 'Синих'}
                   </span>
                 </div>
               </div>
               <div className="w-full pt-8">
                  <PrimaryButton onClick={() => setPhase('captain')} variant={turn === 'red' ? 'red' : 'blue'} className="w-full h-16 text-lg tracking-widest">Я ГОТОВ</PrimaryButton>
-                 <p className="text-[10px] text-gray-500 font-bold mt-4 animate-pulse uppercase">Остальные не должны видеть экран!</p>
+                 <p className="text-[10px] text-white/30 font-bold mt-4 animate-pulse uppercase">Остальные не должны видеть экран!</p>
               </div>
             </motion.div>
           )}
@@ -257,14 +257,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               className="space-y-4 flex flex-col"
             >
               <div className="text-center">
-                <p className={`text-[20px] font-black uppercase tracking-widest ${turn === 'red' ? 'text-red-500' : 'text-blue-500'}`}>Ваш ход: капитану</p>
+                <p className={`text-[20px] font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>Ваш ход: капитану</p>
                 <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3 mb-2 text-[12px] font-black uppercase tracking-widest">
-                   <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500"></span> Красные</div>
-                   <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Синие</div>
+                   <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-premium-red"></span> Красные</div>
+                   <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-premium-blue"></span> Синие</div>
                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-stone-400"></span> Мирные (конец хода)</div>
                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-black border border-red-900"></span> Убийца (смерть)</div>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">Придумайте подсказку (слово и число)</p>
+                <p className="text-xs text-white/40 mt-1">Придумайте подсказку (слово и число)</p>
 
               </div>
               
@@ -274,10 +274,10 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                     key={card.id} 
                     className={`aspect-[4/3] rounded flex items-center justify-center p-1 text-center relative
                       ${card.revealed ? 'opacity-30' : ''}
-                      ${card.color === 'red' ? 'bg-red-500/80' : 
-                        card.color === 'blue' ? 'bg-blue-500/80' : 
+                      ${card.color === 'red' ? 'bg-premium-red/80' : 
+                        card.color === 'blue' ? 'bg-premium-blue/80' : 
                         card.color === 'neutral' ? 'bg-stone-300/90 text-stone-900 border border-stone-400/50' : 
-                        card.color === 'double_agent' ? 'bg-emerald-500/80' :
+                        card.color === 'double_agent' ? 'bg-premium-green/80' :
                         'bg-black border border-red-900'}
                     `}
                   >
@@ -294,7 +294,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                     value={clueWord}
                     onChange={(e) => setClueWord(e.target.value.replace(/ /g, ''))}
                     placeholder="Одно слово"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-center font-bold outline-none focus:border-emerald-500/50 transition-colors uppercase"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-center font-bold outline-none focus:border-premium-green/50 transition-colors uppercase"
                     required
                   />
                   <input
@@ -306,7 +306,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                     value={clueCount === 0 ? '' : clueCount}
                     onChange={(e) => setClueCount(parseInt(e.target.value) || 0)}
                     placeholder="0"
-                    className="w-20 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-center text-xl font-bold outline-none focus:border-emerald-500/50 transition-colors"
+                    className="w-20 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-center text-xl font-bold outline-none focus:border-premium-green/50 transition-colors"
                     required
                   />
                 </div>
@@ -323,13 +323,13 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               exit={{ opacity: 0, scale: 1.1 }}
               className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
             >
-              <div className={`p-8 rounded-[2rem] ${turn === 'red' ? 'bg-red-500/10 border-red-500/20' : 'bg-blue-500/10 border-blue-500/20'} border shadow-2xl`}>
-                 <Users className={`w-24 h-24 ${turn === 'red' ? 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`} />
+              <div className={`p-8 rounded-[2rem] ${turn === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
+                 <Users className={`w-24 h-24 ${turn === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`} />
               </div>
               <div>
-                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2 font-bold">Передайте телефон команде</p>
+                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте телефон команде</p>
                 <div className="mt-4">
-                  <span className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${turn === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                  <span className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${turn === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                     Команда {turn === 'red' ? 'Красных' : 'Синих'}
                   </span>
                 </div>
@@ -349,13 +349,13 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               className="space-y-4 flex flex-col h-full"
             >
               <div className="flex flex-col items-center justify-center text-center bg-white/5 py-3 rounded-2xl border border-white/10 relative overflow-hidden">
-                <div className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-red-400' : 'bg-blue-400'}`} />
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black mb-1">ПОДСКАЗКА</p>
+                <div className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-premium-red' : 'bg-premium-blue'}`} />
+                <p className="text-[10px] text-white/40 uppercase tracking-widest font-black mb-1">ПОДСКАЗКА</p>
                 <div className="flex items-baseline gap-2">
                    <h3 className="text-2xl font-black uppercase text-white tracking-widest">{clueWord}</h3>
-                   <span className="text-xl font-bold text-gray-500">{clueCount}</span>
+                   <span className="text-xl font-bold text-white/30">{clueCount}</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Осталось попыток: <strong className="text-white">{guessesLeft}</strong></p>
+                <p className="text-xs text-white/30 mt-2">Осталось попыток: <strong className="text-white">{guessesLeft}</strong></p>
               </div>
 
               <div className="grid grid-cols-5 gap-1.5 flex-1 items-center relative">
@@ -369,7 +369,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                     >
                       <div className="bg-black/90 backdrop-blur-md border border-white/20 px-6 py-4 rounded-3xl shadow-2xl">
                         <p className="text-xl font-black text-center text-white tracking-widest">{lastActionMsg}</p>
-                        <p className="text-[10px] text-gray-500 text-center uppercase font-bold mt-2">Ход переходит...</p>
+                        <p className="text-[10px] text-white/30 text-center uppercase font-bold mt-2">Ход переходит...</p>
                       </div>
                     </motion.div>
                   )}
@@ -381,8 +381,8 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                     disabled={card.revealed}
                     className={`aspect-[4/3] rounded flex items-center justify-center p-1 text-center transition-all
                       ${!card.revealed ? 'bg-stone-200 hover:bg-stone-300 active:scale-95 cursor-pointer shadow-md border-b-2 border-stone-400 text-stone-800' : ''}
-                      ${card.revealed && card.color === 'red' ? 'bg-red-500 text-white border border-red-700 pointer-events-none opacity-80' : ''}
-                      ${card.revealed && card.color === 'blue' ? 'bg-blue-500 text-white border border-blue-700 pointer-events-none opacity-80' : ''}
+                      ${card.revealed && card.color === 'red' ? 'bg-premium-red text-white border border-red-700 pointer-events-none opacity-80' : ''}
+                      ${card.revealed && card.color === 'blue' ? 'bg-premium-blue text-white border border-blue-700 pointer-events-none opacity-80' : ''}
                       ${card.revealed && card.color === 'neutral' ? 'bg-stone-400 text-stone-800 border border-stone-500 pointer-events-none opacity-80' : ''}
                       ${card.revealed && card.color === 'assassin' ? 'bg-stone-900 text-white border border-black pointer-events-none opacity-90' : ''}
                     `}
@@ -406,8 +406,8 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
             >
               <div className="space-y-4">
-                 <p className="text-sm uppercase tracking-widest text-emerald-500 font-bold">ИГРА ОКОНЧЕНА</p>
-                 <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-red-500' : 'text-blue-500'}`}>
+                 <p className="text-sm uppercase tracking-widest text-premium-green font-bold">ИГРА ОКОНЧЕНА</p>
+                 <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
                     ПОБЕДА {winner === 'red' ? 'КРАСНЫХ' : 'СИНИХ'}!
                  </h2>
               </div>

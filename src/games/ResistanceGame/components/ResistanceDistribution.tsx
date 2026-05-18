@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, EyeOff, Skull } from 'lucide-react';
 import { Player } from '../../../types';
@@ -28,14 +28,14 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                     <div className="p-8 space-y-6">
                         {currentPlayer.isSpy ? (
                             <div className="space-y-4">
-                                <Skull className="w-16 h-16 text-red-500 mx-auto" />
-                                <h4 className="text-4xl font-black text-red-600 italic">ШПИОН</h4>
-                                <p className="text-gray-500 text-sm">Ваши союзники: {spies.filter(s => s !== currentPlayer.name).join(', ') || 'нет'}</p>
+                                <Skull className="w-16 h-16 text-premium-red mx-auto" />
+                                <h4 className="text-4xl font-black text-premium-red italic">ШПИОН</h4>
+                                <p className="text-white/30 text-sm">Ваши союзники: {spies.filter(s => s !== currentPlayer.name).join(', ') || 'нет'}</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                <Shield className="w-16 h-16 text-blue-500 mx-auto" />
-                                <h4 className="text-4xl font-black text-blue-500 italic">СОПРОТИВЛЕНИЕ</h4>
+                                <Shield className="w-16 h-16 text-premium-blue mx-auto" />
+                                <h4 className="text-4xl font-black text-premium-blue italic">СОПРОТИВЛЕНИЕ</h4>
                             </div>
                         )}
                         <button onClick={next} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase">Усвоено</button>

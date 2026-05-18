@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } from 'lucide-react';
@@ -133,18 +133,18 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   }, [timeLeft, phase, isDrawingRound]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#0a0502] text-[#e5e7eb] font-sans select-none overflow-hidden">
+    <div className="flex flex-col h-screen   select-none overflow-hidden">
       {/* Header */}
-      <div className="flex-shrink-0 px-4 py-3 bg-[#0a0502]/90  border-b border-white/5 flex items-center justify-between z-20">
+      <div className="flex-shrink-0 px-4 py-3 /90  border-b border-white/5 flex items-center justify-between z-20">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
-            <Pencil className="w-4 h-4 text-orange-500" />
+          <div className="w-9 h-9 rounded-xl bg-premium-orange/10 flex items-center justify-center border border-premium-orange/20">
+            <Pencil className="w-4 h-4 text-premium-orange" />
           </div>
           <div>
             <h2 className="text-base font-black uppercase italic tracking-tighter leading-none">
-              Tele<span className="text-orange-500">strations</span>
+              Tele<span className="text-premium-orange">strations</span>
             </h2>
-            <p className="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">
+            <p className="text-[9px] text-white/30 uppercase tracking-widest font-bold mt-0.5">
               {phase === 'setup'
                 ? `${playerNames.length} игроков`
                 : `${currentRound + 1}/${shuffledPlayers.length * selectedRounds} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === 'action' || phase === 'transition' ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`
@@ -153,10 +153,10 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <button onClick={() => setShowInstructions(true)} className="p-2 bg-white/5 rounded-lg text-gray-500 hover:text-white transition-all">
+          <button onClick={() => setShowInstructions(true)} className="p-2 bg-white/5 rounded-lg text-white/30 hover:text-white transition-all">
             <HelpCircle className="w-5 h-5" />
           </button>
-          <button onClick={onBack} className="p-2 bg-white/5 rounded-lg text-gray-500 hover:text-white transition-all">
+          <button onClick={onBack} className="p-2 bg-white/5 rounded-lg text-white/30 hover:text-white transition-all">
             <Home className="w-5 h-5" />
           </button>
         </div>
@@ -177,16 +177,16 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
             >
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 mb-1">
-                  <Pencil className="w-7 h-7 text-orange-500" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-premium-orange/10 border border-premium-orange/20 mb-1">
+                  <Pencil className="w-7 h-7 text-premium-orange" />
                 </div>
                 <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
-                <p className="text-gray-500 text-sm">{playerNames.length} игроков</p>
+                <p className="text-white/30 text-sm">{playerNames.length} игроков</p>
               </div>
 
               {/* Rounds */}
               <div className="w-full max-w-sm">
-                <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3 text-center">Раунды цепочки</p>
+                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Раунды цепочки</p>
                 <div className="flex gap-3">
                   {[1, 2, 3].map(r => (
                     <motion.button
@@ -195,8 +195,8 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                       onClick={() => setSelectedRounds(r)}
                       className={`flex-1 py-4 rounded-2xl font-black text-lg border transition-all ${
                         selectedRounds === r
-                          ? 'bg-orange-500/10 border-orange-500/30 text-orange-400'
-                          : 'bg-white/5 border-white/10 text-gray-500'
+                          ? 'bg-premium-orange/10 border-premium-orange/30 text-premium-orange'
+                          : 'bg-white/5 border-white/10 text-white/30'
                       }`}
                     >
                       {r}
@@ -207,7 +207,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
               {/* Difficulty */}
               <div className="w-full max-w-sm space-y-3">
-                <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3 text-center">Сложность</p>
+                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Сложность</p>
                 {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => {
                   const cfg = DIFFICULTY_CONFIG[diff];
                   const isSelected = difficulty === diff;
@@ -224,12 +224,12 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                     >
                       <span className="text-2xl leading-none">{cfg.emoji}</span>
                       <div className="flex-1 min-w-0">
-                        <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-gray-400'}`}>{cfg.label}</h4>
-                        <p className="text-xs text-gray-500 mt-0.5 leading-tight">{cfg.description}</p>
+                        <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-white/40'}`}>{cfg.label}</h4>
+                        <p className="text-xs text-white/30 mt-0.5 leading-tight">{cfg.description}</p>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-gray-600'}`}>{cfg.drawTime}с</p>
-                        <p className="text-[9px] text-gray-600 uppercase font-bold tracking-widest">рисунок</p>
+                        <p className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-white/25'}`}>{cfg.drawTime}с</p>
+                        <p className="text-[9px] text-white/25 uppercase font-bold tracking-widest">рисунок</p>
                       </div>
                     </motion.button>
                   );
@@ -258,22 +258,22 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
             >
               <div className="text-center space-y-3">
-                <div className="inline-block px-4 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full">
-                  <span className="text-[10px] text-orange-500 font-bold uppercase tracking-widest">Первый рисует</span>
+                <div className="inline-block px-4 py-1 bg-premium-orange/10 border border-premium-orange/20 rounded-full">
+                  <span className="text-[10px] text-premium-orange font-bold uppercase tracking-widest">Первый рисует</span>
                 </div>
                 <h3 className="text-4xl font-black italic">{currentPlayer}</h3>
-                <p className="text-gray-500 text-sm">Запомни слово и нарисуй его так, чтобы другие поняли</p>
+                <p className="text-white/30 text-sm">Запомни слово и нарисуй его так, чтобы другие поняли</p>
               </div>
 
               {/* Порядок игроков */}
               <div className="w-full max-w-sm p-4 bg-white/5 border border-white/5 rounded-2xl">
-                <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3 text-center">Порядок этой игры</p>
+                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Порядок этой игры</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {shuffledPlayers.map((name, i) => (
                     <div key={i} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${
                       i % 2 === 0
-                        ? 'bg-orange-500/10 border-orange-500/20 text-orange-400'
-                        : 'bg-white/5 border-white/10 text-gray-400'
+                        ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
+                        : 'bg-white/5 border-white/10 text-white/40'
                     }`}>
                       <span className="opacity-50">{i + 1}.</span>
                       <span>{name}</span>
@@ -286,18 +286,18 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               {!wordRevealed ? (
                 <button
                   onClick={() => setWordRevealed(true)}
-                  className="w-full max-w-sm p-8 bg-white/5 border-2 border-dashed border-orange-500/20 rounded-[2.5rem] text-center hover:bg-orange-500/5 hover:border-orange-500/40 transition-all group"
+                  className="w-full max-w-sm p-8 bg-white/5 border-2 border-dashed border-premium-orange/20 rounded-[2.5rem] text-center hover:bg-premium-orange/5 hover:border-premium-orange/40 transition-all group"
                 >
-                  <p className="text-[9px] text-gray-600 uppercase font-black tracking-widest mb-3">Убедись, что остальные не смотрят</p>
-                  <div className="flex items-center justify-center gap-2 text-orange-500/50 group-hover:text-orange-500 transition-colors">
+                  <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3">Убедись, что остальные не смотрят</p>
+                  <div className="flex items-center justify-center gap-2 text-premium-orange/50 group-hover:text-premium-orange transition-colors">
                     <Eye className="w-5 h-5" />
                     <span className="text-base font-black">Показать слово</span>
                   </div>
                 </button>
               ) : (
-                <div className="w-full max-w-sm p-8 bg-orange-500/10 border border-orange-500/30 rounded-[2.5rem] text-center">
-                  <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest mb-2">Твоё секретное слово</p>
-                  <h4 className="text-3xl font-black text-orange-400">{currentWord}</h4>
+                <div className="w-full max-w-sm p-8 bg-premium-orange/10 border border-premium-orange/30 rounded-[2.5rem] text-center">
+                  <p className="text-[10px] text-white/25 uppercase font-black tracking-widest mb-2">Твоё секретное слово</p>
+                  <h4 className="text-3xl font-black text-premium-orange">{currentWord}</h4>
                 </div>
               )}
 
@@ -325,15 +325,15 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               <div className="text-center space-y-3">
                 <div className={`inline-block px-4 py-1 rounded-full border ${
                   isDrawingRound
-                    ? 'bg-orange-500/10 border-orange-500/20'
+                    ? 'bg-premium-orange/10 border-premium-orange/20'
                     : 'bg-white/5 border-white/10'
                 }`}>
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${isDrawingRound ? 'text-orange-500' : 'text-gray-400'}`}>
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${isDrawingRound ? 'text-premium-orange' : 'text-white/40'}`}>
                     {isDrawingRound ? '✏️ Рисует' : '💬 Угадывает'}
                   </span>
                 </div>
                 <h3 className="text-4xl font-black italic">{currentPlayer}</h3>
-                <p className="text-gray-500 text-sm">
+                <p className="text-white/30 text-sm">
                   {isDrawingRound
                     ? 'Посмотри на слово в следующем экране и нарисуй его'
                     : 'Посмотри на рисунок и напиши, что на нём изображено'}
@@ -346,8 +346,8 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                   <div
                     key={i}
                     className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i < currentRound ? 'bg-orange-500/40 w-3' :
-                      i === currentRound ? 'bg-orange-500 w-6' : 'bg-white/10 w-3'
+                      i < currentRound ? 'bg-premium-orange/40 w-3' :
+                      i === currentRound ? 'bg-premium-orange w-6' : 'bg-white/10 w-3'
                     }`}
                   />
                 ))}
@@ -384,14 +384,14 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 /* ── GUESS MODE ── */
                 <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
                   <div className="text-center space-y-1">
-                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest">💬 Угадай рисунок</p>
-                    <span className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-400'}`}>{timeLeft}с</span>
+                    <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">💬 Угадай рисунок</p>
+                    <span className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}>{timeLeft}с</span>
                     <h3 className="text-xl font-black italic">Что здесь изображено?</h3>
                   </div>
 
                   <div className="flex justify-center gap-1.5">
                     {shuffledPlayers.map((_, i) => (
-                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'}`} />
+                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-premium-orange/30' : i === currentRound ? 'w-5 bg-premium-orange' : 'w-3 bg-white/10'}`} />
                     ))}
                   </div>
 
@@ -399,7 +399,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                     <img
                       src={steps[steps.length - 1].content}
                       alt="Drawing"
-                      className="w-full h-auto object-contain rounded-xl bg-[#120a0a]"
+                      className="w-full h-auto object-contain rounded-xl "
                     />
                   </div>
 
@@ -410,7 +410,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                       onChange={e => setGuess(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && guess.trim() && finishAction(guess, 'guess')}
                       placeholder="Напиши ответ..."
-                      className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-orange-500 focus:bg-orange-500/5 transition-all outline-none"
+                      className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
                     />
                     <button
                       disabled={!guess.trim()}
@@ -438,14 +438,14 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               <div className="p-6 space-y-6 pb-40">
                 <div className="text-center space-y-1">
                   <h3 className="text-3xl font-black italic uppercase tracking-tighter">Финал цепочки</h3>
-                  <p className="text-gray-500 text-sm">Смотрите, как менялось слово</p>
+                  <p className="text-white/30 text-sm">Смотрите, как менялось слово</p>
                 </div>
 
                 {/* Original word */}
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 flex-shrink-0 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-[9px] font-black text-orange-500">START</div>
-                  <div className="flex-1 p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
-                    <p className="text-xs text-orange-500 uppercase font-black tracking-widest mb-1">Исходное слово</p>
+                  <div className="w-11 h-11 flex-shrink-0 rounded-full bg-premium-orange/10 border border-premium-orange/20 flex items-center justify-center text-[9px] font-black text-premium-orange">START</div>
+                  <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
+                    <p className="text-xs text-premium-orange uppercase font-black tracking-widest mb-1">Исходное слово</p>
                     <p className="text-xl font-bold italic">{initialWord}</p>
                   </div>
                 </div>
@@ -461,16 +461,16 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                     <div className="flex items-center gap-3">
                       <div className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-black border ${
                         step.type === 'draw'
-                          ? 'bg-orange-500/10 border-orange-500/20 text-orange-400'
-                          : 'bg-white/5 border-white/10 text-gray-400'
+                          ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
+                          : 'bg-white/5 border-white/10 text-white/40'
                       }`}>
                         {step.type === 'draw' ? '✏️' : '💬'}
                       </div>
-                      <p className="text-xs font-black uppercase tracking-widest text-gray-500">{step.author}</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-white/30">{step.author}</p>
                     </div>
                     <div className="ml-14 bg-white/5 border border-white/5 rounded-[1.5rem] overflow-hidden p-3">
                       {step.type === 'draw' ? (
-                        <img src={step.content} alt="Drawing" className="w-full bg-[#120a0a] rounded-xl" />
+                        <img src={step.content} alt="Drawing" className="w-full  rounded-xl" />
                       ) : (
                         <div className="p-3 text-center">
                           <p className="text-xl font-black italic">"{step.content}"</p>
@@ -493,7 +493,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                   </button>
                   <button
                     onClick={onBack}
-                    className="w-full py-4 bg-white/5 border border-white/10 text-gray-400 rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
+                    className="w-full py-4 bg-white/5 border border-white/10 text-white/40 rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
                   >
                     <Home className="w-4 h-4" />
                     <span className="text-xs">В меню</span>

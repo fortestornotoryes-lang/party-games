@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Ghost, Users, Maximize2, X } from 'lucide-react';
 import { Player } from '../../../types';
@@ -21,7 +21,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, can
   }, [fullscreen]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#0a0502] text-gray-200 overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6  text-gray-200 overflow-hidden">
       <div className="w-full max-w-md flex flex-col gap-8">
         {canvasImage && (
           <motion.div
@@ -83,9 +83,9 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({ players, can
               animate={{ scale: 1, opacity: 1 }}
               className="space-y-8 text-center"
             >
-              <div className="p-10 bg-red-500/10 border border-red-500/20 rounded-[40px] space-y-4">
-                <Ghost className="w-16 h-16 text-red-500 mx-auto animate-bounce" />
-                <h4 className="text-3xl font-black text-red-500 italic uppercase">САМОЗВАНЕЦ</h4>
+              <div className="p-10 bg-premium-red/10 border border-premium-red/20 rounded-[40px] space-y-4">
+                <Ghost className="w-16 h-16 text-premium-red mx-auto animate-bounce" />
+                <h4 className="text-3xl font-black text-premium-red italic uppercase">САМОЗВАНЕЦ</h4>
                 <div className="text-4xl font-black text-white">{spy?.name}</div>
               </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Skull, CheckCircle2, XCircle, Users, ArrowRight, RotateCcw, Activity } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -90,30 +90,30 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
   }, [phase, winner]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#060807] text-[#e5e7eb] font-sans pb-10">
+    <div className="flex flex-col min-h-screen   pb-10">
        <GameHeader 
           title={GAMES_REGISTRY.resistance.title}
           subtitle={`Миссия ${missionIndex + 1}`} 
           icon={Shield} 
-          themeColor="border-blue-500/50 text-blue-400"
+          themeColor="border-premium-blue/50 text-premium-blue"
           onBack={onBack}
        />
 
        <div className="p-6 flex-1 flex flex-col max-w-sm mx-auto w-full gap-6">
           <div className="flex justify-between p-4 bg-white/5 rounded-3xl border border-white/10 shadow-2xl">
              <div className="text-center group">
-                <p className="text-[10px] text-blue-500 font-black tracking-widest mb-1">ГРУППА</p>
+                <p className="text-[10px] text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
                 <div className="flex items-center gap-2">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className={`w-3 h-3 rounded-full ${i < resistanceScore ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/5 border border-white/10'}`} />
+                    <div key={i} className={`w-3 h-3 rounded-full ${i < resistanceScore ? 'bg-premium-blue shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/5 border border-white/10'}`} />
                   ))}
                 </div>
              </div>
              <div className="text-center group">
-                <p className="text-[10px] text-red-500 font-black tracking-widest mb-1">ШПИОНЫ</p>
+                <p className="text-[10px] text-premium-red font-black tracking-widest mb-1">ШПИОНЫ</p>
                 <div className="flex items-center gap-2 justify-end">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className={`w-3 h-3 rounded-full ${i < spiesScore ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-white/5 border border-white/10'}`} />
+                    <div key={i} className={`w-3 h-3 rounded-full ${i < spiesScore ? 'bg-premium-red shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-white/5 border border-white/10'}`} />
                   ))}
                 </div>
              </div>
@@ -125,16 +125,16 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                     <div className="text-center space-y-1">
                         <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Лидер миссии</p>
                         <h3 className="text-4xl font-black italic text-white uppercase">{currentLeader.name}</h3>
-                        <p className="text-xs text-blue-400 font-bold uppercase tracking-wider mt-2">Выбери {missionSize} чел. для операции</p>
+                        <p className="text-xs text-premium-blue font-bold uppercase tracking-wider mt-2">Выбери {missionSize} чел. для операции</p>
                     </div>
 
                     <div className="grid grid-cols-1 gap-2">
                       {players.map(p => (
-                          <button key={p.id} onClick={() => handleToggle(p.id)} className={`p-4 rounded-2xl border text-left flex items-center transition-all ${selectedTeam.includes(p.id)?'bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/10':'bg-white/5 border-white/5 opacity-60'}`}>
-                              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-4 transition-all ${selectedTeam.includes(p.id)?'bg-blue-500 border-blue-500':'border-white/20'}`}>
+                          <button key={p.id} onClick={() => handleToggle(p.id)} className={`p-4 rounded-2xl border text-left flex items-center transition-all ${selectedTeam.includes(p.id)?'bg-premium-blue/10 border-premium-blue/50 shadow-lg shadow-premium-blue/10':'bg-white/5 border-white/5 opacity-60'}`}>
+                              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-4 transition-all ${selectedTeam.includes(p.id)?'bg-premium-blue border-premium-blue':'border-white/20'}`}>
                                 {selectedTeam.includes(p.id) && <CheckCircle2 className="w-3 h-3 text-white" />}
                               </div>
-                              <span className={`font-black italic uppercase tracking-tight text-lg ${selectedTeam.includes(p.id)?'text-white':'text-gray-500'}`}>{p.name}</span>
+                              <span className={`font-black italic uppercase tracking-tight text-lg ${selectedTeam.includes(p.id)?'text-white':'text-white/30'}`}>{p.name}</span>
                           </button>
                       ))}
                     </div>
@@ -153,18 +153,18 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
             {phase === 'missionVoting' && (
                 <motion.div key="voting" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 flex-1 flex flex-col items-center justify-center">
                     <div className="text-center">
-                      <p className="text-[10px] text-blue-500 font-black uppercase tracking-widest mb-2">Голосует</p>
+                      <p className="text-[10px] text-premium-blue font-black uppercase tracking-widest mb-2">Голосует</p>
                       <h4 className="text-4xl font-black italic text-white uppercase">{currentVoter?.name}</h4>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 w-full">
-                        <button onClick={() => handleMissionVote(true)} className="group p-8 bg-emerald-500/10 border-2 border-emerald-500/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all">
-                            <CheckCircle2 className="w-12 h-12 text-emerald-500" />
-                            <span className="text-xl font-black italic text-emerald-500 uppercase tracking-widest">УСПЕХ</span>
+                        <button onClick={() => handleMissionVote(true)} className="group p-8 bg-premium-green/10 border-2 border-premium-green/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all">
+                            <CheckCircle2 className="w-12 h-12 text-premium-green" />
+                            <span className="text-xl font-black italic text-premium-green uppercase tracking-widest">УСПЕХ</span>
                         </button>
-                        <button onClick={() => handleMissionVote(false)} className="group p-8 bg-red-500/10 border-2 border-red-500/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all">
-                            <XCircle className="w-12 h-12 text-red-500" />
-                            <span className="text-xl font-black italic text-red-500 uppercase tracking-widest">ПРОВАЛ</span>
+                        <button onClick={() => handleMissionVote(false)} className="group p-8 bg-premium-red/10 border-2 border-premium-red/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all">
+                            <XCircle className="w-12 h-12 text-premium-red" />
+                            <span className="text-xl font-black italic text-premium-red uppercase tracking-widest">ПРОВАЛ</span>
                         </button>
                     </div>
                 </motion.div>
@@ -172,11 +172,11 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
 
             {phase === 'missionResult' && (
                 <motion.div key="result" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-8 text-center flex-1 flex flex-col items-center justify-center">
-                    <div className={`p-12 rounded-[40px] w-full border-2 ${missionVotes.includes(false) ? 'bg-red-500/10 border-red-500/40' : 'bg-emerald-500/10 border-emerald-500/40'}`}>
+                    <div className={`p-12 rounded-[40px] w-full border-2 ${missionVotes.includes(false) ? 'bg-premium-red/10 border-premium-red/40' : 'bg-premium-green/10 border-premium-green/40'}`}>
                         <div className="mb-4 flex justify-center">
-                          {missionVotes.includes(false) ? <Skull className="w-16 h-16 text-red-500" /> : <Activity className="w-16 h-16 text-emerald-500" />}
+                          {missionVotes.includes(false) ? <Skull className="w-16 h-16 text-premium-red" /> : <Activity className="w-16 h-16 text-premium-green" />}
                         </div>
-                        <h3 className={`text-5xl font-black italic uppercase leading-none ${missionVotes.includes(false) ? 'text-red-500' : 'text-emerald-500'}`}>
+                        <h3 className={`text-5xl font-black italic uppercase leading-none ${missionVotes.includes(false) ? 'text-premium-red' : 'text-premium-green'}`}>
                           ОПЕРАЦИЯ<br/>{missionVotes.includes(false) ? 'ПРОВАЛЕНА' : 'УДАЧНА'}
                         </h3>
                     </div>
@@ -186,9 +186,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
 
             {phase === 'gameOver' && (
                 <motion.div key="over" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-12 text-center flex-1 flex flex-col items-center justify-center">
-                    <div className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-blue-500/10 border-blue-500/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-red-500/10 border-red-500/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}>
+                    <div className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}>
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-60">ФИНАЛЬНЫЙ СЧЕТ</h2>
-                        <h3 className={`text-6xl font-black italic uppercase italic leading-none ${winner === 'resistance' ? 'text-blue-500' : 'text-red-500'}`}>
+                        <h3 className={`text-6xl font-black italic uppercase italic leading-none ${winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}`}>
                           {winner === 'resistance' ? 'ГРУППА' : 'ШПИОНЫ'}<br/>ПОБЕДИЛИ
                         </h3>
                     </div>
@@ -197,7 +197,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                        <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">Агенты шпионажа</p>
                        <div className="grid grid-cols-2 gap-2">
                           {players.filter(p => p.isSpy).map(p => (
-                            <div key={p.id} className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl font-bold italic uppercase text-red-400">{p.name}</div>
+                            <div key={p.id} className="p-3 bg-premium-red/10 border border-premium-red/30 rounded-xl font-bold italic uppercase text-premium-red">{p.name}</div>
                           ))}
                        </div>
                     </div>

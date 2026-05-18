@@ -169,7 +169,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                                         {game.title}
                                     </h3>
                                     <p className="text-[12px] text-white/45 font-medium leading-snug mb-2.5 pr-1">
-                                        {game.description}
+                                        {game.subtitle}
                                     </p>
                                     <div className="flex items-center gap-2 flex-wrap">
                                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-[5px] rounded-[8px] ${themeCfg.accentBg} ${themeCfg.accentText} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>

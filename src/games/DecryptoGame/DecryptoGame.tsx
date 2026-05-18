@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+﻿import React, {useState, useEffect} from 'react';
 import {motion, AnimatePresence} from 'motion/react';
 import {GameHeader} from '../../components/GameHeader';
 import {PrimaryButton} from '../../components/UI';
@@ -218,7 +218,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                 title={GAMES_REGISTRY.decrypto.title}
                 subtitle="Коды и перехваты"
                 icon={Key}
-                themeColor="text-purple-500 bg-purple-500/10 border-purple-500/30"
+                themeColor="text-premium-purple bg-premium-purple/10 border-premium-purple/30"
                 onBack={onBack}
             />
 
@@ -233,19 +233,19 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             exit={{opacity: 0, y: -20}}
                             className="space-y-6 flex-1 flex flex-col justify-center"
                         >
-                            <h2 className="text-2xl font-black text-center mb-2 uppercase tracking-widest text-purple-400">Команды</h2>
-                            <p className="text-sm text-center text-gray-500 mb-6">Распределитесь для игры</p>
+                            <h2 className="text-2xl font-black text-center mb-2 uppercase tracking-widest text-premium-purple">Команды</h2>
+                            <p className="text-sm text-center text-white/30 mb-6">Распределитесь для игры</p>
 
                             <div className="grid gap-3">
-                                <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl">
-                                    <h3 className="text-red-400 font-bold uppercase text-xs mb-2 flex items-center gap-2">
+                                <div className="p-4 bg-premium-red/10 border border-premium-red/30 rounded-2xl">
+                                    <h3 className="text-premium-red font-bold uppercase text-xs mb-2 flex items-center gap-2">
                                         <Users className="w-4 h-4"/> Красная Команда</h3>
-                                    <p className="text-sm text-red-100/70">{redState.players.join(', ')}</p>
+                                    <p className="text-sm text-premium-red/70">{redState.players.join(', ')}</p>
                                 </div>
-                                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl">
-                                    <h3 className="text-blue-400 font-bold uppercase text-xs mb-2 flex items-center gap-2">
+                                <div className="p-4 bg-premium-blue/10 border border-premium-blue/30 rounded-2xl">
+                                    <h3 className="text-premium-blue font-bold uppercase text-xs mb-2 flex items-center gap-2">
                                         <Users className="w-4 h-4"/> Синяя Команда</h3>
-                                    <p className="text-sm text-blue-100/70">{blueState.players.join(', ')}</p>
+                                    <p className="text-sm text-premium-blue/70">{blueState.players.join(', ')}</p>
                                 </div>
                             </div>
 
@@ -263,19 +263,19 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
                         >
                             <div
-                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-red-500/10 border-red-500/20' : 'bg-blue-500/10 border-blue-500/20'} border shadow-2xl`}>
+                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
                                 <KeyRound
-                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
+                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
                             </div>
                             <div>
-                                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2 font-bold">Раунд {round} •
+                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Раунд {round} •
                                     Шифровальщик</p>
-                                <h2 className={`text-5xl font-black uppercase tracking-tight ${activeTeam === 'red' ? 'text-red-400' : 'text-blue-400'}`}>
+                                <h2 className={`text-5xl font-black uppercase tracking-tight ${activeTeam === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
                                     {getCaptainName(activeTeam)}
                                 </h2>
                                 <div className="mt-4">
                   <span
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${activeTeam === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                     Команда {activeTeam === 'red' ? 'Красных' : 'Синих'}
                   </span>
                                 </div>
@@ -285,7 +285,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                                variant={activeTeam === 'red' ? 'red' : 'blue'}
                                                className="w-full h-16 text-lg tracking-widest">ПОКАЗАТЬ
                                     КОД</PrimaryButton>
-                                <p className="text-[10px] text-gray-500 font-bold mt-4 animate-pulse uppercase">Остальные
+                                <p className="text-[10px] text-white/30 font-bold mt-4 animate-pulse uppercase">Остальные
                                     не должны видеть экран!</p>
                             </div>
                         </motion.div>
@@ -300,7 +300,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="space-y-6 flex flex-col overflow-auto pb-8 relative h-full"
                         >
                             <div className="text-center sticky top-0 bg-black/50 backdrop-blur-md py-2 z-10 font-black">
-                                <p className={`text-[10px] tracking-widest uppercase ${activeTeam === 'red' ? 'text-red-500' : 'text-blue-500'}`}>Шифровальщик {activeTeam === 'red' ? 'Красных' : 'Синих'}</p>
+                                <p className={`text-[10px] tracking-widest uppercase ${activeTeam === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>Шифровальщик {activeTeam === 'red' ? 'Красных' : 'Синих'}</p>
                                 <h3 className="text-3xl text-white tracking-[0.2em]">{currentCode.join(' - ')}</h3>
                             </div>
 
@@ -309,25 +309,24 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                     <div key={i}
                                          className="bg-white/5 border border-white/10 p-2 rounded relative overflow-hidden flex flex-col items-center justify-center h-20">
                                         <span
-                                            className="absolute left-2 top-2 text-[10px] text-gray-500 font-black">{i + 1}</span>
+                                            className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
                                         <span className="text-sm font-bold uppercase">{w}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <form onSubmit={handleCluesSubmit} className="space-y-4 flex-1">
-                                <p className="text-xs font-bold text-gray-400 text-center uppercase mt-4">Напишите
+                                <p className="text-xs font-bold text-white/40 text-center uppercase mt-4">Напишите
                                     ассоциации к словам кода</p>
                                 {currentCode.map((num, i) => (
                                     <div key={i} className="flex gap-4 items-center">
                                         <div
-                                            className={`w-8 h-8 flex items-center justify-center font-black rounded-lg ${activeTeam === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                                            className={`w-8 h-8 flex items-center justify-center font-black rounded-lg ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                                             {num}
                                         </div>
                                         <input
                                             required
-                                            type="number"
-                                            inputMode={"decimal"}
+                                            type="text"
                                             value={clues[i]}
                                             onChange={(e) => {
                                                 const newClues = [...clues];
@@ -335,7 +334,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                                 setClues(newClues);
                                             }}
                                             placeholder={`Ассоциация на слово "${currentTeamState.words[num - 1]}"`}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white transition-colors placeholder:text-gray-600"
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white transition-colors placeholder:text-white/25"
                                         />
                                     </div>
                                 ))}
@@ -357,16 +356,16 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
                         >
                             <div
-                                className={`p-8 rounded-[2rem] ${enemyTeamColor === 'red' ? 'bg-red-500/10 border-red-500/20' : 'bg-blue-500/10 border-blue-500/20'} border shadow-2xl`}>
+                                className={`p-8 rounded-[2rem] ${enemyTeamColor === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
                                 <AlertOctagon
-                                    className={`w-24 h-24 ${enemyTeamColor === 'red' ? 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
+                                    className={`w-24 h-24 ${enemyTeamColor === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
                             </div>
                             <div>
-                                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2 font-bold">Передайте
+                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте
                                     телефон для перехвата</p>
                                 <div className="mt-4">
                   <span
-                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${enemyTeamColor === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${enemyTeamColor === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                     Командe {enemyTeamColor === 'red' ? 'Красных' : 'Синих'}
                   </span>
                                 </div>
@@ -387,12 +386,12 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="space-y-4 flex flex-col h-full overflow-auto"
                         >
                             <div className="text-center font-black">
-                                <p className={`text-[10px] tracking-widest uppercase ${enemyTeamColor === 'red' ? 'text-red-500' : 'text-blue-500'}`}>ВРЕМЯ
+                                <p className={`text-[10px] tracking-widest uppercase ${enemyTeamColor === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>ВРЕМЯ
                                     ПЕРЕХВАТА</p>
                             </div>
 
                             <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Текущие подсказки
+                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Текущие подсказки
                                     врага</p>
                                 <ul className="space-y-1">
                                     {clues.map((c, i) => <li key={i}
@@ -402,13 +401,13 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
 
                             {currentTeamState.history.length > 0 && (
                                 <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                                    <p className="text-xs text-gray-500 font-bold uppercase mb-2">История раундов
+                                    <p className="text-xs text-white/30 font-bold uppercase mb-2">История раундов
                                         врага</p>
                                     <div className="space-y-2">
                                         {currentTeamState.history.map((h, i) => (
                                             <div key={i} className="text-xs">
                                                 <span
-                                                    className="text-purple-400 font-bold">Код {h.code.join('-')}</span>: {h.clues.join(', ')}
+                                                    className="text-premium-purple font-bold">Код {h.code.join('-')}</span>: {h.clues.join(', ')}
                                             </div>
                                         ))}
                                     </div>
@@ -416,7 +415,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             )}
 
                             <form onSubmit={handleInterceptSubmit} className="mt-4 space-y-4 flex-1">
-                                <p className="text-[10px] font-bold text-center text-gray-400 uppercase">Введите
+                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите
                                     перехваченный код</p>
                                 <div className="grid grid-cols-3 gap-2">
                                     {[0, 1, 2].map(i => (
@@ -453,16 +452,16 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
                         >
                             <div
-                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-red-500/10 border-red-500/20' : 'bg-blue-500/10 border-blue-500/20'} border shadow-2xl`}>
+                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
                                 <Users
-                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
+                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
                             </div>
                             <div>
-                                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2 font-bold">Передайте
+                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте
                                     вашей команде</p>
                                 <div className="mt-4">
                   <span
-                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${activeTeam === 'red' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
                     Командe {activeTeam === 'red' ? 'Красных' : 'Синих'}
                   </span>
                                 </div>
@@ -487,21 +486,21 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                     <div key={i}
                                          className="bg-white/5 border border-white/10 p-2 rounded relative overflow-hidden flex flex-col items-center justify-center h-16">
                                         <span
-                                            className="absolute left-2 top-2 text-[10px] text-gray-500 font-black">{i + 1}</span>
+                                            className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
                                         <span className="text-sm font-bold uppercase">{w}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="bg-white/5 p-4 rounded-xl">
-                                <p className="text-xs text-gray-500 font-bold uppercase mb-2">Новые подсказки</p>
+                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Новые подсказки</p>
                                 <ul className="space-y-1 text-lg font-black uppercase tracking-wider text-center">
                                     {clues.map((c, i) => <li key={i} className="text-white">{c}</li>)}
                                 </ul>
                             </div>
 
                             <form onSubmit={handleTeamGuessSubmit} className="mt-4 space-y-4 flex-1">
-                                <p className="text-[10px] font-bold text-center text-gray-400 uppercase">Введите ваш
+                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите ваш
                                     код</p>
                                 <div className="grid grid-cols-3 gap-2">
                                     {[0, 1, 2].map(i => (
@@ -546,16 +545,16 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                     <div
                                         className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col w-full relative overflow-hidden">
                                         {interceptGuess.join('') === currentCode.join('') &&
-                                            <div className="absolute inset-0 bg-red-500/10"></div>}
+                                            <div className="absolute inset-0 bg-premium-red/10"></div>}
                                         <div className="flex justify-between items-center w-full z-10">
-                                            <span className="text-xs text-gray-400 uppercase font-bold text-left">Перехват врага<br/><span
+                                            <span className="text-xs text-white/40 uppercase font-bold text-left">Перехват врага<br/><span
                                                 className="text-white text-2xl tracking-[0.2em]">{interceptGuess.join('')}</span></span>
                                             {interceptGuess.join('') === currentCode.join('') ? (
                                                 <span
-                                                    className="text-red-400 font-black px-4 py-2 bg-red-400/20 rounded-xl border border-red-500/30">ПЕРЕХВАТ</span>
+                                                    className="text-premium-red font-black px-4 py-2 bg-premium-red/15 rounded-xl border border-premium-red/30">ПЕРЕХВАТ</span>
                                             ) : (
                                                 <span
-                                                    className="text-gray-500 font-bold px-4 py-2 bg-white/5 rounded-xl">МИМО</span>
+                                                    className="text-white/30 font-bold px-4 py-2 bg-white/5 rounded-xl">МИМО</span>
                                             )}
                                         </div>
                                     </div>
@@ -564,16 +563,16 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                                 <div
                                     className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col w-full relative overflow-hidden">
                                     {teamGuess.join('') === currentCode.join('') &&
-                                        <div className="absolute inset-0 bg-emerald-500/10"></div>}
+                                        <div className="absolute inset-0 bg-premium-green/10"></div>}
                                     <div className="flex justify-between items-center w-full z-10">
-                                        <span className="text-xs text-gray-400 uppercase font-bold text-left">Твоя команда<br/><span
+                                        <span className="text-xs text-white/40 uppercase font-bold text-left">Твоя команда<br/><span
                                             className="text-white text-2xl tracking-[0.2em]">{teamGuess.join('')}</span></span>
                                         {teamGuess.join('') === currentCode.join('') ? (
                                             <span
-                                                className="text-emerald-400 font-black px-4 py-2 bg-emerald-400/20 rounded-xl border border-emerald-500/30">УСПЕХ</span>
+                                                className="text-premium-green font-black px-4 py-2 bg-premium-green/15 rounded-xl border border-premium-green/30">УСПЕХ</span>
                                         ) : (
                                             <span
-                                                className="text-red-400 font-black px-4 py-2 bg-red-400/20 rounded-xl border border-red-500/30">ОШИБКА</span>
+                                                className="text-premium-red font-black px-4 py-2 bg-premium-red/15 rounded-xl border border-premium-red/30">ОШИБКА</span>
                                         )}
                                     </div>
                                 </div>
@@ -594,9 +593,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
                         >
                             <div className="space-y-4">
-                                <p className="text-sm uppercase tracking-widest text-emerald-500 font-bold">ИГРА
+                                <p className="text-sm uppercase tracking-widest text-premium-green font-bold">ИГРА
                                     ОКОНЧЕНА</p>
-                                <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-red-500' : 'text-blue-500'}`}>
+                                <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
                                     ПОБЕДА {winner === 'red' ? 'КРАСНЫХ' : 'СИНИХ'}!
                                 </h2>
                             </div>

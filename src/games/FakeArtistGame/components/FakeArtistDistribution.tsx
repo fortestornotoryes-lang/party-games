@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, Ghost, EyeOff } from 'lucide-react';
 import { Player } from '../../../types';
@@ -47,7 +47,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0502] flex items-center justify-center p-6 text-gray-200 selection:bg-emerald-500/30 overflow-hidden">
+    <div className="min-h-screen  flex items-center justify-center p-6 text-gray-200 selection:bg-premium-green/30 overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -75,14 +75,14 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center gap-6 px-10"
                 >
-                  <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20">
-                    <EyeOff className="w-10 h-10 text-emerald-500/40 animate-pulse" />
+                  <div className="w-24 h-24 bg-premium-green/10 rounded-full flex items-center justify-center border border-premium-green/20">
+                    <EyeOff className="w-10 h-10 text-premium-green/40 animate-pulse" />
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] uppercase font-black text-emerald-500 tracking-[0.2em]">Передай девайс</p>
+                    <p className="text-[10px] uppercase font-black text-premium-green tracking-[0.2em]">Передай девайс</p>
                     <h4 className="text-3xl font-black text-white italic">{players[currentIndex].name}</h4>
                   </div>
-                  <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest leading-relaxed">Нажми, когда будешь один, чтобы увидеть роль</p>
+                  <p className="text-white/30 font-bold uppercase text-[10px] tracking-widest leading-relaxed">Нажми, когда будешь один, чтобы увидеть роль</p>
                 </motion.div>
               ) : (
                 <motion.div
@@ -93,23 +93,23 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 >
                   {players[currentIndex].isSpy ? (
                     <div className="space-y-6 w-full">
-                      <Ghost className="w-20 h-20 text-red-500 mx-auto" />
+                      <Ghost className="w-20 h-20 text-premium-red mx-auto" />
                       <div className="space-y-2">
-                        <h4 className="text-4xl font-black text-red-600 italic uppercase leading-none">САМОЗВАНЕЦ</h4>
-                        <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Тема: {category}</p>
+                        <h4 className="text-4xl font-black text-premium-red italic uppercase leading-none">САМОЗВАНЕЦ</h4>
+                        <p className="text-white/30 text-[10px] font-black uppercase tracking-widest">Тема: {category}</p>
                       </div>
-                      <div className="p-4 bg-red-500/5 rounded-2xl border border-red-500/10">
-                        <p className="text-xs text-red-400 font-bold uppercase">Слово неизвестно. Рисуй так, чтобы не выдать себя!</p>
+                      <div className="p-4 bg-premium-red/5 rounded-2xl border border-premium-red/10">
+                        <p className="text-xs text-premium-red font-bold uppercase">Слово неизвестно. Рисуй так, чтобы не выдать себя!</p>
                       </div>
                     </div>
                   ) : (
                     <div className="space-y-6 w-full">
-                      <Palette className="w-20 h-20 text-sky-500 mx-auto" />
+                      <Palette className="w-20 h-20 text-premium-sky mx-auto" />
                       <div className="space-y-2">
-                        <p className="text-[10px] text-sky-500 font-black uppercase tracking-widest">Твое слово:</p>
+                        <p className="text-[10px] text-premium-sky font-black uppercase tracking-widest">Твое слово:</p>
                         <h2 className="text-5xl font-black text-white italic uppercase tracking-tighter leading-none">{word}</h2>
                       </div>
-                      <p className="text-xs text-gray-500 uppercase font-black italic tracking-widest">Тема: {category}</p>
+                      <p className="text-xs text-white/30 uppercase font-black italic tracking-widest">Тема: {category}</p>
                     </div>
                   )}
                   <button
