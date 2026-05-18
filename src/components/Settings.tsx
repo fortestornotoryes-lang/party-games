@@ -35,7 +35,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
       </div>
       <button 
         onClick={onToggle}
-        className={`w-12 h-6 rounded-full p-1 transition-colors ${value ? 'bg-emerald-500' : 'bg-white/10'}`}
+        className={`w-12 h-6 rounded-full p-1 transition-colors ${value ? 'bg-premium-green' : 'bg-white/10'}`}
       >
         <motion.div 
           animate={{ x: value ? 24 : 0 }}
@@ -130,8 +130,8 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <GameCard title="Хранилище">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-                    <Database className="w-5 h-5 text-emerald-500" />
+                  <div className="w-10 h-10 bg-premium-green/10 rounded-xl flex items-center justify-center border border-premium-green/20">
+                    <Database className="w-5 h-5 text-premium-green" />
                   </div>
                   <div>
                     <p className="text-sm font-bold">LocalStorage</p>
@@ -192,11 +192,11 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                     onChange={(e) => setNewWord(e.target.value)}
                     placeholder="Добавить свое слово..."
                   />
-                  <IconButton 
+                  <IconButton
                     variant="filled"
                     icon={Plus}
                     onClick={handleAddWord}
-                    className="w-14 h-14 shrink-0 rounded-2xl bg-emerald-500 text-black"
+                    className="w-14 h-14 shrink-0 rounded-2xl bg-premium-green text-black"
                   />
                 </div>
 

@@ -1,7 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { Home, HelpCircle, LucideIcon } from 'lucide-react';
-import { ParallaxBackground } from './UI';
 
 interface GameHeaderProps {
   title: string;
@@ -23,32 +21,43 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   extraActions
 }) => {
   return (
-    <div className="sticky top-0 z-30 px-4 py-3 border-b border-white/5 flex items-center justify-between overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none opacity-10">
-        <ParallaxBackground />
-      </div>
-      <div className="flex items-center space-x-3 relative z-10">
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${themeColor}`}>
-          <Icon className="w-5 h-5" />
+    <div
+      className="sticky top-0 z-30 px-4 py-2.5 border-b border-white/[0.06] flex items-center justify-between"
+      style={{
+        background: 'rgba(11, 9, 21, 0.75)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center border ${themeColor} bg-white/5`}>
+          <Icon className="w-4 h-4" />
         </div>
         <div>
-          <h2 className="text-base font-black uppercase italic tracking-tighter leading-none inline-block">
+          <h2 className="text-[14px] font-black uppercase italic tracking-tight leading-none text-white">
             {title}
           </h2>
-          <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mt-0.5">
+          <p className="text-[9px] text-white/35 uppercase tracking-[0.18em] font-black mt-[3px]">
             {subtitle}
           </p>
         </div>
       </div>
-      <div className="flex items-center space-x-2 relative z-10">
+
+      <div className="flex items-center gap-2">
         {extraActions}
         {onShowInstructions && (
-          <button onClick={onShowInstructions} className="p-2 bg-white/10 rounded-lg text-white hover:text-white transition-all active:scale-95 shadow-md">
-            <HelpCircle className="w-5 h-5" />
+          <button
+            onClick={onShowInstructions}
+            className="w-11 h-11 rounded-premium-sm bg-white/[0.06] border border-white/[0.08] text-white/50 flex items-center justify-center active:scale-90 transition-all hover:bg-white/[0.10] hover:text-white/80"
+          >
+            <HelpCircle className="w-[18px] h-[18px]" />
           </button>
         )}
-        <button onClick={onBack} className="p-2 bg-white/10 rounded-lg text-white hover:text-white transition-all active:scale-95 shadow-md">
-          <Home className="w-5 h-5" />
+        <button
+          onClick={onBack}
+          className="w-11 h-11 rounded-premium-sm bg-white/[0.06] border border-white/[0.08] text-white/50 flex items-center justify-center active:scale-90 transition-all hover:bg-white/[0.10] hover:text-white/80"
+        >
+          <Home className="w-[18px] h-[18px]" />
         </button>
       </div>
     </div>

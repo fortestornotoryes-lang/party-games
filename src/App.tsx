@@ -136,11 +136,11 @@ function AppContent() {
             default: return (
               <div className="relative">
                 <MainMenu onSelectGame={handleMenuSelect} />
-                <button 
+                <button
                   onClick={() => setStatus('settings')}
-                  className="fixed bottom-6 right-6 w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 active:scale-95 transition-all shadow-2xl z-50"
+                  className="fixed bottom-6 right-6 w-14 h-14 glass-card rounded-[18px] flex items-center justify-center text-white/30 active:scale-95 transition-all z-50 hover:text-white/60"
                 >
-                  <SettingsIcon className="w-6 h-6" />
+                  <SettingsIcon className="w-5 h-5" />
                 </button>
               </div>
             );
