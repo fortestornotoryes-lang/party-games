@@ -1,11 +1,11 @@
-﻿import React, {useState, useEffect} from 'react';
-import {motion, AnimatePresence} from 'motion/react';
-import {GameHeader} from '../../components/GameHeader';
-import {PrimaryButton} from '../../components/UI';
-import {Users, KeyRound, AlertOctagon, CheckCircle2, Key} from 'lucide-react';
-import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {contentService} from '../../services/contentService';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { LucideIcon, Users, KeyRound, AlertOctagon, Key, Trophy } from 'lucide-react';
+import { GameHeader } from '../../components/GameHeader';
+import { PrimaryButton } from '../../components/UI';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
+import { contentService } from '../../services/contentService';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 
 interface DecryptoGameProps {
     playerNames: string[];
@@ -17,8 +17,8 @@ type TeamColor = 'red' | 'blue';
 interface RoundData {
     code: number[];
     clues: string[];
-    interceptionGuess: (number | '')[] | null;
-    teamGuess: (number | '')[];
+    interceptionGuess: number[] | null;
+    teamGuess: number[];
 }
 
 interface TeamState {
@@ -31,7 +31,7 @@ interface TeamState {
 }
 
 type Phase =
-    'setup'
+    | 'setup'
     | 'pass_captain'
     | 'captain_clues'
     | 'pass_enemy'
@@ -41,9 +41,128 @@ type Phase =
     | 'reveal'
     | 'game_over';
 
-export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack}) => {
-    const {difficulty, mode} = useGameSettings();
-    const wordCount = mode === 'extended_5' ? 5 : (mode === 'extended_6' ? 6 : 4);
+// ─── style helpers ────────────────────────────────────────────────────────────
+
+const tLabel = (c: TeamColor) => c === 'red' ? 'Красных' : 'Синих';
+const tText  = (c: TeamColor) => c === 'red' ? 'text-premium-red' : 'text-premium-blue';
+const tBg    = (c: TeamColor) => c === 'red'
+    ? 'bg-premium-red/10 border-premium-red/20'
+    : 'bg-premium-blue/10 border-premium-blue/20';
+const tBadge = (c: TeamColor) => c === 'red'
+    ? 'bg-premium-red/20 text-premium-red'
+    : 'bg-premium-blue/20 text-premium-blue';
+const tFocus = (c: TeamColor) => c === 'red'
+    ? 'focus:border-premium-red/50'
+    : 'focus:border-premium-blue/50';
+const tGlow  = (c: TeamColor) => c === 'red'
+    ? 'drop-shadow-[0_0_15px_rgba(255,46,77,0.5)]'
+    : 'drop-shadow-[0_0_15px_rgba(63,123,255,0.5)]';
+
+// ─── CodeInput ────────────────────────────────────────────────────────────────
+
+const CodeInput: React.FC<{
+    value: (number | '')[];
+    onChange: (v: (number | '')[]) => void;
+    max: number;
+    team: TeamColor;
+}> = ({ value, onChange, max, team }) => (
+    <div className="grid grid-cols-3 gap-2">
+        {[0, 1, 2].map(i => (
+            <input
+                key={i} type="number" min="1" max={max} required
+                value={value[i] === '' ? '' : value[i]}
+                onChange={(e) => {
+                    const g = [...value] as (number | '')[];
+                    if (e.target.value === '') {
+                        g[i] = '';
+                    } else {
+                        const v = parseInt(e.target.value);
+                        if (v >= 1 && v <= max) g[i] = v;
+                    }
+                    onChange(g);
+                }}
+                className={`h-16 text-2xl font-black text-center rounded-xl bg-white/5 border border-white/10 outline-none transition-colors ${tFocus(team)}`}
+            />
+        ))}
+    </div>
+);
+
+// ─── ScoreRow ─────────────────────────────────────────────────────────────────
+
+const ScoreRow: React.FC<{ red: TeamState; blue: TeamState }> = ({ red, blue }) => (
+    <div className="flex gap-3 w-full">
+        {([['red', red], ['blue', blue]] as [TeamColor, TeamState][]).map(([color, state]) => {
+            const captain = state.players[state.captainIndex % state.players.length];
+            return (
+                <div key={color} className={`flex-1 p-3 rounded-xl border ${tBg(color)} space-y-2`}>
+                    <div className="flex items-center justify-between">
+                        <span className={`text-[9px] font-black uppercase tracking-wider ${tText(color)}`}>{tLabel(color)}</span>
+                        <span className="text-[10px] text-white/40 font-bold">✗{state.interceptions} · {state.fails}ош</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                        {state.players.map(p => (
+                            <span
+                                key={p}
+                                className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold ${
+                                    p === captain
+                                        ? `${tBadge(color)} border border-current/30`
+                                        : 'bg-white/5 text-white/35'
+                                }`}
+                            >
+                                {p === captain ? `★ ${p}` : p}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            );
+        })}
+    </div>
+);
+
+// ─── PassScreen ───────────────────────────────────────────────────────────────
+
+const PassScreen: React.FC<{
+    icon: LucideIcon;
+    team: TeamColor;
+    subtitle: string;
+    buttonLabel: string;
+    onContinue: () => void;
+    red: TeamState;
+    blue: TeamState;
+    children?: React.ReactNode;
+}> = ({ icon: Icon, team, subtitle, buttonLabel, onContinue, red, blue, children }) => (
+    <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 1.1 }}
+        className="flex-1 flex flex-col items-center justify-center text-center gap-6"
+    >
+        <div className={`p-8 rounded-[2rem] ${tBg(team)} border shadow-2xl`}>
+            <Icon className={`w-24 h-24 ${tText(team)} ${tGlow(team)}`} />
+        </div>
+
+        {children ?? (
+            <span className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${tBadge(team)}`}>
+                Команде {tLabel(team)}
+            </span>
+        )}
+
+        <ScoreRow red={red} blue={blue} />
+
+        <div className="w-full space-y-3">
+            <PrimaryButton onClick={onContinue} variant={team} className="w-full h-16 text-lg tracking-widest">
+                {buttonLabel}
+            </PrimaryButton>
+            <p className="text-[10px] text-white/25 font-bold uppercase animate-pulse">{subtitle}</p>
+        </div>
+    </motion.div>
+);
+
+// ─── main component ───────────────────────────────────────────────────────────
+
+export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack }) => {
+    const { difficulty, mode } = useGameSettings();
+    const wordCount = mode === 'extended_5' ? 5 : mode === 'extended_6' ? 6 : 4;
 
     const [phase, setPhase] = useState<Phase>('setup');
     const [round, setRound] = useState(1);
@@ -52,19 +171,16 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     const [redState, setRedState] = useState<TeamState | null>(null);
     const [blueState, setBlueState] = useState<TeamState | null>(null);
 
-    // Transient round state
     const [currentCode, setCurrentCode] = useState<number[]>([]);
     const [clues, setClues] = useState<string[]>(['', '', '']);
     const [interceptGuess, setInterceptGuess] = useState<(number | '')[]>(['', '', '']);
     const [teamGuess, setTeamGuess] = useState<(number | '')[]>(['', '', '']);
-    const [winner, setWinner] = useState<string | null>(null);
+    const [winner, setWinner] = useState<TeamColor | null>(null);
 
-    useEffect(() => {
-        initGame();
-    }, [playerNames]);
+    useEffect(() => { initGame(); }, [playerNames]);
 
-    const generateCode = () => {
-        const nums = Array.from({length: wordCount}, (_, i) => i + 1);
+    const generateCode = (): number[] => {
+        const nums = Array.from({ length: wordCount }, (_, i) => i + 1);
         for (let i = nums.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [nums[i], nums[j]] = [nums[j], nums[i]];
@@ -73,30 +189,12 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     };
 
     const initGame = () => {
-        const shuffledPlayers = [...playerNames].sort(() => Math.random() - 0.5);
-        const half = Math.ceil(shuffledPlayers.length / 2);
-        const redPlayers = shuffledPlayers.slice(0, half);
-        const bluePlayers = shuffledPlayers.slice(half);
-
-        const redWords = contentService.getDecryptoWords(difficulty, wordCount);
-        const blueWords = contentService.getDecryptoWords(difficulty, wordCount);
-
-        setRedState({
-            words: redWords,
-            players: redPlayers,
-            interceptions: 0,
-            fails: 0,
-            history: [],
-            captainIndex: 0
-        });
-        setBlueState({
-            words: blueWords,
-            players: bluePlayers,
-            interceptions: 0,
-            fails: 0,
-            history: [],
-            captainIndex: 0
-        });
+        const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
+        const half = Math.ceil(shuffled.length / 2);
+        const redPlayers  = shuffled.slice(0, half);
+        const bluePlayers = shuffled.slice(half);
+        setRedState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: redPlayers,  interceptions: 0, fails: 0, history: [], captainIndex: Math.floor(Math.random() * redPlayers.length) });
+        setBlueState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: bluePlayers, interceptions: 0, fails: 0, history: [], captainIndex: Math.floor(Math.random() * bluePlayers.length) });
         setRound(1);
         setActiveTeam('red');
         setPhase('setup');
@@ -112,105 +210,75 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     };
 
     const getCaptainName = (team: TeamColor) => {
-        const state = team === 'red' ? redState : blueState;
-        if (!state) return '';
-        return state.players[state.captainIndex % state.players.length];
+        const s = team === 'red' ? redState : blueState;
+        return s ? s.players[s.captainIndex % s.players.length] : '';
     };
 
     const handleCluesSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (clues.some(c => c.trim() === '')) return;
-        if (round > 1) {
-            setPhase('pass_enemy');
-        } else {
-            setInterceptGuess([]); // No intercept on round 1
-            setPhase('pass_team');
-        }
-    };
-
-    const handleInterceptSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setPhase('pass_team');
-    };
-
-    const handleTeamGuessSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setPhase('reveal');
+        setPhase(round > 1 ? 'pass_enemy' : 'pass_team');
     };
 
     const continueAfterReveal = () => {
-        const EnemyState = activeTeam === 'red' ? blueState! : redState!;
-        const CurrentState = activeTeam === 'red' ? redState! : blueState!;
+        // Build mutable copies from current state — never re-read stale state refs
+        const cur: TeamState = {
+            ...(activeTeam === 'red' ? redState! : blueState!),
+            history: [...(activeTeam === 'red' ? redState! : blueState!).history],
+        };
+        const env: TeamState = { ...(activeTeam === 'red' ? blueState! : redState!) };
 
-        let isIntercepted = false;
-        let isFailed = false;
+        const intercepted = round > 1 && (interceptGuess as number[]).join('') === currentCode.join('');
+        const failed      = (teamGuess as number[]).join('') !== currentCode.join('');
 
-        if (round > 1 && interceptGuess.join('') === currentCode.join('')) {
-            EnemyState.interceptions += 1;
-            isIntercepted = true;
-        }
-        if (teamGuess.join('') !== currentCode.join('')) {
-            CurrentState.fails += 1;
-            isFailed = true;
-        }
+        if (intercepted) env.interceptions += 1;
+        if (failed)      cur.fails         += 1;
 
-        CurrentState.history.push({
+        cur.history.push({
             code: currentCode,
             clues,
-            interceptionGuess: round > 1 ? interceptGuess : null,
-            teamGuess
+            interceptionGuess: round > 1 ? (interceptGuess as number[]) : null,
+            teamGuess: teamGuess as number[],
         });
 
-        if (activeTeam === 'red') {
-            setRedState({...CurrentState});
-            setBlueState({...EnemyState});
-        } else {
-            setBlueState({...CurrentState});
-            setRedState({...EnemyState});
-        }
+        const newRed  = activeTeam === 'red' ? cur : env;
+        const newBlue = activeTeam === 'red' ? env : cur;
 
-        // Check win condition
-        if (EnemyState.interceptions >= 2) {
-            setWinner(activeTeam === 'red' ? 'blue' : 'red');
-            setPhase('game_over');
-            return;
-        }
-        if (CurrentState.fails >= 2) {
+        // Check win condition before committing state
+        if (env.interceptions >= 2 || cur.fails >= 2) {
+            setRedState(newRed);
+            setBlueState(newBlue);
             setWinner(activeTeam === 'red' ? 'blue' : 'red');
             setPhase('game_over');
             return;
         }
 
-        // Switch turn
         if (activeTeam === 'red') {
+            // Mid-round: switch to blue team
+            setRedState(newRed);
+            setBlueState(newBlue);
             setActiveTeam('blue');
-            setCurrentCode(generateCode());
-            setClues(['', '', '']);
-            setPhase('pass_captain');
         } else {
-            // End of round
+            // End of round: advance to next round, captain stays fixed
+            setRedState(newRed);
+            setBlueState(newBlue);
             setActiveTeam('red');
-            setRound(round + 1);
-
-            // Update captains
-            const nextRed = {...redState!};
-            nextRed.captainIndex = (nextRed.captainIndex + 1);
-            const nextBlue = {...blueState!};
-            nextBlue.captainIndex = (nextBlue.captainIndex + 1);
-            setRedState(nextRed);
-            setBlueState(nextBlue);
-
-            setCurrentCode(generateCode());
-            setClues(['', '', '']);
-            setPhase('pass_captain');
+            setRound(r => r + 1);
         }
+
+        setCurrentCode(generateCode());
+        setClues(['', '', '']);
+        setInterceptGuess(['', '', '']);
+        setTeamGuess(['', '', '']);
+        setPhase('pass_captain');
     };
 
     if (!redState || !blueState) return null;
 
-    const currentTeamState = activeTeam === 'red' ? redState : blueState;
-    const enemyTeamState = activeTeam === 'red' ? blueState : redState;
-    const enemyTeamColor = activeTeam === 'red' ? 'blue' : 'red';
+    const curState     = activeTeam === 'red' ? redState : blueState;
+    const enemyColor   = activeTeam === 'red' ? 'blue' : 'red' as TeamColor;
+    const intercepted  = round > 1 && (interceptGuess as number[]).join('') === currentCode.join('');
+    const guessCorrect = (teamGuess as number[]).join('') === currentCode.join('');
 
     return (
         <div className="flex flex-col min-h-screen text-white pb-20">
@@ -225,379 +293,266 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
             <div className="flex-1 flex flex-col p-4 max-w-lg mx-auto w-full pt-10">
                 <AnimatePresence mode="wait">
 
+                    {/* ── SETUP ── */}
                     {phase === 'setup' && (
-                        <motion.div
-                            key="setup"
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -20}}
+                        <motion.div key="setup"
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
                             className="space-y-6 flex-1 flex flex-col justify-center"
                         >
-                            <h2 className="text-2xl font-black text-center mb-2 uppercase tracking-widest text-premium-purple">Команды</h2>
-                            <p className="text-sm text-center text-white/30 mb-6">Распределитесь для игры</p>
-
+                            <h2 className="text-2xl font-black text-center uppercase tracking-widest text-premium-purple">Команды</h2>
+                            <p className="text-sm text-center text-white/30">Распределитесь для игры</p>
                             <div className="grid gap-3">
-                                <div className="p-4 bg-premium-red/10 border border-premium-red/30 rounded-2xl">
-                                    <h3 className="text-premium-red font-bold uppercase text-xs mb-2 flex items-center gap-2">
-                                        <Users className="w-4 h-4"/> Красная Команда</h3>
-                                    <p className="text-sm text-premium-red/70">{redState.players.join(', ')}</p>
-                                </div>
-                                <div className="p-4 bg-premium-blue/10 border border-premium-blue/30 rounded-2xl">
-                                    <h3 className="text-premium-blue font-bold uppercase text-xs mb-2 flex items-center gap-2">
-                                        <Users className="w-4 h-4"/> Синяя Команда</h3>
-                                    <p className="text-sm text-premium-blue/70">{blueState.players.join(', ')}</p>
-                                </div>
+                                {([['red', redState], ['blue', blueState]] as [TeamColor, TeamState][]).map(([color, state]) => (
+                                    <div key={color} className={`p-4 ${tBg(color)} border rounded-2xl`}>
+                                        <h3 className={`${tText(color)} font-bold uppercase text-xs mb-2 flex items-center gap-2`}>
+                                            <Users className="w-4 h-4" /> Команда {tLabel(color)}
+                                        </h3>
+                                        <p className={`text-sm ${tText(color)} opacity-70`}>{state.players.join(', ')}</p>
+                                    </div>
+                                ))}
                             </div>
-
-                            <PrimaryButton onClick={startRound} variant="purple" className="mt-8">НАЧАТЬ РАУНД
-                                1</PrimaryButton>
+                            <PrimaryButton onClick={startRound} variant="purple" className="mt-8">НАЧАТЬ РАУНД 1</PrimaryButton>
                         </motion.div>
                     )}
 
+                    {/* ── PASS CAPTAIN ── */}
                     {phase === 'pass_captain' && (
-                        <motion.div
-                            key="pass_captain"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            exit={{opacity: 0, scale: 1.1}}
-                            className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
+                        <PassScreen key="pass_captain"
+                            icon={KeyRound} team={activeTeam}
+                            subtitle="Остальные не должны видеть экран!"
+                            buttonLabel="ПОКАЗАТЬ КОД"
+                            onContinue={() => setPhase('captain_clues')}
+                            red={redState} blue={blueState}
                         >
-                            <div
-                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
-                                <KeyRound
-                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
-                            </div>
-                            <div>
-                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Раунд {round} •
-                                    Шифровальщик</p>
-                                <h2 className={`text-5xl font-black uppercase tracking-tight ${activeTeam === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
+                            <div className="space-y-1">
+                                <p className="text-sm uppercase tracking-widest text-white/30 font-bold">
+                                    Раунд {round} · Шифровальщик
+                                </p>
+                                <h2 className={`text-5xl font-black uppercase tracking-tight ${tText(activeTeam)}`}>
                                     {getCaptainName(activeTeam)}
                                 </h2>
-                                <div className="mt-4">
-                  <span
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
-                    Команда {activeTeam === 'red' ? 'Красных' : 'Синих'}
-                  </span>
-                                </div>
+                                <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${tBadge(activeTeam)}`}>
+                                    Команда {tLabel(activeTeam)}
+                                </span>
                             </div>
-                            <div className="w-full pt-8">
-                                <PrimaryButton onClick={() => setPhase('captain_clues')}
-                                               variant={activeTeam === 'red' ? 'red' : 'blue'}
-                                               className="w-full h-16 text-lg tracking-widest">ПОКАЗАТЬ
-                                    КОД</PrimaryButton>
-                                <p className="text-[10px] text-white/30 font-bold mt-4 animate-pulse uppercase">Остальные
-                                    не должны видеть экран!</p>
-                            </div>
-                        </motion.div>
+                        </PassScreen>
                     )}
 
+                    {/* ── CAPTAIN CLUES ── */}
                     {phase === 'captain_clues' && (
-                        <motion.div
-                            key="captain_clues"
-                            initial={{opacity: 0}}
-                            animate={{opacity: 1}}
-                            exit={{opacity: 0}}
+                        <motion.div key="captain_clues"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="space-y-6 flex flex-col overflow-auto pb-8 relative h-full"
                         >
-                            <div className="text-center sticky top-0 bg-black/50 backdrop-blur-md py-2 z-10 font-black">
-                                <p className={`text-[10px] tracking-widest uppercase ${activeTeam === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>Шифровальщик {activeTeam === 'red' ? 'Красных' : 'Синих'}</p>
-                                <h3 className="text-3xl text-white tracking-[0.2em]">{currentCode.join(' - ')}</h3>
+                            <div className={`text-center sticky top-0 bg-black/60 backdrop-blur-md py-3 z-10`}>
+                                <p className={`text-[10px] tracking-widest uppercase font-black ${tText(activeTeam)}`}>
+                                    Шифровальщик {tLabel(activeTeam)}
+                                </p>
+                                <h3 className="text-3xl text-white font-black tracking-[0.2em]">
+                                    {currentCode.join(' - ')}
+                                </h3>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">
-                                {currentTeamState.words.map((w, i) => (
-                                    <div key={i}
-                                         className="bg-white/5 border border-white/10 p-2 rounded relative overflow-hidden flex flex-col items-center justify-center h-20">
-                                        <span
-                                            className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
+                                {curState.words.map((w, i) => (
+                                    <div key={i} className="bg-white/5 border border-white/10 p-2 rounded-xl relative flex flex-col items-center justify-center h-20">
+                                        <span className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
                                         <span className="text-sm font-bold uppercase">{w}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <form onSubmit={handleCluesSubmit} className="space-y-4 flex-1">
-                                <p className="text-xs font-bold text-white/40 text-center uppercase mt-4">Напишите
-                                    ассоциации к словам кода</p>
+                                <p className="text-xs font-bold text-white/40 text-center uppercase">Напишите ассоциации к словам кода</p>
                                 {currentCode.map((num, i) => (
                                     <div key={i} className="flex gap-4 items-center">
-                                        <div
-                                            className={`w-8 h-8 flex items-center justify-center font-black rounded-lg ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
+                                        <div className={`w-8 h-8 flex items-center justify-center font-black rounded-lg shrink-0 ${tBadge(activeTeam)}`}>
                                             {num}
                                         </div>
                                         <input
-                                            required
-                                            type="text"
+                                            required type="text"
                                             value={clues[i]}
                                             onChange={(e) => {
-                                                const newClues = [...clues];
-                                                newClues[i] = e.target.value;
-                                                setClues(newClues);
+                                                const c = [...clues];
+                                                c[i] = e.target.value;
+                                                setClues(c);
                                             }}
-                                            placeholder={`Ассоциация на слово "${currentTeamState.words[num - 1]}"`}
+                                            placeholder={`Ассоциация на "${curState.words[num - 1]}"`}
                                             className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white transition-colors placeholder:text-white/25"
                                         />
                                     </div>
                                 ))}
-
                                 <PrimaryButton type="submit" variant={activeTeam} className="w-full mt-6"
-                                               disabled={clues.some(c => c.trim() === '')}>
+                                    disabled={clues.some(c => c.trim() === '')}>
                                     ЗАШИФРОВАТЬ
                                 </PrimaryButton>
                             </form>
                         </motion.div>
                     )}
 
+                    {/* ── PASS ENEMY ── */}
                     {phase === 'pass_enemy' && (
-                        <motion.div
-                            key="pass_enemy"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            exit={{opacity: 0, scale: 1.1}}
-                            className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
-                        >
-                            <div
-                                className={`p-8 rounded-[2rem] ${enemyTeamColor === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
-                                <AlertOctagon
-                                    className={`w-24 h-24 ${enemyTeamColor === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
-                            </div>
-                            <div>
-                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте
-                                    телефон для перехвата</p>
-                                <div className="mt-4">
-                  <span
-                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${enemyTeamColor === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
-                    Командe {enemyTeamColor === 'red' ? 'Красных' : 'Синих'}
-                  </span>
-                                </div>
-                            </div>
-                            <div className="w-full pt-8">
-                                <PrimaryButton onClick={() => setPhase('enemy_intercept')} variant={enemyTeamColor}
-                                               className="w-full h-16 text-lg tracking-widest">ПЕРЕХВАТИТЬ</PrimaryButton>
-                            </div>
-                        </motion.div>
+                        <PassScreen key="pass_enemy"
+                            icon={AlertOctagon} team={enemyColor}
+                            subtitle="Передайте телефон команде соперника"
+                            buttonLabel="ПЕРЕХВАТИТЬ"
+                            onContinue={() => setPhase('enemy_intercept')}
+                            red={redState} blue={blueState}
+                        />
                     )}
 
+                    {/* ── ENEMY INTERCEPT ── */}
                     {phase === 'enemy_intercept' && (
-                        <motion.div
-                            key="enemy_intercept"
-                            initial={{opacity: 0}}
-                            animate={{opacity: 1}}
-                            exit={{opacity: 0}}
+                        <motion.div key="enemy_intercept"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="space-y-4 flex flex-col h-full overflow-auto"
                         >
-                            <div className="text-center font-black">
-                                <p className={`text-[10px] tracking-widest uppercase ${enemyTeamColor === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>ВРЕМЯ
-                                    ПЕРЕХВАТА</p>
-                            </div>
+                            <p className={`text-[10px] tracking-widest uppercase font-black text-center ${tText(enemyColor)}`}>
+                                ВРЕМЯ ПЕРЕХВАТА · КОМАНДА {tLabel(enemyColor).toUpperCase()}
+                            </p>
 
                             <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Текущие подсказки
-                                    врага</p>
+                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Текущие подсказки врага</p>
                                 <ul className="space-y-1">
-                                    {clues.map((c, i) => <li key={i}
-                                                             className="text-white font-bold">{i + 1}. {c}</li>)}
+                                    {clues.map((c, i) => (
+                                        <li key={i} className="text-white font-bold">{i + 1}. {c}</li>
+                                    ))}
                                 </ul>
                             </div>
 
-                            {currentTeamState.history.length > 0 && (
+                            {curState.history.length > 0 && (
                                 <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                                    <p className="text-xs text-white/30 font-bold uppercase mb-2">История раундов
-                                        врага</p>
+                                    <p className="text-xs text-white/30 font-bold uppercase mb-2">История раундов врага</p>
                                     <div className="space-y-2">
-                                        {currentTeamState.history.map((h, i) => (
+                                        {curState.history.map((h, i) => (
                                             <div key={i} className="text-xs">
-                                                <span
-                                                    className="text-premium-purple font-bold">Код {h.code.join('-')}</span>: {h.clues.join(', ')}
+                                                <span className="text-premium-purple font-bold">Код {h.code.join('-')}</span>: {h.clues.join(', ')}
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
 
-                            <form onSubmit={handleInterceptSubmit} className="mt-4 space-y-4 flex-1">
-                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите
-                                    перехваченный код</p>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {[0, 1, 2].map(i => (
-                                        <input
-                                            key={i} type="number" min="1" max={wordCount} required
-                                            value={interceptGuess[i] || ''}
-                                            onChange={(e) => {
-                                                const v = parseInt(e.target.value);
-                                                if (v >= 1 && v <= wordCount) {
-                                                    const g = [...interceptGuess];
-                                                    g[i] = v;
-                                                    setInterceptGuess(g);
-                                                } else if (e.target.value === '') {
-                                                    const g = [...interceptGuess];
-                                                    g[i] = 0;
-                                                    setInterceptGuess(g);
-                                                }
-                                            }}
-                                            className={`h-16 text-2xl font-black text-center rounded-xl bg-white/5 border border-white/10 flex-1 outline-none focus:border-${enemyTeamColor}-500/50`}
-                                        />
-                                    ))}
-                                </div>
-                                <PrimaryButton type="submit" variant={enemyTeamColor} className="w-full">ПОДТВЕРДИТЬ
-                                    ПЕРЕХВАТ</PrimaryButton>
+                            <form onSubmit={(e) => { e.preventDefault(); setPhase('pass_team'); }} className="mt-2 space-y-4 flex-1">
+                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите перехваченный код</p>
+                                <CodeInput value={interceptGuess} onChange={setInterceptGuess} max={wordCount} team={enemyColor} />
+                                <PrimaryButton type="submit" variant={enemyColor} className="w-full">
+                                    ПОДТВЕРДИТЬ ПЕРЕХВАТ
+                                </PrimaryButton>
                             </form>
                         </motion.div>
                     )}
 
+                    {/* ── PASS TEAM ── */}
                     {phase === 'pass_team' && (
-                        <motion.div
-                            key="pass_team"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
-                        >
-                            <div
-                                className={`p-8 rounded-[2rem] ${activeTeam === 'red' ? 'bg-premium-red/10 border-premium-red/20' : 'bg-premium-blue/10 border-premium-blue/20'} border shadow-2xl`}>
-                                <Users
-                                    className={`w-24 h-24 ${activeTeam === 'red' ? 'text-premium-red drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-premium-blue drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]'}`}/>
-                            </div>
-                            <div>
-                                <p className="text-sm uppercase tracking-widest text-white/30 mb-2 font-bold">Передайте
-                                    вашей команде</p>
-                                <div className="mt-4">
-                  <span
-                      className={`px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest ${activeTeam === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue'}`}>
-                    Командe {activeTeam === 'red' ? 'Красных' : 'Синих'}
-                  </span>
-                                </div>
-                            </div>
-                            <div className="w-full pt-8">
-                                <PrimaryButton onClick={() => setPhase('team_guess')} variant={activeTeam}
-                                               className="w-full h-16 text-lg tracking-widest">РАЗГАДАТЬ
-                                    КОД</PrimaryButton>
-                            </div>
-                        </motion.div>
+                        <PassScreen key="pass_team"
+                            icon={Users} team={activeTeam}
+                            subtitle="Передайте телефон своей команде"
+                            buttonLabel="РАЗГАДАТЬ КОД"
+                            onContinue={() => setPhase('team_guess')}
+                            red={redState} blue={blueState}
+                        />
                     )}
 
+                    {/* ── TEAM GUESS ── */}
                     {phase === 'team_guess' && (
-                        <motion.div
-                            key="team_guess"
-                            initial={{opacity: 0}}
-                            animate={{opacity: 1}}
+                        <motion.div key="team_guess"
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             className="space-y-4 flex flex-col h-full overflow-auto"
                         >
-                            <div className="grid grid-cols-2 gap-2 mb-4">
-                                {currentTeamState.words.map((w, i) => (
-                                    <div key={i}
-                                         className="bg-white/5 border border-white/10 p-2 rounded relative overflow-hidden flex flex-col items-center justify-center h-16">
-                                        <span
-                                            className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
+                            <div className="grid grid-cols-2 gap-2">
+                                {curState.words.map((w, i) => (
+                                    <div key={i} className="bg-white/5 border border-white/10 p-2 rounded-xl relative flex flex-col items-center justify-center h-16">
+                                        <span className="absolute left-2 top-2 text-[10px] text-white/30 font-black">{i + 1}</span>
                                         <span className="text-sm font-bold uppercase">{w}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="bg-white/5 p-4 rounded-xl">
-                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Новые подсказки</p>
+                                <p className="text-xs text-white/30 font-bold uppercase mb-2">Подсказки капитана</p>
                                 <ul className="space-y-1 text-lg font-black uppercase tracking-wider text-center">
                                     {clues.map((c, i) => <li key={i} className="text-white">{c}</li>)}
                                 </ul>
                             </div>
 
-                            <form onSubmit={handleTeamGuessSubmit} className="mt-4 space-y-4 flex-1">
-                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите ваш
-                                    код</p>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {[0, 1, 2].map(i => (
-                                        <input
-                                            key={i} type="number" min="1" max={wordCount} required
-                                            value={teamGuess[i] || ''}
-                                            onChange={(e) => {
-                                                const v = parseInt(e.target.value);
-                                                if (v >= 1 && v <= wordCount) {
-                                                    const g = [...teamGuess];
-                                                    g[i] = v;
-                                                    setTeamGuess(g);
-                                                } else if (e.target.value === '') {
-                                                    const g = [...teamGuess];
-                                                    g[i] = 0;
-                                                    setTeamGuess(g);
-                                                }
-                                            }}
-                                            className={`h-16 text-2xl font-black text-center rounded-xl bg-white/5 border border-white/10 flex-1 outline-none focus:border-${activeTeam}-500/50`}
-                                        />
-                                    ))}
-                                </div>
-                                <PrimaryButton type="submit" variant={activeTeam}
-                                               className="w-full">РАЗГАДАТЬ</PrimaryButton>
+                            <form onSubmit={(e) => { e.preventDefault(); setPhase('reveal'); }} className="mt-2 space-y-4 flex-1">
+                                <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите ваш код</p>
+                                <CodeInput value={teamGuess} onChange={setTeamGuess} max={wordCount} team={activeTeam} />
+                                <PrimaryButton type="submit" variant={activeTeam} className="w-full">РАЗГАДАТЬ</PrimaryButton>
                             </form>
                         </motion.div>
                     )}
 
+                    {/* ── REVEAL ── */}
                     {phase === 'reveal' && (
-                        <motion.div
-                            key="reveal"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            className="flex-1 flex flex-col items-center justify-center text-center w-full"
+                        <motion.div key="reveal"
+                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 flex flex-col items-center justify-center text-center w-full gap-6"
                         >
-                            <h2 className="text-3xl font-black uppercase text-white tracking-[0.2em] border-b border-white/20 pb-4 w-full mb-8">
-                                ИТОГИ РАУНДА
-                            </h2>
+                            <div className="w-full">
+                                <h2 className="text-2xl font-black uppercase text-white tracking-[0.2em] border-b border-white/20 pb-3 mb-4">
+                                    ИТОГИ РАУНДА
+                                </h2>
+                            </div>
 
-                            <div className="space-y-3 mt-8 w-full">
+                            <div className="space-y-3 w-full">
                                 {round > 1 && (
-                                    <div
-                                        className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col w-full relative overflow-hidden">
-                                        {interceptGuess.join('') === currentCode.join('') &&
-                                            <div className="absolute inset-0 bg-premium-red/10"></div>}
-                                        <div className="flex justify-between items-center w-full z-10">
-                                            <span className="text-xs text-white/40 uppercase font-bold text-left">Перехват врага<br/><span
-                                                className="text-white text-2xl tracking-[0.2em]">{interceptGuess.join('')}</span></span>
-                                            {interceptGuess.join('') === currentCode.join('') ? (
-                                                <span
-                                                    className="text-premium-red font-black px-4 py-2 bg-premium-red/15 rounded-xl border border-premium-red/30">ПЕРЕХВАТ</span>
-                                            ) : (
-                                                <span
-                                                    className="text-white/30 font-bold px-4 py-2 bg-white/5 rounded-xl">МИМО</span>
-                                            )}
+                                    <div className={`border rounded-2xl p-5 flex justify-between items-center w-full ${intercepted ? 'bg-premium-red/10 border-premium-red/30' : 'bg-white/5 border-white/10'}`}>
+                                        <div className="text-left">
+                                            <p className="text-xs text-white/40 uppercase font-bold">Перехват {tLabel(enemyColor)}</p>
+                                            <p className="text-white text-2xl font-black tracking-[0.2em] mt-1">
+                                                {(interceptGuess as number[]).join(' - ')}
+                                            </p>
                                         </div>
+                                        <span className={`font-black px-4 py-2 rounded-xl border text-sm ${intercepted ? 'text-premium-red bg-premium-red/15 border-premium-red/30' : 'text-white/30 bg-white/5 border-white/10'}`}>
+                                            {intercepted ? 'ПЕРЕХВАТ' : 'МИМО'}
+                                        </span>
                                     </div>
                                 )}
 
-                                <div
-                                    className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col w-full relative overflow-hidden">
-                                    {teamGuess.join('') === currentCode.join('') &&
-                                        <div className="absolute inset-0 bg-premium-green/10"></div>}
-                                    <div className="flex justify-between items-center w-full z-10">
-                                        <span className="text-xs text-white/40 uppercase font-bold text-left">Твоя команда<br/><span
-                                            className="text-white text-2xl tracking-[0.2em]">{teamGuess.join('')}</span></span>
-                                        {teamGuess.join('') === currentCode.join('') ? (
-                                            <span
-                                                className="text-premium-green font-black px-4 py-2 bg-premium-green/15 rounded-xl border border-premium-green/30">УСПЕХ</span>
-                                        ) : (
-                                            <span
-                                                className="text-premium-red font-black px-4 py-2 bg-premium-red/15 rounded-xl border border-premium-red/30">ОШИБКА</span>
-                                        )}
+                                <div className={`border rounded-2xl p-5 flex justify-between items-center w-full ${guessCorrect ? 'bg-premium-green/10 border-premium-green/30' : 'bg-premium-red/10 border-premium-red/30'}`}>
+                                    <div className="text-left">
+                                        <p className="text-xs text-white/40 uppercase font-bold">Команда {tLabel(activeTeam)}</p>
+                                        <p className="text-white text-2xl font-black tracking-[0.2em] mt-1">
+                                            {(teamGuess as number[]).join(' - ')}
+                                        </p>
                                     </div>
+                                    <span className={`font-black px-4 py-2 rounded-xl border text-sm ${guessCorrect ? 'text-premium-green bg-premium-green/15 border-premium-green/30' : 'text-premium-red bg-premium-red/15 border-premium-red/30'}`}>
+                                        {guessCorrect ? 'УСПЕХ' : 'ОШИБКА'}
+                                    </span>
                                 </div>
                             </div>
 
-                            <div className="w-full pt-8">
-                                <PrimaryButton onClick={continueAfterReveal} variant="white"
-                                               className="w-full h-16 text-lg tracking-widest">ДАЛЬШЕ</PrimaryButton>
-                            </div>
+                            <ScoreRow red={redState} blue={blueState} />
+
+                            <PrimaryButton onClick={continueAfterReveal} variant="white" className="w-full h-16 text-lg tracking-widest">
+                                ДАЛЬШЕ
+                            </PrimaryButton>
                         </motion.div>
                     )}
 
+                    {/* ── GAME OVER ── */}
                     {phase === 'game_over' && (
-                        <motion.div
-                            key="game_over"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
+                        <motion.div key="game_over"
+                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex-1 flex flex-col items-center justify-center text-center gap-8"
                         >
-                            <div className="space-y-4">
-                                <p className="text-sm uppercase tracking-widest text-premium-green font-bold">ИГРА
-                                    ОКОНЧЕНА</p>
-                                <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
-                                    ПОБЕДА {winner === 'red' ? 'КРАСНЫХ' : 'СИНИХ'}!
+                            <Trophy className={`w-24 h-24 ${winner ? tText(winner) : 'text-white'}`} />
+                            <div className="space-y-2">
+                                <p className="text-sm uppercase tracking-widest text-premium-green font-bold">ИГРА ОКОНЧЕНА</p>
+                                <h2 className={`text-5xl font-black uppercase ${winner ? tText(winner) : ''}`}>
+                                    ПОБЕДА {winner ? tLabel(winner).toUpperCase() : ''}!
                                 </h2>
+                            </div>
+                            <div className="flex gap-4">
+                                {([['red', redState], ['blue', blueState]] as [TeamColor, TeamState][]).map(([color, state]) => (
+                                    <div key={color} className={`px-5 py-3 rounded-2xl border ${tBg(color)} text-center`}>
+                                        <p className={`text-[9px] font-black uppercase ${tText(color)} mb-1`}>{tLabel(color)}</p>
+                                        <p className="text-white/40 text-xs">✗ {state.interceptions} перехватов</p>
+                                        <p className="text-white/40 text-xs">✗ {state.fails} ошибок</p>
+                                    </div>
+                                ))}
                             </div>
                             <PrimaryButton onClick={initGame} variant="white">НОВАЯ ИГРА</PrimaryButton>
                         </motion.div>
