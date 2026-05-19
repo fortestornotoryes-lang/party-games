@@ -12,6 +12,7 @@ import { GameKey } from '../../types/games';
 import { shuffle } from '../../utils/random';
 import { InstructionsModal } from '../../components/InstructionsModal';
 import { DrawingCanvas } from '../../components/DrawingCanvas';
+import { PassPhoneCard } from '../../components/PassPhoneCard';
 
 interface TelestrationsGameProps {
   playerNames: string[];
@@ -297,27 +298,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -60 }}
               transition={{ duration: 0.25 }}
-              className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
+              className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-5"
             >
-              <div className="text-center space-y-3">
-                <div className={`inline-block px-4 py-1 rounded-full border ${
-                  isDrawingRound
-                    ? 'bg-premium-orange/10 border-premium-orange/20'
-                    : 'bg-white/5 border-white/10'
-                }`}>
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${isDrawingRound ? 'text-premium-orange' : 'text-white/40'}`}>
-                    {isDrawingRound ? '✏️ Рисует' : '💬 Угадывает'}
-                  </span>
-                </div>
-                <h3 className="text-4xl font-black italic">{currentPlayer}</h3>
-                <p className="text-white/30 text-sm">
-                  {isDrawingRound
-                    ? 'Посмотри на слово в следующем экране и нарисуй его'
-                    : 'Посмотри на рисунок и напиши, что на нём изображено'}
-                </p>
-              </div>
-
-              {/* Прогресс */}
+              {/* Progress */}
               <div className="flex items-center gap-1.5">
                 {shuffledPlayers.map((_, i) => (
                   <div
@@ -330,13 +313,15 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                 ))}
               </div>
 
-              <button
-                onClick={startAction}
-                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
-              >
-                <span>Принять телефон</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <div className="w-full max-w-sm">
+                <PassPhoneCard
+                  playerName={currentPlayer}
+                  badge={isDrawingRound ? 'Рисует' : 'Угадывает'}
+                  badgeColor={isDrawingRound ? 'orange' : 'sky'}
+                  instruction={isDrawingRound ? 'Нажми чтобы увидеть слово' : 'Нажми чтобы увидеть рисунок'}
+                  onClick={startAction}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -372,11 +357,11 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                     ))}
                   </div>
 
-                  <div className="w-full max-w-sm bg-white/5 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl p-3">
+                  <div className="w-full max-w-sm rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl">
                     <img
                       src={steps[steps.length - 1].content}
                       alt="Drawing"
-                      className="w-full h-auto object-contain rounded-xl "
+                      className="w-full h-auto block"
                     />
                   </div>
 

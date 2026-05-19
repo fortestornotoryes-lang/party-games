@@ -173,7 +173,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
              >
                  <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white transition-opacity" />
                  {!hasDrawn && !isDrawing && (
-                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-20 space-y-4">
+                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-60 space-y-4">
                        <Brush className="w-16 h-16 text-black" />
                        <span className="font-black italic text-black uppercase tracking-tighter">Нарисуй одну линию</span>
                    </div>
@@ -207,16 +207,17 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
-               className="absolute inset-0  z-10 flex flex-col items-center justify-between pt-20 p-6 space-y-8"
+               className="absolute inset-0 z-10 flex flex-col bg-black pt-40 items-center justify-between p-6 space-y-8"
             >
-               <div className="text-center space-y-4">
-                  <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
-                  <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
-               </div>
+
 
                <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-premium-green/20 bg-premium-green/5">
                   <Palette className="w-16 h-16 text-premium-green animate-pulse" />
-                  <p className="text-xs text-center text-white/40 px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
+                   <div className="text-center space-y-4">
+                       <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
+                       <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
+                   </div>
+                  <p className="text-xs text-center text-premium-green px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
                </GameCard>
 
                <PrimaryButton onClick={() => setIsTransitioning(false)} className="bg-white !text-black">

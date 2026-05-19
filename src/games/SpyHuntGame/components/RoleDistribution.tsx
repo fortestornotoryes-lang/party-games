@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Ghost, Shield, Fingerprint } from 'lucide-react';
+import { MapPin, Ghost, Shield } from 'lucide-react';
 import { Player } from '../../../types';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
+import { PassPhoneCard } from '../../../components/PassPhoneCard';
 
 interface RoleDistributionProps {
   players: Player[];
@@ -63,43 +64,12 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ type: 'spring', stiffness: 280, damping: 24 }}
-                onClick={() => setIsRevealed(true)}
-                className="w-full aspect-[3/4] rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"
-                style={{
-                  background: 'linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.018) 100%)',
-                  border: '1.5px solid rgba(255,255,255,0.09)',
-                  boxShadow: '0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)',
-                }}
               >
-                {/* Grid texture */}
-                <div className="absolute inset-0 opacity-[0.022]" style={{
-                  backgroundImage: 'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
-                }} />
-
-                {/* Corner brackets */}
-                <div className="absolute top-5 left-5 w-5 h-5 border-t-2 border-l-2 border-white/[0.12] rounded-tl-md" />
-                <div className="absolute top-5 right-5 w-5 h-5 border-t-2 border-r-2 border-white/[0.12] rounded-tr-md" />
-                <div className="absolute bottom-5 left-5 w-5 h-5 border-b-2 border-l-2 border-white/[0.12] rounded-bl-md" />
-                <div className="absolute bottom-5 right-5 w-5 h-5 border-b-2 border-r-2 border-white/[0.12] rounded-br-md" />
-
-                <div className="text-center space-y-7 px-10 relative z-10">
-                  <motion.div
-                    animate={{ opacity: [0.3, 0.65, 0.3] }}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                    className="mx-auto w-[72px] h-[72px] rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center"
-                  >
-                    <Fingerprint className="w-9 h-9 text-white/35" />
-                  </motion.div>
-
-                  <div>
-                    <p className="text-[9px] uppercase font-black text-white/[0.22] tracking-[0.45em] mb-2">Игрок</p>
-                    <h4 className="text-[42px] font-black italic text-white tracking-tighter leading-none">{currentPlayer.name}</h4>
-                  </div>
-
-                  <p className="text-[9px] uppercase font-bold text-white/[0.18] tracking-[0.25em] leading-relaxed">
-                    Нажми чтобы<br />увидеть роль
-                  </p>
-                </div>
+                <PassPhoneCard
+                  playerName={currentPlayer.name}
+                  instruction="Нажми чтобы увидеть роль"
+                  onClick={() => setIsRevealed(true)}
+                />
               </motion.div>
             ) : (
               /* ── REVEALED ── */

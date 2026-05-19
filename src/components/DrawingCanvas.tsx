@@ -23,6 +23,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawHistory = useRef<ImageData[]>([]);
   const prevTimeLeftRef = useRef(timeLeft);
+  const isCanvasReady = useRef(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#ffffff');
   const [brushSize, setBrushSize] = useState(2);
@@ -49,7 +50,9 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       const newH = Math.round(rect.height * dpr);
       if (canvas.width !== newW || canvas.height !== newH) {
         let saved: ImageData | undefined;
-        if (canvas.width > 0 && canvas.height > 0) {
+        // Only save content if the canvas was already properly initialized —
+        // the HTML default (300×150) is transparent and must not be restored.
+        if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
           try { saved = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch {}
         }
         canvas.width = newW;
@@ -61,6 +64,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         ctx.fillStyle = '#120a0a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         if (saved) { try { ctx.putImageData(saved, 0, 0); } catch {} }
+        isCanvasReady.current = true;
       }
     };
 
