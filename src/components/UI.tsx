@@ -32,11 +32,11 @@ export const ParallaxBackground = () => {
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
       <motion.div 
         style={{ x: x1, y: y1 }}
-        className="absolute -inset-[30%] bg-[radial-gradient(ellipse_at_30%_30%,rgba(105,60,220,0.12),transparent_60%)]"
+        className="absolute inset-[-30%] bg-[radial-gradient(ellipse_at_30%_30%,rgba(105,60,220,0.12),transparent_60%)]"
       />
       <motion.div 
         style={{ x: x2, y: y2 }}
-        className="absolute -inset-[30%] bg-[radial-gradient(ellipse_at_70%_70%,rgba(255,46,77,0.06),transparent_60%)]"
+        className="absolute inset-[-30%] bg-[radial-gradient(ellipse_at_70%_70%,rgba(255,46,77,0.06),transparent_60%)]"
       />
     </div>
   );
@@ -46,6 +46,7 @@ interface PrimaryButtonProps {
   onClick?: () => void;
   children: React.ReactNode;
   icon?: LucideIcon;
+  iconElement?: React.ReactNode;
   disabled?: boolean;
   variant?: 'white' | 'premium' | 'red' | 'blue' | 'emerald' | 'purple' | 'outline';
   className?: string;
@@ -56,6 +57,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   onClick,
   children,
   icon: Icon,
+  iconElement,
   disabled,
   variant = 'premium',
   className = '',
@@ -85,8 +87,8 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       disabled={disabled}
       className={`${baseStyles} ${variants[variant]} ${className}`}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      {Icon && <Icon className="w-6 h-6 relative z-10" />}
+      <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      {iconElement ?? (Icon && <Icon className="w-6 h-6 relative z-10" />)}
       <span className="relative z-10 uppercase tracking-tighter leading-none">{children}</span>
     </button>
   );
@@ -171,7 +173,7 @@ export const TextInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = 
 
 export const Typography = {
   Title: ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <h1 className={`text-[56px] font-black tracking-tighter uppercase italic leading-[0.75] text-white ${className}`}>
+    <h1 className={`text-[28px] font-black tracking-tighter uppercase italic leading-[0.75] text-white ${className}`}>
       {children}
     </h1>
   ),

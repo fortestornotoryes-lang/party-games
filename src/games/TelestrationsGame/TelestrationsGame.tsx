@@ -1,18 +1,21 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCountdown } from '../../hooks/useCountdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { Pencil, MessageSquare, ArrowRight, Home, HelpCircle, Shuffle, Eye } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
 import { contentService } from '../../services/contentService';
 import { DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
-import { GAME_INSTRUCTIONS } from '../../constants/instructions';
-import { GameKey } from '../../types/games';
 import { shuffle } from '../../utils/random';
-import { InstructionsModal } from '../../components/InstructionsModal';
+import { GameHeader } from '../../components/GameHeader';
 import { DrawingCanvas } from '../../components/DrawingCanvas';
 import { PassPhoneCard } from '../../components/PassPhoneCard';
+import { TelestrationsPhase, Step } from './types';
+import { TelestrationsSetup } from './components/TelestrationsSetup';
+import { TelestrationsStart } from './components/TelestrationsStart';
+import { TelestrationsGuess } from './components/TelestrationsGuess';
+import { TelestrationsGallery } from './components/TelestrationsGallery';
 
 interface TelestrationsGameProps {
   playerNames: string[];
@@ -20,13 +23,6 @@ interface TelestrationsGameProps {
   initialDifficulty?: Difficulty;
   initialRounds?: number;
 }
-
-type Step = {
-  type: 'draw' | 'guess';
-  content: string;
-  author: string;
-};
-
 
 export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty, initialRounds }) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
@@ -39,16 +35,14 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     return { word, difficulty: initialDifficulty, rounds: initialRounds ?? 1 };
   });
 
-  const [phase, setPhase] = useState<'setup' | 'start' | 'action' | 'transition' | 'gallery'>(initState ? 'start' : 'setup');
+  const [phase, setPhase] = useState<TelestrationsPhase>(initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup);
   const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
   const [selectedRounds, setSelectedRounds] = useState(initState?.rounds ?? 1);
   const [initialWord, setInitialWord] = useState(initState?.word ?? '');
   const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
-
-  const [showInstructions, setShowInstructions] = useState(false);
   const [wordRevealed, setWordRevealed] = useState(false);
   const [guess, setGuess] = useState('');
-  const [timeLeft, setTimeLeft] = useCountdown(phase === 'action');
+  const [timeLeft, setTimeLeft] = useCountdown(phase === TelestrationsPhase.Action);
 
   const currentPlayer = shuffledPlayers[currentRound % shuffledPlayers.length];
   const isDrawingRound = currentRound % 2 === 0;
@@ -62,7 +56,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     setCurrentRound(0);
     setWordRevealed(false);
     setTimeLeft(0);
-    setPhase('start');
+    setPhase(TelestrationsPhase.Start);
   };
 
   const startNewGame = () => {
@@ -70,11 +64,11 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     setCurrentRound(0);
     setWordRevealed(false);
     setTimeLeft(0);
-    setPhase('setup');
+    setPhase(TelestrationsPhase.Setup);
   };
 
   const startAction = () => {
-    setPhase('action');
+    setPhase(TelestrationsPhase.Action);
     setGuess('');
     const cfg = DIFFICULTY_CONFIG[difficulty];
     setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
@@ -89,209 +83,61 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
       feedbackService.playSound('success');
       feedbackService.vibrate([50, 30, 50, 30, 50]);
       if (settings.visualEffects) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#f97316', '#ffffff']
-        });
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f97316', '#ffffff'] });
       }
-      setPhase('gallery');
+      setPhase(TelestrationsPhase.Gallery);
     } else {
       feedbackService.playSound('click');
       setCurrentRound(prev => prev + 1);
-      setPhase('transition');
+      setPhase(TelestrationsPhase.Transition);
     }
   };
 
-  // Auto-submit guess on timeout
   useEffect(() => {
-    if (phase === 'action' && !isDrawingRound && timeLeft === 0) finishAction(guess, 'guess');
+    if (phase === TelestrationsPhase.Action && !isDrawingRound && timeLeft === 0) finishAction(guess, 'guess');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, phase, isDrawingRound]);
 
-  return (
-    <div className="flex flex-col h-screen   select-none overflow-hidden">
-      {/* Header */}
-      <div className="flex-shrink-0 px-4 py-3 /90  border-b border-white/5 flex items-center justify-between z-20">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-premium-orange/10 flex items-center justify-center border border-premium-orange/20">
-            <Pencil className="w-4 h-4 text-premium-orange" />
-          </div>
-          <div>
-            <h2 className="text-base font-black uppercase italic tracking-tighter leading-none">
-              Tele<span className="text-premium-orange">strations</span>
-            </h2>
-            <p className="text-[9px] text-white/30 uppercase tracking-widest font-bold mt-0.5">
-              {phase === 'setup'
-                ? `${playerNames.length} игроков`
-                : `${currentRound + 1}/${shuffledPlayers.length * selectedRounds} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === 'action' || phase === 'transition' ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`
-              }
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button onClick={() => setShowInstructions(true)} className="p-2 bg-white/5 rounded-lg text-white/30 hover:text-white transition-all">
-            <HelpCircle className="w-5 h-5" />
-          </button>
-          <button onClick={onBack} className="p-2 bg-white/5 rounded-lg text-white/30 hover:text-white transition-all">
-            <Home className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+  const subtitle = phase === TelestrationsPhase.Setup
+    ? `${playerNames.length} игроков`
+    : `${currentRound + 1}/${shuffledPlayers.length * selectedRounds} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
 
-      {/* Content — phases are absolute inset-0 */}
+  return (
+    <div className="flex flex-col h-screen select-none overflow-hidden">
+      <GameHeader
+        title="TELESTRATIONS"
+        subtitle={subtitle}
+        icon={Pencil}
+        themeColor="border-premium-orange/30 text-premium-orange"
+        onBack={onBack}
+      />
+
       <div className="flex-1 relative min-h-0">
         <AnimatePresence mode="wait">
 
-          {/* ── SETUP ── */}
-          {phase === 'setup' && (
-            <motion.div
-              key="setup"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.25 }}
-              className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
-            >
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-premium-orange/10 border border-premium-orange/20 mb-1">
-                  <Pencil className="w-7 h-7 text-premium-orange" />
-                </div>
-                <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
-                <p className="text-white/30 text-sm">{playerNames.length} игроков</p>
-              </div>
-
-              {/* Rounds */}
-              <div className="w-full max-w-sm">
-                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Раунды цепочки</p>
-                <div className="flex gap-3">
-                  {[1, 2, 3].map(r => (
-                    <motion.button
-                      key={r}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setSelectedRounds(r)}
-                      className={`flex-1 py-4 rounded-2xl font-black text-lg border transition-all ${
-                        selectedRounds === r
-                          ? 'bg-premium-orange/10 border-premium-orange/30 text-premium-orange'
-                          : 'bg-white/5 border-white/10 text-white/30'
-                      }`}
-                    >
-                      {r}
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Difficulty */}
-              <div className="w-full max-w-sm space-y-3">
-                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Сложность</p>
-                {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => {
-                  const cfg = DIFFICULTY_CONFIG[diff];
-                  const isSelected = difficulty === diff;
-                  return (
-                    <motion.button
-                      key={diff}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setDifficulty(diff)}
-                      className={`w-full p-4 rounded-[2rem] border text-left flex items-center gap-4 transition-all ${
-                        isSelected
-                          ? `${cfg.border} ${cfg.bg}`
-                          : 'border-white/10 bg-white/5 opacity-50'
-                      }`}
-                    >
-                      <span className="text-2xl leading-none">{cfg.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-white/40'}`}>{cfg.label}</h4>
-                        <p className="text-xs text-white/30 mt-0.5 leading-tight">{cfg.description}</p>
-                      </div>
-                      <div className="shrink-0 text-right">
-                        <p className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-white/25'}`}>{cfg.drawTime}с</p>
-                        <p className="text-[9px] text-white/25 uppercase font-bold tracking-widest">рисунок</p>
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={handleStartGame}
-                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
-              >
-                <span>Начать</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </motion.div>
+          {phase === TelestrationsPhase.Setup && (
+            <TelestrationsSetup
+              playerCount={playerNames.length}
+              difficulty={difficulty}
+              selectedRounds={selectedRounds}
+              onDifficultyChange={setDifficulty}
+              onRoundsChange={setSelectedRounds}
+              onStart={handleStartGame}
+            />
           )}
 
-          {/* ── START ── */}
-          {phase === 'start' && (
-            <motion.div
-              key="start"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.25 }}
-              className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
-            >
-              <div className="text-center space-y-3">
-                <div className="inline-block px-4 py-1 bg-premium-orange/10 border border-premium-orange/20 rounded-full">
-                  <span className="text-[10px] text-premium-orange font-bold uppercase tracking-widest">Первый рисует</span>
-                </div>
-                <h3 className="text-4xl font-black italic">{currentPlayer}</h3>
-                <p className="text-white/30 text-sm">Запомни слово и нарисуй его так, чтобы другие поняли</p>
-              </div>
-
-              {/* Порядок игроков */}
-              <div className="w-full max-w-sm p-4 bg-white/5 border border-white/5 rounded-2xl">
-                <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Порядок этой игры</p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {shuffledPlayers.map((name, i) => (
-                    <div key={i} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${
-                      i % 2 === 0
-                        ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
-                        : 'bg-white/5 border-white/10 text-white/40'
-                    }`}>
-                      <span className="opacity-50">{i + 1}.</span>
-                      <span>{name}</span>
-                      <span className="opacity-60">{i % 2 === 0 ? '✏️' : '💬'}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {!wordRevealed ? (
-                <button
-                  onClick={() => setWordRevealed(true)}
-                  className="w-full max-w-sm p-8 bg-white/5 border-2 border-dashed border-premium-orange/20 rounded-[2.5rem] text-center hover:bg-premium-orange/5 hover:border-premium-orange/40 transition-all group"
-                >
-                  <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3">Убедись, что остальные не смотрят</p>
-                  <div className="flex items-center justify-center gap-2 text-premium-orange/50 group-hover:text-premium-orange transition-colors">
-                    <Eye className="w-5 h-5" />
-                    <span className="text-base font-black">Показать слово</span>
-                  </div>
-                </button>
-              ) : (
-                <div className="w-full max-w-sm p-8 bg-premium-orange/10 border border-premium-orange/30 rounded-[2.5rem] text-center">
-                  <p className="text-[10px] text-white/25 uppercase font-black tracking-widest mb-2">Твоё секретное слово</p>
-                  <h4 className="text-3xl font-black text-premium-orange">{currentWord}</h4>
-                </div>
-              )}
-
-              <button
-                onClick={startAction}
-                disabled={!wordRevealed}
-                className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
-              >
-                <span>Я готов рисовать</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </motion.div>
+          {phase === TelestrationsPhase.Start && (
+            <TelestrationsStart
+              currentPlayer={currentPlayer}
+              shuffledPlayers={shuffledPlayers}
+              currentWord={currentWord}
+              wordRevealed={wordRevealed}
+              onReveal={() => setWordRevealed(true)}
+              onReady={startAction}
+            />
           )}
 
-          {/* ── TRANSITION ── */}
-          {phase === 'transition' && (
+          {phase === TelestrationsPhase.Transition && (
             <motion.div
               key={`transition-${currentRound}`}
               initial={{ opacity: 0, x: 60 }}
@@ -300,19 +146,14 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               transition={{ duration: 0.25 }}
               className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-5"
             >
-              {/* Progress */}
               <div className="flex items-center gap-1.5">
                 {shuffledPlayers.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i < currentRound ? 'bg-premium-orange/40 w-3' :
-                      i === currentRound ? 'bg-premium-orange w-6' : 'bg-white/10 w-3'
-                    }`}
-                  />
+                  <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i < currentRound ? 'bg-premium-orange/40 w-3' :
+                    i === currentRound ? 'bg-premium-orange w-6' : 'bg-white/10 w-3'
+                  }`} />
                 ))}
               </div>
-
               <div className="w-full max-w-sm">
                 <PassPhoneCard
                   playerName={currentPlayer}
@@ -325,8 +166,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
             </motion.div>
           )}
 
-          {/* ── ACTION ── */}
-          {phase === 'action' && (
+          {phase === TelestrationsPhase.Action && (
             <motion.div
               key="action"
               initial={{ opacity: 0 }}
@@ -343,137 +183,31 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                   onFinish={(dataUrl) => finishAction(dataUrl, 'draw')}
                 />
               ) : (
-                /* ── GUESS MODE ── */
-                <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
-                  <div className="text-center space-y-1">
-                    <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">💬 Угадай рисунок</p>
-                    <span className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}>{timeLeft}с</span>
-                    <h3 className="text-xl font-black italic">Что здесь изображено?</h3>
-                  </div>
-
-                  <div className="flex justify-center gap-1.5">
-                    {shuffledPlayers.map((_, i) => (
-                      <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i < currentRound ? 'w-3 bg-premium-orange/30' : i === currentRound ? 'w-5 bg-premium-orange' : 'w-3 bg-white/10'}`} />
-                    ))}
-                  </div>
-
-                  <div className="w-full max-w-sm rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl">
-                    <img
-                      src={steps[steps.length - 1].content}
-                      alt="Drawing"
-                      className="w-full h-auto block"
-                    />
-                  </div>
-
-                  <div className="w-full max-w-sm space-y-3">
-                    <input
-                      type="text"
-                      value={guess}
-                      onChange={e => setGuess(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && guess.trim() && finishAction(guess, 'guess')}
-                      placeholder="Напиши ответ..."
-                      className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
-                    />
-                    <button
-                      disabled={!guess.trim()}
-                      onClick={() => finishAction(guess, 'guess')}
-                      className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 disabled:opacity-20 transition-all shadow-2xl"
-                    >
-                      <MessageSquare className="w-5 h-5" />
-                      <span>Готово</span>
-                    </button>
-                  </div>
-                </div>
+                <TelestrationsGuess
+                  lastDrawing={steps[steps.length - 1].content}
+                  timeLeft={timeLeft}
+                  currentRound={currentRound}
+                  shuffledPlayers={shuffledPlayers}
+                  guess={guess}
+                  onGuessChange={setGuess}
+                  onSubmit={() => finishAction(guess, 'guess')}
+                />
               )}
             </motion.div>
           )}
 
-          {/* ── GALLERY ── */}
-          {phase === 'gallery' && (
-            <motion.div
-              key="gallery"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.25 }}
-              className="absolute inset-0 overflow-y-auto"
-            >
-              <div className="p-6 space-y-6 pb-40">
-                <div className="text-center space-y-1">
-                  <h3 className="text-3xl font-black italic uppercase tracking-tighter">Финал цепочки</h3>
-                  <p className="text-white/30 text-sm">Смотрите, как менялось слово</p>
-                </div>
-
-                {/* Original word */}
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 flex-shrink-0 rounded-full bg-premium-orange/10 border border-premium-orange/20 flex items-center justify-center text-[9px] font-black text-premium-orange">START</div>
-                  <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
-                    <p className="text-xs text-premium-orange uppercase font-black tracking-widest mb-1">Исходное слово</p>
-                    <p className="text-xl font-bold italic">{initialWord}</p>
-                  </div>
-                </div>
-
-                {steps.map((step, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.08 }}
-                    className="flex flex-col gap-2"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-black border ${
-                        step.type === 'draw'
-                          ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
-                          : 'bg-white/5 border-white/10 text-white/40'
-                      }`}>
-                        {step.type === 'draw' ? '✏️' : '💬'}
-                      </div>
-                      <p className="text-xs font-black uppercase tracking-widest text-white/30">{step.author}</p>
-                    </div>
-                    <div className="ml-14 bg-white/5 border border-white/5 rounded-[1.5rem] overflow-hidden p-3">
-                      {step.type === 'draw' ? (
-                        <img src={step.content} alt="Drawing" className="w-full  rounded-xl" />
-                      ) : (
-                        <div className="p-3 text-center">
-                          <p className="text-xl font-black italic">"{step.content}"</p>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Footer с двумя кнопками */}
-              <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#0a0502] via-[#0a0502]/95 to-transparent pointer-events-none">
-                <div className="pointer-events-auto flex flex-col gap-3 max-w-sm mx-auto">
-                  <button
-                    onClick={startNewGame}
-                    className="w-full py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
-                  >
-                    <Shuffle className="w-5 h-5" />
-                    <span>Новая игра</span>
-                  </button>
-                  <button
-                    onClick={onBack}
-                    className="w-full py-4 bg-white/5 border border-white/10 text-white/40 rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
-                  >
-                    <Home className="w-4 h-4" />
-                    <span className="text-xs">В меню</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+          {phase === TelestrationsPhase.Gallery && (
+            <TelestrationsGallery
+              initialWord={initialWord}
+              steps={steps}
+              onNewGame={startNewGame}
+              onBack={onBack}
+            />
           )}
 
         </AnimatePresence>
       </div>
 
-      <InstructionsModal
-        open={showInstructions}
-        instructions={GAME_INSTRUCTIONS[GameKey.Telestrations]}
-        onClose={() => setShowInstructions(false)}
-        theme="orange"
-      />
     </div>
   );
 };

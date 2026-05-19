@@ -9,5 +9,5 @@
 - [Types & Data](types_data.md) — Player, GameStatus, GameState, GameSettingsContext, контент-константы
 - [Mobile Fixes](mobile_fixes.md) — canvas ResizeObserver+DPR, touch-action none, flex-1 min-h-0
 - [Performance Rules](performance_rules.md) — вложенные backdrop-filter убивают скроллинг, что безопасно
-- [UI Components](components_ui.md) — справочник PrimaryButton, GameCard, GameHeader, DrawingCanvas
+- [UI Components](components_ui.md) — Setup (до игры, инструкции+игроки), GameHeader (во время игры), PassPhoneCard, DrawingCanvas, UI.tsx
 - [Storage & Word Logic](storage_wordlogic.md) — storageService gameId-ключи, какие игры используют contentService, какие inline; исправленные difficulty-баги

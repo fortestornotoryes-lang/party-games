@@ -176,13 +176,15 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
                 />
             </div>
 
-            <button 
-                onClick={() => onRemove(player.id)} 
-                disabled={!canRemove}
-                className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
-            >
-                <UserMinus className="w-5 h-5" />
-            </button>
+            {canRemove &&
+               ( <button
+                    onClick={() => onRemove(player.id)}
+                    disabled={!canRemove}
+                    className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
+                >
+                    <UserMinus className="w-5 h-5" />
+                </button>)
+            }
         </Reorder.Item>
     );
 };
@@ -230,15 +232,7 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                         >
                             <ArrowLeft className="w-6 h-6" />
                         </button>
-
-                        <div className={`w-12 h-12 rounded-[20px] glass-card flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.5)] border-white/10`}>
-                            <div className={`absolute inset-0 rounded-[20px] blur-xl opacity-20 ${config.bg}`} />
-                            <Icon className={`w-7 h-7 ${config.text} relative z-10`} />
-                        </div>
-                    </div>
-
-                    <div className="px-1">
-                        <h2 className="text-[42px] font-black italic uppercase tracking-tighter leading-[0.75] mb-8 text-center">
+                        <Typography.Title className='tracking-tighter leading-[0.75] text-center'>
                             {titleWords.length > 1 ? (
                                 <>
                                     {titleWords.slice(0, -1).join(' ')} <br />
@@ -247,7 +241,11 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
                             ) : (
                                 <span className={config.text}>{title}</span>
                             )}
-                        </h2>
+                        </Typography.Title>
+
+                    </div>
+
+                    <div className="px-1">
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -312,22 +310,21 @@ export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, 
             {/* Footer Buttons */}
             <div className="fixed bottom-0 left-0 right-0 z-50 p-6  bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent">
                 <div className="grid grid-cols-[1fr_2fr] gap-5 max-w-md mx-auto">
-                    <button 
+                    <button
                         onClick={() => setShowInstructions(true)} 
                         className="h-16 glass-card rounded-premium-md flex items-center justify-center gap-3 text-white/80 active:scale-95 transition-all group border-white/5"
                     >
                         <HelpCircle className="w-7 h-7 transition-colors group-hover:text-white/60" />
                     </button>
                     
-                    <button 
-                        disabled={!isReady} 
+                    <PrimaryButton
+                        disabled={!isReady}
+                        iconElement={<Play className="w-6 h-6 fill-current relative z-10" />}
                         onClick={() => onStart(players.map(p => p.name))} 
                         className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}
                     >
-                        <div className="absolute inset-0 bg-linear-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <Play className="w-6 h-6 fill-current relative z-10" />
                         <span className="text-2xl font-black uppercase tracking-tighter italic relative z-10 leading-none">СТАРТ</span>
-                    </button>
+                    </PrimaryButton>
                 </div>
             </div>
 

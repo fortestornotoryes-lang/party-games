@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import {GameTheme} from "@/src/types.ts";
+import {GameTheme} from "@/types.ts";
 
 export enum GameKey {
     Spy = 'spy',

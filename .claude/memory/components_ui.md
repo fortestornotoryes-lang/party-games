@@ -1,6 +1,6 @@
 ---
 name: components-ui
-description: "Справочник UI-компонентов из src/components/UI.tsx и GameHeader, DrawingCanvas"
+description: "Справочник UI-компонентов: Setup (до игры), GameHeader (во время игры), PassPhoneCard, DrawingCanvas, UI.tsx"
 metadata: 
   node_type: memory
   type: project
@@ -93,18 +93,61 @@ metadata:
 
 ---
 
-## GameHeader (src/components/GameHeader.tsx)
+## Setup (src/components/Setup.tsx) — экран ДО игры
+
+**Назначение:** полноэкранный экран настройки перед стартом. Используется для ВСЕХ игр через `case 'setup'` в App.tsx.
+
+**Что делает:**
+- Список игроков с добавлением, удалением, переименованием, перетаскиванием (Reorder)
+- Загружает/сохраняет имена через `storageService.getPlayers()` / `savePlayers()`
+- `children` — слот для `<UniversalGameSettings>` (difficulty, mode, rounds, timer)
+- Кнопка `HelpCircle` → открывает `InstructionsModal` с правилами (управляется внутри Setup)
+- Кнопка СТАРТ → вызывает `onStart(playerNames)`
+
+**ВАЖНО:** инструкции (InstructionsModal) живут ТОЛЬКО здесь. Никакому игровому компоненту не нужно рендерить InstructionsModal самостоятельно — Setup уже показал их до старта.
+
+```tsx
+<Setup
+  onStart={startGame}
+  onBack={reset}
+  title="FAKE ARTIST"
+  subtitle="Найдите фейкового автора"
+  icon={Palette}
+  themeColor="green"               // GameTheme: 'red'|'green'|'sky'|'orange'|'purple'|'yellow'|'blue'
+  playerPlaceholder="Игрок"
+  addPlayerLabel="Добавить"
+  instructions={GAME_INSTRUCTIONS[GameKey.FakeArtist]}
+  description="Описание игры"
+  minPlayers={4}
+>
+  <UniversalGameSettings ... />
+</Setup>
+```
+
+`themeColor` здесь — это `GameTheme` ('green', 'red' и т.д.), НЕ Tailwind-строка. Setup использует `colorConfig` для полного набора стилей (button, shadow, gradient, focus и т.д.).
+
+---
+
+## GameHeader (src/components/GameHeader.tsx) — хедер ВО ВРЕМЯ игры
+
+**Назначение:** компактный sticky-хедер, отображается пока игра идёт (после Setup).
+
+**Что делает:** показывает иконку + название игры + динамический subtitle (счёт, раунд, имя игрока и т.д.) + кнопка Home. Слот `extraActions` для дополнительных кнопок (таймер, счёт и пр.).
+
+**НЕ делает:** не показывает инструкции, не управляет игроками — это зона Setup.
 
 ```tsx
 <GameHeader
   title="FAKE ARTIST"
   subtitle="Ход 1 / 6"
   icon={Palette}
-  themeColor="border-emerald-500/50 text-emerald-400"
+  themeColor="border-premium-green/30 text-premium-green"  // raw Tailwind-строка, НЕ GameTheme
   onBack={fn}
+  extraActions={<button>...</button>}   // опционально
 />
 ```
-Sticky-хедер с кнопкой назад.
+
+`themeColor` здесь — raw Tailwind-строка (`"border-premium-orange/30 text-premium-orange"`), НЕ GameTheme enum. Применяется напрямую как className к иконке-квадрату.
 
 ---
 
