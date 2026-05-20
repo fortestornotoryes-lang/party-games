@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Timer, List, RotateCcw, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Skull } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -10,24 +10,33 @@ import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { RoleDistribution } from './components/RoleDistribution';
+import { initSpyHunt } from '../../utils/gameLogic';
 
 interface GameProps {
-  players: Player[];
-  location: string;
-  onRestart: () => void;
-  onFinish: () => void;
+  playerNames: string[];
+  onBack: () => void;
 }
 
-export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart, onFinish }) => {
-  const { difficulty } = useGameSettings();
+export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
+  const { difficulty, mode } = useGameSettings();
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [location, setLocation] = useState('');
+  const [phase, setPhase] = useState<'distributing' | 'playing' | 'reveal'>('distributing');
+
   const gameDuration = GAME_DURATION_BY_DIFFICULTY[(difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'] ?? 480;
   const [timeLeft, setTimeLeft] = useState(gameDuration);
   const [showLocations, setShowLocations] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
-  const [phase, setPhase] = useState<'playing' | 'reveal'>('playing');
 
   useEffect(() => {
-    if (timeLeft <= 0 || phase === 'reveal') return;
+    const { players: p, location: loc } = initSpyHunt(playerNames, difficulty, mode);
+    setPlayers(p);
+    setLocation(loc);
+  }, [playerNames, difficulty, mode]);
+
+  useEffect(() => {
+    if (timeLeft <= 0 || phase !== 'playing') return;
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft, phase]);
@@ -51,18 +60,34 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
 
   const spy = players.find(p => p.isSpy);
 
+  if (players.length === 0) return null;
+
   return (
     <div className="flex flex-col min-h-screen pb-10">
       <GameHeader 
         title={GAMES_REGISTRY.spy.title}
-        subtitle={phase === 'playing' ? "Идет поиск..." : "Результаты"} 
+        subtitle={phase === 'distributing' ? "Раздача ролей" : phase === 'playing' ? "Идет поиск..." : "Результаты"} 
         icon={Skull} 
         themeColor="border-premium-red/50 text-premium-red"
-        onBack={onRestart}
+        onBack={onBack}
       />
 
       <AnimatePresence mode="wait">
-        {phase === 'playing' ? (
+        {phase === 'distributing' ? (
+          <motion.div
+            key="distributing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col"
+          >
+            <RoleDistribution 
+              players={players} 
+              location={location} 
+              onFinish={() => setPhase('playing')} 
+            />
+          </motion.div>
+        ) : phase === 'playing' ? (
           <motion.div 
             key="playing"
             initial={{ opacity: 0 }}
@@ -154,7 +179,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
                </div>
             </GameCard>
 
-            <PrimaryButton onClick={onFinish} icon={RotateCcw} variant="red">
+            <PrimaryButton onClick={onBack} icon={RotateCcw} variant="red">
               ВЕРНУТЬСЯ В МЕНЮ
             </PrimaryButton>
           </motion.div>
@@ -163,3 +188,4 @@ export const SpyHuntGame: React.FC<GameProps> = ({ players, location, onRestart,
     </div>
   );
 };
+

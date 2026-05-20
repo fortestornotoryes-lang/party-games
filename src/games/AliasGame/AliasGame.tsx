@@ -5,44 +5,51 @@ import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
 import { contentService } from '../../services/contentService';
-import { ALIAS_DIFFICULTY_CONFIG } from '../../constants/aliasContent';
+import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE, TROPHY_THRESHOLD } from '../../constants/aliasContent';
 import { GameKey } from '../../types/games';
 import { GameHeader } from '../../components/GameHeader';
 import { useTimer } from '../../hooks/useTimer';
 import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
+import { AliasPhase, Team } from './types';
 
-interface Team { name: string; players: string[]; score: number; }
 interface AliasGameProps { playerNames: string[]; onBack: () => void; }
+
+const TEAMS_CONFIG = [
+  { name: 'Красные', color: 'red' as const },
+  { name: 'Синие',   color: 'blue' as const },
+] as const;
+
+const CIRCUMFERENCE = 2 * Math.PI * 28;
+
+const fmtScore = (n: number) => `${n > 0 ? '+' : ''}${n}`;
 
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
   const { difficulty } = useGameSettings();
   const [teams, setTeams] = useState<Team[]>([]);
   const [currentTeamIdx, setCurrentTeamIdx] = useState(0);
-  const [phase, setPhase] = useState<'start' | 'playing' | 'round_end' | 'game_over'>('start');
+  const [phase, setPhase] = useState<AliasPhase>(AliasPhase.Start);
   const [currentWord, setCurrentWord] = useState('');
   const [roundScore, setRoundScore] = useState(0);
 
   const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
   const { timeLeft, start: startTimer, reset: resetTimer } = useTimer({
     initialTime: roundTime,
-    onTimeUp: () => setPhase('round_end'),
+    onTimeUp: () => setPhase(AliasPhase.RoundEnd),
   });
-
-  const getAvailableWords = () => contentService.getAliasWords(difficulty);
 
   useEffect(() => {
     const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
     const mid = Math.ceil(shuffled.length / 2);
     setTeams([
-      { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
-      { name: 'Синие', players: shuffled.slice(mid), score: 0 },
+      { name: TEAMS_CONFIG[0].name, color: TEAMS_CONFIG[0].color, players: shuffled.slice(0, mid), score: 0 },
+      { name: TEAMS_CONFIG[1].name, color: TEAMS_CONFIG[1].color, players: shuffled.slice(mid), score: 0 },
     ]);
   }, [playerNames]);
 
   const nextWord = () => {
-    const available = getAvailableWords();
+    const available = contentService.getAliasWords(difficulty);
     const word = available[Math.floor(Math.random() * available.length)];
     setCurrentWord(word);
     storageService.markWordAsUsed(GameKey.Alias, word);
@@ -52,7 +59,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     resetTimer(roundTime);
     setRoundScore(0);
     nextWord();
-    setPhase('playing');
+    setPhase(AliasPhase.Playing);
     startTimer();
   };
 
@@ -71,20 +78,20 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   };
 
   const finishRound = () => {
-    const newTeams = teams.map((t, i) =>
+    const updatedTeams = teams.map((t, i) =>
       i === currentTeamIdx ? { ...t, score: t.score + roundScore } : t
     );
-    setTeams(newTeams);
-    if (newTeams[currentTeamIdx].score >= 30) {
-      setPhase('game_over');
+    setTeams(updatedTeams);
+    if (updatedTeams[currentTeamIdx].score >= WIN_SCORE) {
+      setPhase(AliasPhase.GameOver);
     } else {
       setCurrentTeamIdx(i => (i + 1) % teams.length);
-      setPhase('start');
+      setPhase(AliasPhase.Start);
     }
   };
 
   useEffect(() => {
-    if (phase !== 'game_over') return;
+    if (phase !== AliasPhase.GameOver) return;
     const settings = storageService.getSettings();
     feedbackService.playSound('success');
     feedbackService.vibrate([100, 50, 100]);
@@ -98,7 +105,8 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
   if (teams.length === 0) return null;
 
-  const isRed = currentTeamIdx === 0;
+  const currentTeam = teams[currentTeamIdx];
+  const isRed = currentTeam.color === 'red';
   const teamColor = isRed ? 'text-premium-red' : 'text-premium-blue';
   const teamBg = isRed ? 'bg-premium-red/[0.07] border-premium-red/20' : 'bg-premium-blue/[0.07] border-premium-blue/20';
 
@@ -108,7 +116,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
         title={GAMES_REGISTRY.alias.title}
         subtitle="Объясни быстрее"
         icon={Brain}
-        themeColor="border-premium-sky/50 text-premium-sky"
+        themeColor="border-premium-orange/50 text-premium-orange"
         onBack={onBack}
       />
 
@@ -116,7 +124,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
         <AnimatePresence mode="wait">
 
           {/* ── START ── */}
-          {phase === 'start' && (
+          {phase === AliasPhase.Start && (
             <motion.div
               key="start"
               initial={{ opacity: 0, y: 14 }}
@@ -135,7 +143,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                 >
                   <Zap className={`w-12 h-12 mb-3 ${teamColor}`} />
                   <h3 className={`text-3xl font-black italic uppercase tracking-tighter ${teamColor}`}>
-                    {teams[currentTeamIdx].name}
+                    {currentTeam.name}
                   </h3>
                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/25 mt-2">Твой черёд!</p>
                 </motion.div>
@@ -151,10 +159,10 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-premium-red/50' : 'text-premium-blue/50'}`}>{t.name}</span>
-                      <Trophy className={`w-3 h-3 ${t.score >= 20 ? 'text-premium-yellow' : 'text-white/10'}`} />
+                      <Trophy className={`w-3 h-3 ${t.score >= TROPHY_THRESHOLD ? 'text-premium-yellow' : 'text-white/10'}`} />
                     </div>
                     <div className={`text-4xl font-black italic ${i === 0 ? 'text-premium-red' : 'text-premium-blue'}`}>{t.score}</div>
-                    <div className="text-[9px] text-white/15 font-black uppercase tracking-widest mt-0.5">/ 30</div>
+                    <div className="text-[9px] text-white/15 font-black uppercase tracking-widest mt-0.5">/ {WIN_SCORE}</div>
                   </div>
                 ))}
               </div>
@@ -164,7 +172,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
           )}
 
           {/* ── PLAYING ── */}
-          {phase === 'playing' && (
+          {phase === AliasPhase.Playing && (
             <motion.div
               key="playing"
               initial={{ opacity: 0 }}
@@ -180,8 +188,8 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                       cx="32" cy="32" r="28"
                       stroke={timeLeft <= 10 ? '#FF2E4D' : '#1FB6FF'}
                       strokeWidth="3" fill="none"
-                      strokeDasharray={176}
-                      strokeDashoffset={176 - (176 * timeLeft) / roundTime}
+                      strokeDasharray={CIRCUMFERENCE}
+                      strokeDashoffset={CIRCUMFERENCE - (CIRCUMFERENCE * timeLeft) / roundTime}
                       strokeLinecap="round"
                       style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.3s' }}
                     />
@@ -215,7 +223,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               <div className="text-center pb-3">
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">Очки: </span>
                 <span className={`text-[9px] font-black uppercase tracking-[0.3em] ${roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'}`}>
-                  {roundScore > 0 ? '+' : ''}{roundScore}
+                  {fmtScore(roundScore)}
                 </span>
               </div>
 
@@ -239,7 +247,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
           )}
 
           {/* ── ROUND END ── */}
-          {phase === 'round_end' && (
+          {phase === AliasPhase.RoundEnd && (
             <motion.div
               key="round_end"
               initial={{ opacity: 0, scale: 0.84 }}
@@ -250,7 +258,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               <div className="space-y-2">
                 <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/20">Время вышло</p>
                 <div className={`text-[96px] font-black italic tracking-tighter leading-none ${roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'}`}>
-                  {roundScore > 0 ? '+' : ''}{roundScore}
+                  {fmtScore(roundScore)}
                 </div>
                 <h3 className="text-sm font-black uppercase italic tracking-tight text-white/45">Очков за раунд</h3>
               </div>
@@ -259,7 +267,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
           )}
 
           {/* ── GAME OVER ── */}
-          {phase === 'game_over' && (
+          {phase === AliasPhase.GameOver && (
             <motion.div
               key="game_over"
               initial={{ opacity: 0 }}
@@ -273,7 +281,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
                   ПОБЕДА!
                 </h2>
                 <p className={`text-lg font-black uppercase tracking-[0.25em] relative ${teamColor}`}>
-                  Команда {teams[currentTeamIdx].name}
+                  Команда {currentTeam.name}
                 </p>
               </div>
               <PrimaryButton onClick={onBack} icon={RotateCcw} variant={isRed ? 'red' : 'blue'}>

@@ -6,6 +6,9 @@ export const ALIAS_DIFFICULTY_CONFIG: Record<AliasDifficulty, { roundTime: numbe
   hard:   { roundTime: 40 },
 };
 
+export const WIN_SCORE = 30;
+export const TROPHY_THRESHOLD = 20;
+
 
 
 export interface WordCategory {

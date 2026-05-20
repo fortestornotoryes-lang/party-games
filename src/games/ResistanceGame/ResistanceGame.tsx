@@ -1,28 +1,71 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Skull, CheckCircle2, XCircle, Users, ArrowRight, RotateCcw, Activity } from 'lucide-react';
+import { Shield, Skull, CheckCircle2, XCircle, ArrowRight, RotateCcw, Activity } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { MISSION_SIZES } from '../../constants/resistanceContent';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { ResistanceDistribution } from './components/ResistanceDistribution';
+import { initResistance } from '../../utils/gameLogic';
 
 interface ResistanceGameProps {
-  players: Player[];
+  playerNames: string[];
   onBack: () => void;
-  onFinish: (winner: 'resistance' | 'spies') => void;
 }
 
-export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack, onFinish }) => {
+export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onBack }) => {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [phase, setPhase] = useState<'distributing' | 'proposing' | 'missionVoting' | 'missionResult' | 'gameOver'>('distributing');
   const [missionIndex, setMissionIndex] = useState(0);
   const [resistanceScore, setResistanceScore] = useState(0);
   const [spiesScore, setSpiesScore] = useState(0);
   const [leaderIndex, setLeaderIndex] = useState(0);
-  const [phase, setPhase] = useState<'proposing' | 'missionVoting' | 'missionResult' | 'gameOver'>('proposing');
   const [selectedTeam, setSelectedTeam] = useState<string[]>([]);
   const [missionVotes, setMissionVotes] = useState<boolean[]>([]);
   const [winner, setWinner] = useState<'resistance' | 'spies' | null>(null);
+
+  useEffect(() => {
+    const { players: p } = initResistance(playerNames);
+    setPlayers(p);
+  }, [playerNames]);
+
+  useEffect(() => {
+    if (phase === 'gameOver' && winner) {
+      const colors = winner === 'resistance' ? ['#3b82f6', '#ffffff'] : ['#ef4444', '#000000'];
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+      const interval: any = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors });
+      }, 250);
+
+      return () => clearInterval(interval);
+    }
+  }, [phase, winner]);
+
+  if (players.length === 0) return null;
+
+  if (phase === 'distributing') {
+    return (
+      <ResistanceDistribution
+        players={players}
+        onFinish={() => setPhase('proposing')}
+      />
+    );
+  }
 
   const missionSize = (MISSION_SIZES as any)[players.length]?.[missionIndex] || 2;
   const currentLeader = players[leaderIndex % players.length];
@@ -64,33 +107,8 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
       setPhase('proposing');
   };
 
-  useEffect(() => {
-    if (phase === 'gameOver' && winner) {
-      const colors = winner === 'resistance' ? ['#3b82f6', '#ffffff'] : ['#ef4444', '#000000'];
-      const duration = 3 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-      const interval: any = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors });
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors });
-      }, 250);
-
-      return () => clearInterval(interval);
-    }
-  }, [phase, winner]);
-
   return (
-    <div className="flex flex-col min-h-screen   pb-10">
+    <div className="flex flex-col min-h-screen pb-10">
        <GameHeader 
           title={GAMES_REGISTRY.resistance.title}
           subtitle={`Миссия ${missionIndex + 1}`} 
@@ -188,7 +206,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                 <motion.div key="over" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-12 text-center flex-1 flex flex-col items-center justify-center">
                     <div className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}>
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-60">ФИНАЛЬНЫЙ СЧЕТ</h2>
-                        <h3 className={`text-6xl font-black italic uppercase italic leading-none ${winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}`}>
+                        <h3 className={`text-6xl font-black italic uppercase leading-none ${winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}`}>
                           {winner === 'resistance' ? 'ГРУППА' : 'ШПИОНЫ'}<br/>ПОБЕДИЛИ
                         </h3>
                     </div>
@@ -202,7 +220,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ players, onBack,
                        </div>
                     </div>
 
-                    <PrimaryButton onClick={() => onFinish(winner!)} icon={RotateCcw} variant="blue">ЗАНОВО</PrimaryButton>
+                    <PrimaryButton onClick={onBack} icon={RotateCcw} variant="blue">ЗАНОВО</PrimaryButton>
                 </motion.div>
             )}
           </AnimatePresence>

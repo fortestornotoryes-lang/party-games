@@ -5,44 +5,45 @@ export interface Player {
   isSpy: boolean;
 }
 
-export type GameStatus = 
-  | 'menu' 
-  | 'settings'
-  | 'setup' 
-  | 'distributing' 
-  | 'playing' 
-  | 'result' 
-  | 'reveal'
-  | 'pass'
-  | 'hinting'
-  | 'guessing'
-  | 'review'
-  | 'alias' 
-  | 'alias_setup' 
-  | 'alias_playing'
-  | 'fake_artist_setup' 
-  | 'fake_artist_distributing' 
-  | 'fake_artist_playing' 
-  | 'fake_artist_voting' 
-  | 'fake_artist_result' 
-  | 'resistance_setup' 
-  | 'resistance_distributing' 
-  | 'resistance_playing' 
-  | 'resistance_result' 
-  | 'wavelength_setup' 
-  | 'wavelength_playing' 
-  | 'telestrations_setup' 
-  | 'telestrations_playing' 
-  | 'telestrations_result' 
-  | 'just_one_setup' 
-  | 'just_one_playing' 
-  | 'just_one_result'
-  | 'codenames_setup'
-  | 'codenames_playing'
-  | 'decrypto_setup'
-  | 'decrypto_playing'
-  | 'mafia_setup'
-  | 'mafia_playing';
+export enum GameStatus {
+  Menu = 'menu',
+  Settings = 'settings',
+  Setup = 'setup',
+  Distributing = 'distributing',
+  Playing = 'playing',
+  Result = 'result',
+  Reveal = 'reveal',
+  Pass = 'pass',
+  Hinting = 'hinting',
+  Guessing = 'guessing',
+  Review = 'review',
+  Alias = 'alias',
+  AliasSetup = 'alias_setup',
+  AliasPlaying = 'alias_playing',
+  FakeArtistSetup = 'fake_artist_setup',
+  FakeArtistDistributing = 'fake_artist_distributing',
+  FakeArtistPlaying = 'fake_artist_playing',
+  FakeArtistVoting = 'fake_artist_voting',
+  FakeArtistResult = 'fake_artist_result',
+  ResistanceSetup = 'resistance_setup',
+  ResistanceDistributing = 'resistance_distributing',
+  ResistancePlaying = 'resistance_playing',
+  ResistanceResult = 'resistance_result',
+  WavelengthSetup = 'wavelength_setup',
+  WavelengthPlaying = 'wavelength_playing',
+  TelestrationsSetup = 'telestrations_setup',
+  TelestrationsPlaying = 'telestrations_playing',
+  TelestrationsResult = 'telestrations_result',
+  JustOneSetup = 'just_one_setup',
+  JustOnePlaying = 'just_one_playing',
+  JustOneResult = 'just_one_result',
+  CodenamesSetup = 'codenames_setup',
+  CodenamesPlaying = 'codenames_playing',
+  DecryptoSetup = 'decrypto_setup',
+  DecryptoPlaying = 'decrypto_playing',
+  MafiaSetup = 'mafia_setup',
+  MafiaPlaying = 'mafia_playing'
+}
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type GameMode = 'classic' | 'double_agent' | 'mole' | string;

@@ -7,13 +7,12 @@ import React, { useState, useCallback, Suspense } from 'react';
 import { MainMenu } from './components/MainMenu';
 import { Setup } from './components/Setup';
 import { UniversalGameSettings } from './components/UniversalGameSettings';
-import { Player, GameStatus, GameState } from './types';
+import { Player, GameStatus } from './types';
 import { storageService } from './services/storageService';
 import { Settings } from './components/Settings';
 import { Settings as SettingsIcon } from 'lucide-react';
-import { initSpyHunt, initFakeArtist, initResistance } from './utils/gameLogic';
 import { GameSettingsProvider, useGameSettings } from './contexts/GameSettingsContext';
-import { GAMES_REGISTRY, SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame, RoleDistribution, FakeArtistDistribution, ResistanceDistribution, FakeArtistVoting } from './registry/GameRegistry';
+import { GAMES_REGISTRY, SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame } from './registry/GameRegistry';
 import { GAME_INSTRUCTIONS } from './constants/instructions';
 import { GameKey } from './types/games';
 
@@ -21,16 +20,6 @@ function AppContent() {
   const { difficulty, mode, rounds, timerSeconds, setDifficulty, setMode, setRounds, setTimerSeconds, currentGameId, setCurrentGameId } = useGameSettings();
   const [status, setStatus] = useState<GameStatus>('menu');
   const [players, setPlayers] = useState<Player[]>([]);
-  const [gameState, setGameState] = useState<GameState>({
-    players: [],
-    status: 'menu',
-    location: '', 
-    word: '', 
-    category: '', 
-    winner: null, 
-    canvasImage: '', 
-    rounds: 2
-  });
 
   const reset = useCallback(() => setStatus('menu'), []);
 
@@ -44,32 +33,11 @@ function AppContent() {
     storageService.savePlayers(playerNames);
     
     const config = GAMES_REGISTRY[currentGameId];
-    let initializedPlayers: Player[] = [];
+    const initializedPlayers: Player[] = playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false }));
     
-    switch (currentGameId) {
-      case 'spy': {
-        const { players: p, location } = initSpyHunt(playerNames, difficulty, mode);
-        initializedPlayers = p;
-        setGameState(prev => ({ ...prev, location }));
-        break;
-      }
-      case 'fake_artist': {
-        const { players: p } = initFakeArtist(playerNames);
-        initializedPlayers = p;
-        break;
-      }
-      case 'resistance': {
-        const { players: p } = initResistance(playerNames);
-        initializedPlayers = p;
-        break;
-      }
-      default:
-        initializedPlayers = playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false }));
-    }
-
     setPlayers(initializedPlayers);
     setStatus(config.setupStatus);
-  }, [currentGameId, difficulty, mode]);
+  }, [currentGameId]);
 
   const handleMenuSelect = (gameId: GameKey) => {
     setCurrentGameId(gameId);
@@ -91,15 +59,9 @@ function AppContent() {
             case 'decrypto_playing': return <DecryptoGame playerNames={playerNames} onBack={reset} />;
             case 'mafia_playing': return <MafiaGame playerNames={playerNames} onBack={reset} />;
             
-            case 'playing': return <SpyHuntGame players={players} location={gameState.location!} onRestart={() => setStatus('setup')} onFinish={reset} />;
-            case 'fake_artist_playing': return <FakeArtistGame players={players} word={gameState.word} category={gameState.category} rounds={gameState.rounds} timerSeconds={gameState.timerSeconds} onBack={reset} onFinish={(img) => { setGameState({...gameState, canvasImage: img}); setStatus('fake_artist_voting'); }} />;
-            case 'resistance_playing': return <ResistanceGame players={players} onBack={reset} onFinish={reset} />;
-            
-            case 'distributing': return <RoleDistribution players={players} location={gameState.location!} onFinish={() => setStatus('playing')} />;
-            case 'fake_artist_distributing': return <FakeArtistDistribution players={players} onFinish={(word, category, rounds, timerSeconds) => { setGameState({...gameState, word, category, rounds, timerSeconds}); setStatus('fake_artist_playing'); }} />;
-            case 'resistance_distributing': return <ResistanceDistribution players={players} onFinish={() => setStatus('resistance_playing')} />;
-            
-            case 'fake_artist_voting': return <FakeArtistVoting players={players} canvasImage={gameState.canvasImage} onReveal={reset} />;
+            case 'playing': return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
+            case 'fake_artist_playing': return <FakeArtistGame playerNames={playerNames} onBack={reset} />;
+            case 'resistance_playing': return <ResistanceGame playerNames={playerNames} onBack={reset} />;
             
             case 'setup': {
               const config = GAMES_REGISTRY[currentGameId!];
@@ -166,4 +128,3 @@ export default function App() {
     </GameSettingsProvider>
   );
 }
-

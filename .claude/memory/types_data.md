@@ -101,7 +101,7 @@ type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
 | spyHuntContent.ts | `LOCATIONS_DATA: LocationInfo[]` (25 лок., каждая 7 ролей) |
 | fakeArtistContent.ts | `FAKE_ARTIST_DATA_BY_DIFFICULTY` — словарь по difficulty |
 | resistanceContent.ts | `RESISTANCE_INSTRUCTIONS`, `MISSION_SIZES` |
-| aliasContent.ts | `ALIAS_CATEGORIES: WordCategory[]` |
+| aliasContent.ts | `ALIAS_CATEGORIES: WordCategory[]`, `ALIAS_DIFFICULTY_CONFIG`, `WIN_SCORE = 30`, `TROPHY_THRESHOLD = 20` |
 | wavelengthContent.ts | `WAVELENGTH_CATEGORIES: [string,string][]` — пары противоположностей |
 | telestrationsContent.ts | `STARTING_WORDS: string[]` |
 | justOneContent.ts | `JUST_ONE_WORDS: string[]` |

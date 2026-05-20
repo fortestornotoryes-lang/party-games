@@ -1,6 +1,6 @@
-﻿import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Palette, Brush, Undo2, Send } from 'lucide-react';
+import { Palette, Brush, Undo2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { storageService } from '../../services/storageService';
@@ -8,18 +8,26 @@ import { feedbackService } from '../../services/feedbackService';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { FakeArtistDistribution } from './components/FakeArtistDistribution';
+import { FakeArtistVoting } from './components/FakeArtistVoting';
+import { initFakeArtist } from '../../utils/gameLogic';
 
 interface Props {
-  players: Player[];
-  word: string;
-  category: string;
-  rounds: number;
-  timerSeconds: number;
+  playerNames: string[];
   onBack: () => void;
-  onFinish: (imageUrl: string) => void;
 }
 
-export const FakeArtistGame: React.FC<Props> = ({ players, word, category, rounds, timerSeconds, onBack, onFinish }) => {
+export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [phase, setPhase] = useState<'distributing' | 'playing' | 'voting'>('distributing');
+  const [gameState, setGameState] = useState({
+    word: '',
+    category: '',
+    rounds: 2,
+    timerSeconds: 100,
+    canvasImage: '',
+  });
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [turnIndex, setTurnIndex] = useState(0);
@@ -28,13 +36,18 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
   const [strokes, setStrokes] = useState<any[]>([]);
   const [currentStroke, setCurrentStroke] = useState<any>(null);
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
-
-  const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][turnIndex % players.length];
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
-    if (timerSeconds > 0 && !isTransitioning) {
-        setTimeLeft(timerSeconds);
+    const { players: p } = initFakeArtist(playerNames);
+    setPlayers(p);
+  }, [playerNames]);
+
+  const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][turnIndex % (players.length || 1)];
+
+  useEffect(() => {
+    if (gameState.timerSeconds > 0 && !isTransitioning && phase === 'playing') {
+        setTimeLeft(gameState.timerSeconds);
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
@@ -46,9 +59,10 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
         }, 1000);
         return () => clearInterval(timer);
     }
-  }, [turnIndex, isTransitioning, timerSeconds]);
+  }, [turnIndex, isTransitioning, gameState.timerSeconds, phase]);
 
   useEffect(() => {
+    if (phase !== 'playing') return;
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -71,7 +85,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
     ro.observe(canvas);
     initCanvas();
     return () => ro.disconnect();
-  }, []);
+  }, [phase]);
 
   const drawAll = useCallback(() => {
     const canvas = canvasRef.current;
@@ -95,7 +109,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
     }
   }, [strokes, currentStroke, playerColor]);
 
-  useEffect(() => { drawAll(); }, [drawAll]);
+  useEffect(() => { if (phase === 'playing') drawAll(); }, [drawAll, phase]);
 
   const getPos = (e: any) => {
     const canvas = canvasRef.current!;
@@ -107,7 +121,7 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
 
   const confirm = () => {
     const settings = storageService.getSettings();
-    if (turnIndex === players.length * rounds - 1) {
+    if (turnIndex === players.length * gameState.rounds - 1) {
       feedbackService.playSound('success');
       feedbackService.vibrate([50, 30, 50]);
       if (settings.visualEffects) {
@@ -118,7 +132,8 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
           colors: ['#10b981', '#ffffff']
         });
       }
-      onFinish(canvasRef.current!.toDataURL());
+      setGameState(prev => ({ ...prev, canvasImage: canvasRef.current!.toDataURL() }));
+      setPhase('voting');
     }
     else {
         feedbackService.playSound('click');
@@ -128,104 +143,145 @@ export const FakeArtistGame: React.FC<Props> = ({ players, word, category, round
     }
   };
 
-  return (
-    <div className="flex flex-col min-h-screen  overflow-hidden select-none relative">
-       <GameHeader
-          title={GAMES_REGISTRY.fake_artist.title}
-          subtitle={`Ход ${turnIndex + 1} / ${players.length * rounds}`}
-          icon={Palette}
-          themeColor="border-premium-green/50 text-premium-green"
-          onBack={onBack}
-       />
+  if (players.length === 0) return null;
 
-       {/* Canvas UI — always mounted so canvas persists between turns */}
-       <div className="p-6 flex-1 flex flex-col items-center space-y-6">
-          <div className="w-full flex justify-between items-end">
-              <div className="space-y-1">
+  return (
+    <div className="flex flex-col min-h-screen overflow-hidden select-none relative">
+      <AnimatePresence mode="wait">
+        {phase === 'distributing' ? (
+          <motion.div
+            key="distributing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col"
+          >
+            <FakeArtistDistribution
+              players={players}
+              onFinish={(word, category, rounds, timerSeconds) => {
+                setGameState(prev => ({ ...prev, word, category, rounds, timerSeconds }));
+                setPhase('playing');
+              }}
+            />
+          </motion.div>
+        ) : phase === 'playing' ? (
+          <motion.div
+            key="playing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col"
+          >
+            <GameHeader
+              title={GAMES_REGISTRY.fake_artist.title}
+              subtitle={`Ход ${turnIndex + 1} / ${players.length * gameState.rounds}`}
+              icon={Palette}
+              themeColor="border-premium-green/50 text-premium-green"
+              onBack={onBack}
+            />
+
+            <div className="p-6 flex-1 flex flex-col items-center space-y-6">
+              <div className="w-full flex justify-between items-end">
+                <div className="space-y-1">
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Рисует</p>
                   <div className="flex items-center gap-3">
-                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: playerColor }} />
-                     <h3 className="text-2xl font-black italic uppercase text-white leading-none">{players[turnIndex % players.length].name}</h3>
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: playerColor }} />
+                    <h3 className="text-2xl font-black italic uppercase text-white leading-none">{players[turnIndex % players.length].name}</h3>
                   </div>
-              </div>
-              <div className="text-right space-y-1">
-                  {timerSeconds > 0 && (
-                     <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}>
-                        {timeLeft}с
-                     </p>
+                </div>
+                <div className="text-right space-y-1">
+                  {gameState.timerSeconds > 0 && (
+                    <p className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}>
+                      {timeLeft}с
+                    </p>
                   )}
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Тема</p>
-                  <h3 className="text-xl font-black italic uppercase text-premium-green leading-none">{category}</h3>
+                  <h3 className="text-xl font-black italic uppercase text-premium-green leading-none">{gameState.category}</h3>
+                </div>
               </div>
-          </div>
 
-          <GameCard className="w-full flex-1 !p-0 overflow-hidden relative border-premium-green/20">
-             <div
-               ref={containerRef}
-               className="w-full h-full"
-               style={{ touchAction: 'none' }}
-               onMouseDown={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
-               onMouseMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
-               onMouseUp={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
-               onTouchStart={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
-               onTouchMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
-               onTouchEnd={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
-             >
-                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white transition-opacity" />
-                 {!hasDrawn && !isDrawing && (
-                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-60 space-y-4">
-                       <Brush className="w-16 h-16 text-black" />
-                       <span className="font-black italic text-black uppercase tracking-tighter">Нарисуй одну линию</span>
-                   </div>
-                 )}
-             </div>
-          </GameCard>
+              <GameCard className="w-full flex-1 !p-0 overflow-hidden relative border-premium-green/20">
+                <div
+                  ref={containerRef}
+                  className="w-full h-full"
+                  style={{ touchAction: 'none' }}
+                  onMouseDown={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
+                  onMouseMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
+                  onMouseUp={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
+                  onTouchStart={(e) => { if (!hasDrawn) { setIsDrawing(true); setCurrentStroke([getPos(e)]); }}}
+                  onTouchMove={(e) => { if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]); }}
+                  onTouchEnd={() => { if (isDrawing) { setStrokes([...strokes, { points: currentStroke, color: playerColor }]); setIsDrawing(false); setCurrentStroke(null); setHasDrawn(true); }}}
+                >
+                  <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-white transition-opacity" />
+                  {!hasDrawn && !isDrawing && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-60 space-y-4">
+                      <Brush className="w-16 h-16 text-black" />
+                      <span className="font-black italic text-black uppercase tracking-tighter">Нарисуй одну линию</span>
+                    </div>
+                  )}
+                </div>
+              </GameCard>
 
-          <div className="w-full flex gap-4 justify-center items-center">
-             <button
-               disabled={!hasDrawn}
-               onClick={() => { setStrokes(strokes.slice(0, -1)); setHasDrawn(false); }}
-               className="w-20 py-6 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center disabled:opacity-0 active:scale-90 transition-all"
-             >
-               <Undo2 className="w-6 h-6" />
-             </button>
-             <PrimaryButton
-               disabled={!hasDrawn}
-               onClick={confirm}
-               className="bg-premium-green !text-black flex-1 font-semibold"
-             >
-               ПОДТВЕРДИТЬ
-             </PrimaryButton>
-          </div>
-       </div>
+              <div className="w-full flex gap-4 justify-center items-center">
+                <button
+                  disabled={!hasDrawn}
+                  onClick={() => { setStrokes(strokes.slice(0, -1)); setHasDrawn(false); }}
+                  className="w-20 py-6 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center disabled:opacity-0 active:scale-90 transition-all"
+                >
+                  <Undo2 className="w-6 h-6" />
+                </button>
+                <PrimaryButton
+                  disabled={!hasDrawn}
+                  onClick={confirm}
+                  className="bg-premium-green !text-black flex-1 font-semibold"
+                >
+                  ПОДТВЕРДИТЬ
+                </PrimaryButton>
+              </div>
+            </div>
 
-       {/* Transition overlay — rendered on top, canvas stays mounted underneath */}
-       <AnimatePresence>
-          {isTransitioning && (
-            <motion.div
-               key="transition"
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               className="absolute inset-0 z-10 flex flex-col bg-black pt-40 items-center justify-between p-6 space-y-8"
-            >
+            {/* Transition overlay — rendered on top, canvas stays mounted underneath */}
+            <AnimatePresence>
+              {isTransitioning && (
+                <motion.div
+                  key="transition"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 z-10 flex flex-col bg-black pt-40 items-center justify-between p-6 space-y-8"
+                >
+                  <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-premium-green/20 bg-premium-green/5">
+                    <Palette className="w-16 h-16 text-premium-green animate-pulse" />
+                    <div className="text-center space-y-4">
+                      <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
+                      <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
+                    </div>
+                    <p className="text-xs text-center text-premium-green px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
+                  </GameCard>
 
-
-               <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-premium-green/20 bg-premium-green/5">
-                  <Palette className="w-16 h-16 text-premium-green animate-pulse" />
-                   <div className="text-center space-y-4">
-                       <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Следующий игрок</p>
-                       <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">{players[turnIndex % players.length].name}</h3>
-                   </div>
-                  <p className="text-xs text-center text-premium-green px-8">Передайте телефон этому игроку и нажмите кнопку ниже</p>
-               </GameCard>
-
-               <PrimaryButton onClick={() => setIsTransitioning(false)} className="bg-white !text-black">
-                  Я ГОТОВ РИСОВАТЬ
-               </PrimaryButton>
-            </motion.div>
-          )}
-       </AnimatePresence>
-  </div>
-);
+                  <PrimaryButton onClick={() => setIsTransitioning(false)} className="bg-white !text-black">
+                    Я ГОТОВ РИСОВАТЬ
+                  </PrimaryButton>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="voting"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col"
+          >
+            <FakeArtistVoting
+              players={players}
+              canvasImage={gameState.canvasImage}
+              onReveal={onBack}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };

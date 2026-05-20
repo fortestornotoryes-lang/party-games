@@ -1,7 +1,8 @@
 import React, { lazy } from 'react';
 import { Shield, Palette, Brain, Pencil, Lightbulb, Radio, Target, Zap, Shield as ShieldIcon, Grid, Key, LucideIcon, Users } from 'lucide-react';
-import { GameStatus, GameMetadata } from '../types';
+import { GameStatus } from '../types';
 import { GameKey, GamesRegistryMap } from '../types/games';
+
 // Lazy load game components
 const SpyHuntGame = lazy(() => import('../games/SpyHuntGame/SpyHuntGame').then(m => ({ default: m.SpyHuntGame })));
 const AliasGame = lazy(() => import('../games/AliasGame/AliasGame').then(m => ({ default: m.AliasGame })));
@@ -14,13 +15,6 @@ const CodenamesGame = lazy(() => import('../games/CodenamesGame/CodenamesGame').
 const DecryptoGame = lazy(() => import('../games/DecryptoGame/DecryptoGame').then(m => ({ default: m.DecryptoGame })));
 const MafiaGame = lazy(() => import('../games/MafiaGame/MafiaGame'));
 
-// Lazy load distribution screens
-const RoleDistribution = lazy(() => import('../games/SpyHuntGame/components/RoleDistribution').then(m => ({ default: m.RoleDistribution })));
-const FakeArtistDistribution = lazy(() => import('../games/FakeArtistGame/components/FakeArtistDistribution').then(m => ({ default: m.FakeArtistDistribution })));
-const ResistanceDistribution = lazy(() => import('../games/ResistanceGame/components/ResistanceDistribution').then(m => ({ default: m.ResistanceDistribution })));
-const FakeArtistVoting = lazy(() => import('../games/FakeArtistGame/components/FakeArtistVoting').then(m => ({ default: m.FakeArtistVoting })));
-
-
 export const GAMES_REGISTRY: GamesRegistryMap = {
   [GameKey.Spy]: {
     id: GameKey.Spy,
@@ -32,7 +26,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description: '1 игрок — шпион. Все остальные знают локацию. Шпион должен догадаться, где он находится, по вопросам.',
     players: '4–7',
     minPlayers: 4,
-    setupStatus: 'distributing',
+    setupStatus: GameStatus.Playing,
     modes: [
       { id: 'classic', name: 'Классика', description: '1 шпион, все остальные знают локацию', icon: Target },
       { id: 'double_agent', name: 'Двойной агент', description: '2 шпиона (от 5 игроков)', icon: Zap },
@@ -49,7 +43,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description: 'В этой игре один игрок — фейковый художник, который не знает, что рисуют остальные.',
     players: '4–7',
     minPlayers: 4,
-    setupStatus: 'fake_artist_distributing'
+    setupStatus: GameStatus.FakeArtistPlaying
   },
   [GameKey.Resistance]: {
     id: GameKey.Resistance,
@@ -61,7 +55,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description: 'Группа сопротивления пытается выполнить миссии, в то время как шпионы пытаются их саботировать.',
     placeholder: 'Игрок',
     minPlayers: 5,
-    setupStatus: 'resistance_distributing'
+    setupStatus: GameStatus.ResistancePlaying
   },
   [GameKey.Alias]: {
     id: GameKey.Alias,
@@ -73,7 +67,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4+',
     description: 'Объясни слово быстрее всех',
     minPlayers: 4,
-    setupStatus: 'alias_playing'
+    setupStatus: GameStatus.AliasPlaying
   },
   [GameKey.JustOne]: {
     id: GameKey.JustOne,
@@ -85,7 +79,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '3–12',
     description: 'Одно слово — одна подсказка',
     minPlayers: 3,
-    setupStatus: 'just_one_playing'
+    setupStatus: GameStatus.JustOnePlaying
   },
   [GameKey.Telestrations]: {
     id: GameKey.Telestrations,
@@ -97,7 +91,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4–12',
     description: 'Рисуй и угадывай по цепочке',
     minPlayers: 4,
-    setupStatus: 'telestrations_playing'
+    setupStatus: GameStatus.TelestrationsPlaying
   },
   [GameKey.Wavelength]: {
     id: GameKey.Wavelength,
@@ -109,7 +103,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4+',
     description: 'Настройся на одну частоту',
     minPlayers: 2,
-    setupStatus: 'wavelength_playing'
+    setupStatus: GameStatus.WavelengthPlaying
   },
   [GameKey.Codenames]: {
     id: GameKey.Codenames,
@@ -121,7 +115,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4+',
     description: 'Битва двух команд шпионов',
     minPlayers: 4,
-    setupStatus: 'codenames_playing',
+    setupStatus: GameStatus.CodenamesPlaying,
     modes: [
       { id: 'classic', name: 'Классика', description: '9 своих, 8 чужих, 1 убийца', icon: Target },
       { id: 'deep_cover', name: 'Глубокое прикрытие', description: '8 своих, 8 чужих, 2 убийцы', icon: ShieldIcon },
@@ -138,7 +132,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4+',
     description: 'Шифруй свои, перехватывай чужие',
     minPlayers: 4,
-    setupStatus: 'decrypto_playing',
+    setupStatus: GameStatus.DecryptoPlaying,
     modes: [
       { id: 'classic', name: 'Классика', description: '4 слова, код из 3 цифр', icon: Key },
       { id: 'extended_5', name: 'Широкий код', description: '5 слов, код из 3 цифр', icon: Target },
@@ -155,11 +149,10 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '6–12',
     description: 'Город засыпает...',
     minPlayers: 6,
-    setupStatus: 'mafia_playing'
+    setupStatus: GameStatus.MafiaPlaying
   }
 } as const;
 
 export { 
-  SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame,
-  RoleDistribution, FakeArtistDistribution, ResistanceDistribution, FakeArtistVoting
+  SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame
 };
