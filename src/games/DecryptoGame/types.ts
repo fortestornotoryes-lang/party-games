@@ -9,3 +9,21 @@ export enum DecryptoPhase {
   Reveal          = 'reveal',
   GameOver        = 'game_over',
 }
+
+export type TeamColor = 'red' | 'blue';
+
+export interface RoundData {
+  code: number[];
+  clues: string[];
+  interceptionGuess: number[] | null;
+  teamGuess: number[];
+}
+
+export interface TeamState {
+  words: string[];
+  players: string[];
+  interceptions: number;
+  fails: number;
+  history: RoundData[];
+  captainIndex: number;
+}
