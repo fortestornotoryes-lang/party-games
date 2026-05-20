@@ -126,6 +126,8 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         const { roundTime } = ALIAS_DIFFICULTY_CONFIG[d as AliasDifficulty];
         return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
       }
+      case GameKey.TruthOrDare:
+        return remaining !== undefined ? `${remaining} карт` : undefined;
       case GameKey.FakeArtist:
       case GameKey.Wavelength:
       case GameKey.JustOne:

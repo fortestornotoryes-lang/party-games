@@ -11,7 +11,8 @@ export enum GameKey {
     Wavelength = 'wavelength',
     Codenames = 'codenames',
     Decrypto = 'decrypto',
-    Mafia = 'mafia'
+    Mafia = 'mafia',
+    TruthOrDare = 'truth_or_dare'
 }
 
 export interface InstructionItem {

@@ -1,226 +1,388 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Save, Plus, Trash2, Settings as SettingsIcon, Database, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, RefreshCw, Database } from 'lucide-react';
 import { storageService, GameSettings } from '../services/storageService';
 import { feedbackService } from '../services/feedbackService';
 import { GameKey } from '../types/games';
-import { PrimaryButton, GameCard, SectionLabel, IconButton, TextInput, PageWrapper, Typography, TabButton } from './UI';
+import { Difficulty } from '../types';
+import { SectionLabel, IconButton, TextInput, PageWrapper, Typography, TabButton } from './UI';
 
 interface SettingsProps {
   onBack: () => void;
 }
 
+// ─── game meta ────────────────────────────────────────────────────────────────
+
+const ALL_WORD_GAMES = [
+  { id: GameKey.JustOne,       short: 'Just One',   activeCls: 'bg-premium-yellow/10 border-premium-yellow/30 text-premium-yellow' },
+  { id: GameKey.Alias,         short: 'Alias',       activeCls: 'bg-premium-blue/10   border-premium-blue/30   text-premium-blue'   },
+  { id: GameKey.Telestrations, short: 'Telest.',     activeCls: 'bg-premium-orange/10 border-premium-orange/30 text-premium-orange' },
+  { id: GameKey.Codenames,     short: 'Codenames',   activeCls: 'bg-premium-green/10  border-premium-green/30  text-premium-green'  },
+  { id: GameKey.Decrypto,      short: 'Decrypto',    activeCls: 'bg-premium-purple/10 border-premium-purple/30 text-premium-purple' },
+  { id: GameKey.Spy,           short: 'Spy Hunt',    activeCls: 'bg-premium-red/10    border-premium-red/30    text-premium-red'    },
+  { id: GameKey.FakeArtist,    short: 'Fake Art.',   activeCls: 'bg-premium-green/10  border-premium-green/30  text-premium-green'  },
+  { id: GameKey.Wavelength,    short: 'Wavelength',  activeCls: 'bg-premium-purple/10 border-premium-purple/30 text-premium-purple' },
+  { id: GameKey.TruthOrDare,   short: 'П/Действие',  activeCls: 'bg-premium-red/10    border-premium-red/30    text-premium-red'    },
+] as const;
+
+// Games where a single word makes sense across multiple (can cross-add)
+const CROSS_ADD_IDS = new Set<GameKey>([
+  GameKey.JustOne, GameKey.Alias, GameKey.Telestrations, GameKey.Codenames, GameKey.Decrypto,
+]);
+
+const DIFFICULTIES: { id: Difficulty; label: string }[] = [
+  { id: 'easy',   label: 'Легко' },
+  { id: 'medium', label: 'Норма' },
+  { id: 'hard',   label: 'Профи' },
+];
+
+function getPlaceholder(gameId: GameKey): string {
+  switch (gameId) {
+    case GameKey.TruthOrDare: return 'Вопрос или задание...';
+    case GameKey.Spy:         return 'Название локации...';
+    case GameKey.FakeArtist:  return 'Тема для рисунка...';
+    case GameKey.Wavelength:  return 'Горячее — Холодное';
+    default:                  return 'Своё слово...';
+  }
+}
+
+function todKey(type: 'truth' | 'dare', diff: Difficulty) {
+  return `tod_${type}_${diff}`;
+}
+
+// ─── component ────────────────────────────────────────────────────────────────
+
 export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'words'>('general');
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
+
+  // Words tab state
   const [selectedGame, setSelectedGame] = useState<GameKey>(GameKey.JustOne);
+  const [todType, setTodType] = useState<'truth' | 'dare'>('truth');
+  const [todDiff, setTodDiff] = useState<Difficulty>('medium');
+  const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set());
   const [newWord, setNewWord] = useState('');
-  const [customWords, setCustomWords] = useState<string[]>(storageService.getCustomWords(selectedGame));
-  const [usedWordsCount, setUsedWordsCount] = useState(storageService.getUsedWords(selectedGame).length);
+  const [customWords, setCustomWords] = useState<string[]>([]);
+  const [usedCount, setUsedCount] = useState(0);
+
+  const isTod = selectedGame === GameKey.TruthOrDare;
+  const isCrossAdd = CROSS_ADD_IDS.has(selectedGame);
+
+  const loadData = useCallback(() => {
+    const words = isTod
+      ? storageService.getCustomWordsByKey(todKey(todType, todDiff))
+      : storageService.getCustomWords(selectedGame);
+    setCustomWords(words);
+    setUsedCount(storageService.getUsedWords(selectedGame).length);
+  }, [selectedGame, todType, todDiff, isTod]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  // ── handlers ──
 
   const toggleSetting = (key: keyof GameSettings) => {
-    const newValue = !settings[key];
-    const newSettings = { ...settings, [key]: newValue };
-    setSettings(newSettings);
-    storageService.saveSettings(newSettings);
-    
+    const next = { ...settings, [key]: !settings[key] };
+    setSettings(next);
+    storageService.saveSettings(next);
     if (key === 'vibration') feedbackService.vibrate(20);
     if (key === 'sounds') feedbackService.playSound('click');
   };
 
-  const SettingToggle = ({ label, value, onToggle, description }: { label: string, value: boolean, onToggle: () => void, description: string }) => (
+  const handleGameChange = (id: GameKey) => {
+    setSelectedGame(id);
+    setAlsoAdd(new Set());
+    setNewWord('');
+  };
+
+  const toggleAlsoAdd = (id: GameKey) => {
+    setAlsoAdd(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const handleAdd = () => {
+    const word = newWord.trim();
+    if (!word) return;
+
+    if (isTod) {
+      storageService.addCustomWordByKey(todKey(todType, todDiff), word);
+    } else {
+      storageService.addCustomWord(selectedGame, word);
+      alsoAdd.forEach(id => storageService.addCustomWord(id, word));
+    }
+
+    setNewWord('');
+    loadData();
+  };
+
+  const handleRemove = (word: string) => {
+    if (isTod) {
+      storageService.removeCustomWordByKey(todKey(todType, todDiff), word);
+    } else {
+      storageService.removeCustomWord(selectedGame, word);
+    }
+    loadData();
+  };
+
+  const handleReset = () => {
+    if (!confirm('Сбросить прогресс для этой игры?')) return;
+    storageService.resetUsedWords(selectedGame);
+    setUsedCount(0);
+  };
+
+  // ── sub-components ──
+
+  const SettingToggle = ({
+    label, description, value, onToggle,
+  }: { label: string; description: string; value: boolean; onToggle: () => void }) => (
     <div className="flex items-center justify-between py-2">
       <div>
-        <p className="text-sm font-bold">{label}</p>
-        <p className="text-[10px] text-gray-500 uppercase font-black">{description}</p>
+        <p className="text-sm font-bold text-white/80">{label}</p>
+        <p className="text-[10px] text-white/25 uppercase font-black tracking-widest">{description}</p>
       </div>
-      <button 
+      <button
         onClick={onToggle}
         className={`w-12 h-6 rounded-full p-1 transition-colors ${value ? 'bg-premium-green' : 'bg-white/10'}`}
       >
-        <motion.div 
-          animate={{ x: value ? 24 : 0 }}
-          className="w-4 h-4 bg-white rounded-full shadow-lg" 
-        />
+        <motion.div animate={{ x: value ? 24 : 0 }} className="w-4 h-4 bg-white rounded-full shadow-lg" />
       </button>
     </div>
   );
 
-  const games: { id: GameKey; name: string }[] = [
-    { id: GameKey.JustOne, name: 'Просто Слово' },
-    { id: GameKey.Spy, name: 'Найди Шпиона' },
-    { id: GameKey.Alias, name: 'Алиас' },
-    { id: GameKey.FakeArtist, name: 'Арт-Обман' },
-  ];
-
-  const handleAddWord = () => {
-    if (newWord.trim()) {
-      storageService.addCustomWord(selectedGame, newWord.trim());
-      setCustomWords(storageService.getCustomWords(selectedGame));
-      setNewWord('');
-    }
-  };
-
-  const handleRemoveWord = (word: string) => {
-    storageService.removeCustomWord(selectedGame, word);
-    setCustomWords(storageService.getCustomWords(selectedGame));
-  };
-
-  const handleResetUsed = () => {
-    if (confirm('Вы уверены, что хотите сбросить список пройденных слов для этой игры?')) {
-      storageService.resetUsedWords(selectedGame);
-      setUsedWordsCount(0);
-    }
-  };
-
-  const handleGameChange = (gameId: GameKey) => {
-    setSelectedGame(gameId);
-    setCustomWords(storageService.getCustomWords(gameId));
-    setUsedWordsCount(storageService.getUsedWords(gameId).length);
-  };
+  // ── render ──
 
   return (
     <PageWrapper>
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <IconButton icon={ArrowLeft} onClick={onBack} />
         <Typography.Heading>Настройки</Typography.Heading>
         <div className="w-12" />
       </div>
 
+      {/* Tabs */}
       <div className="flex bg-white/5 p-1 rounded-2xl mb-8">
-        <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')}>
-          Общие
-        </TabButton>
-        <TabButton active={activeTab === 'words'} onClick={() => setActiveTab('words')}>
-          Слова
-        </TabButton>
+        <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')}>Общие</TabButton>
+        <TabButton active={activeTab === 'words'}   onClick={() => setActiveTab('words')}>Слова</TabButton>
       </div>
 
       <AnimatePresence mode="wait">
+
+        {/* ── GENERAL TAB ── */}
         {activeTab === 'general' && (
-          <motion.div 
+          <motion.div
             key="general"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            <GameCard title="Эффекты и Отклик">
-              <div className="space-y-4 divide-y divide-white/5">
-                <SettingToggle 
-                  label="Визуальные эффекты"
-                  description="Конфетти и анимации"
-                  value={!!settings.visualEffects} 
-                  onToggle={() => toggleSetting('visualEffects')} 
-                />
-                <SettingToggle 
-                  label="Вибрация"
-                  description="Тактильный отклик"
-                  value={!!settings.vibration} 
-                  onToggle={() => toggleSetting('vibration')} 
-                />
-                <SettingToggle 
-                  label="Звуки"
-                  description="Звуковые эффекты"
-                  value={!!settings.sounds} 
-                  onToggle={() => toggleSetting('sounds')} 
-                />
+            <div className="glass-card rounded-[24px] p-6 border border-white/5 space-y-1">
+              <SectionLabel className="mb-5">Эффекты и отклик</SectionLabel>
+              <div className="divide-y divide-white/5">
+                <SettingToggle label="Визуальные эффекты" description="Конфетти и анимации"  value={!!settings.visualEffects} onToggle={() => toggleSetting('visualEffects')} />
+                <SettingToggle label="Вибрация"           description="Тактильный отклик"     value={!!settings.vibration}     onToggle={() => toggleSetting('vibration')} />
+                <SettingToggle label="Звуки"              description="Звуковые эффекты"       value={!!settings.sounds}        onToggle={() => toggleSetting('sounds')} />
               </div>
-            </GameCard>
+            </div>
 
-            <GameCard title="Хранилище">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-premium-green/10 rounded-xl flex items-center justify-center border border-premium-green/20">
-                    <Database className="w-5 h-5 text-premium-green" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">LocalStorage</p>
-                    <SectionLabel>Статус: Активно</SectionLabel>
-                  </div>
+            <div className="glass-card rounded-[24px] p-6 border border-white/5">
+              <SectionLabel className="mb-4">Хранилище</SectionLabel>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-premium-green/10 rounded-xl flex items-center justify-center border border-premium-green/20">
+                  <Database className="w-5 h-5 text-premium-green" />
                 </div>
-                <Typography.Description>
-                  Ваши данные (игроки, пройденные слова, кастомные слова) сохраняются локально в браузере.
-                </Typography.Description>
+                <div>
+                  <p className="text-sm font-bold text-white/80">LocalStorage</p>
+                  <p className="text-[10px] text-premium-green font-black uppercase tracking-widest">Активно</p>
+                </div>
               </div>
-            </GameCard>
+              <p className="text-xs text-white/30 leading-relaxed">
+                Игроки, пройденные вопросы и свои слова хранятся локально в браузере.
+              </p>
+            </div>
 
-            <GameCard title="Информация">
-              <Typography.Description>
-                Версия 1.1.0-beta<br/>
-                <span className="text-gray-400">С любовью для вечеринок 🍻</span>
-              </Typography.Description>
-            </GameCard>
+            <div className="glass-card rounded-[24px] p-6 border border-white/5">
+              <SectionLabel className="mb-2">О приложении</SectionLabel>
+              <p className="text-xs text-white/30 leading-relaxed">Версия 1.1.0-beta · С любовью для вечеринок</p>
+            </div>
           </motion.div>
         )}
 
+        {/* ── WORDS TAB ── */}
         {activeTab === 'words' && (
-          <motion.div 
+          <motion.div
             key="words"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-              {games.map(game => (
-                <button
-                  key={game.id}
-                  onClick={() => handleGameChange(game.id)}
-                  className={`shrink-0 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${selectedGame === game.id ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-gray-600'}`}
-                >
-                  {game.name}
-                </button>
-              ))}
+            {/* 1. Game selector */}
+            <div>
+              <SectionLabel>Игра</SectionLabel>
+              <div className="flex gap-2 overflow-x-auto pb-2 -mx-6 px-6" style={{ scrollbarWidth: 'none' }}>
+                {ALL_WORD_GAMES.map(game => (
+                  <button
+                    key={game.id}
+                    onClick={() => handleGameChange(game.id)}
+                    className={`shrink-0 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                      selectedGame === game.id ? game.activeCls : 'border-white/8 text-white/25'
+                    }`}
+                  >
+                    {game.short}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <SectionLabel>Сброс прогресса</SectionLabel>
-                <button 
-                  onClick={handleResetUsed}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 text-red-500 rounded-lg text-[10px] font-black uppercase tracking-widest border border-red-500/20 active:scale-95 transition-transform"
+            {/* 2. TruthOrDare — type + difficulty selectors */}
+            {isTod && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-3"
+              >
+                {/* Type */}
+                <div className="grid grid-cols-2 gap-2">
+                  {(['truth', 'dare'] as const).map(t => (
+                    <button
+                      key={t}
+                      onClick={() => setTodType(t)}
+                      className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        todType === t
+                          ? t === 'truth'
+                            ? 'bg-premium-sky/10 border-premium-sky/30 text-premium-sky'
+                            : 'bg-premium-red/10 border-premium-red/30 text-premium-red'
+                          : 'border-white/8 text-white/20'
+                      }`}
+                    >
+                      {t === 'truth' ? 'Правда' : 'Действие'}
+                    </button>
+                  ))}
+                </div>
+                {/* Difficulty */}
+                <div className="grid grid-cols-3 gap-2">
+                  {DIFFICULTIES.map(d => (
+                    <button
+                      key={d.id}
+                      onClick={() => setTodDiff(d.id)}
+                      className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        todDiff === d.id
+                          ? d.id === 'easy'   ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
+                          : d.id === 'medium' ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
+                                              : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
+                          : 'border-white/8 text-white/20'
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* 3. Progress */}
+            <div className="flex items-center justify-between py-1">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-0.5">Прогресс</p>
+                <p className="text-[11px] text-white/20 font-medium">
+                  {usedCount > 0 ? `${usedCount} пройдено` : 'Нет пройденных'}
+                </p>
+              </div>
+              {usedCount > 0 && (
+                <button
+                  onClick={handleReset}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-premium-red/10 text-premium-red rounded-xl text-[9px] font-black uppercase tracking-widest border border-premium-red/20 active:scale-95 transition-transform"
                 >
                   <RefreshCw className="w-3 h-3" />
-                  Очистить ({usedWordsCount})
+                  Сброс
+                </button>
+              )}
+            </div>
+
+            {/* 4. Add form */}
+            <div className="space-y-3">
+              <SectionLabel>Добавить</SectionLabel>
+
+              <div className="flex gap-2">
+                <TextInput
+                  value={newWord}
+                  onChange={e => setNewWord(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleAdd()}
+                  placeholder={getPlaceholder(selectedGame)}
+                  className="flex-1"
+                />
+                <button
+                  onClick={handleAdd}
+                  disabled={!newWord.trim()}
+                  className="shrink-0 w-12 rounded-2xl bg-premium-green text-black flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all"
+                >
+                  <Plus className="w-5 h-5" />
                 </button>
               </div>
-              
-              <div className="bg-white/5 border border-white/10 rounded-3xl p-4 space-y-4">
-                <div className="flex gap-2">
-                  <TextInput 
-                    value={newWord}
-                    onChange={(e) => setNewWord(e.target.value)}
-                    placeholder="Добавить свое слово..."
-                  />
-                  <IconButton
-                    variant="filled"
-                    icon={Plus}
-                    onClick={handleAddWord}
-                    className="w-14 h-14 shrink-0 rounded-2xl bg-premium-green text-black"
-                  />
-                </div>
 
-                <div className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                  {customWords.length === 0 ? (
-                    <Typography.Description className="text-center py-8 italic">Нет добавленных слов</Typography.Description>
-                  ) : (
-                    customWords.map(word => (
-                      <div key={word} className="flex items-center justify-between bg-white/[0.02] p-3 rounded-2xl border border-white/5">
-                        <span className="text-sm font-medium">{word}</span>
-                        <IconButton 
-                          icon={Trash2}
-                          onClick={() => handleRemoveWord(word)}
-                          className="p-2 bg-transparent text-gray-600 hover:text-red-400"
-                        />
-                      </div>
-                    ))
-                  )}
+              {/* Cross-add chips — only for word-type games */}
+              {isCrossAdd && (
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.35em] text-white/20 mb-2">
+                    Также добавить в:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {ALL_WORD_GAMES.filter(g => CROSS_ADD_IDS.has(g.id) && g.id !== selectedGame).map(game => (
+                      <button
+                        key={game.id}
+                        onClick={() => toggleAlsoAdd(game.id)}
+                        className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                          alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
+                        }`}
+                      >
+                        {game.short}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* 5. Custom words list */}
+            <div>
+              <SectionLabel>
+                {isTod
+                  ? `Свои ${todType === 'truth' ? 'правды' : 'действия'} · ${DIFFICULTIES.find(d => d.id === todDiff)?.label}`
+                  : 'Свои слова'
+                }
+              </SectionLabel>
+
+              {customWords.length === 0 ? (
+                <p className="text-[11px] text-white/15 font-medium text-center py-10 italic">
+                  Ничего не добавлено
+                </p>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {customWords.map(word => (
+                    <div
+                      key={word}
+                      className="flex items-center justify-between bg-white/[0.02] px-4 py-3 rounded-2xl border border-white/5"
+                    >
+                      <span className="text-sm font-medium text-white/60 leading-snug flex-1 mr-3">{word}</span>
+                      <button
+                        onClick={() => handleRemove(word)}
+                        className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         )}
+
       </AnimatePresence>
     </PageWrapper>
   );

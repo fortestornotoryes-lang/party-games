@@ -4,6 +4,7 @@ const STORAGE_KEYS = {
   PLAYERS: 'party_app_players',
   USED_WORDS: 'party_app_used_words',
   CUSTOM_WORDS: 'party_app_custom_words',
+  CUSTOM_KEYED: 'party_app_custom_keyed',
   SETTINGS: 'party_app_settings',
   HISTORY: 'party_app_history'
 };
@@ -71,6 +72,30 @@ export const storageService = {
     if (custom[gameId]) {
       custom[gameId] = custom[gameId].filter((w: string) => w !== word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
+    }
+  },
+
+  // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
+  getCustomWordsByKey: (key: string): string[] => {
+    const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED);
+    const store: Record<string, string[]> = data ? JSON.parse(data) : {};
+    return store[key] || [];
+  },
+  addCustomWordByKey: (key: string, word: string) => {
+    const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED);
+    const store: Record<string, string[]> = data ? JSON.parse(data) : {};
+    if (!store[key]) store[key] = [];
+    if (!store[key].includes(word)) {
+      store[key].push(word);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
+    }
+  },
+  removeCustomWordByKey: (key: string, word: string) => {
+    const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED);
+    const store: Record<string, string[]> = data ? JSON.parse(data) : {};
+    if (store[key]) {
+      store[key] = store[key].filter(w => w !== word);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
     }
   },
 

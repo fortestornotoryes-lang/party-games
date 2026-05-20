@@ -44,12 +44,12 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 
       <div className="flex items-center gap-2">
         {extraActions}
-        <PrimaryButton
+        <button
           onClick={onBack}
-          className="w-11 h-11 rounded-premium-sm bg-white/6 border border-white/8 text-white/50 flex items-center justify-center active:scale-90 transition-all hover:bg-white/[0.10] hover:text-white/80"
+          className="w-12 h-12 rounded-premium-sm bg-white/6 border border-white/8 text-white/50 flex items-center justify-center active:scale-90 transition-all hover:bg-white/[0.10] hover:text-white/80"
         >
-          <Home className="w-4.5 h-4.5" />
-        </PrimaryButton>
+          <Home className="w-8 h-8" />
+        </button>
       </div>
     </div>
   );

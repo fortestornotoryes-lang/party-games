@@ -23,6 +23,7 @@ import {
   ResistanceGame,
   SpyHuntGame,
   TelestrationsGame,
+  TruthOrDareGame,
   WavelengthGame
 } from './registry/GameRegistry';
 import {GAME_INSTRUCTIONS} from './constants/instructions';
@@ -70,6 +71,7 @@ function AppContent() {
             case GameStatus.CodenamesPlaying: return <CodenamesGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.DecryptoPlaying: return <DecryptoGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.MafiaPlaying: return <MafiaGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.TruthOrDarePlaying: return <TruthOrDareGame playerNames={playerNames} onBack={reset} />;
 
             case GameStatus.Playing: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;

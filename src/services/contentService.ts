@@ -8,6 +8,7 @@ import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntCont
 import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../constants/telestrationsContent';
 import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesContent';
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
+import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '../constants/truthOrDareContent';
 import { storageService } from './storageService';
 
 export const contentService = {
@@ -162,6 +163,23 @@ export const contentService = {
     return location;
   },
 
+  getTruthOrDareQuestion(type: 'truth' | 'dare', difficulty: Difficulty): string {
+    const staticPool = type === 'truth' ? TRUTHS_BY_DIFFICULTY[difficulty] : DARES_BY_DIFFICULTY[difficulty];
+    const custom = storageService.getCustomWordsByKey(`tod_${type}_${difficulty}`);
+    const used = storageService.getUsedWords(GameKey.TruthOrDare);
+    const all = [...staticPool, ...custom];
+
+    let available = all.filter(q => !used.includes(q));
+    if (available.length === 0) {
+      storageService.resetUsedWords(GameKey.TruthOrDare);
+      available = all;
+    }
+
+    const question = available[Math.floor(Math.random() * available.length)];
+    storageService.markWordAsUsed(GameKey.TruthOrDare, question);
+    return question;
+  },
+
   getWordStats(gameId: GameKey, difficulty: Difficulty): { total: number; remaining: number } {
     const used = storageService.getUsedWords(gameId);
     const custom = storageService.getCustomWords(gameId);
@@ -207,6 +225,13 @@ export const contentService = {
       case GameKey.Decrypto: {
         const all = [...(DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium), ...custom];
         return { total: all.length, remaining: all.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.TruthOrDare: {
+        const truths = [...TRUTHS_BY_DIFFICULTY[difficulty], ...storageService.getCustomWordsByKey(`tod_truth_${difficulty}`)];
+        const dares = [...DARES_BY_DIFFICULTY[difficulty], ...storageService.getCustomWordsByKey(`tod_dare_${difficulty}`)];
+        const all = [...truths, ...dares];
+        const used = storageService.getUsedWords(GameKey.TruthOrDare);
+        return { total: all.length, remaining: all.filter(q => !used.includes(q)).length };
       }
       default:
         return { total: 0, remaining: 0 };

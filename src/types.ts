@@ -42,7 +42,8 @@ export enum GameStatus {
   DecryptoSetup = 'decrypto_setup',
   DecryptoPlaying = 'decrypto_playing',
   MafiaSetup = 'mafia_setup',
-  MafiaPlaying = 'mafia_playing'
+  MafiaPlaying = 'mafia_playing',
+  TruthOrDarePlaying = 'truth_or_dare_playing'
 }
 
 export type Difficulty = 'easy' | 'medium' | 'hard';

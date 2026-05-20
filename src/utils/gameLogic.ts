@@ -80,32 +80,3 @@ export const initResistance = (playerNames: string[]) => {
   return { players };
 };
 
-export const initAlias = (playerNames: string[]) => {
-  const shuffled = shuffle(playerNames);
-  const mid = Math.ceil(shuffled.length / 2);
-  return {
-    teams: [
-      { name: 'Красные', players: shuffled.slice(0, mid), score: 0 },
-      { name: 'Синие', players: shuffled.slice(mid), score: 0 },
-    ]
-  };
-};
-
-export const initJustOne = (playerNames: string[]) => {
-  return { guesserIndex: 0, score: 0, totalRounds: 0 };
-};
-
-export const initTelestrations = (playerNames: string[]) => {
-  return { shuffledPlayers: shuffle(playerNames), currentRound: 0 };
-};
-
-export const initWavelength = (playerNames: string[]) => {
-  const shuffled = shuffle(playerNames);
-  const mid = Math.ceil(shuffled.length / 2);
-  return {
-    teams: [
-      { name: 'Красные', color: 'red', players: shuffled.slice(0, mid), score: 0 },
-      { name: 'Синие', color: 'blue', players: shuffled.slice(mid), score: 0 },
-    ]
-  };
-};
