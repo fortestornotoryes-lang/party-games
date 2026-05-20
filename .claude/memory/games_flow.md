@@ -31,6 +31,7 @@ App.tsx оборачивает `renderGame()` в `<Suspense fallback={...}>`.
 | alias | `GameStatus.AliasPlaying` | **blue** | `border-premium-blue/50 text-premium-blue` |
 | just_one | `GameStatus.JustOnePlaying` | yellow | `border-premium-yellow/30 text-premium-yellow` |
 | telestrations | `GameStatus.TelestrationsPlaying` | orange | `border-premium-orange/30 text-premium-orange` |
+| truth_or_dare | *(добавить)* | red | `border-premium-red/30 text-premium-red` |
 | wavelength | `GameStatus.WavelengthPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
 | codenames | `GameStatus.CodenamesPlaying` | green | `border-premium-green/30 text-premium-green` |
 | decrypto | `GameStatus.DecryptoPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
@@ -50,7 +51,7 @@ setStatus(config.setupStatus);  // GameStatus enum из GameRegistry
 ```ts
 case 'alias_playing':      → <AliasGame>
 case 'just_one_playing':   → <JustOneGame>
-case 'telestrations_playing': → <TelestrationsGame initialDifficulty={difficulty} initialRounds={rounds}>
+case 'telestrations_playing': → <TelestrationsGame initialDifficulty={difficulty}>
 case 'wavelength_playing': → <WavelengthGame>
 case 'codenames_playing':  → <CodenamesGame>
 case 'decrypto_playing':   → <DecryptoGame>
@@ -84,3 +85,18 @@ default:                   → <MainMenu> + Settings-кнопка (fixed bottom-
 - `TelestrationsPhase` в `src/games/TelestrationsGame/types.ts`
 
 Не использовать строковые литералы для внутренних фаз — только enum. [[phase-enum-pattern]]
+
+---
+
+## Telestrations — особенности (2026-05-20)
+
+Раунды (selectedRounds / initialRounds) **полностью удалены** — игра всегда идёт ровно один круг (каждый игрок делает один ход). Причина: второй круг возвращается к игроку, знающему исходное слово — это ломает механику.
+
+Что удалено:
+- Проп `initialRounds` из `TelestrationsGame`
+- Стейт `selectedRounds` из `TelestrationsGame`
+- Блок "Раунды цепочки" из `TelestrationsSetup`
+- Блок `currentGameId === GameKey.Telestrations && setRounds` из `UniversalGameSettings`
+- `initialRounds={rounds}` из `App.tsx`
+
+Конец игры: `currentRound === shuffledPlayers.length - 1` (одна полная цепочка).

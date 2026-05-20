@@ -199,22 +199,8 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         />
       )}
 
-      {currentGameId === GameKey.Telestrations && setRounds && (
-        <SettingRow
-          label="Раунды цепочки"
-          icon={Shield}
-          color="orange"
-          value={rounds ?? 1}
-          onChange={setRounds}
-          options={[
-            { value: 1, label: '1 КР.', color: 'orange' },
-            { value: 2, label: '2 КР.', color: 'orange' },
-            { value: 3, label: '3 КР.', color: 'orange' },
-          ]}
-        />
-      )}
 
-      {currentGameId === 'fake_artist' && setTimerSeconds && (
+{currentGameId === 'fake_artist' && setTimerSeconds && (
         <SettingRow
           label="Таймер хода"
           icon={Zap}
