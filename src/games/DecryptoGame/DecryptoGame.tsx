@@ -6,6 +6,7 @@ import { PrimaryButton } from '../../components/UI';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { DecryptoPhase } from './types';
 
 interface DecryptoGameProps {
     playerNames: string[];
@@ -29,17 +30,6 @@ interface TeamState {
     history: RoundData[];
     captainIndex: number;
 }
-
-type Phase =
-    | 'setup'
-    | 'pass_captain'
-    | 'captain_clues'
-    | 'pass_enemy'
-    | 'enemy_intercept'
-    | 'pass_team'
-    | 'team_guess'
-    | 'reveal'
-    | 'game_over';
 
 // ─── style helpers ────────────────────────────────────────────────────────────
 
@@ -164,7 +154,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     const { difficulty, mode } = useGameSettings();
     const wordCount = mode === 'extended_5' ? 5 : mode === 'extended_6' ? 6 : 4;
 
-    const [phase, setPhase] = useState<Phase>('setup');
+    const [phase, setPhase] = useState<DecryptoPhase>(DecryptoPhase.Setup);
     const [round, setRound] = useState(1);
     const [activeTeam, setActiveTeam] = useState<TeamColor>('red');
 
@@ -197,7 +187,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
         setBlueState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: bluePlayers, interceptions: 0, fails: 0, history: [], captainIndex: Math.floor(Math.random() * bluePlayers.length) });
         setRound(1);
         setActiveTeam('red');
-        setPhase('setup');
+        setPhase(DecryptoPhase.Setup);
         setWinner(null);
     };
 
@@ -206,7 +196,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
         setClues(['', '', '']);
         setInterceptGuess(['', '', '']);
         setTeamGuess(['', '', '']);
-        setPhase('pass_captain');
+        setPhase(DecryptoPhase.PassCaptain);
     };
 
     const getCaptainName = (team: TeamColor) => {
@@ -217,7 +207,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     const handleCluesSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (clues.some(c => c.trim() === '')) return;
-        setPhase(round > 1 ? 'pass_enemy' : 'pass_team');
+        setPhase(round > 1 ? DecryptoPhase.PassEnemy : DecryptoPhase.PassTeam);
     };
 
     const continueAfterReveal = () => {
@@ -249,7 +239,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
             setRedState(newRed);
             setBlueState(newBlue);
             setWinner(activeTeam === 'red' ? 'blue' : 'red');
-            setPhase('game_over');
+            setPhase(DecryptoPhase.GameOver);
             return;
         }
 
@@ -270,7 +260,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
         setClues(['', '', '']);
         setInterceptGuess(['', '', '']);
         setTeamGuess(['', '', '']);
-        setPhase('pass_captain');
+        setPhase(DecryptoPhase.PassCaptain);
     };
 
     if (!redState || !blueState) return null;
@@ -294,7 +284,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 <AnimatePresence mode="wait">
 
                     {/* ── SETUP ── */}
-                    {phase === 'setup' && (
+                    {phase === DecryptoPhase.Setup && (
                         <motion.div key="setup"
                             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
                             className="space-y-6 flex-1 flex flex-col justify-center"
@@ -316,12 +306,12 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── PASS CAPTAIN ── */}
-                    {phase === 'pass_captain' && (
+                    {phase === DecryptoPhase.PassCaptain && (
                         <PassScreen key="pass_captain"
                             icon={KeyRound} team={activeTeam}
                             subtitle="Остальные не должны видеть экран!"
                             buttonLabel="ПОКАЗАТЬ КОД"
-                            onContinue={() => setPhase('captain_clues')}
+                            onContinue={() => setPhase(DecryptoPhase.CaptainClues)}
                             red={redState} blue={blueState}
                         >
                             <div className="space-y-1">
@@ -339,7 +329,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── CAPTAIN CLUES ── */}
-                    {phase === 'captain_clues' && (
+                    {phase === DecryptoPhase.CaptainClues && (
                         <motion.div key="captain_clues"
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="space-y-6 flex flex-col overflow-auto pb-8 relative h-full"
@@ -391,18 +381,18 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── PASS ENEMY ── */}
-                    {phase === 'pass_enemy' && (
+                    {phase === DecryptoPhase.PassEnemy && (
                         <PassScreen key="pass_enemy"
                             icon={AlertOctagon} team={enemyColor}
                             subtitle="Передайте телефон команде соперника"
                             buttonLabel="ПЕРЕХВАТИТЬ"
-                            onContinue={() => setPhase('enemy_intercept')}
+                            onContinue={() => setPhase(DecryptoPhase.EnemyIntercept)}
                             red={redState} blue={blueState}
                         />
                     )}
 
                     {/* ── ENEMY INTERCEPT ── */}
-                    {phase === 'enemy_intercept' && (
+                    {phase === DecryptoPhase.EnemyIntercept && (
                         <motion.div key="enemy_intercept"
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="space-y-4 flex flex-col h-full overflow-auto"
@@ -433,7 +423,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                                 </div>
                             )}
 
-                            <form onSubmit={(e) => { e.preventDefault(); setPhase('pass_team'); }} className="mt-2 space-y-4 flex-1">
+                            <form onSubmit={(e) => { e.preventDefault(); setPhase(DecryptoPhase.PassTeam); }} className="mt-2 space-y-4 flex-1">
                                 <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите перехваченный код</p>
                                 <CodeInput value={interceptGuess} onChange={setInterceptGuess} max={wordCount} team={enemyColor} />
                                 <PrimaryButton type="submit" variant={enemyColor} className="w-full">
@@ -444,18 +434,18 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── PASS TEAM ── */}
-                    {phase === 'pass_team' && (
+                    {phase === DecryptoPhase.PassTeam && (
                         <PassScreen key="pass_team"
                             icon={Users} team={activeTeam}
                             subtitle="Передайте телефон своей команде"
                             buttonLabel="РАЗГАДАТЬ КОД"
-                            onContinue={() => setPhase('team_guess')}
+                            onContinue={() => setPhase(DecryptoPhase.TeamGuess)}
                             red={redState} blue={blueState}
                         />
                     )}
 
                     {/* ── TEAM GUESS ── */}
-                    {phase === 'team_guess' && (
+                    {phase === DecryptoPhase.TeamGuess && (
                         <motion.div key="team_guess"
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                             className="space-y-4 flex flex-col h-full overflow-auto"
@@ -476,7 +466,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                                 </ul>
                             </div>
 
-                            <form onSubmit={(e) => { e.preventDefault(); setPhase('reveal'); }} className="mt-2 space-y-4 flex-1">
+                            <form onSubmit={(e) => { e.preventDefault(); setPhase(DecryptoPhase.Reveal); }} className="mt-2 space-y-4 flex-1">
                                 <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите ваш код</p>
                                 <CodeInput value={teamGuess} onChange={setTeamGuess} max={wordCount} team={activeTeam} />
                                 <PrimaryButton type="submit" variant={activeTeam} className="w-full">РАЗГАДАТЬ</PrimaryButton>
@@ -485,7 +475,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── REVEAL ── */}
-                    {phase === 'reveal' && (
+                    {phase === DecryptoPhase.Reveal && (
                         <motion.div key="reveal"
                             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                             className="flex-1 flex flex-col items-center justify-center text-center w-full gap-6"
@@ -533,7 +523,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     )}
 
                     {/* ── GAME OVER ── */}
-                    {phase === 'game_over' && (
+                    {phase === DecryptoPhase.GameOver && (
                         <motion.div key="game_over"
                             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                             className="flex-1 flex flex-col items-center justify-center text-center gap-8"

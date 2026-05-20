@@ -3,25 +3,37 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useCallback, Suspense } from 'react';
-import { MainMenu } from './components/MainMenu';
-import { Setup } from './components/Setup';
-import { UniversalGameSettings } from './components/UniversalGameSettings';
-import { Player, GameStatus } from './types';
-import { storageService } from './services/storageService';
-import { Settings } from './components/Settings';
-import { Settings as SettingsIcon } from 'lucide-react';
-import { GameSettingsProvider, useGameSettings } from './contexts/GameSettingsContext';
-import { GAMES_REGISTRY, SpyHuntGame, AliasGame, FakeArtistGame, ResistanceGame, WavelengthGame, TelestrationsGame, JustOneGame, CodenamesGame, DecryptoGame, MafiaGame } from './registry/GameRegistry';
-import { GAME_INSTRUCTIONS } from './constants/instructions';
-import { GameKey } from './types/games';
+import React, {Suspense, useCallback, useState} from 'react';
+import {MainMenu} from './components/MainMenu';
+import {Setup} from './components/Setup';
+import {UniversalGameSettings} from './components/UniversalGameSettings';
+import {GameModeOption, GameStatus, Player} from './types';
+import {storageService} from './services/storageService';
+import {Settings} from './components/Settings';
+import {Settings as SettingsIcon} from 'lucide-react';
+import {GameSettingsProvider, useGameSettings} from './contexts/GameSettingsContext';
+import {
+  AliasGame,
+  CodenamesGame,
+  DecryptoGame,
+  FakeArtistGame,
+  GAMES_REGISTRY,
+  JustOneGame,
+  MafiaGame,
+  ResistanceGame,
+  SpyHuntGame,
+  TelestrationsGame,
+  WavelengthGame
+} from './registry/GameRegistry';
+import {GAME_INSTRUCTIONS} from './constants/instructions';
+import {GameKey} from './types/games';
 
 function AppContent() {
   const { difficulty, mode, rounds, timerSeconds, setDifficulty, setMode, setRounds, setTimerSeconds, currentGameId, setCurrentGameId } = useGameSettings();
-  const [status, setStatus] = useState<GameStatus>('menu');
+  const [status, setStatus] = useState<GameStatus>(GameStatus.Menu);
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const reset = useCallback(() => setStatus('menu'), []);
+  const reset = useCallback(() => setStatus(GameStatus.Menu), []);
 
   React.useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -41,7 +53,7 @@ function AppContent() {
 
   const handleMenuSelect = (gameId: GameKey) => {
     setCurrentGameId(gameId);
-    setStatus('setup');
+    setStatus(GameStatus.Setup);
   };
 
   const renderGame = () => {
@@ -51,19 +63,19 @@ function AppContent() {
       <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white/50 font-black uppercase tracking-widest animate-pulse">Загрузка...</div>}>
         {(() => {
           switch (status) {
-            case 'alias_playing': return <AliasGame playerNames={playerNames} onBack={reset} />;
-            case 'just_one_playing': return <JustOneGame playerNames={playerNames} onBack={reset} />;
-            case 'telestrations_playing': return <TelestrationsGame playerNames={playerNames} onBack={reset} initialDifficulty={difficulty} initialRounds={rounds} />;
-            case 'wavelength_playing': return <WavelengthGame playerNames={playerNames} onBack={reset} />;
-            case 'codenames_playing': return <CodenamesGame playerNames={playerNames} onBack={reset} />;
-            case 'decrypto_playing': return <DecryptoGame playerNames={playerNames} onBack={reset} />;
-            case 'mafia_playing': return <MafiaGame playerNames={playerNames} onBack={reset} />;
-            
-            case 'playing': return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
-            case 'fake_artist_playing': return <FakeArtistGame playerNames={playerNames} onBack={reset} />;
-            case 'resistance_playing': return <ResistanceGame playerNames={playerNames} onBack={reset} />;
-            
-            case 'setup': {
+            case GameStatus.AliasPlaying: return <AliasGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.JustOnePlaying: return <JustOneGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.TelestrationsPlaying: return <TelestrationsGame playerNames={playerNames} onBack={reset} initialDifficulty={difficulty} initialRounds={rounds} />;
+            case GameStatus.WavelengthPlaying: return <WavelengthGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.CodenamesPlaying: return <CodenamesGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.DecryptoPlaying: return <DecryptoGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.MafiaPlaying: return <MafiaGame playerNames={playerNames} onBack={reset} />;
+
+            case GameStatus.Playing: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.ResistancePlaying: return <ResistanceGame playerNames={playerNames} onBack={reset} />;
+
+            case GameStatus.Setup: {
               const config = GAMES_REGISTRY[currentGameId!];
               return (
                 <Setup 
@@ -71,13 +83,13 @@ function AppContent() {
                   onBack={reset} 
                   title={config.title} 
                   subtitle={config.subtitle} 
-                  icon={config.icon} 
-                  themeColor={config.theme} 
-                  playerPlaceholder={config.placeholder} 
+                  icon={config.icon as any}
+                  themeColor={config.theme}
+                  playerPlaceholder={config.placeholder}
                   addPlayerLabel="Добавить"
-                  instructions={GAME_INSTRUCTIONS[currentGameId as GameKey] ?? []}
+                  instructions={(GAME_INSTRUCTIONS[currentGameId as GameKey] ?? []) as { title: string; content: string }[]}
                   description={config.description}
-                  minPlayers={config.minPlayers} 
+                  minPlayers={config.minPlayers}
                 >
                   <UniversalGameSettings 
                     difficulty={difficulty}
@@ -89,17 +101,17 @@ function AppContent() {
                     setRounds={setRounds}
                     timerSeconds={timerSeconds}
                     setTimerSeconds={setTimerSeconds}
-                    modes={config.modes}
+                    modes={config.modes as GameModeOption[]}
                   />
                 </Setup>
               );
             }
-            case 'settings': return <Settings onBack={reset} />;
+            case GameStatus.Settings: return <Settings onBack={reset} />;
             default: return (
               <div className="relative">
                 <MainMenu onSelectGame={handleMenuSelect} />
                 <button
-                  onClick={() => setStatus('settings')}
+                  onClick={() => setStatus(GameStatus.Settings)}
                   className="fixed bottom-6 right-6 w-14 h-14 glass-card rounded-[18px] flex items-center justify-center text-white/30 active:scale-95 transition-all z-50 hover:text-white/60"
                 >
                   <SettingsIcon className="w-5 h-5" />

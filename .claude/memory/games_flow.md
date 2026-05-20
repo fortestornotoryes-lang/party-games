@@ -1,7 +1,7 @@
 ---
 name: games-flow
-description: "Все 10 игр: GameStatus-цепочки, компоненты, GameRegistry-метаданные"
-metadata: 
+description: "Все 10 игр: GameStatus-цепочки, setupStatus, темы, lazy loading, App.tsx routing"
+metadata:
   node_type: memory
   type: project
   originSessionId: d3ec9307-4021-49f9-822a-9589555ac09e
@@ -9,88 +9,78 @@ metadata:
 
 ## GameRegistry паттерн
 
-Все игры регистрируются в `src/registry/GameRegistry.tsx`. Тип `GameMetadata` определён в `src/types/games.ts`:
+Все игры регистрируются в `src/registry/GameRegistry.tsx`. Тип `GameMetadata` определён в `src/types.ts`.
+
+Компоненты игр — **lazy-loaded** через `React.lazy`:
 ```ts
-interface GameMetadata {
-  readonly id: GameKey;       // enum: 'spy'|'fake_artist'|'resistance'|...
-  readonly title: string;
-  readonly subtitle: string;
-  readonly icon: ComponentType<any>;
-  readonly theme: GameTheme;  // 'red'|'sky'|'green'|'blue'|'orange'|'purple'|'yellow'
-  readonly placeholder: string;
-  readonly description?: string;
-  readonly players: string;   // Строка вида "4–7"
-  readonly minPlayers: number;
-  readonly setupStatus: string;
-  readonly modes?: readonly GameMode[];
-}
+const AliasGame = lazy(() => import('../games/AliasGame/AliasGame').then(m => ({ default: m.AliasGame })));
 ```
-Инструкции вынесены отдельно в `src/constants/instructions.ts` как `GAME_INSTRUCTIONS: GameInstructionsMap`.
+App.tsx оборачивает `renderGame()` в `<Suspense fallback={...}>`.
 
-`MainMenu` рендерит `Object.values(GAMES_REGISTRY)`. Порядок в реестре = порядок в меню.
+Инструкции вынесены в `src/constants/instructions.ts` как `GAME_INSTRUCTIONS: GameInstructionsMap`.
 
 ---
 
-## GameStatus → Компонент (App.tsx renderGame)
+## setupStatus и темы (GameRegistry)
 
-| GameStatus | Компонент |
-|-----------|-----------|
-| `setup` | `Setup` → `startGame` → `distributing` |
-| `distributing` | `RoleDistribution` → `playing` |
-| `playing` | `SpyHuntGame` |
-| `alias_playing` | `AliasGame` |
-| `just_one_playing` | `JustOneGame` |
-| `telestrations_playing` | `TelestrationsGame` |
-| `wavelength_playing` | `WavelengthGame` |
-| `codenames_playing` | `CodenamesGame` |
-| `decrypto_playing` | `DecryptoGame` |
-| `mafia_playing` | `MafiaGame` |
-| `fake_artist_distributing` | `FakeArtistDistribution` |
-| `fake_artist_playing` | `FakeArtistGame` |
-| `fake_artist_voting` | `FakeArtistVoting` |
-| `resistance_distributing` | `ResistanceDistribution` |
-| `resistance_playing` | `ResistanceGame` |
+| ID | setupStatus | Тема | GameHeader themeColor |
+|----|-------------|------|----------------------|
+| spy | `GameStatus.Playing` | red | `border-premium-red/30 text-premium-red` |
+| fake_artist | `GameStatus.FakeArtistPlaying` | green | `border-premium-green/30 text-premium-green` |
+| resistance | `GameStatus.ResistancePlaying` | sky | `border-premium-sky/30 text-premium-sky` |
+| alias | `GameStatus.AliasPlaying` | **blue** | `border-premium-blue/50 text-premium-blue` |
+| just_one | `GameStatus.JustOnePlaying` | yellow | `border-premium-yellow/30 text-premium-yellow` |
+| telestrations | `GameStatus.TelestrationsPlaying` | orange | `border-premium-orange/30 text-premium-orange` |
+| wavelength | `GameStatus.WavelengthPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
+| codenames | `GameStatus.CodenamesPlaying` | green | `border-premium-green/30 text-premium-green` |
+| decrypto | `GameStatus.DecryptoPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
+| mafia | `GameStatus.MafiaPlaying` | orange | `border-premium-orange/30 text-premium-orange` |
 
 ---
 
-## Инициализация игроков (App.tsx startGame)
+## App.tsx: startGame и роутинг
 
-```
-spy → initSpyHunt(playerNames, difficulty, mode) → { players, location }
-fake_artist → initFakeArtist(playerNames) → { players }
-resistance → initResistance(playerNames) → { players }
-default → playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false }))
+`startGame(playerNames)` упрощён — никакой `initSpyHunt`/`initFakeArtist`/`initResistance`. Просто:
+```ts
+setPlayers(playerNames.map(name => ({ id: name, name, role: 'Игрок', isSpy: false })));
+setStatus(config.setupStatus);  // GameStatus enum из GameRegistry
 ```
 
+Роутинг в `renderGame()` — switch по `status`:
+```ts
+case 'alias_playing':      → <AliasGame>
+case 'just_one_playing':   → <JustOneGame>
+case 'telestrations_playing': → <TelestrationsGame initialDifficulty={difficulty} initialRounds={rounds}>
+case 'wavelength_playing': → <WavelengthGame>
+case 'codenames_playing':  → <CodenamesGame>
+case 'decrypto_playing':   → <DecryptoGame>
+case 'mafia_playing':      → <MafiaGame>
+case 'playing':            → <SpyHuntGame>
+case 'fake_artist_playing':→ <FakeArtistGame>
+case 'resistance_playing': → <ResistanceGame>
+case 'setup':              → <Setup> + <UniversalGameSettings>
+case 'settings':           → <Settings>
+default:                   → <MainMenu> + Settings-кнопка (fixed bottom-right)
+```
+
+⚠️ App.tsx частично не мигрирован: switch-кейсы используют строки, а не `GameStatus.X`. Это текущие TS-ошибки в проекте. В новом коде вне App.tsx — только `GameStatus.X`.
+
 ---
 
-## Цепочки по играм
+## Инициализация игроков
 
-### SPY HUNT
-`setup → distributing → playing` (onBack: reset)
-
-### FAKE ARTIST
-`setup → fake_artist_distributing → fake_artist_playing → fake_artist_voting` (onFinish передаёт `canvasImage`)
-
-### RESISTANCE
-`setup → resistance_distributing → resistance_playing` (onFinish: reset)
-
-### ALIAS / JUST ONE / TELESTRATIONS / WAVELENGTH / CODENAMES / DECRYPTO / MAFIA
-`setup → <game>_playing` (внутренняя фаза-машина)
+Все игры получают `playerNames: string[]`. Инициализацию ролей каждая игра делает сама:
+- SpyHunt → `contentService.getSpyHuntLocation()` + role assignment в `initSpyHunt()`
+- FakeArtist → `initFakeArtist()` в gameLogic.ts
+- Resistance → `initResistance()` в gameLogic.ts
+- Остальные → слова/контент через contentService, команды — внутри компонента
 
 ---
 
-## Темы игр (GameRegistry)
+## Фазы внутри игр
 
-| ID | Тема | Цвет |
-|----|------|------|
-| spy | red | premium-red |
-| fake_artist | green | premium-green |
-| resistance | sky | premium-sky |
-| alias | orange | premium-orange |
-| wavelength | purple | premium-purple |
-| telestrations | yellow | premium-yellow |
-| just_one | blue | premium-blue |
-| codenames | red | premium-red |
-| decrypto | sky | premium-sky |
-| mafia | purple | premium-purple |
+Внутренние фазы — enum в `./types.ts` рядом с компонентом. Примеры:
+- `AliasPhase` в `src/games/AliasGame/types.ts`
+- `TelestrationsPhase` в `src/games/TelestrationsGame/types.ts`
+
+Не использовать строковые литералы для внутренних фаз — только enum. [[phase-enum-pattern]]

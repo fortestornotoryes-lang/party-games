@@ -116,7 +116,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
         title={GAMES_REGISTRY.alias.title}
         subtitle="Объясни быстрее"
         icon={Brain}
-        themeColor="border-premium-orange/50 text-premium-orange"
+        themeColor="border-premium-blue/50 text-premium-blue"
         onBack={onBack}
       />
 

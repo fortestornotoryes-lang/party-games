@@ -138,6 +138,30 @@ export const contentService = {
     return item;
   },
 
+  getSpyHuntLocation(difficulty: string) {
+    const defaultRoles = ['Агент', 'Специалист', 'Наблюдатель', 'Сотрудник', 'Гость', 'Персонал', 'Охранник'];
+    const diffKey = (difficulty as SpyDifficulty) in LOCATIONS_BY_DIFFICULTY
+      ? difficulty as SpyDifficulty
+      : 'medium';
+
+    const custom = storageService.getCustomWords(GameKey.Spy);
+    const used = storageService.getUsedWords(GameKey.Spy);
+    const all = [
+      ...LOCATIONS_BY_DIFFICULTY[diffKey],
+      ...custom.map(name => ({ name, roles: defaultRoles, difficulty: diffKey })),
+    ];
+
+    let available = all.filter(l => !used.includes(l.name));
+    if (available.length === 0) {
+      storageService.resetUsedWords(GameKey.Spy);
+      available = all;
+    }
+
+    const location = available[Math.floor(Math.random() * available.length)];
+    storageService.markWordAsUsed(GameKey.Spy, location.name);
+    return location;
+  },
+
   getWordStats(gameId: GameKey, difficulty: Difficulty): { total: number; remaining: number } {
     const used = storageService.getUsedWords(gameId);
     const custom = storageService.getCustomWords(gameId);

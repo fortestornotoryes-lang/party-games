@@ -9,6 +9,7 @@ import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
+import { JustOnePhase } from './types';
 
 interface JustOneGameProps { playerNames: string[]; onBack: () => void; }
 
@@ -17,7 +18,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   const [guesserIdx, setGuesserIdx] = useState(0);
   const [word, setWord] = useState('');
   const [hints, setHints] = useState<Record<string, string>>({});
-  const [phase, setPhase] = useState<'pass' | 'hinting' | 'guessing' | 'result'>('pass');
+  const [phase, setPhase] = useState<JustOnePhase>(JustOnePhase.Pass);
   const [guess, setGuess] = useState('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [visibleHints, setVisibleHints] = useState<string[]>([]);
@@ -31,7 +32,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     setHints({});
     setLocalHints({});
     setGuess('');
-    setPhase('pass');
+    setPhase(JustOnePhase.Pass);
   };
 
   const submitHint = (player: string, hint: string) => {
@@ -44,7 +45,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     const vals = Object.values(hints) as string[];
     vals.forEach(h => { counts[h] = (counts[h] || 0) + 1; });
     setVisibleHints(vals.filter(h => counts[h] === 1));
-    setPhase('guessing');
+    setPhase(JustOnePhase.Guessing);
   };
 
   const handleGuess = () => {
@@ -61,7 +62,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
       feedbackService.playSound('error');
       feedbackService.vibrate(100);
     }
-    setPhase('result');
+    setPhase(JustOnePhase.Result);
   };
 
   const guesser = playerNames[guesserIdx];
@@ -82,7 +83,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
         <AnimatePresence mode="wait">
 
           {/* ── PASS ── */}
-          {phase === 'pass' && (
+          {phase === JustOnePhase.Pass && (
             <motion.div
               key="pass"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -104,12 +105,12 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 {guesser}, передай телефон остальным. Только они увидят загаданное слово!
               </div>
 
-              <PrimaryButton onClick={() => setPhase('hinting')}>МЫ ВЗЯЛИ ТЕЛЕФОН</PrimaryButton>
+              <PrimaryButton onClick={() => setPhase(JustOnePhase.Hinting)}>МЫ ВЗЯЛИ ТЕЛЕФОН</PrimaryButton>
             </motion.div>
           )}
 
           {/* ── HINTING ── */}
-          {phase === 'hinting' && (
+          {phase === JustOnePhase.Hinting && (
             <motion.div
               key="hinting"
               initial={{ opacity: 0 }}
@@ -179,7 +180,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
           )}
 
           {/* ── GUESSING ── */}
-          {phase === 'guessing' && (
+          {phase === JustOnePhase.Guessing && (
             <motion.div
               key="guessing"
               initial={{ opacity: 0 }}
@@ -225,7 +226,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
           )}
 
           {/* ── RESULT ── */}
-          {phase === 'result' && (
+          {phase === JustOnePhase.Result && (
             <motion.div
               key="result"
               initial={{ opacity: 0, scale: 0.88 }}

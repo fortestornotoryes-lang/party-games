@@ -1,32 +1,13 @@
 import { Player } from '../types';
 import { GameKey } from '../types/games';
-import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
 import { shuffle } from './random';
 import { storageService } from '../services/storageService';
+import { contentService } from '../services/contentService';
 
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const initSpyHunt = (playerNames: string[], difficulty: string = 'medium', mode: string = 'classic') => {
-  const custom = storageService.getCustomWords(GameKey.Spy);
-  const used = storageService.getUsedWords(GameKey.Spy);
-
-  const defaultRoles = ['Агент', 'Специалист', 'Наблюдатель', 'Сотрудник', 'Гость', 'Персонал', 'Охранник'];
-  const diffKey = (difficulty as SpyDifficulty) in LOCATIONS_BY_DIFFICULTY ? difficulty as SpyDifficulty : 'medium';
-
-  const allLocations = [
-    ...LOCATIONS_BY_DIFFICULTY[diffKey],
-    ...custom.map(name => ({ name, roles: defaultRoles, difficulty: diffKey }))
-  ];
-
-  let available = allLocations.filter(l => !used.includes(l.name));
-  
-  if (available.length === 0) {
-    storageService.resetUsedWords(GameKey.Spy);
-    available = allLocations;
-  }
-
-  const locationObj = available[Math.floor(Math.random() * available.length)];
-  storageService.markWordAsUsed(GameKey.Spy, locationObj.name);
+  const locationObj = contentService.getSpyHuntLocation(difficulty);
 
   // Mode logic
   const indices = Array.from({ length: playerNames.length }, (_, i) => i);

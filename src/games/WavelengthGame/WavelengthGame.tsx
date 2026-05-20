@@ -9,6 +9,7 @@ import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { WavelengthPhase } from './types';
 
 interface WavelengthGameProps {
   playerNames: string[];
@@ -17,7 +18,7 @@ interface WavelengthGameProps {
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onBack }) => {
   const { difficulty } = useGameSettings();
-  const [phase, setPhase] = useState<'pass' | 'clue' | 'guessing' | 'reveal'>('pass');
+  const [phase, setPhase] = useState<WavelengthPhase>(WavelengthPhase.Pass);
   const [currentPair, setCurrentPair] = useState<string[]>(['', '']);
   const [targetValue, setTargetValue] = useState(50);
   const [guessValue, setGuessValue] = useState(50);
@@ -32,7 +33,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
     setCurrentPair(pair);
     setTargetValue(Math.floor(Math.random() * 90) + 5);
     setGuessValue(50);
-    setPhase('pass');
+    setPhase(WavelengthPhase.Pass);
   };
 
   const psychic = playerNames[psychicIdx];
@@ -48,7 +49,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const score = calculateScore();
 
   useEffect(() => {
-    if (phase === 'reveal') {
+    if (phase === WavelengthPhase.Reveal) {
       const settings = storageService.getSettings();
       
       if (score >= 3) {
@@ -85,7 +86,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
       <div className="flex-1 overflow-hidden relative flex flex-col p-6">
         <AnimatePresence mode="wait">
-          {phase === 'pass' && (
+          {phase === WavelengthPhase.Pass && (
             <motion.div key="pass" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center space-y-10 text-center">
                <div className="space-y-4">
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Новый раунд</p>
@@ -95,11 +96,11 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
                <div className="p-8 bg-premium-purple/5 border-2 border-premium-purple/10 rounded-[40px] text-sm text-gray-500 max-w-xs transition-all">
                   {psychic}, возьми телефон! Только ты должен видеть секретную цель. Убедись, что остальные не смотрят.
                </div>
-               <PrimaryButton onClick={() => setPhase('clue')} className="bg-premium-purple">Я ГОТОВ</PrimaryButton>
+               <PrimaryButton onClick={() => setPhase(WavelengthPhase.Clue)} className="bg-premium-purple">Я ГОТОВ</PrimaryButton>
             </motion.div>
           )}
 
-          {phase === 'clue' && (
+          {phase === WavelengthPhase.Clue && (
             <motion.div key="clue" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="h-full flex flex-col space-y-12">
               <div className="text-center space-y-4">
                 <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">Текущий Телепат</div>
@@ -137,13 +138,13 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
                 </div>
               </div>
 
-              <PrimaryButton onClick={() => setPhase('guessing')}>
+              <PrimaryButton onClick={() => setPhase(WavelengthPhase.Guessing)}>
                 Я ДАЛ ПОДСКАЗКУ
               </PrimaryButton>
             </motion.div>
           )}
 
-          {phase === 'guessing' && (
+          {phase === WavelengthPhase.Guessing && (
             <motion.div key="guessing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col space-y-12">
               <div className="text-center space-y-4">
                 <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройте волну!</h3>
@@ -181,13 +182,13 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
                  </GameCard>
               </div>
 
-              <PrimaryButton onClick={() => setPhase('reveal')}>
+              <PrimaryButton onClick={() => setPhase(WavelengthPhase.Reveal)}>
                 ПОДТВЕРДИТЬ ВЫБОР
               </PrimaryButton>
             </motion.div>
           )}
 
-          {phase === 'reveal' && (
+          {phase === WavelengthPhase.Reveal && (
             <motion.div key="reveal" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col space-y-12">
                <div className="text-center">
                   <h2 className="text-6xl font-black italic uppercase italic tracking-tighter mb-2">РЕЗУЛЬТАТ</h2>

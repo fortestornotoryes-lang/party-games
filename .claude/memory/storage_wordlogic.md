@@ -14,25 +14,22 @@ metadata:
 
 Хранилища: `PLAYERS`, `USED_WORDS`, `CUSTOM_WORDS`, `SETTINGS`, `SETTINGS_{gameId}` (game config).
 
-## Паттерн: дублирование логики выбора слов
+## Паттерн: все игры используют contentService
 
-**Не используют contentService — берут слова inline:**
-- `AliasGame.tsx` → `getAvailableWords()` (свой фильтр по difficulty)
-- `JustOneGame.tsx` → `generateNewWord()` (свой фильтр по difficulty)
-- `WavelengthGame.tsx` → `startNewRound()` (свой фильтр по difficulty)
-- `FakeArtistGame/FakeArtistDistribution.tsx` → `useEffect` при mount
-- `TelestrationsGame.tsx` → своя функция
+Все игры делегируют выбор слов/контента в `contentService`. Inline-логика выбора слов в игровых компонентах — антипаттерн, миграция завершена.
 
-**Используют contentService:**
-- `CodenamesGame.tsx` → `contentService.getCodenamesWords(difficulty)`
-- `DecryptoGame.tsx` → `contentService.getDecryptoWords(difficulty)`
+| Игра | Метод contentService |
+|------|---------------------|
+| AliasGame | `getAliasWords(difficulty)` → возвращает filtered array, маркировка через `markWordAsUsed` вручную в игре |
+| JustOneGame | `getJustOneWord(difficulty)` → одно слово, авто-маркировка |
+| WavelengthGame | `getWavelengthPair(difficulty)` → пара строк, авто-маркировка |
+| FakeArtistDistribution | `getFakeArtistWord(difficulty)` → `{word, category}`, авто-маркировка |
+| TelestrationsGame | `getTelestrationsWord(difficulty)` → одно слово, авто-маркировка |
+| CodenamesGame | `getCodenamesWords(difficulty)` → 25 слов, авто-маркировка всех 25 |
+| DecryptoGame | `getDecryptoWords(difficulty, count)` → N слов, авто-маркировка |
+| SpyHuntGame | `getSpyHuntLocation(difficulty)` → `LocationInfo {name, roles}`, авто-маркировка |
 
-**contentService-методы, которые НЕ вызываются (dead code):**
-`getAliasWords`, `getWavelengthPair`, `getFakeArtistWord`, `getSpyHuntLocations`
-
-**Why:** исторически игры писались независимо, contentService не стал единым источником.
-
-**How to apply:** при изменении логики слов для Alias/JustOne/Wavelength/FakeArtist/Telestrations — редактировать inline-код в самой игре, НЕ contentService. При изменении Codenames/Decrypto — редактировать contentService.
+**How to apply:** при изменении логики слов для любой игры — редактировать метод в `contentService.ts`. Не добавлять inline-логику в компоненты.
 
 ## Отображение оставшихся слов в UniversalGameSettings (2026-05-16)
 

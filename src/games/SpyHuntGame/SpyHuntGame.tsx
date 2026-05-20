@@ -12,6 +12,7 @@ import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { RoleDistribution } from './components/RoleDistribution';
 import { initSpyHunt } from '../../utils/gameLogic';
+import { SpyHuntPhase } from './types';
 
 interface GameProps {
   playerNames: string[];
@@ -22,7 +23,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   const { difficulty, mode } = useGameSettings();
   const [players, setPlayers] = useState<Player[]>([]);
   const [location, setLocation] = useState('');
-  const [phase, setPhase] = useState<'distributing' | 'playing' | 'reveal'>('distributing');
+  const [phase, setPhase] = useState<SpyHuntPhase>(SpyHuntPhase.Distributing);
 
   const gameDuration = GAME_DURATION_BY_DIFFICULTY[(difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'] ?? 480;
   const [timeLeft, setTimeLeft] = useState(gameDuration);
@@ -36,13 +37,13 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   }, [playerNames, difficulty, mode]);
 
   useEffect(() => {
-    if (timeLeft <= 0 || phase !== 'playing') return;
+    if (timeLeft <= 0 || phase !== SpyHuntPhase.Playing) return;
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft, phase]);
 
   useEffect(() => {
-    if (phase === 'reveal') {
+    if (phase === SpyHuntPhase.Reveal) {
       const settings = storageService.getSettings();
       feedbackService.playSound('success');
       feedbackService.vibrate([50, 30, 50]);
@@ -66,14 +67,14 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
     <div className="flex flex-col min-h-screen pb-10">
       <GameHeader 
         title={GAMES_REGISTRY.spy.title}
-        subtitle={phase === 'distributing' ? "Раздача ролей" : phase === 'playing' ? "Идет поиск..." : "Результаты"} 
+        subtitle={phase === SpyHuntPhase.Distributing ? "Раздача ролей" : phase === SpyHuntPhase.Playing ? "Идет поиск..." : "Результаты"} 
         icon={Skull} 
         themeColor="border-premium-red/50 text-premium-red"
         onBack={onBack}
       />
 
       <AnimatePresence mode="wait">
-        {phase === 'distributing' ? (
+        {phase === SpyHuntPhase.Distributing ? (
           <motion.div
             key="distributing"
             initial={{ opacity: 0 }}
@@ -84,10 +85,10 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             <RoleDistribution 
               players={players} 
               location={location} 
-              onFinish={() => setPhase('playing')} 
+              onFinish={() => setPhase(SpyHuntPhase.Playing)} 
             />
           </motion.div>
-        ) : phase === 'playing' ? (
+        ) : phase === SpyHuntPhase.Playing ? (
           <motion.div 
             key="playing"
             initial={{ opacity: 0 }}
@@ -151,7 +152,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             </div>
 
             <div className="pt-8">
-              <PrimaryButton onClick={() => setPhase('reveal')} icon={Skull} className="bg-premium-red !text-white shadow-premium-red/30">
+              <PrimaryButton onClick={() => setPhase(SpyHuntPhase.Reveal)} icon={Skull} className="bg-premium-red !text-white shadow-premium-red/30">
                 РАЗОБЛАЧИТЬ
               </PrimaryButton>
             </div>

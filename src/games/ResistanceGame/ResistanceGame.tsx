@@ -9,6 +9,7 @@ import { PrimaryButton, GameCard } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { initResistance } from '../../utils/gameLogic';
+import { ResistancePhase } from './types';
 
 interface ResistanceGameProps {
   playerNames: string[];
@@ -17,7 +18,7 @@ interface ResistanceGameProps {
 
 export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onBack }) => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [phase, setPhase] = useState<'distributing' | 'proposing' | 'missionVoting' | 'missionResult' | 'gameOver'>('distributing');
+  const [phase, setPhase] = useState<ResistancePhase>(ResistancePhase.Distributing);
   const [missionIndex, setMissionIndex] = useState(0);
   const [resistanceScore, setResistanceScore] = useState(0);
   const [spiesScore, setSpiesScore] = useState(0);
@@ -32,7 +33,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
   }, [playerNames]);
 
   useEffect(() => {
-    if (phase === 'gameOver' && winner) {
+    if (phase === ResistancePhase.GameOver && winner) {
       const colors = winner === 'resistance' ? ['#3b82f6', '#ffffff'] : ['#ef4444', '#000000'];
       const duration = 3 * 1000;
       const animationEnd = Date.now() + duration;
@@ -58,11 +59,11 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
 
   if (players.length === 0) return null;
 
-  if (phase === 'distributing') {
+  if (phase === ResistancePhase.Distributing) {
     return (
       <ResistanceDistribution
         players={players}
-        onFinish={() => setPhase('proposing')}
+        onFinish={() => setPhase(ResistancePhase.Proposing)}
       />
     );
   }
@@ -90,12 +91,12 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
           
           if (nextSpiesScore >= 3 || nextResScore >= 3) {
             setWinner(nextSpiesScore >= 3 ? 'spies' : 'resistance');
-            setPhase('gameOver');
+            setPhase(ResistancePhase.GameOver);
           } else {
-            setPhase('missionResult');
+            setPhase(ResistancePhase.MissionResult);
           }
       } else {
-          setPhase('missionVoting');
+          setPhase(ResistancePhase.MissionVoting);
       }
   };
 
@@ -104,7 +105,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
       setLeaderIndex(leaderIndex + 1);
       setSelectedTeam([]);
       setMissionVotes([]);
-      setPhase('proposing');
+      setPhase(ResistancePhase.Proposing);
   };
 
   return (
@@ -138,7 +139,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
           </div>
 
           <AnimatePresence mode="wait">
-            {phase === 'proposing' && (
+            {phase === ResistancePhase.Proposing && (
                 <motion.div key="proposing" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                     <div className="text-center space-y-1">
                         <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">Лидер миссии</p>
@@ -159,7 +160,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
 
                     <PrimaryButton 
                       disabled={selectedTeam.length !== missionSize} 
-                      onClick={() => setPhase('missionVoting')} 
+                      onClick={() => setPhase(ResistancePhase.MissionVoting)} 
                       className="bg-white !text-black"
                       icon={ArrowRight}
                     >
@@ -168,7 +169,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 </motion.div>
             )}
 
-            {phase === 'missionVoting' && (
+            {phase === ResistancePhase.MissionVoting && (
                 <motion.div key="voting" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 flex-1 flex flex-col items-center justify-center">
                     <div className="text-center">
                       <p className="text-[10px] text-premium-blue font-black uppercase tracking-widest mb-2">Голосует</p>
@@ -188,7 +189,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 </motion.div>
             )}
 
-            {phase === 'missionResult' && (
+            {phase === ResistancePhase.MissionResult && (
                 <motion.div key="result" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-8 text-center flex-1 flex flex-col items-center justify-center">
                     <div className={`p-12 rounded-[40px] w-full border-2 ${missionVotes.includes(false) ? 'bg-premium-red/10 border-premium-red/40' : 'bg-premium-green/10 border-premium-green/40'}`}>
                         <div className="mb-4 flex justify-center">
@@ -202,7 +203,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 </motion.div>
             )}
 
-            {phase === 'gameOver' && (
+            {phase === ResistancePhase.GameOver && (
                 <motion.div key="over" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-12 text-center flex-1 flex flex-col items-center justify-center">
                     <div className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}>
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-60">ФИНАЛЬНЫЙ СЧЕТ</h2>

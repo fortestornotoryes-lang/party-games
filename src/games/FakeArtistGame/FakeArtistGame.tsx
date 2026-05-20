@@ -11,6 +11,7 @@ import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { FakeArtistDistribution } from './components/FakeArtistDistribution';
 import { FakeArtistVoting } from './components/FakeArtistVoting';
 import { initFakeArtist } from '../../utils/gameLogic';
+import { FakeArtistPhase } from './types';
 
 interface Props {
   playerNames: string[];
@@ -19,7 +20,7 @@ interface Props {
 
 export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [phase, setPhase] = useState<'distributing' | 'playing' | 'voting'>('distributing');
+  const [phase, setPhase] = useState<FakeArtistPhase>(FakeArtistPhase.Distributing);
   const [gameState, setGameState] = useState({
     word: '',
     category: '',
@@ -46,7 +47,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][turnIndex % (players.length || 1)];
 
   useEffect(() => {
-    if (gameState.timerSeconds > 0 && !isTransitioning && phase === 'playing') {
+    if (gameState.timerSeconds > 0 && !isTransitioning && phase === FakeArtistPhase.Playing) {
         setTimeLeft(gameState.timerSeconds);
         const timer = setInterval(() => {
             setTimeLeft(prev => {
@@ -62,7 +63,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   }, [turnIndex, isTransitioning, gameState.timerSeconds, phase]);
 
   useEffect(() => {
-    if (phase !== 'playing') return;
+    if (phase !== FakeArtistPhase.Playing) return;
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -109,7 +110,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
     }
   }, [strokes, currentStroke, playerColor]);
 
-  useEffect(() => { if (phase === 'playing') drawAll(); }, [drawAll, phase]);
+  useEffect(() => { if (phase === FakeArtistPhase.Playing) drawAll(); }, [drawAll, phase]);
 
   const getPos = (e: any) => {
     const canvas = canvasRef.current!;
@@ -133,7 +134,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
         });
       }
       setGameState(prev => ({ ...prev, canvasImage: canvasRef.current!.toDataURL() }));
-      setPhase('voting');
+      setPhase(FakeArtistPhase.Voting);
     }
     else {
         feedbackService.playSound('click');
@@ -148,7 +149,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden select-none relative">
       <AnimatePresence mode="wait">
-        {phase === 'distributing' ? (
+        {phase === FakeArtistPhase.Distributing ? (
           <motion.div
             key="distributing"
             initial={{ opacity: 0 }}
@@ -160,11 +161,11 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
               players={players}
               onFinish={(word, category, rounds, timerSeconds) => {
                 setGameState(prev => ({ ...prev, word, category, rounds, timerSeconds }));
-                setPhase('playing');
+                setPhase(FakeArtistPhase.Playing);
               }}
             />
           </motion.div>
-        ) : phase === 'playing' ? (
+        ) : phase === FakeArtistPhase.Playing ? (
           <motion.div
             key="playing"
             initial={{ opacity: 0 }}

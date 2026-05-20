@@ -6,6 +6,7 @@ import { Grid, Eye, EyeOff, User, Users, AlertTriangle, Zap } from 'lucide-react
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { CodenamesPhase } from './types';
 
 interface CodenamesGameProps {
   playerNames: string[];
@@ -22,11 +23,9 @@ interface Card {
   revealed: boolean;
 }
 
-type Phase = 'setup' | 'pass_captain' | 'captain' | 'pass_team' | 'team' | 'game_over';
-
 export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBack }) => {
   const { difficulty, mode: activeMode } = useGameSettings();
-  const [phase, setPhase] = useState<Phase>('setup');
+  const [phase, setPhase] = useState<CodenamesPhase>(CodenamesPhase.Setup);
   const [cards, setCards] = useState<Card[]>([]);
   const [turn, setTurn] = useState<Team>('red');
   
@@ -103,7 +102,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     
     setCards(newCards);
     setTurn(activeMode === 'classic' ? 'red' : (Math.random() > 0.5 ? 'red' : 'blue'));
-    setPhase('setup');
+    setPhase(CodenamesPhase.Setup);
     setWinner(null);
   };
 
@@ -113,13 +112,13 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     e.preventDefault();
     if (!clueWord || clueCount < 0) return;
     setGuessesLeft(clueCount + 1); // +1 extra guess allowed
-    setPhase('pass_team');
+    setPhase(CodenamesPhase.PassTeam);
   };
 
   const [lastActionMsg, setLastActionMsg] = useState<string | null>(null);
   
   const handleCardClick = (card: Card) => {
-    if (phase !== 'team' || card.revealed) return;
+    if (phase !== CodenamesPhase.Team || card.revealed) return;
     
     // Handle Double Agent conversion
     let cardColor = card.color;
@@ -132,7 +131,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     
     if (cardColor === 'assassin') {
       setWinner(turn === 'red' ? 'blue' : 'red');
-      setPhase('game_over');
+      setPhase(CodenamesPhase.GameOver);
       return;
     }
     
@@ -141,12 +140,12 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     
     if (redLeft === 0) {
       setWinner('red');
-      setPhase('game_over');
+      setPhase(CodenamesPhase.GameOver);
       return;
     }
     if (blueLeft === 0) {
       setWinner('blue');
-      setPhase('game_over');
+      setPhase(CodenamesPhase.GameOver);
       return;
     }
     
@@ -173,7 +172,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     setTurn(turn === 'red' ? 'blue' : 'red');
     setClueWord('');
     setClueCount(0);
-    setPhase('pass_captain');
+    setPhase(CodenamesPhase.PassCaptain);
   };
 
   if (playerNames.length < 4) {
@@ -193,7 +192,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
       <div className="flex-1 flex flex-col p-4 max-w-lg mx-auto w-full pt-10">
         <AnimatePresence mode="wait">
           
-          {phase === 'setup' && (
+          {phase === CodenamesPhase.Setup && (
             <motion.div
               key="setup"
               initial={{ opacity: 0, y: 20 }}
@@ -217,11 +216,11 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                 </div>
               </div>
               
-              <PrimaryButton onClick={() => setPhase('pass_captain')} variant="emerald" className="mt-8">ИГРАТЬ</PrimaryButton>
+              <PrimaryButton onClick={() => setPhase(CodenamesPhase.PassCaptain)} variant="emerald" className="mt-8">ИГРАТЬ</PrimaryButton>
             </motion.div>
           )}
 
-          {phase === 'pass_captain' && (
+          {phase === CodenamesPhase.PassCaptain && (
             <motion.div
               key="pass_captain"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -242,13 +241,13 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                 </div>
               </div>
               <div className="w-full pt-8">
-                 <PrimaryButton onClick={() => setPhase('captain')} variant={turn === 'red' ? 'red' : 'blue'} className="w-full h-16 text-lg tracking-widest">Я ГОТОВ</PrimaryButton>
+                 <PrimaryButton onClick={() => setPhase(CodenamesPhase.Captain)} variant={turn === 'red' ? 'red' : 'blue'} className="w-full h-16 text-lg tracking-widest">Я ГОТОВ</PrimaryButton>
                  <p className="text-[10px] text-white/30 font-bold mt-4 animate-pulse uppercase">Остальные не должны видеть экран!</p>
               </div>
             </motion.div>
           )}
 
-          {phase === 'captain' && (
+          {phase === CodenamesPhase.Captain && (
             <motion.div
               key="captain"
               initial={{ opacity: 0 }}
@@ -315,7 +314,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
             </motion.div>
           )}
 
-          {phase === 'pass_team' && (
+          {phase === CodenamesPhase.PassTeam && (
             <motion.div
               key="pass_team"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -335,12 +334,12 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                 </div>
               </div>
               <div className="w-full pt-8">
-                 <PrimaryButton onClick={() => setPhase('team')} variant={turn === 'red' ? 'red' : 'blue'} className="w-full h-16 text-lg tracking-widest">МЫ ГОТОВЫ</PrimaryButton>
+                 <PrimaryButton onClick={() => setPhase(CodenamesPhase.Team)} variant={turn === 'red' ? 'red' : 'blue'} className="w-full h-16 text-lg tracking-widest">МЫ ГОТОВЫ</PrimaryButton>
               </div>
             </motion.div>
           )}
 
-          {phase === 'team' && (
+          {phase === CodenamesPhase.Team && (
             <motion.div
               key="team"
               initial={{ opacity: 0 }}
@@ -398,7 +397,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
             </motion.div>
           )}
 
-          {phase === 'game_over' && (
+          {phase === CodenamesPhase.GameOver && (
             <motion.div
               key="game_over"
               initial={{ opacity: 0, scale: 0.9 }}
