@@ -65,7 +65,7 @@ function AppContent() {
           switch (status) {
             case GameStatus.AliasPlaying: return <AliasGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.JustOnePlaying: return <JustOneGame playerNames={playerNames} onBack={reset} />;
-            case GameStatus.TelestrationsPlaying: return <TelestrationsGame playerNames={playerNames} onBack={reset} initialDifficulty={difficulty} initialRounds={rounds} />;
+            case GameStatus.TelestrationsPlaying: return <TelestrationsGame playerNames={playerNames} onBack={reset} initialDifficulty={difficulty} />;
             case GameStatus.WavelengthPlaying: return <WavelengthGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.CodenamesPlaying: return <CodenamesGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.DecryptoPlaying: return <DecryptoGame playerNames={playerNames} onBack={reset} />;

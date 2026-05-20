@@ -21,10 +21,9 @@ interface TelestrationsGameProps {
   playerNames: string[];
   onBack: () => void;
   initialDifficulty?: Difficulty;
-  initialRounds?: number;
 }
 
-export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty, initialRounds }) => {
+export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty }) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -32,12 +31,11 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
   const [initState] = useState(() => {
     if (!initialDifficulty) return null;
     const word = contentService.getTelestrationsWord(initialDifficulty);
-    return { word, difficulty: initialDifficulty, rounds: initialRounds ?? 1 };
+    return { word, difficulty: initialDifficulty };
   });
 
   const [phase, setPhase] = useState<TelestrationsPhase>(initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup);
   const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
-  const [selectedRounds, setSelectedRounds] = useState(initState?.rounds ?? 1);
   const [initialWord, setInitialWord] = useState(initState?.word ?? '');
   const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
   const [wordRevealed, setWordRevealed] = useState(false);
@@ -79,7 +77,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     if (type === 'guess') setCurrentWord(content);
     const newSteps: Step[] = [...steps, { type, content, author: currentPlayer }];
     setSteps(newSteps);
-    if (currentRound === shuffledPlayers.length * selectedRounds - 1) {
+    if (currentRound === shuffledPlayers.length - 1) {
       feedbackService.playSound('success');
       feedbackService.vibrate([50, 30, 50, 30, 50]);
       if (settings.visualEffects) {
@@ -100,7 +98,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
   const subtitle = phase === TelestrationsPhase.Setup
     ? `${playerNames.length} игроков`
-    : `${currentRound + 1}/${shuffledPlayers.length * selectedRounds} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
+    : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
 
   return (
     <div className="flex flex-col h-screen select-none overflow-hidden">
@@ -119,9 +117,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
             <TelestrationsSetup
               playerCount={playerNames.length}
               difficulty={difficulty}
-              selectedRounds={selectedRounds}
               onDifficultyChange={setDifficulty}
-              onRoundsChange={setSelectedRounds}
               onStart={handleStartGame}
             />
           )}

@@ -6,18 +6,14 @@ import { DIFFICULTY_CONFIG, Difficulty } from '../../../constants/telestrationsC
 interface Props {
   playerCount: number;
   difficulty: Difficulty;
-  selectedRounds: number;
   onDifficultyChange: (d: Difficulty) => void;
-  onRoundsChange: (r: number) => void;
   onStart: () => void;
 }
 
 export const TelestrationsSetup: React.FC<Props> = ({
   playerCount,
   difficulty,
-  selectedRounds,
   onDifficultyChange,
-  onRoundsChange,
   onStart,
 }) => (
   <motion.div
@@ -34,26 +30,6 @@ export const TelestrationsSetup: React.FC<Props> = ({
       </div>
       <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
       <p className="text-white/30 text-sm">{playerCount} игроков</p>
-    </div>
-
-    <div className="w-full max-w-sm">
-      <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Раунды цепочки</p>
-      <div className="flex gap-3">
-        {[1, 2, 3].map(r => (
-          <motion.button
-            key={r}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onRoundsChange(r)}
-            className={`flex-1 py-4 rounded-2xl font-black text-lg border transition-all ${
-              selectedRounds === r
-                ? 'bg-premium-orange/10 border-premium-orange/30 text-premium-orange'
-                : 'bg-white/5 border-white/10 text-white/30'
-            }`}
-          >
-            {r}
-          </motion.button>
-        ))}
-      </div>
     </div>
 
     <div className="w-full max-w-sm space-y-3">

@@ -133,7 +133,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                         const countDisplay = stats ? `${stats.remaining} / ${stats.total}` : null;
 
                         return (
-                            <motion.button
+                            <motion.div
                                 key={game.id}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -190,15 +190,14 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                                 setDescriptionGameId(game.id);
                                             }}
                                             className="w-10 h-10 rounded-full flex items-center justify-center transition-all
-                                                bg-white/[0.04] border border-white/[0.08] text-white/20
+                                                bg-white/4 border border-white/8 text-white/20
                                                 hover:text-white/60 hover:border-white/20 active:scale-90"
                                         >
                                             <HelpCircle className="w-6 h-6" />
                                         </button>
                                     )}
-                                    {/*<ChevronRight className="w-[14px] h-[14px] text-white/15 transition-all duration-300 group-hover:text-white/35 group-hover:translate-x-0.5" />*/}
                                 </div>
-                            </motion.button>
+                            </motion.div>
                         );
                     })}
                 </div>
