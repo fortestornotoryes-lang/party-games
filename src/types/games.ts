@@ -39,6 +39,7 @@ export interface GameMetadata {
     readonly minPlayers: number;
     readonly setupStatus: GameStatus;
     readonly modes?: readonly GameMode[];
+    readonly backgroundImage?: string;
 }
 
 export type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
