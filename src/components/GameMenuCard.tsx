@@ -40,13 +40,14 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
                 hover:bg-white/[0.06] hover:border-white/[0.12]"
             style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}
         >
-            {/* Background image (optional, per-game) */}
+            {/* Background image (optional, per-game) — right-anchored with left fade */}
             {game.backgroundImage && (
                 <img
                     src={game.backgroundImage}
                     alt=""
                     aria-hidden
-                    className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-35 transition-all duration-300 scale-[1] pointer-events-none"
+                    className="absolute right-0 top-0 h-full w-auto max-w-[105%] object-contain object-right opacity-90 transition-opacity duration-300 pointer-events-none"
+                    style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 65%)' }}
                 />
             )}
 

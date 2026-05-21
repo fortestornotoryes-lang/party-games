@@ -2,8 +2,15 @@ import React, {lazy} from 'react';
 import mafia from '../assets/Gemini_Generated_Image_ozm0i6ozm0i6ozm0.png';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import decryptoImage from '../assets/decryptoImage.png';
+import FakeArtistImage from '../assets/FakeArtistImage.png';
+import CodenamesImage from '../assets/CodenamesImage.png';
+import JustOneImage from '../assets/JustOneImage.png';
 import mafia2 from '../assets/mafia_2.png';
 import telestrationsImg from '../assets/telephone.png';
+import ResistanceImage from '../assets/ResistanceImage.png';
+import SpyHuntImage from '../assets/SpyHuntImage.png';
+import WavelengthImage from '../assets/WavelengthImage.png';
+import alieaImage from '../assets/alieaImage.png';
 import {
     Shield,
     Palette,
@@ -52,7 +59,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             {id: 'classic', name: 'Классика', description: '1 шпион, все остальные знают локацию', icon: Target},
             {id: 'double_agent', name: 'Двойной агент', description: '2 шпиона (от 5 игроков)', icon: Zap},
             {id: 'mole', name: 'Предатель', description: '1 шпион и 1 помощник (от 5 игроков)', icon: ShieldIcon},
-        ]
+        ],
+        backgroundImage: SpyHuntImage,
+
     },
     [GameKey.FakeArtist]: {
         id: GameKey.FakeArtist,
@@ -64,7 +73,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description: 'В этой игре один игрок — фейковый художник, который не знает, что рисуют остальные.',
         players: '4–7',
         minPlayers: 4,
-        setupStatus: GameStatus.FakeArtistPlaying
+        setupStatus: GameStatus.FakeArtistPlaying,
+        backgroundImage: FakeArtistImage,
+
     },
     [GameKey.TruthOrDare]: {
         id: GameKey.TruthOrDare,
@@ -113,7 +124,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
                 description: '8 своих, 8 чужих, 1 общий агент (кто первый нашел)',
                 icon: Zap
             },
-        ]
+        ],
+        backgroundImage: CodenamesImage,
+
     },
     [GameKey.Decrypto]: {
         id: GameKey.Decrypto,
@@ -144,7 +157,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '4+',
         description: 'Объясни слово быстрее всех',
         minPlayers: 4,
-        setupStatus: GameStatus.AliasPlaying
+        setupStatus: GameStatus.AliasPlaying,
+        backgroundImage: alieaImage,
+
     },
     [GameKey.Resistance]: {
         id: GameKey.Resistance,
@@ -156,7 +171,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description: 'Группа сопротивления пытается выполнить миссии, в то время как шпионы пытаются их саботировать.',
         placeholder: 'Игрок',
         minPlayers: 5,
-        setupStatus: GameStatus.ResistancePlaying
+        setupStatus: GameStatus.ResistancePlaying,
+        backgroundImage: ResistanceImage,
+
     },
     [GameKey.Wavelength]: {
         id: GameKey.Wavelength,
@@ -168,7 +185,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '4+',
         description: 'Настройся на одну частоту',
         minPlayers: 2,
-        setupStatus: GameStatus.WavelengthPlaying
+        setupStatus: GameStatus.WavelengthPlaying,
+        backgroundImage: WavelengthImage,
+
     },
     [GameKey.JustOne]: {
         id: GameKey.JustOne,
@@ -181,7 +200,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description: 'Одно слово — одна подсказка',
         minPlayers: 3,
         setupStatus: GameStatus.JustOnePlaying,
-        backgroundImage: mafia2,
+        backgroundImage: JustOneImage,
 
     },
     [GameKey.Mafia]: {
