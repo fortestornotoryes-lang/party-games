@@ -80,7 +80,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
         title={GAMES_REGISTRY.wavelength.title}
         subtitle="На одной волне" 
         icon={Radio} 
-        themeColor="border-premium-purple/50 text-premium-purple"
+        theme="purple"
         onBack={onBack}
       />
 

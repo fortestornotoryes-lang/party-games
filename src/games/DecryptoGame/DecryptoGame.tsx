@@ -130,7 +130,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 title={GAMES_REGISTRY.decrypto.title}
                 subtitle="Коды и перехваты"
                 icon={Key}
-                themeColor="text-premium-purple bg-premium-purple/10 border-premium-purple/30"
+                theme="purple"
                 onBack={onBack}
             />
 

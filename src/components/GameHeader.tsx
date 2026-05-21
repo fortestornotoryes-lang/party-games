@@ -1,12 +1,14 @@
 import React from 'react';
 import { Home, LucideIcon } from 'lucide-react';
 import {PrimaryButton} from "@/components/UI.tsx";
+import { GameTheme } from '../types';
+import { getTheme } from '../theme/colors';
 
 interface GameHeaderProps {
   title: string;
   subtitle: string;
   icon: LucideIcon;
-  themeColor: string;
+  theme: GameTheme;
   onBack: () => void;
   extraActions?: React.ReactNode;
 }
@@ -15,10 +17,11 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   title,
   subtitle,
   icon: Icon,
-  themeColor,
+  theme,
   onBack,
   extraActions,
 }) => {
+  const t = getTheme(theme);
   return (
     <div
       className="sticky top-0 z-30 px-4 py-2.5 border-b border-white/6 flex items-center justify-between"
@@ -29,7 +32,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       }}
     >
       <div className="flex items-center gap-3">
-        <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center border ${themeColor} bg-white/5`}>
+        <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center border ${t.headerTheme} bg-white/5`}>
           <Icon className="w-4 h-4" />
         </div>
         <div>

@@ -106,7 +106,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
         title="TELESTRATIONS"
         subtitle={subtitle}
         icon={Pencil}
-        themeColor="border-premium-orange/30 text-premium-orange"
+        theme="orange"
         onBack={onBack}
       />
 

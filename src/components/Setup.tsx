@@ -6,6 +6,7 @@ import { InstructionsModal } from './InstructionsModal';
 import { storageService } from '../services/storageService';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { GameTheme } from '../types';
+import { getTheme, ThemeTokens } from '../theme/colors';
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;
@@ -23,103 +24,6 @@ interface SetupProps {
     children?: React.ReactNode;
 }
 
-const colorConfig: Record<GameTheme, {
-    bg: string;
-    border: string;
-    text: string;
-    button: string;
-    shadow: string;
-    gradient: string;
-    focus: string;
-    addHover: string;
-    closeHover: string;
-    indexBg: string;
-}> = {
-    red: {
-        bg: 'bg-premium-red/10',
-        border: 'border-premium-red/30',
-        text: 'text-premium-red',
-        button: 'bg-premium-red hover:bg-[#ff4d6a] active:scale-95 shadow-[0_20px_50px_rgba(255,46,77,0.3)]',
-        shadow: 'shadow-premium-red/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,46,77,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-red/50',
-        addHover: 'hover:bg-premium-red/5 hover:text-white/80 hover:border-premium-red/20',
-        closeHover: 'hover:bg-premium-red/10 hover:text-premium-red',
-        indexBg: 'bg-premium-red/20 text-premium-red border-premium-red/30',
-    },
-    green: {
-        bg: 'bg-premium-green/10',
-        border: 'border-premium-green/30',
-        text: 'text-premium-green',
-        button: 'bg-premium-green hover:bg-[#1ae599] active:scale-95 shadow-[0_20px_50px_rgba(0,216,138,0.3)]',
-        shadow: 'shadow-premium-green/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(0,216,138,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-green/50',
-        addHover: 'hover:bg-premium-green/5 hover:text-white/80 hover:border-premium-green/20',
-        closeHover: 'hover:bg-premium-green/10 hover:text-premium-green',
-        indexBg: 'bg-premium-green/20 text-premium-green border-premium-green/30',
-    },
-    sky: {
-        bg: 'bg-premium-sky/10',
-        border: 'border-premium-sky/30',
-        text: 'text-premium-sky',
-        button: 'bg-premium-sky hover:bg-[#3ac1ff] active:scale-95 shadow-[0_20px_50px_rgba(31,182,255,0.3)]',
-        shadow: 'shadow-premium-sky/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(31,182,255,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-sky/50',
-        addHover: 'hover:bg-premium-sky/5 hover:text-white/80 hover:border-premium-sky/20',
-        closeHover: 'hover:bg-premium-sky/10 hover:text-premium-sky',
-        indexBg: 'bg-premium-sky/20 text-premium-sky border-premium-sky/30',
-    },
-    orange: {
-        bg: 'bg-premium-orange/10',
-        border: 'border-premium-orange/30',
-        text: 'text-premium-orange',
-        button: 'bg-premium-orange hover:bg-[#ffa14d] active:scale-95 shadow-[0_20px_50px_rgba(255,138,31,0.3)]',
-        shadow: 'shadow-premium-orange/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,138,31,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-orange/50',
-        addHover: 'hover:bg-premium-orange/5 hover:text-white/80 hover:border-premium-orange/20',
-        closeHover: 'hover:bg-premium-orange/10 hover:text-premium-orange',
-        indexBg: 'bg-premium-orange/20 text-premium-orange border-premium-orange/30',
-    },
-    purple: {
-        bg: 'bg-premium-purple/10',
-        border: 'border-premium-purple/30',
-        text: 'text-premium-purple',
-        button: 'bg-premium-purple hover:bg-[#d499ff] active:scale-95 shadow-[0_20px_50px_rgba(199,123,255,0.3)]',
-        shadow: 'shadow-premium-purple/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(199,123,255,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-purple/50',
-        addHover: 'hover:bg-premium-purple/5 hover:text-white/80 hover:border-premium-purple/20',
-        closeHover: 'hover:bg-premium-purple/10 hover:text-premium-purple',
-        indexBg: 'bg-premium-purple/20 text-premium-purple border-premium-purple/30',
-    },
-    yellow: {
-        bg: 'bg-premium-yellow/10',
-        border: 'border-premium-yellow/30',
-        text: 'text-premium-yellow',
-        button: 'bg-premium-yellow hover:bg-[#ffd14d] active:scale-95 shadow-[0_20px_50px_rgba(255,216,77,0.3)]',
-        shadow: 'shadow-premium-yellow/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(255,216,77,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-yellow/50',
-        addHover: 'hover:bg-premium-yellow/5 hover:text-white/80 hover:border-premium-yellow/20',
-        closeHover: 'hover:bg-premium-yellow/10 hover:text-premium-yellow',
-        indexBg: 'bg-premium-yellow/20 text-premium-yellow border-premium-yellow/30',
-    },
-    blue: {
-        bg: 'bg-premium-blue/10',
-        border: 'border-premium-blue/30',
-        text: 'text-premium-blue',
-        button: 'bg-premium-blue hover:bg-[#6699ff] active:scale-95 shadow-[0_20px_50px_rgba(63,123,255,0.3)]',
-        shadow: 'shadow-premium-blue/40',
-        gradient: 'bg-[radial-gradient(circle_at_50%_0%,rgba(63,123,255,0.15),transparent_70%)]',
-        focus: 'focus:border-premium-blue/50',
-        addHover: 'hover:bg-premium-blue/5 hover:text-white/80 hover:border-premium-blue/20',
-        closeHover: 'hover:bg-premium-blue/10 hover:text-premium-blue',
-        indexBg: 'bg-premium-blue/20 text-premium-blue border-premium-blue/30',
-    },
-};
 
 interface PlayerEntry {
     id: string;
@@ -131,7 +35,7 @@ const makeId = () => `p-${++_idCounter}-${Math.random().toString(36).slice(2, 6)
 
 const DEFAULT_NAMES = ['Дуня', 'Валера', 'Булочка', 'Люба', 'Саша'];
 
-type Config = (typeof colorConfig)[keyof typeof colorConfig];
+type Config = ThemeTokens;
 
 interface PlayerRowProps {
     player: PlayerEntry;
@@ -191,7 +95,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({ player, index, canRemove, config,
 
 export const Setup: React.FC<SetupProps> = ({ onStart, onBack, title, subtitle, icon: Icon, themeColor, playerPlaceholder, addPlayerLabel, instructions, description, minPlayers = 3, maxPlayers = 8, children }) => {
     const { difficulty } = useGameSettings();
-    const config = colorConfig[themeColor] || colorConfig.red;
+    const config = getTheme(themeColor);
     const [players, setPlayers] = useState<PlayerEntry[]>(() => {
         const savedNames = storageService.getPlayers();
         if (savedNames.length >= minPlayers) {

@@ -44,7 +44,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
         title={GAMES_REGISTRY.truth_or_dare.title}
         subtitle="Правда или Действие"
         icon={Flame}
-        themeColor="border-premium-red/30 text-premium-red"
+        theme="red"
         onBack={onBack}
       />
 

@@ -185,7 +185,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
         title={GAMES_REGISTRY.codenames.title}
         subtitle="Битва шпионов" 
         icon={Grid} 
-        themeColor="text-premium-green bg-premium-green/90 border-premium-green/30" 
+        theme="green" 
         onBack={onBack} 
       />
       

@@ -2,18 +2,10 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 import {PrimaryButton, Typography} from "@/components/UI.tsx";
+import { GameTheme } from '../types';
+import { getTheme } from '../theme/colors';
 
-const themes = {
-  orange:  { accent: 'text-premium-orange',  bg: 'bg-premium-orange/10', glow: 'shadow-premium-orange/20' },
-  purple:  { accent: 'text-premium-purple',  bg: 'bg-premium-purple/10', glow: 'shadow-premium-purple/20' },
-  green: { accent: 'text-premium-green', bg: 'bg-premium-green/10', glow: 'shadow-premium-green/20' },
-  red:     { accent: 'text-premium-red',     bg: 'bg-premium-red/10', glow: 'shadow-premium-red/20' },
-  blue:    { accent: 'text-premium-blue',    bg: 'bg-premium-blue/10', glow: 'shadow-premium-blue/20' },
-  sky:     { accent: 'text-premium-sky',     bg: 'bg-premium-sky/10', glow: 'shadow-premium-sky/20' },
-  yellow:  { accent: 'text-premium-yellow',  bg: 'bg-premium-yellow/10', glow: 'shadow-premium-yellow/20' },
-} as const;
-
-type ModalTheme = keyof typeof themes;
+type ModalTheme = GameTheme;
 
 interface InstructionsModalProps {
   open: boolean;
@@ -32,7 +24,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
   theme,
   description = 'Брифинг по игровому процессу и правилам участия в секретной операции.',
 }) => {
-  const themeConfig = themes[theme] || themes.red;
+  const themeConfig = getTheme(theme);
 
   useEffect(() => {
     if (!open) return;
@@ -64,7 +56,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
 
             <div className="mb-12">
               <div className="flex items-center gap-4 mb-4">
-                 <div className={`w-8 h-0.5 rounded-full ${themeConfig.accent} bg-current opacity-60`} />
+                 <div className={`w-8 h-0.5 rounded-full ${themeConfig.text} bg-current opacity-60`} />
               </div>
 
               <p className="text-base text-white/50 leading-relaxed font-medium">
@@ -82,7 +74,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                   className="p-6 glass-card rounded-premium-lg flex gap-6 border-white/5 items-center"
                 >
                   <div className="pt-1">
-                    <h4 className={`text-[17px] font-black  uppercase tracking-tighter mb-2 italic ${themeConfig.accent}`} >{item.title}</h4>
+                    <h4 className={`text-[17px] font-black  uppercase tracking-tighter mb-2 italic ${themeConfig.text}`} >{item.title}</h4>
                     <p className="text-sm text-white/80 leading-relaxed font-medium">{item.content}</p>
                   </div>
                 </motion.div>

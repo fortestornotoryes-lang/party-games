@@ -177,7 +177,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
               title={GAMES_REGISTRY.fake_artist.title}
               subtitle={`Ход ${turnIndex + 1} / ${players.length * gameState.rounds}`}
               icon={Palette}
-              themeColor="border-premium-green/50 text-premium-green"
+              theme="green"
               onBack={onBack}
             />
 

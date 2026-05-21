@@ -12,7 +12,19 @@
       "Bash(python scripts/search.py \"party games entertainment social vibrant dark immersive\" --design-system -p \"Party Hub\" -f markdown)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\games\\\\\" -Recurse | Where-Object {$_.Extension -in @\\('.tsx', '.ts', '.jsx', '.js'\\)} | ForEach-Object {$_.FullName})",
       "mcp__ide__getDiagnostics",
-      "WebFetch(domain:fortestornotoryes-lang.github.io)"
+      "WebFetch(domain:fortestornotoryes-lang.github.io)",
+      "Bash(dir C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src *)",
+      "Bash(dir C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\components *)",
+      "Bash(dir C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\games *)",
+      "Bash(dir C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\constants *)",
+      "Bash(dir C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\types *)",
+      "Bash(sed -i 's/themeColor=\"border-premium-red\\\\/50 text-premium-red\"/theme=\"red\"/g' src/games/SpyHuntGame/SpyHuntGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"border-premium-red\\\\/30 text-premium-red\"/theme=\"red\"/g' src/games/TruthOrDareGame/TruthOrDareGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"border-premium-green\\\\/50 text-premium-green\"/theme=\"green\"/g' src/games/FakeArtistGame/FakeArtistGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"border-premium-blue\\\\/50 text-premium-blue\"/theme=\"blue\"/g' src/games/AliasGame/AliasGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"border-premium-blue\\\\/50 text-premium-blue\"/theme=\"blue\"/g' src/games/ResistanceGame/ResistanceGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"text-premium-green bg-premium-green\\\\/90 border-premium-green\\\\/30\"/theme=\"green\"/g' src/games/CodenamesGame/CodenamesGame.tsx)",
+      "Bash(sed -i 's/themeColor=\"text-premium-purple bg-premium-purple\\\\/10 border-premium-purple\\\\/30\"/theme=\"purple\"/g' src/games/DecryptoGame/DecryptoGame.tsx)"
     ]
   },
   "enabledPlugins": {

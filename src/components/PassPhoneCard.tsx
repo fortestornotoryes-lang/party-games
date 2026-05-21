@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Fingerprint, LucideIcon } from 'lucide-react';
 
-type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'default';
-type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'default';
+type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';
+type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
 
 interface PassPhoneCardProps {
   playerName: string;
@@ -20,15 +20,21 @@ const badgeStyles: Record<BadgeColor, string> = {
   sky:     'bg-premium-sky/10    border-premium-sky/20    text-premium-sky',
   red:     'bg-premium-red/10    border-premium-red/20    text-premium-red',
   green:   'bg-premium-green/10  border-premium-green/20  text-premium-green',
+  blue:    'bg-premium-blue/10   border-premium-blue/20   text-premium-blue',
+  purple:  'bg-premium-purple/10 border-premium-purple/20 text-premium-purple',
+  yellow:  'bg-premium-yellow/10 border-premium-yellow/20 text-premium-yellow',
   default: 'bg-white/5           border-white/10          text-white/40',
 };
 
 const accentStyles: Record<AccentColor, { ring: string; icon: string }> = {
-  default: { ring: 'bg-white/[0.04] border-white/[0.08]',           icon: 'text-white/35' },
-  green:   { ring: 'bg-premium-green/10 border-premium-green/20',   icon: 'text-premium-green/50' },
-  sky:     { ring: 'bg-premium-sky/10   border-premium-sky/20',     icon: 'text-premium-sky/50' },
-  red:     { ring: 'bg-premium-red/10   border-premium-red/20',     icon: 'text-premium-red/50' },
-  orange:  { ring: 'bg-premium-orange/10 border-premium-orange/20', icon: 'text-premium-orange/50' },
+  default: { ring: 'bg-white/[0.04] border-white/[0.08]',              icon: 'text-white/35' },
+  green:   { ring: 'bg-premium-green/10  border-premium-green/20',     icon: 'text-premium-green/50' },
+  sky:     { ring: 'bg-premium-sky/10    border-premium-sky/20',       icon: 'text-premium-sky/50' },
+  red:     { ring: 'bg-premium-red/10    border-premium-red/20',       icon: 'text-premium-red/50' },
+  orange:  { ring: 'bg-premium-orange/10 border-premium-orange/20',    icon: 'text-premium-orange/50' },
+  blue:    { ring: 'bg-premium-blue/10   border-premium-blue/20',      icon: 'text-premium-blue/50' },
+  purple:  { ring: 'bg-premium-purple/10 border-premium-purple/20',    icon: 'text-premium-purple/50' },
+  yellow:  { ring: 'bg-premium-yellow/10 border-premium-yellow/20',    icon: 'text-premium-yellow/50' },
 };
 
 export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({

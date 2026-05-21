@@ -69,7 +69,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
         title={GAMES_REGISTRY.spy.title}
         subtitle={phase === SpyHuntPhase.Distributing ? "Раздача ролей" : phase === SpyHuntPhase.Playing ? "Идет поиск..." : "Результаты"} 
         icon={Skull} 
-        themeColor="border-premium-red/50 text-premium-red"
+        theme="red"
         onBack={onBack}
       />
 

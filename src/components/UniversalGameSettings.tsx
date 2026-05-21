@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { SectionLabel } from './UI';
 import { Difficulty, GameMode, GameModeOption } from '../types';
 import { Shield, Zap, Target, LucideIcon } from 'lucide-react';
+import { getTheme } from '../theme/colors';
 import { contentService } from '../services/contentService';
 import { GameKey } from '../types/games';
 import { GAME_DURATION_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
@@ -11,15 +12,7 @@ import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG } from '../constan
 
 // ─── universal setting row ────────────────────────────────────────────────────
 
-const colorStyles = {
-  green:  'bg-premium-green/10  border-premium-green/40  text-premium-green  shadow-[0_0_20px_rgba(0,216,138,0.12)]',
-  sky:    'bg-premium-sky/10    border-premium-sky/40    text-premium-sky    shadow-[0_0_20px_rgba(31,182,255,0.12)]',
-  red:    'bg-premium-red/10    border-premium-red/40    text-premium-red    shadow-[0_0_20px_rgba(255,46,77,0.12)]',
-  orange: 'bg-premium-orange/10 border-premium-orange/40 text-premium-orange shadow-[0_0_20px_rgba(255,138,31,0.12)]',
-  purple: 'bg-premium-purple/10 border-premium-purple/40 text-premium-purple shadow-[0_0_20px_rgba(199,123,255,0.12)]',
-} as const;
-
-type OptionColor = keyof typeof colorStyles;
+type OptionColor = 'green' | 'sky' | 'red' | 'orange' | 'purple';
 
 interface SettingOption {
   value: string | number;
@@ -53,7 +46,7 @@ const SettingRow: React.FC<SettingRowProps> = ({ label, icon: Icon, options, val
             onClick={() => onChange(opt.value)}
             className={`flex flex-col items-center justify-center rounded-premium-md transition-all border h-14 ${
               isActive
-                ? colorStyles[opt.color ?? color]
+                ? getTheme(opt.color ?? color).activeOption
                 : 'glass-card border-white/5 text-white/20 opacity-60'
             }`}
           >
@@ -170,12 +163,12 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                   onClick={() => setMode(m.id)}
                   className={`p-6 rounded-premium-lg border transition-all text-left flex items-center gap-6 relative overflow-hidden ${
                     isActive
-                      ? 'bg-premium-red/10 border-premium-red/40 text-white shadow-[0_0_30px_rgba(255,46,77,0.15)]'
+                      ? `${getTheme('red').bg10} ${getTheme('red').border40} text-white shadow-[0_0_30px_rgba(255,46,77,0.15)]`
                       : 'glass-card border-white/5 text-white/80'
                   }`}
                 >
                   <div className={`w-14 h-14 shrink-0 rounded-[18px] flex items-center justify-center transition-all ${
-                    isActive ? 'bg-premium-red text-white shadow-xl shadow-premium-red/20' : 'bg-white/5 text-white/20'
+                    isActive ? `${getTheme('red').solid} text-white shadow-xl shadow-premium-red/20` : 'bg-white/5 text-white/20'
                   }`}>
                     <m.icon className="w-7 h-7" />
                   </div>

@@ -75,7 +75,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
         title={GAMES_REGISTRY.just_one.title}
         subtitle="Пойми намёк"
         icon={Lightbulb}
-        themeColor="border-premium-yellow/50 text-premium-yellow"
+        theme="yellow"
         onBack={onBack}
       />
 

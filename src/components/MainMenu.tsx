@@ -6,81 +6,11 @@ import { useGameSettings } from '../contexts/GameSettingsContext';
 import { contentService } from '../services/contentService';
 import { GameKey } from '../types/games';
 import { GAMES_REGISTRY } from '../registry/GameRegistry';
+import { getTheme } from '../theme/colors';
 
 interface MainMenuProps {
     onSelectGame: (gameId: GameKey) => void;
 }
-
-const themeConfigs = {
-    'premium-red': {
-        iconBg: 'bg-premium-red',
-        accentBg: 'bg-premium-red/10',
-        accentText: 'text-premium-red',
-        barColor: 'bg-premium-red',
-        sheetAccent: 'text-premium-red',
-        sheetBorder: 'border-premium-red/20',
-        sheetBg: 'bg-premium-red/5',
-    },
-    'premium-sky': {
-        iconBg: 'bg-premium-sky',
-        accentBg: 'bg-premium-sky/10',
-        accentText: 'text-premium-sky',
-        barColor: 'bg-premium-sky',
-        sheetAccent: 'text-premium-sky',
-        sheetBorder: 'border-premium-sky/20',
-        sheetBg: 'bg-premium-sky/5',
-    },
-    'premium-green': {
-        iconBg: 'bg-premium-green',
-        accentBg: 'bg-premium-green/10',
-        accentText: 'text-premium-green',
-        barColor: 'bg-premium-green',
-        sheetAccent: 'text-premium-green',
-        sheetBorder: 'border-premium-green/20',
-        sheetBg: 'bg-premium-green/5',
-    },
-    'premium-blue': {
-        iconBg: 'bg-premium-blue',
-        accentBg: 'bg-premium-blue/10',
-        accentText: 'text-premium-blue',
-        barColor: 'bg-premium-blue',
-        sheetAccent: 'text-premium-blue',
-        sheetBorder: 'border-premium-blue/20',
-        sheetBg: 'bg-premium-blue/5',
-    },
-    'premium-orange': {
-        iconBg: 'bg-premium-orange',
-        accentBg: 'bg-premium-orange/10',
-        accentText: 'text-premium-orange',
-        barColor: 'bg-premium-orange',
-        sheetAccent: 'text-premium-orange',
-        sheetBorder: 'border-premium-orange/20',
-        sheetBg: 'bg-premium-orange/5',
-    },
-    'premium-purple': {
-        iconBg: 'bg-premium-purple',
-        accentBg: 'bg-premium-purple/10',
-        accentText: 'text-premium-purple',
-        barColor: 'bg-premium-purple',
-        sheetAccent: 'text-premium-purple',
-        sheetBorder: 'border-premium-purple/20',
-        sheetBg: 'bg-premium-purple/5',
-    },
-    'premium-yellow': {
-        iconBg: 'bg-premium-yellow',
-        accentBg: 'bg-premium-yellow/10',
-        accentText: 'text-premium-yellow',
-        barColor: 'bg-premium-yellow',
-        sheetAccent: 'text-premium-yellow',
-        sheetBorder: 'border-premium-yellow/20',
-        sheetBg: 'bg-premium-yellow/5',
-    },
-} as const;
-
-const getThemeConfig = (theme: string) => {
-    const key = `premium-${theme}` as keyof typeof themeConfigs;
-    return themeConfigs[key] || themeConfigs['premium-red'];
-};
 
 const GAMES = Object.values(GAMES_REGISTRY);
 
@@ -129,7 +59,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                     {GAMES.map((game, index) => {
                         const Icon = game.icon;
                         const stats = getGameStats(game.id);
-                        const themeCfg = getThemeConfig(game.theme);
+                        const t = getTheme(game.theme);
                         const countDisplay = stats ? `${stats.remaining} / ${stats.total}` : null;
 
                         return (
@@ -144,17 +74,17 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                 }}
                                 whileTap={{ scale: 0.975 }}
                                 onClick={() => onSelectGame(game.id)}
-                                className="w-full p-4 rounded-[20px] flex items-center gap-4 text-left relative overflow-hidden
+                                className="w-full p-4 rounded-r-[20px] flex items-center gap-4 text-left relative overflow-hidden
                                     transition-all duration-300 group
                                     bg-white/[0.035] border border-white/[0.07]
                                     hover:bg-white/[0.06] hover:border-white/[0.12]"
                                 style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}
                             >
                                 {/* Left color accent bar */}
-                                <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-r-full ${themeCfg.barColor} opacity-75`} />
+                                <div className={`absolute left-0 top-0 bottom-0 w-[5px] rounded-r-full ${t.solid} opacity-75`} />
 
                                 {/* Icon */}
-                                <div className={`w-[52px] h-[52px] rounded-[16px] ${themeCfg.iconBg} flex items-center justify-center relative overflow-hidden shrink-0 ml-2.5`}>
+                                <div className={`w-[52px] h-[52px] rounded-[16px] ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0 ml-2.5`}>
                                     <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
                                     <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/25" />
                                     <Icon className="w-[22px] h-[22px] text-white relative z-10 transition-transform duration-300 group-hover:scale-110" />
@@ -169,7 +99,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                         {game.subtitle}
                                     </p>
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-[5px] rounded-[8px] ${themeCfg.accentBg} ${themeCfg.accentText} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
+                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-[5px] rounded-[8px] ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
                                             <Users className="w-[10px] h-[10px]" />
                                             {game.players}
                                         </span>
@@ -207,7 +137,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
             <AnimatePresence>
                 {descriptionGame && (() => {
                     const Icon = descriptionGame.icon;
-                    const themeCfg = getThemeConfig(descriptionGame.theme);
+                    const t = getTheme(descriptionGame.theme);
                     return (
                         <>
                             {/* Backdrop */}
@@ -247,12 +177,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                     <div className="px-6 pb-6 pt-4 space-y-5">
                                         {/* Header */}
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-12 h-12 rounded-[14px] ${themeCfg.iconBg} flex items-center justify-center relative overflow-hidden shrink-0`}>
+                                            <div className={`w-12 h-12 rounded-[14px] ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0`}>
                                                 <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
                                                 <Icon className="w-5 h-5 text-white relative z-10" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className={`text-[18px] font-black italic uppercase tracking-tight ${themeCfg.sheetAccent}`}>
+                                                <h3 className={`text-[18px] font-black italic uppercase tracking-tight ${t.text}`}>
                                                     {descriptionGame.title}
                                                 </h3>
                                                 <p className="text-[11px] text-white/35 font-medium mt-0.5">{descriptionGame.subtitle}</p>
@@ -266,7 +196,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                         </div>
 
                                         {/* Description */}
-                                        <div className={`rounded-2xl border p-4 ${themeCfg.sheetBorder} ${themeCfg.sheetBg}`}>
+                                        <div className={`rounded-2xl border p-4 ${t.border20} ${t.bg5}`}>
                                             <p className="text-[13px] text-white/70 font-medium leading-relaxed">
                                                 {descriptionGame.description}
                                             </p>
@@ -274,7 +204,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
                                         {/* Info row */}
                                         <div className="flex items-center gap-2">
-                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] ${themeCfg.accentBg} ${themeCfg.accentText} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
                                                 <Users className="w-[10px] h-[10px]" />
                                                 {descriptionGame.players} игроков
                                             </span>
@@ -287,7 +217,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                                 setDescriptionGameId(null);
                                                 onSelectGame(descriptionGame.id);
                                             }}
-                                            className={`w-full py-4 rounded-[18px] font-black uppercase tracking-[0.15em] text-[13px] text-black ${themeCfg.iconBg} active:scale-[0.98] transition-transform`}
+                                            className={`w-full py-4 rounded-[18px] font-black uppercase tracking-[0.15em] text-[13px] text-black ${t.solid} active:scale-[0.98] transition-transform`}
                                             style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}
                                         >
                                             Играть

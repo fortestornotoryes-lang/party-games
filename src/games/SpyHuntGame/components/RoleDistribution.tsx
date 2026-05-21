@@ -4,6 +4,7 @@ import { MapPin, Ghost, Shield } from 'lucide-react';
 import { Player } from '../../../types';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
 import { PassPhoneCard } from '../../../components/PassPhoneCard';
+import { ROLE_TOKENS } from '../../../theme/colors';
 
 interface RoleDistributionProps {
   players: Player[];
@@ -80,16 +81,8 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                 transition={{ type: 'spring', stiffness: 260, damping: 22 }}
                 className="w-full min-h-[28rem] rounded-[2.5rem] flex flex-col relative overflow-hidden"
                 style={{
-                  border: `1.5px solid ${
-                    roleType === 'spy' ? 'rgba(255,46,77,0.45)'
-                    : roleType === 'traitor' ? 'rgba(249,115,22,0.4)'
-                    : 'rgba(34,197,94,0.32)'
-                  }`,
-                  boxShadow: roleType === 'spy'
-                    ? '0 0 80px rgba(255,46,77,0.22), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,46,77,0.12)'
-                    : roleType === 'traitor'
-                    ? '0 0 70px rgba(249,115,22,0.15), 0 32px 64px rgba(0,0,0,0.55)'
-                    : '0 0 70px rgba(34,197,94,0.12), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(34,197,94,0.08)',
+                  border: ROLE_TOKENS[roleType].cardBorder,
+                  boxShadow: ROLE_TOKENS[roleType].cardShadow,
                 }}
               >
                 {/* Gradient bg */}
@@ -102,9 +95,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                 {/* Top glow */}
                 <div
                   className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl pointer-events-none opacity-60"
-                  style={{
-                    background: roleType === 'spy' ? 'rgba(255,46,77,0.3)' : roleType === 'traitor' ? 'rgba(249,115,22,0.22)' : 'rgba(34,197,94,0.18)',
-                  }}
+                  style={{ background: ROLE_TOKENS[roleType].topGlow }}
                 />
 
                 <div className="relative z-10 flex flex-col flex-1 p-7 items-center text-center">
@@ -119,11 +110,11 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
 
                       <div className="space-y-3">
                         <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 2.5, repeat: Infinity }}>
-                          <Ghost className="w-[88px] h-[88px] text-premium-red mx-auto" style={{ filter: 'drop-shadow(0 0 20px rgba(255,46,77,0.5))' }} />
+                          <Ghost className="w-[88px] h-[88px] text-premium-red mx-auto" style={{ filter: ROLE_TOKENS.spy.iconFilter }} />
                         </motion.div>
                         <h3
                           className="text-[68px] font-black italic text-premium-red tracking-tighter leading-none"
-                          style={{ textShadow: '0 0 48px rgba(255,46,77,0.45)' }}
+                          style={{ textShadow: ROLE_TOKENS.spy.textShadow }}
                         >
                           ШПИОН
                         </h3>
@@ -141,7 +132,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                       <button
                         onClick={nextPlayer}
                         className="w-full py-4 bg-premium-red rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
-                        style={{ boxShadow: '0 8px 32px rgba(255,46,77,0.35)' }}
+                        style={{ boxShadow: ROLE_TOKENS.spy.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
                       </button>
@@ -157,7 +148,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                       </div>
 
                       <div className="space-y-4">
-                        <Shield className="w-[72px] h-[72px] text-premium-orange mx-auto" style={{ filter: 'drop-shadow(0 0 16px rgba(249,115,22,0.45))' }} />
+                        <Shield className="w-[72px] h-[72px] text-premium-orange mx-auto" style={{ filter: ROLE_TOKENS.traitor.iconFilter }} />
                         <h3 className="text-[52px] font-black italic text-premium-orange tracking-tighter leading-none">
                           ПРЕДАТЕЛЬ
                         </h3>
@@ -173,7 +164,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                       <button
                         onClick={nextPlayer}
                         className="w-full py-4 bg-premium-orange rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
-                        style={{ boxShadow: '0 8px 32px rgba(249,115,22,0.25)' }}
+                        style={{ boxShadow: ROLE_TOKENS.traitor.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
                       </button>
@@ -189,12 +180,12 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                       </div>
 
                       <div className="space-y-4">
-                        <MapPin className="w-[72px] h-[72px] text-premium-green mx-auto" style={{ filter: 'drop-shadow(0 0 16px rgba(34,197,94,0.4))' }} />
+                        <MapPin className="w-[72px] h-[72px] text-premium-green mx-auto" style={{ filter: ROLE_TOKENS.agent.iconFilter }} />
                         <div className="space-y-1">
                           <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-green/50">Секретная локация</p>
                           <h3
                             className="font-black italic text-white uppercase tracking-tighter leading-tight wrap-break-word"
-                            style={{ textShadow: '0 0 32px rgba(34,197,94,0.22)', fontSize: 'clamp(22px, 9vw, 40px)' }}
+                            style={{ textShadow: ROLE_TOKENS.agent.textShadow, fontSize: 'clamp(22px, 9vw, 40px)' }}
                           >
                             {location}
                           </h3>
@@ -209,7 +200,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                       <button
                         onClick={nextPlayer}
                         className="w-full py-4 bg-premium-green rounded-[18px] font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
-                        style={{ boxShadow: '0 8px 32px rgba(34,197,94,0.22)' }}
+                        style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
                       </button>

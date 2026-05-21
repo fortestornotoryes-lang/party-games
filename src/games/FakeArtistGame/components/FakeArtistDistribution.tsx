@@ -6,6 +6,7 @@ import { contentService } from '../../../services/contentService';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
 import { FakeArtistDifficulty } from '../../../constants/fakeArtistContent';
 import { PassPhoneCard } from '../../../components/PassPhoneCard';
+import { rgba } from '../../../theme/colors';
 
 interface Props {
   players: Player[];
@@ -93,11 +94,11 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="w-full aspect-3/4 rounded-[2.5rem] flex flex-col relative overflow-hidden"
                 style={{
                   border: isSpy
-                    ? '1.5px solid rgba(255,46,77,0.45)'
-                    : '1.5px solid rgba(31,182,255,0.35)',
+                    ? `1.5px solid ${rgba('red', 0.45)}`
+                    : `1.5px solid ${rgba('sky', 0.35)}`,
                   boxShadow: isSpy
-                    ? '0 0 80px rgba(255,46,77,0.22), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,46,77,0.12)'
-                    : '0 0 70px rgba(31,182,255,0.15), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(31,182,255,0.08)',
+                    ? `0 0 80px ${rgba('red', 0.22)}, 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 ${rgba('red', 0.12)}`
+                    : `0 0 70px ${rgba('sky', 0.15)}, 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 ${rgba('sky', 0.08)}`,
                 }}
               >
                 {/* Gradient bg */}
@@ -111,9 +112,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 <div
                   className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl pointer-events-none opacity-60"
                   style={{
-                    background: isSpy
-                      ? 'rgba(255,46,77,0.28)'
-                      : 'rgba(31,182,255,0.2)',
+                    background: isSpy ? rgba('red', 0.28) : rgba('sky', 0.2),
                   }}
                 />
 
@@ -135,12 +134,12 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                         <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 2.5, repeat: Infinity }}>
                           <Ghost
                             className="w-[88px] h-[88px] text-premium-red mx-auto"
-                            style={{ filter: 'drop-shadow(0 0 20px rgba(255,46,77,0.5))' }}
+                            style={{ filter: `drop-shadow(0 0 20px ${rgba('red', 0.5)})` }}
                           />
                         </motion.div>
                         <h3
                           className="text-[56px] font-black italic text-premium-red tracking-tighter leading-none"
-                          style={{ textShadow: '0 0 48px rgba(255,46,77,0.45)' }}
+                          style={{ textShadow: `0 0 48px ${rgba('red', 0.45)}` }}
                         >
                           САМО&shy;ЗВАНЕЦ
                         </h3>
@@ -156,7 +155,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                       <button
                         onClick={next}
                         className="w-full py-4 bg-premium-red rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
-                        style={{ boxShadow: '0 8px 32px rgba(255,46,77,0.35)' }}
+                        style={{ boxShadow: `0 8px 32px ${rgba('red', 0.35)}` }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}
                       </button>
@@ -178,13 +177,13 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                       <div className="space-y-4">
                         <Palette
                           className="w-[72px] h-[72px] text-premium-sky mx-auto"
-                          style={{ filter: 'drop-shadow(0 0 16px rgba(31,182,255,0.45))' }}
+                          style={{ filter: `drop-shadow(0 0 16px ${rgba('sky', 0.45)})` }}
                         />
                         <div className="space-y-1">
                           <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-sky/50">Твоё слово</p>
                           <h3
                             className="text-[46px] font-black italic text-white uppercase tracking-tighter leading-tight"
-                            style={{ textShadow: '0 0 32px rgba(31,182,255,0.25)' }}
+                            style={{ textShadow: `0 0 32px ${rgba('sky', 0.25)}` }}
                           >
                             {word}
                           </h3>
@@ -199,7 +198,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                       <button
                         onClick={next}
                         className="w-full py-4 bg-premium-sky rounded-[18px] font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
-                        style={{ boxShadow: '0 8px 32px rgba(31,182,255,0.25)' }}
+                        style={{ boxShadow: `0 8px 32px ${rgba('sky', 0.25)}` }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}
                       </button>

@@ -114,7 +114,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
           title={GAMES_REGISTRY.resistance.title}
           subtitle={`Миссия ${missionIndex + 1}`} 
           icon={Shield} 
-          themeColor="border-premium-blue/50 text-premium-blue"
+          theme="blue"
           onBack={onBack}
        />
 
