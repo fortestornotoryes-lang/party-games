@@ -114,7 +114,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
                       <div>
                         <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">Секретная роль</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
                       </div>
 
                       <div className="space-y-3">
@@ -153,7 +153,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
                       <div>
                         <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-orange/50">Секретная роль</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
                       </div>
 
                       <div className="space-y-4">
@@ -185,7 +185,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
                       <div>
                         <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-green/50">Агент</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5">{currentPlayer.name}</h4>
+                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
                       </div>
 
                       <div className="space-y-4">
