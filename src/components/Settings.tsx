@@ -25,11 +25,6 @@ const ALL_WORD_GAMES = [
   { id: GameKey.TruthOrDare,   short: 'П/Действие',  activeCls: 'bg-premium-red/10    border-premium-red/30    text-premium-red'    },
 ] as const;
 
-// Games where a single word makes sense across multiple (can cross-add)
-const CROSS_ADD_IDS = new Set<GameKey>([
-  GameKey.JustOne, GameKey.Alias, GameKey.Telestrations, GameKey.Codenames, GameKey.Decrypto,
-]);
-
 const DIFFICULTIES: { id: Difficulty; label: string }[] = [
   { id: 'easy',   label: 'Легко' },
   { id: 'medium', label: 'Норма' },
@@ -57,24 +52,26 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
 
   // Words tab state
-  const [selectedGame, setSelectedGame] = useState<GameKey>(GameKey.JustOne);
+  // alsoAdd is the primary game selector — chips under the word field
+  const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set([GameKey.JustOne]));
+  const [wordDiff, setWordDiff] = useState<Difficulty>('medium');
   const [todType, setTodType] = useState<'truth' | 'dare'>('truth');
   const [todDiff, setTodDiff] = useState<Difficulty>('medium');
-  const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set());
   const [newWord, setNewWord] = useState('');
   const [customWords, setCustomWords] = useState<string[]>([]);
   const [usedCount, setUsedCount] = useState(0);
 
-  const isTod = selectedGame === GameKey.TruthOrDare;
-  const isCrossAdd = CROSS_ADD_IDS.has(selectedGame);
+  // selectedGame = first chip in selection (used for word list / progress display)
+  const selectedGame = Array.from(alsoAdd)[0] ?? GameKey.JustOne;
+  const isTod = alsoAdd.has(GameKey.TruthOrDare);
 
   const loadData = useCallback(() => {
     const words = isTod
       ? storageService.getCustomWordsByKey(todKey(todType, todDiff))
-      : storageService.getCustomWords(selectedGame);
+      : storageService.getCustomWordsByKey(`${selectedGame}_${wordDiff}`);
     setCustomWords(words);
     setUsedCount(storageService.getUsedWords(selectedGame).length);
-  }, [selectedGame, todType, todDiff, isTod]);
+  }, [selectedGame, todType, todDiff, isTod, wordDiff]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
@@ -88,18 +85,29 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     if (key === 'sounds') feedbackService.playSound('click');
   };
 
-  const handleGameChange = (id: GameKey) => {
-    setSelectedGame(id);
-    setAlsoAdd(new Set());
-    setNewWord('');
-  };
-
   const toggleAlsoAdd = (id: GameKey) => {
     setAlsoAdd(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (id === GameKey.TruthOrDare) {
+        // TruthOrDare is mutually exclusive with other games
+        if (next.has(id)) {
+          if (next.size > 1) next.delete(id);
+        } else {
+          next.clear();
+          next.add(id);
+        }
+      } else {
+        // Selecting a regular game clears TruthOrDare
+        next.delete(GameKey.TruthOrDare);
+        if (next.has(id)) {
+          if (next.size > 1) next.delete(id);
+        } else {
+          next.add(id);
+        }
+      }
       return next;
     });
+    setNewWord('');
   };
 
   const handleAdd = () => {
@@ -109,8 +117,9 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     if (isTod) {
       storageService.addCustomWordByKey(todKey(todType, todDiff), word);
     } else {
-      storageService.addCustomWord(selectedGame, word);
-      alsoAdd.forEach(id => storageService.addCustomWord(id, word));
+      alsoAdd.forEach(id =>
+        storageService.addCustomWordByKey(`${id}_${wordDiff}`, word)
+      );
     }
 
     setNewWord('');
@@ -121,7 +130,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     if (isTod) {
       storageService.removeCustomWordByKey(todKey(todType, todDiff), word);
     } else {
-      storageService.removeCustomWord(selectedGame, word);
+      storageService.removeCustomWordByKey(`${selectedGame}_${wordDiff}`, word);
     }
     loadData();
   };
@@ -220,25 +229,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* 1. Game selector */}
-            <div>
-              <SectionLabel>Игра</SectionLabel>
-              <div className="flex gap-2 overflow-x-auto pb-2 -mx-6 px-6" style={{ scrollbarWidth: 'none' }}>
-                {ALL_WORD_GAMES.map(game => (
-                  <button
-                    key={game.id}
-                    onClick={() => handleGameChange(game.id)}
-                    className={`shrink-0 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
-                      selectedGame === game.id ? game.activeCls : 'border-white/8 text-white/25'
-                    }`}
-                  >
-                    {game.short}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 2. TruthOrDare — type + difficulty selectors */}
+            {/* 1. TruthOrDare — type + difficulty selectors */}
             {isTod && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -285,7 +276,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </motion.div>
             )}
 
-            {/* 3. Progress */}
+            {/* 2. Progress */}
             <div className="flex items-center justify-between py-1">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-0.5">Прогресс</p>
@@ -304,9 +295,30 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               )}
             </div>
 
-            {/* 4. Add form */}
+            {/* 3. Add form */}
             <div className="space-y-3">
               <SectionLabel>Добавить</SectionLabel>
+
+              {/* Difficulty selector (non-TruthOrDare) */}
+              {!isTod && (
+                <div className="grid grid-cols-3 gap-2">
+                  {DIFFICULTIES.map(d => (
+                    <button
+                      key={d.id}
+                      onClick={() => setWordDiff(d.id)}
+                      className={`py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        wordDiff === d.id
+                          ? d.id === 'easy'   ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
+                          : d.id === 'medium' ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
+                                              : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
+                          : 'border-white/8 text-white/20'
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               <div className="flex gap-2">
                 <TextInput
@@ -325,35 +337,33 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                 </button>
               </div>
 
-              {/* Cross-add chips — only for word-type games */}
-              {isCrossAdd && (
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.35em] text-white/20 mb-2">
-                    Также добавить в:
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {ALL_WORD_GAMES.filter(g => CROSS_ADD_IDS.has(g.id) && g.id !== selectedGame).map(game => (
-                      <button
-                        key={game.id}
-                        onClick={() => toggleAlsoAdd(game.id)}
-                        className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
-                          alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
-                        }`}
-                      >
-                        {game.short}
-                      </button>
-                    ))}
-                  </div>
+              {/* Game chips — primary game selector */}
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.35em] text-white/20 mb-2">
+                  Добавить в:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {ALL_WORD_GAMES.map(game => (
+                    <button
+                      key={game.id}
+                      onClick={() => toggleAlsoAdd(game.id)}
+                      className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                        alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
+                      }`}
+                    >
+                      {game.short}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
 
-            {/* 5. Custom words list */}
+            {/* 4. Custom words list */}
             <div>
               <SectionLabel>
                 {isTod
                   ? `Свои ${todType === 'truth' ? 'правды' : 'действия'} · ${DIFFICULTIES.find(d => d.id === todDiff)?.label}`
-                  : 'Свои слова'
+                  : `Свои слова · ${DIFFICULTIES.find(d => d.id === wordDiff)?.label}`
                 }
               </SectionLabel>
 

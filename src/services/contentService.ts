@@ -20,7 +20,10 @@ export const contentService = {
     });
 
     const staticWords = targetCategories.flatMap(c => c.words);
-    const customWords = storageService.getCustomWords(GameKey.Alias);
+    const customWords = [
+      ...storageService.getCustomWords(GameKey.Alias),
+      ...storageService.getCustomWordsByKey(`${GameKey.Alias}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Alias);
     const all = [...staticWords, ...customWords];
 
@@ -34,7 +37,10 @@ export const contentService = {
 
   getCodenamesWords(difficulty: Difficulty): string[] {
     const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
-    const custom = storageService.getCustomWords(GameKey.Codenames);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.Codenames),
+      ...storageService.getCustomWordsByKey(`${GameKey.Codenames}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Codenames);
     const all = [...pool, ...custom];
 
@@ -51,7 +57,10 @@ export const contentService = {
 
   getDecryptoWords(difficulty: Difficulty, count: number = 4): string[] {
     const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
-    const custom = storageService.getCustomWords(GameKey.Decrypto);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.Decrypto),
+      ...storageService.getCustomWordsByKey(`${GameKey.Decrypto}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Decrypto);
     const all = [...pool, ...custom];
 
@@ -68,7 +77,10 @@ export const contentService = {
 
   getJustOneWord(difficulty: Difficulty): string {
     const pool = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
-    const custom = storageService.getCustomWords(GameKey.JustOne);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.JustOne),
+      ...storageService.getCustomWordsByKey(`${GameKey.JustOne}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.JustOne);
     const all = [...pool, ...custom];
 
@@ -85,7 +97,10 @@ export const contentService = {
 
   getWavelengthPair(difficulty: Difficulty): string[] {
     const pool = (WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] || WAVELENGTH_DATA_BY_DIFFICULTY.medium) as string[][];
-    const custom = storageService.getCustomWords(GameKey.Wavelength);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.Wavelength),
+      ...storageService.getCustomWordsByKey(`${GameKey.Wavelength}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Wavelength);
 
     const all = [
@@ -106,7 +121,10 @@ export const contentService = {
 
   getTelestrationsWord(difficulty: Difficulty): string {
     const pool = TELESTRATIONS_WORDS[difficulty] || TELESTRATIONS_WORDS.medium;
-    const custom = storageService.getCustomWords(GameKey.Telestrations);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.Telestrations),
+      ...storageService.getCustomWordsByKey(`${GameKey.Telestrations}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Telestrations);
     const all = [...pool, ...custom];
 
@@ -123,7 +141,10 @@ export const contentService = {
 
   getFakeArtistWord(difficulty: Difficulty): { word: string; category: string } {
     const staticPool = FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty];
-    const custom = storageService.getCustomWords(GameKey.FakeArtist);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.FakeArtist),
+      ...storageService.getCustomWordsByKey(`${GameKey.FakeArtist}_${difficulty}`),
+    ];
     const used = storageService.getUsedWords(GameKey.FakeArtist);
 
     const pool = [...staticPool, ...custom.map(w => ({ word: w, category: 'Своё' }))];
@@ -145,7 +166,10 @@ export const contentService = {
       ? difficulty as SpyDifficulty
       : 'medium';
 
-    const custom = storageService.getCustomWords(GameKey.Spy);
+    const custom = [
+      ...storageService.getCustomWords(GameKey.Spy),
+      ...storageService.getCustomWordsByKey(`${GameKey.Spy}_${diffKey}`),
+    ];
     const used = storageService.getUsedWords(GameKey.Spy);
     const all = [
       ...LOCATIONS_BY_DIFFICULTY[diffKey],
