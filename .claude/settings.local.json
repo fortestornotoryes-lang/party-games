@@ -11,7 +11,8 @@
       "Read(//c/Users/Alex/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.5.0/.claude/skills/ui-ux-pro-max/**)",
       "Bash(python scripts/search.py \"party games entertainment social vibrant dark immersive\" --design-system -p \"Party Hub\" -f markdown)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\customGame\\\\src\\\\games\\\\\" -Recurse | Where-Object {$_.Extension -in @\\('.tsx', '.ts', '.jsx', '.js'\\)} | ForEach-Object {$_.FullName})",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:fortestornotoryes-lang.github.io)"
     ]
   },
   "enabledPlugins": {

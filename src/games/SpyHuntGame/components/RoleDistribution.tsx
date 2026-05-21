@@ -29,7 +29,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden select-none">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-y-auto select-none">
 
       {/* Progress dots */}
       <div className="flex gap-2 mb-8">
@@ -78,7 +78,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                 initial={{ scale: 0.82, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className="w-full aspect-[3/4] rounded-[2.5rem] flex flex-col relative overflow-hidden"
+                className="w-full min-h-[28rem] rounded-[2.5rem] flex flex-col relative overflow-hidden"
                 style={{
                   border: `1.5px solid ${
                     roleType === 'spy' ? 'rgba(255,46,77,0.45)'
@@ -193,8 +193,8 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                         <div className="space-y-1">
                           <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-green/50">Секретная локация</p>
                           <h3
-                            className="text-[40px] font-black italic text-white uppercase tracking-tighter leading-tight"
-                            style={{ textShadow: '0 0 32px rgba(34,197,94,0.22)' }}
+                            className="font-black italic text-white uppercase tracking-tighter leading-tight wrap-break-word"
+                            style={{ textShadow: '0 0 32px rgba(34,197,94,0.22)', fontSize: 'clamp(22px, 9vw, 40px)' }}
                           >
                             {location}
                           </h3>
