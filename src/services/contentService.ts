@@ -206,7 +206,10 @@ export const contentService = {
 
   getWordStats(gameId: GameKey, difficulty: Difficulty): { total: number; remaining: number } {
     const used = storageService.getUsedWords(gameId);
-    const custom = storageService.getCustomWords(gameId);
+    const custom = [
+      ...storageService.getCustomWords(gameId),
+      ...storageService.getCustomWordsByKey(`${gameId}_${difficulty}`),
+    ];
 
     switch (gameId) {
       case GameKey.Alias: {

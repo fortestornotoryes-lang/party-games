@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Plus, Trash2, RefreshCw, Database } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, RefreshCw, Database, Search } from 'lucide-react';
 import { storageService, GameSettings } from '../services/storageService';
 import { feedbackService } from '../services/feedbackService';
 import { GameKey } from '../types/games';
 import { Difficulty } from '../types';
 import { SectionLabel, IconButton, TextInput, PageWrapper, Typography, TabButton } from './UI';
+import { Pagination } from './Pagination';
 
 interface SettingsProps {
   onBack: () => void;
 }
 
-// ─── game meta ────────────────────────────────────────────────────────────────
+// ─── constants ────────────────────────────────────────────────────────────────
+
+const PAGE_SIZE = 8;
 
 const ALL_WORD_GAMES = [
   { id: GameKey.JustOne,       short: 'Just One',   activeCls: 'bg-premium-yellow/10 border-premium-yellow/30 text-premium-yellow' },
@@ -45,6 +48,25 @@ function todKey(type: 'truth' | 'dare', diff: Difficulty) {
   return `tod_${type}_${diff}`;
 }
 
+// ─── sub-components ───────────────────────────────────────────────────────────
+
+const SettingToggle: React.FC<{
+  label: string; description: string; value: boolean; onToggle: () => void;
+}> = ({ label, description, value, onToggle }) => (
+  <div className="flex items-center justify-between py-2">
+    <div>
+      <p className="text-sm font-bold text-white/80">{label}</p>
+      <p className="text-[10px] text-white/25 uppercase font-black tracking-widest">{description}</p>
+    </div>
+    <button
+      onClick={onToggle}
+      className={`w-12 h-6 rounded-full p-1 transition-colors ${value ? 'bg-premium-green' : 'bg-white/10'}`}
+    >
+      <motion.div animate={{ x: value ? 24 : 0 }} className="w-4 h-4 bg-white rounded-full shadow-lg" />
+    </button>
+  </div>
+);
+
 // ─── component ────────────────────────────────────────────────────────────────
 
 export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
@@ -52,18 +74,28 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
 
   // Words tab state
-  // alsoAdd is the primary game selector — chips under the word field
   const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set([GameKey.JustOne]));
   const [wordDiff, setWordDiff] = useState<Difficulty>('medium');
   const [todType, setTodType] = useState<'truth' | 'dare'>('truth');
   const [todDiff, setTodDiff] = useState<Difficulty>('medium');
   const [newWord, setNewWord] = useState('');
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [customWords, setCustomWords] = useState<string[]>([]);
   const [usedCount, setUsedCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // selectedGame = first chip in selection (used for word list / progress display)
   const selectedGame = Array.from(alsoAdd)[0] ?? GameKey.JustOne;
   const isTod = alsoAdd.has(GameKey.TruthOrDare);
+
+  // Filtered + paginated slice
+  const filteredWords = customWords.filter(w =>
+    w.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const pagedWords = filteredWords.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   const loadData = useCallback(() => {
     const words = isTod
@@ -74,6 +106,18 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   }, [selectedGame, todType, todDiff, isTod, wordDiff]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Reset pagination + search when context switches
+  useEffect(() => {
+    setSearchQuery('');
+    setCurrentPage(1);
+  }, [selectedGame, wordDiff, todType, todDiff]);
+
+  // Keep page in bounds after search narrows results
+  useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil(filteredWords.length / PAGE_SIZE));
+    if (currentPage > maxPage) setCurrentPage(maxPage);
+  }, [filteredWords.length, currentPage]);
 
   // ── handlers ──
 
@@ -89,7 +133,6 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     setAlsoAdd(prev => {
       const next = new Set(prev);
       if (id === GameKey.TruthOrDare) {
-        // TruthOrDare is mutually exclusive with other games
         if (next.has(id)) {
           if (next.size > 1) next.delete(id);
         } else {
@@ -97,7 +140,6 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
           next.add(id);
         }
       } else {
-        // Selecting a regular game clears TruthOrDare
         next.delete(GameKey.TruthOrDare);
         if (next.has(id)) {
           if (next.size > 1) next.delete(id);
@@ -108,11 +150,30 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
       return next;
     });
     setNewWord('');
+    setValidationError(null);
   };
 
   const handleAdd = () => {
     const word = newWord.trim();
-    if (!word) return;
+
+    if (word.length < 3) {
+      setValidationError('Минимум 3 буквы');
+      return;
+    }
+
+    const wordLower = word.toLowerCase();
+    const isDuplicate = isTod
+      ? storageService.getCustomWordsByKey(todKey(todType, todDiff))
+          .some(w => w.toLowerCase() === wordLower)
+      : Array.from(alsoAdd).some(id =>
+          storageService.getCustomWordsByKey(`${id}_${wordDiff}`)
+            .some(w => w.toLowerCase() === wordLower)
+        );
+
+    if (isDuplicate) {
+      setValidationError('Уже добавлено');
+      return;
+    }
 
     if (isTod) {
       storageService.addCustomWordByKey(todKey(todType, todDiff), word);
@@ -123,6 +184,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     }
 
     setNewWord('');
+    setValidationError(null);
     loadData();
   };
 
@@ -132,6 +194,10 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     } else {
       storageService.removeCustomWordByKey(`${selectedGame}_${wordDiff}`, word);
     }
+    // If last item on page, step back
+    if (pagedWords.length === 1 && currentPage > 1) {
+      setCurrentPage(p => p - 1);
+    }
     loadData();
   };
 
@@ -140,25 +206,6 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     storageService.resetUsedWords(selectedGame);
     setUsedCount(0);
   };
-
-  // ── sub-components ──
-
-  const SettingToggle = ({
-    label, description, value, onToggle,
-  }: { label: string; description: string; value: boolean; onToggle: () => void }) => (
-    <div className="flex items-center justify-between py-2">
-      <div>
-        <p className="text-sm font-bold text-white/80">{label}</p>
-        <p className="text-[10px] text-white/25 uppercase font-black tracking-widest">{description}</p>
-      </div>
-      <button
-        onClick={onToggle}
-        className={`w-12 h-6 rounded-full p-1 transition-colors ${value ? 'bg-premium-green' : 'bg-white/10'}`}
-      >
-        <motion.div animate={{ x: value ? 24 : 0 }} className="w-4 h-4 bg-white rounded-full shadow-lg" />
-      </button>
-    </div>
-  );
 
   // ── render ──
 
@@ -188,7 +235,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            <div className="glass-card rounded-[24px] p-6 border border-white/5 space-y-1">
+            <div className="glass-card rounded-3xl p-6 border border-white/5 space-y-1">
               <SectionLabel className="mb-5">Эффекты и отклик</SectionLabel>
               <div className="divide-y divide-white/5">
                 <SettingToggle label="Визуальные эффекты" description="Конфетти и анимации"  value={!!settings.visualEffects} onToggle={() => toggleSetting('visualEffects')} />
@@ -197,7 +244,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </div>
             </div>
 
-            <div className="glass-card rounded-[24px] p-6 border border-white/5">
+            <div className="glass-card rounded-3xl p-6 border border-white/5">
               <SectionLabel className="mb-4">Хранилище</SectionLabel>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-premium-green/10 rounded-xl flex items-center justify-center border border-premium-green/20">
@@ -213,7 +260,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="glass-card rounded-[24px] p-6 border border-white/5">
+            <div className="glass-card rounded-3xl p-6 border border-white/5">
               <SectionLabel className="mb-2">О приложении</SectionLabel>
               <p className="text-xs text-white/30 leading-relaxed">Версия 1.1.0-beta · С любовью для вечеринок</p>
             </div>
@@ -230,51 +277,52 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             className="space-y-6"
           >
             {/* 1. TruthOrDare — type + difficulty selectors */}
-            {isTod && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="space-y-3"
-              >
-                {/* Type */}
-                <div className="grid grid-cols-2 gap-2">
-                  {(['truth', 'dare'] as const).map(t => (
-                    <button
-                      key={t}
-                      onClick={() => setTodType(t)}
-                      className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                        todType === t
-                          ? t === 'truth'
-                            ? 'bg-premium-sky/10 border-premium-sky/30 text-premium-sky'
-                            : 'bg-premium-red/10 border-premium-red/30 text-premium-red'
-                          : 'border-white/8 text-white/20'
-                      }`}
-                    >
-                      {t === 'truth' ? 'Правда' : 'Действие'}
-                    </button>
-                  ))}
-                </div>
-                {/* Difficulty */}
-                <div className="grid grid-cols-3 gap-2">
-                  {DIFFICULTIES.map(d => (
-                    <button
-                      key={d.id}
-                      onClick={() => setTodDiff(d.id)}
-                      className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                        todDiff === d.id
-                          ? d.id === 'easy'   ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
-                          : d.id === 'medium' ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
-                                              : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
-                          : 'border-white/8 text-white/20'
-                      }`}
-                    >
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {isTod && (
+                <motion.div
+                  key="tod-selectors"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-3"
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['truth', 'dare'] as const).map(t => (
+                      <button
+                        key={t}
+                        onClick={() => setTodType(t)}
+                        className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                          todType === t
+                            ? t === 'truth'
+                              ? 'bg-premium-sky/10 border-premium-sky/30 text-premium-sky'
+                              : 'bg-premium-red/10 border-premium-red/30 text-premium-red'
+                            : 'border-white/8 text-white/20'
+                        }`}
+                      >
+                        {t === 'truth' ? 'Правда' : 'Действие'}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {DIFFICULTIES.map(d => (
+                      <button
+                        key={d.id}
+                        onClick={() => setTodDiff(d.id)}
+                        className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                          todDiff === d.id
+                            ? d.id === 'easy'   ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
+                            : d.id === 'medium' ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
+                                                : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
+                            : 'border-white/8 text-white/20'
+                        }`}
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* 2. Progress */}
             <div className="flex items-center justify-between py-1">
@@ -320,21 +368,37 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                 </div>
               )}
 
-              <div className="flex gap-2">
-                <TextInput
-                  value={newWord}
-                  onChange={e => setNewWord(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleAdd()}
-                  placeholder={getPlaceholder(selectedGame)}
-                  className="flex-1"
-                />
-                <button
-                  onClick={handleAdd}
-                  disabled={!newWord.trim()}
-                  className="shrink-0 w-12 rounded-2xl bg-premium-green text-black flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
+              <div className="space-y-1.5">
+                <div className="flex gap-2">
+                  <TextInput
+                    value={newWord}
+                    onChange={e => { setNewWord(e.target.value); setValidationError(null); }}
+                    onKeyDown={e => e.key === 'Enter' && handleAdd()}
+                    placeholder={getPlaceholder(selectedGame)}
+                    className="flex-1"
+                  />
+                  <button
+                    onClick={handleAdd}
+                    disabled={newWord.trim().length < 3}
+                    className="shrink-0 w-12 rounded-2xl bg-premium-green text-black flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Validation error */}
+                <AnimatePresence>
+                  {validationError && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="text-[10px] font-black uppercase tracking-widest text-premium-red/70 pl-1"
+                    >
+                      {validationError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Game chips — primary game selector */}
@@ -372,22 +436,49 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   Ничего не добавлено
                 </p>
               ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                  {customWords.map(word => (
-                    <div
-                      key={word}
-                      className="flex items-center justify-between bg-white/[0.02] px-4 py-3 rounded-2xl border border-white/5"
-                    >
-                      <span className="text-sm font-medium text-white/60 leading-snug flex-1 mr-3">{word}</span>
-                      <button
-                        onClick={() => handleRemove(word)}
-                        className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-lg"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                <>
+                  {/* Search */}
+                  <div className="relative mb-3">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20 pointer-events-none" />
+                    <input
+                      value={searchQuery}
+                      onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                      placeholder="Поиск..."
+                      className="w-full pl-8 pr-4 py-2.5 bg-white/5 rounded-2xl text-sm text-white/60 placeholder:text-white/20 border border-white/8 outline-none"
+                    />
+                  </div>
+
+                  {/* Word list */}
+                  {filteredWords.length === 0 ? (
+                    <p className="text-[11px] text-white/15 font-medium text-center py-6 italic">
+                      Ничего не найдено
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {pagedWords.map(word => (
+                        <div
+                          key={word}
+                          className="flex items-center justify-between bg-white/2 px-4 py-3 rounded-2xl border border-white/5"
+                        >
+                          <span className="text-sm font-medium text-white/60 leading-snug flex-1 mr-3">{word}</span>
+                          <button
+                            onClick={() => handleRemove(word)}
+                            className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-lg"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+
+                      <Pagination
+                        page={currentPage}
+                        total={filteredWords.length}
+                        perPage={PAGE_SIZE}
+                        onChange={setCurrentPage}
+                      />
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
           </motion.div>
