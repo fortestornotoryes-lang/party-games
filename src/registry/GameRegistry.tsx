@@ -1,4 +1,9 @@
 import React, {lazy} from 'react';
+import mafia from '../assets/Gemini_Generated_Image_ozm0i6ozm0i6ozm0.png';
+import TruthOrDareImage from '../assets/TruthOrDare.png';
+import decryptoImage from '../assets/decryptoImage.png';
+import mafia2 from '../assets/mafia_2.png';
+import telestrationsImg from '../assets/telephone.png';
 import {
     Shield,
     Palette,
@@ -71,7 +76,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '2+',
         description: 'Классическая игра: ответь честно на вопрос или выполни задание',
         minPlayers: 2,
-        setupStatus: GameStatus.TruthOrDarePlaying
+        setupStatus: GameStatus.TruthOrDarePlaying,
+        backgroundImage: TruthOrDareImage,
+
     },
     [GameKey.Telestrations]: {
         id: GameKey.Telestrations,
@@ -83,7 +90,8 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '4–12',
         description: 'Рисуй и угадывай по цепочке',
         minPlayers: 4,
-        setupStatus: GameStatus.TelestrationsPlaying
+        setupStatus: GameStatus.TelestrationsPlaying,
+        backgroundImage: telestrationsImg,
     },
     [GameKey.Codenames]: {
         id: GameKey.Codenames,
@@ -122,7 +130,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             {id: 'classic', name: 'Классика', description: '4 слова, код из 3 цифр', icon: Key},
             {id: 'extended_5', name: 'Широкий код', description: '5 слов, код из 3 цифр', icon: Target},
             {id: 'extended_6', name: 'Супер-шифровка', description: '6 слов, код из 3 цифр', icon: Brain},
-        ]
+        ],
+        backgroundImage: decryptoImage,
+
     },
     [GameKey.Alias]: {
         id: GameKey.Alias,
@@ -170,7 +180,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '3–12',
         description: 'Одно слово — одна подсказка',
         minPlayers: 3,
-        setupStatus: GameStatus.JustOnePlaying
+        setupStatus: GameStatus.JustOnePlaying,
+        backgroundImage: mafia2,
+
     },
     [GameKey.Mafia]: {
         id: GameKey.Mafia,
@@ -182,7 +194,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '6–12',
         description: 'Город засыпает...',
         minPlayers: 6,
-        setupStatus: GameStatus.MafiaPlaying
+        setupStatus: GameStatus.MafiaPlaying,
+        backgroundImage: mafia2,
+
     },
 
 } as const;

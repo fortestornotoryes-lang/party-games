@@ -46,7 +46,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
                     src={game.backgroundImage}
                     alt=""
                     aria-hidden
-                    className="absolute inset-0 w-full h-full object-cover opacity-[0.07] group-hover:opacity-[0.12] transition-opacity duration-300 scale-[1.04] group-hover:scale-100 pointer-events-none"
+                    className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-35 transition-all duration-300 scale-[1] pointer-events-none"
                 />
             )}
 
