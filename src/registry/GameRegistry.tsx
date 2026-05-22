@@ -27,7 +27,8 @@ import {
     LucideIcon,
     Users,
     Flame,
-    LayoutGrid
+    LayoutGrid,
+    ArrowDown
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -233,7 +234,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         minPlayers: 2,
         setupStatus: GameStatus.ConnectFourPlaying,
         backgroundImage: ConnectFourImage,
-
+        modes: [
+            { id: 'classic',      name: 'Классика',     description: '7×6 — собери 4 фишки в ряд',           icon: Grid },
+            { id: 'large',        name: 'Большое поле', description: '9×7 — больше пространства для тактики', icon: LayoutGrid },
+            { id: 'connect_five', name: 'Пять в ряд',   description: '9×7 — нужно собрать 5 фишек подряд',   icon: Target },
+            { id: 'pop_out',      name: 'Pop Out',       description: '7×6 — вытащи нижнюю фишку из столбца', icon: ArrowDown },
+        ],
     },
 } as const;
 
