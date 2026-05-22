@@ -12,7 +12,8 @@ export enum GameKey {
     Codenames = 'codenames',
     Decrypto = 'decrypto',
     Mafia = 'mafia',
-    TruthOrDare = 'truth_or_dare'
+    TruthOrDare = 'truth_or_dare',
+    ConnectFour = 'connect_four'
 }
 
 export interface InstructionItem {

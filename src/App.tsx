@@ -15,6 +15,7 @@ import {GameSettingsProvider, useGameSettings} from './contexts/GameSettingsCont
 import {
   AliasGame,
   CodenamesGame,
+  ConnectFourGame,
   DecryptoGame,
   FakeArtistGame,
   GAMES_REGISTRY,
@@ -72,6 +73,7 @@ function AppContent() {
             case GameStatus.DecryptoPlaying: return <DecryptoGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.MafiaPlaying: return <MafiaGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.TruthOrDarePlaying: return <TruthOrDareGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.ConnectFourPlaying: return <ConnectFourGame playerNames={playerNames} onBack={reset} />;
 
             case GameStatus.Playing: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;

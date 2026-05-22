@@ -11,6 +11,7 @@ import ResistanceImage from '../assets/ResistanceImage.png';
 import SpyHuntImage from '../assets/SpyHuntImage.png';
 import WavelengthImage from '../assets/WavelengthImage.png';
 import alieaImage from '../assets/alieaImage.png';
+import ConnectFourImage from '../assets/ConnectFourImage2.png';
 import {
     Shield,
     Palette,
@@ -25,7 +26,8 @@ import {
     Key,
     LucideIcon,
     Users,
-    Flame
+    Flame,
+    LayoutGrid
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -42,6 +44,7 @@ const CodenamesGame = lazy(() => import('../games/CodenamesGame/CodenamesGame').
 const DecryptoGame = lazy(() => import('../games/DecryptoGame/DecryptoGame').then(m => ({default: m.DecryptoGame})));
 const MafiaGame = lazy(() => import('../games/MafiaGame/MafiaGame'));
 const TruthOrDareGame = lazy(() => import('../games/TruthOrDareGame/TruthOrDareGame').then(m => ({default: m.TruthOrDareGame})));
+const ConnectFourGame = lazy(() => import('../games/ConnectFourGame/ConnectFourGame').then(m => ({default: m.ConnectFourGame})));
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Spy]: {
@@ -218,6 +221,20 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
 
     },
 
+    [GameKey.ConnectFour]: {
+        id: GameKey.ConnectFour,
+        title: 'ЧЕТЫРЕ В РЯД',
+        subtitle: 'Connect Four',
+        icon: LayoutGrid,
+        theme: 'red',
+        placeholder: 'Игрок',
+        players: '2',
+        description: 'Первым собери 4 фишки в ряд — по горизонтали, вертикали или диагонали.',
+        minPlayers: 2,
+        setupStatus: GameStatus.ConnectFourPlaying,
+        backgroundImage: ConnectFourImage,
+
+    },
 } as const;
 
 export {
@@ -231,5 +248,6 @@ export {
     CodenamesGame,
     DecryptoGame,
     MafiaGame,
-    TruthOrDareGame
+    TruthOrDareGame,
+    ConnectFourGame,
 };
