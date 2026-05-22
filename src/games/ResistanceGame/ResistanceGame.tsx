@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Skull, CheckCircle2, XCircle, ArrowRight, RotateCcw, Activity } from 'lucide-react';
+import { Shield, Skull, CheckCircle2, XCircle, ArrowRight, RotateCcw, Activity, Fingerprint } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { MISSION_SIZES } from '../../constants/resistanceContent';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton, GameCard } from '../../components/UI';
+import { PassPhoneCard } from '../../components/PassPhoneCard';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { initResistance } from '../../utils/gameLogic';
@@ -96,7 +97,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             setPhase(ResistancePhase.MissionResult);
           }
       } else {
-          setPhase(ResistancePhase.MissionVoting);
+          setPhase(ResistancePhase.PassingPhone);
       }
   };
 
@@ -158,14 +159,28 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                       ))}
                     </div>
 
-                    <PrimaryButton 
-                      disabled={selectedTeam.length !== missionSize} 
-                      onClick={() => setPhase(ResistancePhase.MissionVoting)} 
+                    <PrimaryButton
+                      disabled={selectedTeam.length !== missionSize}
+                      onClick={() => setPhase(ResistancePhase.PassingPhone)}
                       className="bg-white !text-black"
                       icon={ArrowRight}
                     >
                       НАЧАТЬ МИССИЮ
                     </PrimaryButton>
+                </motion.div>
+            )}
+
+            {phase === ResistancePhase.PassingPhone && (
+                <motion.div key={`pass-${missionVotes.length}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="flex-1 flex flex-col items-center justify-center">
+                    <PassPhoneCard
+                        playerName={currentVoter?.name ?? ''}
+                        badge="Голосует"
+                        badgeColor="sky"
+                        instruction="Нажми чтобы проголосовать"
+                        icon={Fingerprint}
+                        accentColor="sky"
+                        onClick={() => setPhase(ResistancePhase.MissionVoting)}
+                    />
                 </motion.div>
             )}
 

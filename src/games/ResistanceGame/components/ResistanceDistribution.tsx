@@ -1,7 +1,8 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, EyeOff, Skull } from 'lucide-react';
+import { Shield, EyeOff, Skull, Fingerprint } from 'lucide-react';
 import { Player } from '../../../types';
+import { PassPhoneCard } from '../../../components/PassPhoneCard';
 
 interface Props {
   players: Player[];
@@ -11,13 +12,39 @@ interface Props {
 export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) => {
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [passing, setPassing] = useState(false);
   const currentPlayer = players[idx];
   const spies = players.filter(p => p.isSpy).map(p => p.name);
 
-  const next = () => {
-    if (idx === players.length - 1) onFinish();
-    else { setRevealed(false); setIdx(idx + 1); }
+  const handleDone = () => {
+    if (idx === players.length - 1) {
+      onFinish();
+    } else {
+      setPassing(true);
+    }
   };
+
+  const handlePassDone = () => {
+    setRevealed(false);
+    setIdx(idx + 1);
+    setPassing(false);
+  };
+
+  if (passing) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <PassPhoneCard
+          playerName={players[idx + 1].name}
+          badge="Следующий"
+          badgeColor="default"
+          instruction="Передай телефон и нажми"
+          icon={Fingerprint}
+          accentColor="default"
+          onClick={handlePassDone}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-6 text-gray-200">
@@ -38,7 +65,7 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                                 <h4 className="text-4xl font-black text-premium-blue italic">СОПРОТИВЛЕНИЕ</h4>
                             </div>
                         )}
-                        <button onClick={next} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase">ЛАДУШКИ</button>
+                        <button onClick={handleDone} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase">ЛАДУШКИ</button>
                     </div>
                 )}
             </div>
