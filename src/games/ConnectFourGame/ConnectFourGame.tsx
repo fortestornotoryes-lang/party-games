@@ -272,7 +272,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               ? win.player === 1
                 ? 'bg-premium-red/5 border-premium-red/25'
                 : 'bg-premium-yellow/5 border-premium-yellow/25'
-              : 'bg-white/[0.04] border-white/10'
+              : 'bg-white/4 border-white/10'
           }`}
         >
           <div className={`grid ${colClass} gap-1.5`}>
@@ -295,7 +295,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                   >
                     {/* hole */}
                     <div className={`absolute inset-[3px] rounded-full border transition-colors duration-200 ${
-                      popTarget ? 'bg-black/55 border-white/20' : 'bg-black/80 border-white/[0.06]'
+                      popTarget ? 'bg-black/55 border-white/20' : 'bg-black/80 border-white/6'
                     }`} />
 
                     {/* piece */}

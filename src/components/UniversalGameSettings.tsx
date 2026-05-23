@@ -168,7 +168,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                       : 'glass-card border-white/5 text-white/80'
                   }`}
                 >
-                  <div className={`w-14 h-14 shrink-0 rounded-[18px] flex items-center justify-center transition-all ${
+                  <div className={`w-14 h-14 shrink-0 rounded-premium-md flex items-center justify-center transition-all ${
                     isActive ? `${getTheme('red').solid} text-white shadow-xl shadow-premium-red/20` : 'bg-white/5 text-white/20'
                   }`}>
                     <m.icon className="w-7 h-7" />

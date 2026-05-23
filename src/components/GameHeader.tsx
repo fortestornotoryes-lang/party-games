@@ -32,7 +32,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       }}
     >
       <div className="flex items-center gap-3">
-        <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center border ${t.headerTheme} bg-white/5`}>
+        <div className={`w-8 h-8 rounded-premium-sm flex items-center justify-center border ${t.headerTheme} bg-white/5`}>
           <Icon className="w-4 h-4" />
         </div>
         <div>

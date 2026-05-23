@@ -104,7 +104,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                 className="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto px-4 pb-8"
                             >
                                 <div
-                                    className="rounded-[28px] overflow-hidden border border-white/[0.08]"
+                                    className="rounded-[28px] overflow-hidden border border-white/8"
                                     style={{
                                         background: 'linear-gradient(160deg, rgba(20,20,25,0.97) 0%, rgba(10,10,12,0.99) 100%)',
                                         backdropFilter: 'blur(32px)',
@@ -119,7 +119,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                     <div className="px-6 pb-6 pt-4 space-y-5">
                                         {/* Header */}
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-12 h-12 rounded-[14px] ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0`}>
+                                            <div className={`w-12 h-12 rounded-premium-md ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0`}>
                                                 <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
                                                 <Icon className="w-5 h-5 text-white relative z-10" />
                                             </div>
@@ -131,7 +131,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                             </div>
                                             <button
                                                 onClick={() => setDescriptionGameId(null)}
-                                                className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/30 hover:text-white/60 transition-colors active:scale-90"
+                                                className="w-8 h-8 rounded-full bg-white/6 border border-white/10 flex items-center justify-center text-white/30 hover:text-white/60 transition-colors active:scale-90"
                                             >
                                                 <X className="w-4 h-4" />
                                             </button>
@@ -146,8 +146,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
                                         {/* Info row */}
                                         <div className="flex items-center gap-2">
-                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
-                                                <Users className="w-[10px] h-[10px]" />
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-premium-sm ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}>
+                                                <Users className="w-2.5 h-2.5" />
                                                 {descriptionGame.players} игроков
                                             </span>
                                         </div>
@@ -159,7 +159,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                                                 setDescriptionGameId(null);
                                                 onSelectGame(descriptionGame.id);
                                             }}
-                                            className={`w-full py-4 rounded-[18px] font-black uppercase tracking-[0.15em] text-[13px] text-black ${t.solid} active:scale-[0.98] transition-transform`}
+                                            className={`w-full py-4 rounded-premium-md font-black uppercase tracking-[0.15em] text-[13px] text-black ${t.solid} active:scale-[0.98] transition-transform`}
                                             style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}
                                         >
                                             Играть

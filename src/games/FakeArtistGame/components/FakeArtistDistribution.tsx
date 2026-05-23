@@ -154,7 +154,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
 
                       <button
                         onClick={next}
-                        className="w-full py-4 bg-premium-red rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
+                        className="w-full py-4 bg-premium-red rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                         style={{ boxShadow: `0 8px 32px ${rgba('red', 0.35)}` }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}
@@ -197,7 +197,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
 
                       <button
                         onClick={next}
-                        className="w-full py-4 bg-premium-sky rounded-[18px] font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
+                        className="w-full py-4 bg-premium-sky rounded-premium-md font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
                         style={{ boxShadow: `0 8px 32px ${rgba('sky', 0.25)}` }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}

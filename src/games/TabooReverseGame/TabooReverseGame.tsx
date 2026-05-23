@@ -226,7 +226,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
             >
               {/* Scoreboard */}
               <div className="flex gap-4 w-full max-w-sm">
-                {([['A', teamA.name, scoreA], ['B', teamB.name, scoreB]] as const).map(([key, name, score]) => (
+                {([['A', teamA.name, scoreA,teamA.players], ['B', teamB.name, scoreB,teamB.players]] as const).map(([key, name, score,players]) => (
                   <div
                     key={key}
                     className={`flex-1 p-4 rounded-2xl border text-center transition-all ${
@@ -238,6 +238,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
                     <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${
                       currentTeam === key ? 'text-premium-orange' : 'text-white/30'
                     }`}>{name}</p>
+                    <p>{players.join(',')}</p>
                     <p className="text-3xl font-black italic">{score}</p>
                   </div>
                 ))}

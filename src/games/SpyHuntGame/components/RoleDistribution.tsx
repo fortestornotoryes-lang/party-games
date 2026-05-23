@@ -131,7 +131,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
 
                       <button
                         onClick={nextPlayer}
-                        className="w-full py-4 bg-premium-red rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
+                        className="w-full py-4 bg-premium-red rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                         style={{ boxShadow: ROLE_TOKENS.spy.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
@@ -163,7 +163,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
 
                       <button
                         onClick={nextPlayer}
-                        className="w-full py-4 bg-premium-orange rounded-[18px] font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
+                        className="w-full py-4 bg-premium-orange rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                         style={{ boxShadow: ROLE_TOKENS.traitor.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
@@ -199,7 +199,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
 
                       <button
                         onClick={nextPlayer}
-                        className="w-full py-4 bg-premium-green rounded-[18px] font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
+                        className="w-full py-4 bg-premium-green rounded-premium-md font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
                         style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
                       >
                         {isLastPlayer ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}

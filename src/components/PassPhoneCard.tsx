@@ -27,7 +27,7 @@ const badgeStyles: Record<BadgeColor, string> = {
 };
 
 const accentStyles: Record<AccentColor, { ring: string; icon: string }> = {
-  default: { ring: 'bg-white/[0.04] border-white/[0.08]',              icon: 'text-white/35' },
+  default: { ring: 'bg-white/4 border-white/8',              icon: 'text-white/35' },
   green:   { ring: 'bg-premium-green/10  border-premium-green/20',     icon: 'text-premium-green/50' },
   sky:     { ring: 'bg-premium-sky/10    border-premium-sky/20',       icon: 'text-premium-sky/50' },
   red:     { ring: 'bg-premium-red/10    border-premium-red/20',       icon: 'text-premium-red/50' },

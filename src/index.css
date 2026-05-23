@@ -69,7 +69,8 @@
   --color-premium-indigo: #6366F1;
 
 
-  --radius-premium-lg: 22px;
+  --radius-premium-xl: 28px;
+  --radius-premium-lg: 20px;
   --radius-premium-md: 16px;
   --radius-premium-sm: 12px;
 }

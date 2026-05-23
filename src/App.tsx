@@ -113,7 +113,7 @@ function AppContent() {
                 <MainMenu onSelectGame={handleMenuSelect} />
                 <button
                   onClick={() => setStatus(GameStatus.Settings)}
-                  className="fixed bottom-6 right-6 w-14 h-14 glass-card rounded-[18px] flex items-center justify-center text-white/30 active:scale-95 transition-all z-50 hover:text-white/60"
+                  className="fixed bottom-6 right-6 w-14 h-14 glass-card rounded-premium-md flex items-center justify-center text-white/30 active:scale-95 transition-all z-50 hover:text-white/60"
                 >
                   <SettingsIcon className="w-5 h-5" />
                 </button>

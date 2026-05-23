@@ -125,7 +125,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 </h2>
               </div>
 
-              <div className="p-4 rounded-[18px] bg-premium-yellow/[0.05] border border-premium-yellow/15 text-center">
+              <div className="p-4 rounded-premium-md bg-premium-yellow/[0.05] border border-premium-yellow/15 text-center">
                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 mb-1">Отгадывает</p>
                 <h3 className="text-xl font-black italic uppercase text-premium-yellow">{guesser}</h3>
               </div>
@@ -133,14 +133,14 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
                   <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/35">Подсказки</span>
-                  <span className="text-[9px] font-black px-3 py-1 bg-white/[0.04] rounded-full text-white/30 border border-white/[0.05]">
+                  <span className="text-[9px] font-black px-3 py-1 bg-white/4 rounded-full text-white/30 border border-white/6">
                     {Object.keys(hints).length}/{hinters.length}
                   </span>
                 </div>
 
                 <div className="space-y-2">
                   {hinters.map(player => (
-                    <div key={player} className="bg-white/[0.03] border border-white/[0.07] rounded-[16px] p-3 flex items-center gap-3">
+                    <div key={player} className="bg-white/3 border border-white/8 rounded-premium-md p-3 flex items-center gap-3">
                       <span className="text-sm font-black italic text-white/70 shrink-0 min-w-[72px]">{player}</span>
                       {hints[player] ? (
                         <div className="flex-1 flex items-center justify-between">
@@ -154,12 +154,12 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                             value={localHints[player] || ''}
                             onChange={e => setLocalHints(prev => ({ ...prev, [player]: e.target.value }))}
                             placeholder="Подсказка..."
-                            className="flex-1 h-9 bg-white/[0.04] border border-white/[0.08] rounded-[10px] px-3 text-sm focus:border-premium-yellow/40 outline-none transition-colors"
+                            className="flex-1 h-9 bg-white/4 border border-white/8 rounded-premium-sm px-3 text-sm focus:border-premium-yellow/40 outline-none transition-colors"
                             onKeyDown={e => { if (e.key === 'Enter') submitHint(player, localHints[player] || ''); }}
                           />
                           <button
                             onClick={() => submitHint(player, localHints[player] || '')}
-                            className="w-9 h-9 shrink-0 bg-premium-yellow text-black rounded-[10px] flex items-center justify-center active:scale-95 transition-transform"
+                            className="w-9 h-9 shrink-0 bg-premium-yellow text-black rounded-premium-sm flex items-center justify-center active:scale-95 transition-transform"
                           >
                             <Send className="w-4 h-4" />
                           </button>
@@ -201,7 +201,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: i * 0.07, type: 'spring', stiffness: 320, damping: 22 }}
-                    className="px-5 py-3 bg-premium-yellow/[0.07] border border-premium-yellow/20 rounded-[18px]"
+                    className="px-5 py-3 bg-premium-yellow/[0.07] border border-premium-yellow/20 rounded-premium-md"
                   >
                     <span className="text-xl font-black italic uppercase tracking-tight text-premium-yellow">{hint}</span>
                   </motion.div>
@@ -218,7 +218,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                   onChange={e => setGuess(e.target.value)}
                   placeholder="Твоя догадка..."
                   onKeyDown={e => { if (e.key === 'Enter' && guess.trim()) handleGuess(); }}
-                  className="w-full py-5 bg-white/[0.04] border border-white/[0.08] rounded-[20px] text-center text-3xl font-black italic uppercase outline-none focus:border-premium-yellow/40 transition-all placeholder:text-white/15"
+                  className="w-full py-5 bg-white/4 border border-white/8 rounded-[20px] text-center text-3xl font-black italic uppercase outline-none focus:border-premium-yellow/40 transition-all placeholder:text-white/15"
                 />
                 <PrimaryButton onClick={handleGuess} disabled={!guess.trim()}>
                   ОТВЕТИТЬ
