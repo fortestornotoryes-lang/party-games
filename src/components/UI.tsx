@@ -171,23 +171,8 @@ export const TextInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = 
   />
 );
 
-export const Typography = {
-  Title: ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <h1 className={`text-[28px] font-black tracking-tighter uppercase italic leading-[0.75] text-white ${className}`}>
-      {children}
-    </h1>
-  ),
-  Heading: ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <h2 className={`text-2xl font-black italic uppercase tracking-tighter text-white ${className}`}>
-      {children}
-    </h2>
-  ),
-  Description: ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-    <p className={`text-sm text-white/80 leading-relaxed font-medium ${className}`}>
-      {children}
-    </p>
-  )
-};
+export { Typography } from './Typography';
+export type { TypoColor, AsElement } from './Typography';
 
 export const PageWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
   children, 

@@ -84,12 +84,12 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
       setMissionVotes(nextVotes);
       if (nextVotes.length === selectedTeam.length) {
           const failed = nextVotes.includes(false);
-          
+
           const nextSpiesScore = spiesScore + (failed ? 1 : 0);
           const nextResScore = resistanceScore + (failed ? 0 : 1);
           setSpiesScore(nextSpiesScore);
           setResistanceScore(nextResScore);
-          
+
           if (nextSpiesScore >= 3 || nextResScore >= 3) {
             setWinner(nextSpiesScore >= 3 ? 'spies' : 'resistance');
             setPhase(ResistancePhase.GameOver);
@@ -97,7 +97,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             setPhase(ResistancePhase.MissionResult);
           }
       } else {
-          setPhase(ResistancePhase.PassingPhone);
+          setPhase(ResistancePhase.MissionVoting);
       }
   };
 

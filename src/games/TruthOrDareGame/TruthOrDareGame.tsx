@@ -4,6 +4,7 @@ import { Flame, Snowflake, CheckCircle, ChevronRight } from 'lucide-react';
 import { GameHeader } from '../../components/GameHeader';
 import { PassPhoneCard } from '../../components/PassPhoneCard';
 import { PrimaryButton } from '../../components/UI';
+import { Typography } from '../../components/Typography';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
@@ -88,15 +89,11 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
               className="h-full flex flex-col p-5 gap-5"
             >
               <div className="flex flex-col items-center justify-center pt-4">
-                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/25 mb-1">Игрок</p>
-                <h2 className="text-[38px] font-black italic uppercase tracking-tighter text-white leading-none text-center">
-                  {currentPlayer}
-                </h2>
+                <Typography.Label color="faint" className="mb-1">Игрок</Typography.Label>
+                <Typography.Display size="sm" className="text-center">{currentPlayer}</Typography.Display>
               </div>
 
-              <p className="text-center text-[10px] font-black uppercase tracking-[0.35em] text-white/20">
-                Выбери своё испытание
-              </p>
+              <Typography.Label color="faint" className="text-center">Выбери своё испытание</Typography.Label>
 
               <div className="flex-1 flex  gap-4 justify-center">
                 {/* ПРАВДА */}
@@ -113,12 +110,8 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(31,182,255,0.08),transparent_65%)]" />
                   <Snowflake className="w-12 h-12 text-premium-sky relative z-10" />
                   <div className="text-center relative z-10">
-                    <div className="text-[38px] font-black italic uppercase tracking-tighter text-premium-sky leading-none">
-                      ПРАВДА
-                    </div>
-                    <div className="text-[9px] font-black uppercase tracking-[0.3em] text-premium-sky/40 mt-1">
-                      Ответь честно
-                    </div>
+                    <Typography.Display size="sm" color="sky" as="div">ПРАВДА</Typography.Display>
+                    <Typography.Label color="sky" className="opacity-40 mt-1" as="div">Ответь честно</Typography.Label>
                   </div>
                 </motion.button>
 
@@ -136,12 +129,8 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,46,77,0.08),transparent_65%)]" />
                   <Flame className="w-12 h-12 text-premium-red relative z-10" />
                   <div className="text-center relative z-10">
-                    <div className="text-[38px] font-black italic uppercase tracking-tighter text-premium-red leading-none">
-                      ДЕЙСТВИЕ
-                    </div>
-                    <div className="text-[9px] font-black uppercase tracking-[0.3em] text-premium-red/40 mt-1">
-                      Выполни задание
-                    </div>
+                    <Typography.Display size="sm" color="red" as="div">ДЕЙСТВИЕ</Typography.Display>
+                    <Typography.Label color="red" className="opacity-40 mt-1" as="div">Выполни задание</Typography.Label>
                   </div>
                   </motion.button>
               </div>
@@ -159,18 +148,17 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
               className="h-full flex flex-col p-5 gap-6"
             >
               <div className="flex flex-col items-center gap-2 pt-2">
-                <div
-                  className={`px-4 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${
-                    choice === 'truth'
-                      ? 'bg-premium-sky/10 border-premium-sky/25 text-premium-sky'
-                      : 'bg-premium-red/10 border-premium-red/25 text-premium-red'
-                  }`}
-                >
-                  {choice === 'truth' ? 'Правда' : 'Действие'}
+                <div className={`px-4 py-1.5 rounded-full border ${
+                  choice === 'truth'
+                    ? 'bg-premium-sky/10 border-premium-sky/25'
+                    : 'bg-premium-red/10 border-premium-red/25'
+                }`}>
+                  <Typography.Label color={choice === 'truth' ? 'sky' : 'red'} as="span">
+                    {choice === 'truth' ? 'Правда' : 'Действие'}
+                  </Typography.Label>
                 </div>
-                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">
-                  {currentPlayer}
-                </p>
+
+                <Typography.Title className="text-center">{currentPlayer}</Typography.Title>
               </div>
 
               <div className="flex-1 flex items-center justify-center px-2">
@@ -198,9 +186,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
                         'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
                     }}
                   />
-                  <p className={`text-xl font-black leading-snug relative z-10 ${
-                    choice === 'truth' ? 'text-white' : 'text-white'
-                  }`}>
+                  <p className="text-xl font-black leading-snug relative z-10 text-white">
                     {content}
                   </p>
                 </motion.div>

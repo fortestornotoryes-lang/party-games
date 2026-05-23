@@ -24,7 +24,10 @@
       "Bash(sed -i 's/themeColor=\"border-premium-blue\\\\/50 text-premium-blue\"/theme=\"blue\"/g' src/games/AliasGame/AliasGame.tsx)",
       "Bash(sed -i 's/themeColor=\"border-premium-blue\\\\/50 text-premium-blue\"/theme=\"blue\"/g' src/games/ResistanceGame/ResistanceGame.tsx)",
       "Bash(sed -i 's/themeColor=\"text-premium-green bg-premium-green\\\\/90 border-premium-green\\\\/30\"/theme=\"green\"/g' src/games/CodenamesGame/CodenamesGame.tsx)",
-      "Bash(sed -i 's/themeColor=\"text-premium-purple bg-premium-purple\\\\/10 border-premium-purple\\\\/30\"/theme=\"purple\"/g' src/games/DecryptoGame/DecryptoGame.tsx)"
+      "Bash(sed -i 's/themeColor=\"text-premium-purple bg-premium-purple\\\\/10 border-premium-purple\\\\/30\"/theme=\"purple\"/g' src/games/DecryptoGame/DecryptoGame.tsx)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Directory -Name)",
+      "Bash(Select-Object -First 20)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Name -Include \"tailwind.config.*\")"
     ]
   },
   "enabledPlugins": {
