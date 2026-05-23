@@ -9,6 +9,7 @@ import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../constants/telestr
 import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesContent';
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
 import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '../constants/truthOrDareContent';
+import { TABOO_REVERSE_CARDS } from '../constants/tabooReverseContent';
 import { storageService } from './storageService';
 
 export const contentService = {
@@ -259,6 +260,11 @@ export const contentService = {
         const all = [...truths, ...dares];
         const used = storageService.getUsedWords(GameKey.TruthOrDare);
         return { total: all.length, remaining: all.filter(q => !used.includes(q)).length };
+      }
+      case GameKey.TabooReverse: {
+        const cards = TABOO_REVERSE_CARDS.filter(c => c.difficulty === difficulty);
+        const allWords = cards.map(c => c.word);
+        return { total: allWords.length, remaining: allWords.filter(w => !used.includes(w)).length };
       }
       default:
         return { total: 0, remaining: 0 };

@@ -120,6 +120,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
       }
       case GameKey.TruthOrDare:
+      case GameKey.TabooReverse:
         return remaining !== undefined ? `${remaining} карт` : undefined;
       case GameKey.FakeArtist:
       case GameKey.Wavelength:

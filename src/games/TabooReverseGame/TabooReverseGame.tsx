@@ -9,8 +9,9 @@ import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { feedbackService } from '../../services/feedbackService';
 import { storageService } from '../../services/storageService';
-import { TabooCard, getNextTabooCard } from '../../constants/tabooReverseContent';
+import { TabooCard, getNextTabooCard, TABOO_REVERSE_CARDS } from '../../constants/tabooReverseContent';
 import { TabooReversePhase } from './types';
+import { GameKey } from '../../types/games';
 
 interface TabooReverseGameProps {
   playerNames: string[];
@@ -51,9 +52,22 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   const [currentTeam, setCurrentTeam] = useState<'A' | 'B'>('A');
 
   // ── Round & card ───────────────────────────────────────────────────────────
-  const [roundNum, setRoundNum]     = useState(1);
-  const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(new Set());
-  const [card, setCard]             = useState<TabooCard>(() => getNextTabooCard(difficulty, new Set()));
+  const [roundNum, setRoundNum] = useState(1);
+
+  // Build initial usedCardIds from localStorage so cross-session history is respected
+  const buildUsedIds = (): Set<number> => {
+    const usedWords = storageService.getUsedWords(GameKey.TabooReverse);
+    if (usedWords.length === 0) return new Set<number>();
+    const usedSet = new Set(usedWords);
+    return new Set(
+      TABOO_REVERSE_CARDS
+        .filter(c => c.difficulty === difficulty && usedSet.has(c.word))
+        .map(c => c.id),
+    );
+  };
+
+  const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(buildUsedIds);
+  const [card, setCard]               = useState<TabooCard>(() => getNextTabooCard(difficulty, buildUsedIds()));
 
   // ── Phase ─────────────────────────────────────────────────────────────────
   const [phase, setPhase] = useState<TabooReversePhase>(TabooReversePhase.Pass);
@@ -136,19 +150,30 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       feedbackService.vibrate(100);
     }
 
-    const newUsed = new Set([...usedCardIds, card.id]);
-    setUsedCardIds(newUsed);
+    const afterUsed = new Set([...usedCardIds, card.id]);
+    const totalForDiff = TABOO_REVERSE_CARDS.filter(c => c.difficulty === difficulty).length;
+
+    // Persist to localStorage; auto-reset when entire deck is exhausted
+    let effectiveUsed: ReadonlySet<number>;
+    if (afterUsed.size >= totalForDiff) {
+      storageService.resetUsedWords(GameKey.TabooReverse);
+      effectiveUsed = new Set<number>();
+    } else {
+      storageService.markWordAsUsed(GameKey.TabooReverse, card.word);
+      effectiveUsed = afterUsed;
+    }
+    setUsedCardIds(effectiveUsed);
 
     if (roundNum >= totalRounds) {
       setPhase(TabooReversePhase.GameOver);
     } else {
-      const nextCard = getNextTabooCard(difficulty, newUsed);
+      const nextCard = getNextTabooCard(difficulty, effectiveUsed);
       setCard(nextCard);
       setRoundNum(r => r + 1);
       setCurrentTeam(t => t === 'A' ? 'B' : 'A');
       setPhase(TabooReversePhase.Pass);
     }
-  }, [card.id, currentTeam, difficulty, roundNum, totalRounds, usedCardIds]);
+  }, [card.id, card.word, currentTeam, difficulty, roundNum, totalRounds, usedCardIds]);
 
   const handleRematch = useCallback(() => {
     setScoreA(0);
@@ -157,11 +182,10 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     setExplainerIdxB(0);
     setCurrentTeam('A');
     setRoundNum(1);
-    const fresh = getNextTabooCard(difficulty, new Set());
-    setCard(fresh);
-    setUsedCardIds(new Set());
+    // Keep usedCardIds — don't repeat cards already seen this session
+    setCard(getNextTabooCard(difficulty, usedCardIds));
     setPhase(TabooReversePhase.Pass);
-  }, [difficulty]);
+  }, [difficulty, usedCardIds]);
 
   // ── Final scores (stable after GameOver) ──────────────────────────────────
   const [finalScoreA, setFinalScoreA] = useState(0);
