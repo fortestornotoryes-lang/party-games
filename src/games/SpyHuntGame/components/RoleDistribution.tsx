@@ -30,7 +30,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-y-auto select-none">
+    <div className="flex flex-col items-center justify-center p-6 overflow-y-auto select-none">
 
       {/* Progress dots */}
       <div className="flex gap-2 mb-8">

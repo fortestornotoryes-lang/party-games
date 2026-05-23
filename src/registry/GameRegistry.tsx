@@ -10,6 +10,7 @@ import ResistanceImage from '../assets/ResistanceImage.png';
 import SpyHuntImage from '../assets/SpyHuntImage.png';
 import WavelengthImage from '../assets/WavelengthImage.png';
 import alieaImage from '../assets/alieaImage.png';
+import TabyImage from '../assets/tabyImage.png';
 import ConnectFourImage from '../assets/ConnectFourImage2.png';
 import {
     Shield,
@@ -27,7 +28,8 @@ import {
     Users,
     Flame,
     LayoutGrid,
-    ArrowDown
+    ArrowDown,
+    ListChecks
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -45,6 +47,7 @@ const DecryptoGame = lazy(() => import('../games/DecryptoGame/DecryptoGame').the
 const MafiaGame = lazy(() => import('../games/MafiaGame/MafiaGame'));
 const TruthOrDareGame = lazy(() => import('../games/TruthOrDareGame/TruthOrDareGame').then(m => ({default: m.TruthOrDareGame})));
 const ConnectFourGame = lazy(() => import('../games/ConnectFourGame/ConnectFourGame').then(m => ({default: m.ConnectFourGame})));
+const TabooReverseGame = lazy(() => import('../games/TabooReverseGame/TabooReverseGame').then(m => ({default: m.TabooReverseGame})));
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Spy]: {
@@ -93,6 +96,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         setupStatus: GameStatus.TruthOrDarePlaying,
         backgroundImage: TruthOrDareImage,
 
+    },
+    [GameKey.TabooReverse]: {
+        id: GameKey.TabooReverse,
+        title: 'ТАБУ НАОБОРОТ',
+        subtitle: 'Запрещённые слова — твои подсказки',
+        icon: ListChecks,
+        theme: 'orange',
+        placeholder: 'Игрок',
+        players: '4–10',
+        description: 'Объясняй загаданное слово, используя только запрещённые слова. Само слово называть нельзя!',
+        minPlayers: 4,
+        setupStatus: GameStatus.TabooReversePlaying,
+        backgroundImage: TabyImage,
     },
     [GameKey.Telestrations]: {
         id: GameKey.Telestrations,
@@ -255,4 +271,5 @@ export {
     MafiaGame,
     TruthOrDareGame,
     ConnectFourGame,
+    TabooReverseGame,
 };

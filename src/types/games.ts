@@ -13,7 +13,8 @@ export enum GameKey {
     Decrypto = 'decrypto',
     Mafia = 'mafia',
     TruthOrDare = 'truth_or_dare',
-    ConnectFour = 'connect_four'
+    ConnectFour = 'connect_four',
+    TabooReverse = 'taboo_reverse'
 }
 
 export interface InstructionItem {
