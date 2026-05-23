@@ -95,7 +95,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-6 space-y-6 flex-1 overflow-y-auto max-w-2xl mx-auto w-full"
+            className="p-6 space-y-6 flex-1 min-h-0 overflow-y-auto max-w-2xl mx-auto w-full"
           >
             <div className="flex justify-center">
               <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${timeLeft < 60 ? 'border-premium-red bg-premium-red/10' : 'border-white/10 bg-white/5'}`}>
@@ -159,10 +159,11 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             </div>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             key="reveal"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
             className="p-6 flex-1 flex flex-col items-center justify-center space-y-12 max-w-md mx-auto w-full"
           >
             <div className="text-center space-y-4">

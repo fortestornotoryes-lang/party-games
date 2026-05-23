@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, {Suspense, useCallback, useState} from 'react';
 import {MainMenu} from './components/MainMenu';
 import {Setup} from './components/Setup';
@@ -75,7 +70,7 @@ function AppContent() {
             case GameStatus.TruthOrDarePlaying: return <TruthOrDareGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.ConnectFourPlaying: return <ConnectFourGame playerNames={playerNames} onBack={reset} />;
 
-            case GameStatus.Playing: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.SpyHuntPlaying: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.ResistancePlaying: return <ResistanceGame playerNames={playerNames} onBack={reset} />;
 

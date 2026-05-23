@@ -186,7 +186,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             )}
 
             {phase === ResistancePhase.MissionVoting && (
-                <motion.div key="voting" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 flex-1 flex flex-col items-center justify-center">
+                <motion.div key="voting" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="space-y-8 flex-1 flex flex-col items-center justify-center">
                     <div className="text-center">
                       <p className="text-[10px] text-premium-blue font-black uppercase tracking-widest mb-2">Голосует</p>
                       <h4 className="text-4xl font-black italic text-white uppercase">{currentVoter?.name}</h4>
@@ -206,7 +206,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             )}
 
             {phase === ResistancePhase.MissionResult && (
-                <motion.div key="result" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-8 text-center flex-1 flex flex-col items-center justify-center">
+                <motion.div key="result" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="space-y-8 text-center flex-1 flex flex-col items-center justify-center">
                     <div className={`p-12 rounded-[40px] w-full border-2 ${missionVotes.includes(false) ? 'bg-premium-red/10 border-premium-red/40' : 'bg-premium-green/10 border-premium-green/40'}`}>
                         <div className="mb-4 flex justify-center">
                           {missionVotes.includes(false) ? <Skull className="w-16 h-16 text-premium-red" /> : <Activity className="w-16 h-16 text-premium-green" />}
@@ -220,7 +220,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             )}
 
             {phase === ResistancePhase.GameOver && (
-                <motion.div key="over" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-12 text-center flex-1 flex flex-col items-center justify-center">
+                <motion.div key="over" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="space-y-12 text-center flex-1 flex flex-col items-center justify-center">
                     <div className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}>
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-60">ФИНАЛЬНЫЙ СЧЕТ</h2>
                         <h3 className={`text-6xl font-black italic uppercase leading-none ${winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}`}>

@@ -79,7 +79,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
         onBack={onBack}
       />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <AnimatePresence mode="wait">
 
           {/* ── PASS ── */}
@@ -115,6 +115,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               key="hinting"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               className="p-5 space-y-6"
             >
               <div className="text-center space-y-2 pt-2">
@@ -185,6 +186,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               key="guessing"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               className="p-6 space-y-8"
             >
               <div className="text-center space-y-1 pt-2">
@@ -231,6 +233,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               key="result"
               initial={{ opacity: 0, scale: 0.88 }}
               animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.88 }}
               transition={{ type: 'spring', stiffness: 280, damping: 22 }}
               className="min-h-full flex flex-col p-6 items-center justify-center text-center gap-8"
             >

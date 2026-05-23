@@ -402,6 +402,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               key="game_over"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
               className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
             >
               <div className="space-y-4">

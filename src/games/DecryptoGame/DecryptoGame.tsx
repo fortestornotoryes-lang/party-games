@@ -185,6 +185,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     {/* ── CAPTAIN CLUES ── */}
                     {phase === DecryptoPhase.CaptainClues && (
                         <CaptainCluesPhase
+                            key="captain_clues"
                             words={curState.words}
                             currentCode={currentCode}
                             clues={clues}
@@ -208,6 +209,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     {/* ── ENEMY INTERCEPT ── */}
                     {phase === DecryptoPhase.EnemyIntercept && (
                         <EnemyInterceptPhase
+                            key="enemy_intercept"
                             enemyHistory={curState.history}
                             clues={clues}
                             interceptGuess={interceptGuess}
@@ -232,6 +234,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     {/* ── TEAM GUESS ── */}
                     {phase === DecryptoPhase.TeamGuess && (
                         <TeamGuessPhase
+                            key="team_guess"
                             words={curState.words}
                             clues={clues}
                             teamGuess={teamGuess}
@@ -245,7 +248,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     {/* ── REVEAL ── */}
                     {phase === DecryptoPhase.Reveal && (
                         <motion.div key="reveal"
-                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                             className="flex-1 flex flex-col items-center justify-center text-center w-full gap-6"
                         >
                             <div className="w-full">
@@ -293,7 +296,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     {/* ── GAME OVER ── */}
                     {phase === DecryptoPhase.GameOver && (
                         <motion.div key="game_over"
-                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                             className="flex-1 flex flex-col items-center justify-center text-center gap-8"
                         >
                             <Trophy className={`w-24 h-24 ${winner ? tText(winner) : 'text-white'}`} />

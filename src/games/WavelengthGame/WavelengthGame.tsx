@@ -88,7 +88,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
       <div className="flex-1 overflow-hidden relative flex flex-col p-6">
         <AnimatePresence mode="wait">
           {phase === WavelengthPhase.Pass && (
-            <motion.div key="pass" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center space-y-10 text-center">
+            <motion.div key="pass" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="h-full flex flex-col items-center justify-center space-y-10 text-center">
                <div className="space-y-4">
                   <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">Новый раунд</p>
                   <h3 className="text-xl font-bold uppercase tracking-widest text-white/60">Телепат:</h3>
@@ -102,7 +102,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
           )}
 
           {phase === WavelengthPhase.Clue && (
-            <motion.div key="clue" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="h-full flex flex-col space-y-12">
+            <motion.div key="clue" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="h-full flex flex-col space-y-12">
               <div className="text-center space-y-4">
                 <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">Текущий Телепат</div>
                 <h3 className="text-4xl font-black italic text-premium-purple tracking-tighter uppercase">{psychic}</h3>
@@ -146,7 +146,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
           )}
 
           {phase === WavelengthPhase.Guessing && (
-            <motion.div key="guessing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col space-y-12">
+            <motion.div key="guessing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col space-y-12">
               <div className="text-center space-y-4">
                 <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройте волну!</h3>
                 <p className="text-gray-400 font-medium">Передвиньте рычаг в нужную позицию</p>
@@ -190,7 +190,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
           )}
 
           {phase === WavelengthPhase.Reveal && (
-            <motion.div key="reveal" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col space-y-12">
+            <motion.div key="reveal" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="h-full flex flex-col space-y-12">
                <div className="text-center">
                   <h2 className="text-6xl font-black italic uppercase italic tracking-tighter mb-2">РЕЗУЛЬТАТ</h2>
                   <div className="flex items-center justify-center space-x-2 text-xl font-bold uppercase tracking-widest text-gray-500">

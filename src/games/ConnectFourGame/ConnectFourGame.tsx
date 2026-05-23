@@ -197,6 +197,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
         <AnimatePresence>
           {isPopOut && !gameOver && (
             <motion.div
+              key="pop-toggle"
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
@@ -303,6 +304,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                         <motion.div
                           key={`p-${r}-${c}-${cell}`}
                           initial={isLastDrop ? { y: -((r + 1) * 54), scale: 0.88 } : false}
+                          exit={{ opacity: 0, scale: 0.5 }}
                           animate={{
                             y: 0,
                             scale: isWinCell ? [1, 1.12, 1] : 1,
@@ -336,6 +338,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
         <AnimatePresence>
           {gameOver && (
             <motion.div
+              key="game-over"
               initial={{ opacity: 0, y: 16, scale: 0.94 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}

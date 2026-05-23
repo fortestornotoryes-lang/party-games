@@ -43,6 +43,7 @@ export enum GameStatus {
   DecryptoPlaying = 'decrypto_playing',
   MafiaSetup = 'mafia_setup',
   MafiaPlaying = 'mafia_playing',
+  SpyHuntPlaying = 'spy_hunt_playing',
   TruthOrDarePlaying = 'truth_or_dare_playing',
   ConnectFourPlaying = 'connect_four_playing'
 }
@@ -50,42 +51,11 @@ export enum GameStatus {
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type GameMode = 'classic' | 'double_agent' | 'mole' | string;
 
-export type GameTheme = 'red'  | 'green' | 'sky' | 'yellow' | 'orange' | 'purple' | 'blue';
+export type GameTheme = 'red' | 'green' | 'sky' | 'yellow' | 'orange' | 'purple' | 'blue' | 'pink' | 'cyan';
 
 export interface GameModeOption {
   id: string;
   name: string;
   description: string;
   icon: any; // Using any for icon component as they are from lucide-react
-}
-
-export interface GameMetadata {
-  id: string;
-  title: string;
-  subtitle: string;
-  icon: any;
-  theme: GameTheme;
-  placeholder: string;
-  description?: string;
-  instructions: { title: string; content: string }[];
-  minPlayers: number;
-  setupStatus: GameStatus;
-  modes?: GameModeOption[];
-  players?: string; // Range of players for display
-}
-
-export interface GameState {
-  players: Player[];
-  location?: string;
-  word?: string;
-  category?: string;
-  status: GameStatus;
-  currentPlayerIndex?: number;
-  timeLeft?: number;
-  winner?: 'resistance' | 'spies' | null | string;
-  canvasImage?: string;
-  rounds?: number;
-  timerSeconds?: number;
-  difficulty?: Difficulty;
-  mode?: GameMode;
 }

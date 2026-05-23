@@ -55,10 +55,10 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
             <div className={`absolute left-0 top-0 bottom-0 w-[5px] rounded-r-full ${t.solid} opacity-75`} />
 
             {/* Icon */}
-            <div className={`w-[52px] h-[52px] rounded-[16px] ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0 ml-2.5`}>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
+            <div className={`w-13 h-13 rounded-[16px] ${t.solid} flex items-center justify-center relative overflow-hidden shrink-0 ml-2.5`}>
+                <div className="absolute inset-0 bg-linear-to-br from-white/25 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/25" />
-                <Icon className="w-[22px] h-[22px] text-white relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                <Icon className="w-5.5 h-5.5 text-white relative z-10 transition-transform duration-300 group-hover:scale-110" />
             </div>
 
             {/* Content */}

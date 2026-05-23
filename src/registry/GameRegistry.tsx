@@ -1,5 +1,4 @@
 import React, {lazy} from 'react';
-import mafia from '../assets/Gemini_Generated_Image_ozm0i6ozm0i6ozm0.png';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import decryptoImage from '../assets/decryptoImage.png';
 import FakeArtistImage from '../assets/FakeArtistImage.png';
@@ -58,7 +57,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description: '1 игрок — шпион. Все остальные знают локацию. Шпион должен догадаться, где он находится, по вопросам.',
         players: '4–7',
         minPlayers: 4,
-        setupStatus: GameStatus.Playing,
+        setupStatus: GameStatus.SpyHuntPlaying,
         modes: [
             {id: 'classic', name: 'Классика', description: '1 шпион, все остальные знают локацию', icon: Target},
             {id: 'double_agent', name: 'Двойной агент', description: '2 шпиона (от 5 игроков)', icon: Zap},
@@ -86,7 +85,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         title: 'ПРАВДА ИЛИ ДЕЙСТВИЕ',
         subtitle: 'Честность или риск',
         icon: Flame,
-        theme: 'red',
+        theme: 'cyan',
         placeholder: 'Игрок',
         players: '2+',
         description: 'Классическая игра: ответь честно на вопрос или выполни задание',
@@ -137,7 +136,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         title: 'DECRYPTO',
         subtitle: 'Коды и перехваты',
         icon: Key,
-        theme: 'purple',
+        theme: 'pink',
         placeholder: 'Шифровальщик',
         players: '4+',
         description: 'Шифруй свои, перехватывай чужие',
