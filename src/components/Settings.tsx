@@ -5,8 +5,9 @@ import { storageService, GameSettings } from '../services/storageService';
 import { feedbackService } from '../services/feedbackService';
 import { GameKey } from '../types/games';
 import { Difficulty } from '../types';
-import { SectionLabel, IconButton, TextInput, PageWrapper, Typography, TabButton } from './UI';
+import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
 import { Pagination } from './Pagination';
+import {TextInput} from "@/components/TextInput.tsx";
 
 interface SettingsProps {
   onBack: () => void;

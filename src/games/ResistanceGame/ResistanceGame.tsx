@@ -5,12 +5,13 @@ import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { MISSION_SIZES } from '../../constants/resistanceContent';
 import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton, GameCard } from '../../components/UI';
+import { PrimaryButton } from '../../components/UI';
 import { PassPhoneCard } from '../../components/PassPhoneCard';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { initResistance } from '../../utils/gameLogic';
 import { ResistancePhase } from './types';
+import {GameCard} from "@/components/GameCard.tsx";
 
 interface ResistanceGameProps {
   playerNames: string[];

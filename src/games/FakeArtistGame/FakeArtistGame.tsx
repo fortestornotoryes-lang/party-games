@@ -6,12 +6,13 @@ import { Player } from '../../types';
 import { storageService } from '../../services/storageService';
 import { feedbackService } from '../../services/feedbackService';
 import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton, GameCard } from '../../components/UI';
+import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { FakeArtistDistribution } from './components/FakeArtistDistribution';
 import { FakeArtistVoting } from './components/FakeArtistVoting';
 import { initFakeArtist } from '../../utils/gameLogic';
 import { FakeArtistPhase } from './types';
+import {GameCard} from "@/components/GameCard.tsx";
 
 interface Props {
   playerNames: string[];

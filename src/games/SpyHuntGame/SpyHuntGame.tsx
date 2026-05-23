@@ -8,11 +8,12 @@ import { feedbackService } from '../../services/feedbackService';
 import { LOCATIONS, QUESTION_IDEAS, GAME_DURATION_BY_DIFFICULTY } from '../../constants/spyHuntContent';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton, GameCard } from '../../components/UI';
+import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { RoleDistribution } from './components/RoleDistribution';
 import { initSpyHunt } from '../../utils/gameLogic';
 import { SpyHuntPhase } from './types';
+import {GameCard} from "@/components/GameCard.tsx";
 
 interface GameProps {
   playerNames: string[];

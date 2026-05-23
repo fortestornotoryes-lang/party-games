@@ -1,7 +1,7 @@
 import React from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
-import { LucideIcon } from 'lucide-react';
-import { feedbackService } from '../services/feedbackService';
+import {motion, useMotionValue, useSpring, useTransform} from 'motion/react';
+import {LucideIcon} from 'lucide-react';
+import {feedbackService} from '../services/feedbackService';
 
 export const ParallaxBackground = () => {
   const mouseX = useMotionValue(0);
@@ -94,22 +94,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   );
 };
 
-export const GameCard: React.FC<{ children: React.ReactNode; title?: string; className?: string; onClick?: () => void }> = ({ 
-  children, 
-  title,
-  className = "",
-  onClick
-}) => (
-  <div 
-    onClick={onClick}
-    className={`glass-card rounded-premium-lg p-7 shadow-2xl ${onClick ? 'active:scale-[0.98] cursor-pointer' : ''} ${className} border-white/5`}
-  >
-    {title && <SectionLabel className="mb-6 font-display italic tracking-[0.4em]">{title}</SectionLabel>}
-    {children}
-  </div>
-);
-
-export const SectionLabel: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
+export const SectionLabel: React.FC<{ children: React.ReactNode; className?: string }> = ({
   children, 
   className = "" 
 }) => (
@@ -163,13 +148,6 @@ export const IconButton: React.FC<{
     </button>
   );
 };
-
-export const TextInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => (
-  <input
-    {...props}
-    className={`h-9 glass-input rounded-premium-md px-4 text-base font-semibold outline-none transition-all placeholder:text-white/20 w-full focus:ring-1 focus:ring-white/20 ${props.className || ''}`}
-  />
-);
 
 export { Typography } from './Typography';
 export type { TypoColor, AsElement } from './Typography';

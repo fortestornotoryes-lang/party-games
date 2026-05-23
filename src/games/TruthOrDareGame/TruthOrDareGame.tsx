@@ -96,9 +96,10 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
                 className="flex flex-col items-center justify-center py-4 px-6"
               >
                 <Typography.Label color="faint" className="mb-1.5">Выбирает</Typography.Label>
-                <Typography.Display size="sm" className="text-center">{currentPlayer}</Typography.Display>
+                <Typography.Display size="md" className="text-center">{currentPlayer}</Typography.Display>
               </motion.div>
 
+              <div className='h-40'></div>
               {/* Cards */}
               <div className="flex-1 flex flex-col px-4 pb-5 gap-3">
 
@@ -109,7 +110,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
                   transition={{ delay: 0.1, type: 'spring', stiffness: 360, damping: 28 }}
                   whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
                   onClick={() => handleChoice('truth')}
-                  className="flex-1 rounded-[32px] relative overflow-hidden flex flex-col items-center justify-center gap-4"
+                  className="flex-1 rounded-4xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
                   style={{
                     background: 'linear-gradient(160deg, rgba(31,182,255,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(31,182,255,0.05) 100%)',
                     border: '1px solid rgba(31,182,255,0.26)',

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Reorder, useDragControls } from 'motion/react';
 import { UserPlus, UserMinus, Play, HelpCircle, X, ChevronRight, ArrowLeft, LucideIcon, GripVertical, Shuffle, Users } from 'lucide-react';
-import { SectionLabel, Badge, IconButton, TextInput, PrimaryButton,PageWrapper ,Typography, ParallaxBackground } from './UI';
+import { SectionLabel, Badge, IconButton, PrimaryButton,PageWrapper ,Typography, ParallaxBackground } from './UI';
 import { InstructionsModal } from './InstructionsModal';
 import { storageService } from '../services/storageService';
 import { useGameSettings } from '../contexts/GameSettingsContext';
 import { GameTheme } from '../types';
 import { getTheme, ThemeTokens } from '../theme/colors';
+import {TextInput} from "@/components/TextInput.tsx";
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;

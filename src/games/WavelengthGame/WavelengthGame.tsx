@@ -7,9 +7,10 @@ import { storageService } from '../../services/storageService';
 import { contentService } from '../../services/contentService';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton, GameCard } from '../../components/UI';
+import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { WavelengthPhase } from './types';
+import {GameCard} from "@/components/GameCard.tsx";
 
 interface WavelengthGameProps {
   playerNames: string[];
