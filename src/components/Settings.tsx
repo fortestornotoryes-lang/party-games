@@ -263,7 +263,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
 
             <div className="glass-card rounded-3xl p-6 border border-white/5">
               <SectionLabel className="mb-2">О приложении</SectionLabel>
-              <p className="text-xs text-white/30 leading-relaxed">Версия 1.1.0-beta · С любовью для вечеринок</p>
+              <p className="text-xs text-white/30 leading-relaxed">Версия 1.1.0-beta · Я писал это на отьебись, как и всё остальное</p>
             </div>
           </motion.div>
         )}
