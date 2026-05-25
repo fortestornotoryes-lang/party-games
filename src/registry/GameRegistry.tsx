@@ -109,6 +109,11 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         minPlayers: 4,
         setupStatus: GameStatus.TabooReversePlaying,
         backgroundImage: TabyImage,
+        modes: [
+            { id: 'classic', name: 'Классика',  description: 'Одна карточка за ход, объясняй — кто угадал, получает очки', icon: Target },
+            { id: 'blitz',   name: 'Блиц',      description: 'Несколько карточек за ход — угадали, берёте следующую',       icon: Zap    },
+            { id: 'team',    name: 'Командный',  description: 'Две команды — угадывает только своя команда',                 icon: Users  },
+        ],
     },
     [GameKey.Telestrations]: {
         id: GameKey.Telestrations,

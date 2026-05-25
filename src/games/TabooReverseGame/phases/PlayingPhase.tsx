@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { SkipForward } from 'lucide-react';
 import { PrimaryButton } from '../../../components/UI';
 import { TabooCard } from '../../../constants/tabooReverseContent';
 
@@ -8,7 +9,10 @@ interface PlayingPhaseProps {
   currentExplainer: string;
   timeLeft: number;
   cardTimer: number;
-  onEarlySolve: () => void;
+  isBlitz?: boolean;
+  blitzStats?: { guessed: number; skipped: number };
+  onGuessed: () => void;
+  onSkip?: () => void;
 }
 
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
@@ -16,7 +20,10 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   currentExplainer,
   timeLeft,
   cardTimer,
-  onEarlySolve,
+  isBlitz,
+  blitzStats,
+  onGuessed,
+  onSkip,
 }) => {
   const timerPct   = (timeLeft / cardTimer) * 100;
   const timerColor =
@@ -40,17 +47,31 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col p-6 gap-6 max-w-lg mx-auto w-full">
-        {/* Timer number */}
+        {/* Top row: explainer label + timer + blitz stats */}
         <div className="flex items-center justify-between">
           <span className="text-[9px] font-black uppercase tracking-widest text-white/30">
             {currentExplainer} объясняет
           </span>
-          <span
-            className="text-2xl font-black italic tabular-nums"
-            style={{ color: timerColor }}
-          >
-            {timeLeft}с
-          </span>
+
+          <div className="flex items-center gap-3">
+            {/* Blitz counters */}
+            {isBlitz && blitzStats && (
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-black tabular-nums text-premium-green">
+                  ✓{blitzStats.guessed}
+                </span>
+                <span className="text-[11px] font-black tabular-nums text-premium-red">
+                  ✗{blitzStats.skipped}
+                </span>
+              </div>
+            )}
+            <span
+              className="text-2xl font-black italic tabular-nums"
+              style={{ color: timerColor }}
+            >
+              {timeLeft}с
+            </span>
+          </div>
         </div>
 
         {/* Secret word */}
@@ -83,15 +104,39 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           </div>
         </div>
 
-        <div className="mt-auto pt-4">
-          <PrimaryButton
-            onClick={onEarlySolve}
-            className="bg-premium-orange text-white! shadow-premium-orange/30"
-          >
-            СЛОВО УГАДАНО!
-          </PrimaryButton>
-          <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20 mt-3">
-            Само слово называть нельзя
+        {/* Action buttons */}
+        <div className="mt-auto pt-4 space-y-3">
+          {isBlitz ? (
+            /* Blitz: two buttons side by side */
+            <div className="flex gap-3">
+              <PrimaryButton
+                onClick={onGuessed}
+                className="flex-1 bg-premium-green! text-white! shadow-premium-green/30"
+              >
+                УГАДАНО!
+              </PrimaryButton>
+              <button
+                onClick={onSkip}
+                className="flex items-center justify-center gap-2 px-5 py-4 rounded-premium-lg glass-card border border-white/10 text-white/50 active:scale-95 transition-all"
+              >
+                <SkipForward className="w-5 h-5" />
+                <span className="text-[11px] font-black uppercase tracking-wider">−1</span>
+              </button>
+            </div>
+          ) : (
+            /* Classic / team: single button */
+            <PrimaryButton
+              onClick={onGuessed}
+              className="bg-premium-orange text-white! shadow-premium-orange/30"
+            >
+              СЛОВО УГАДАНО!
+            </PrimaryButton>
+          )}
+
+          <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20">
+            {isBlitz
+              ? 'Пропуск даёт −1 объясняющему'
+              : 'Само слово называть нельзя'}
           </p>
         </div>
       </div>

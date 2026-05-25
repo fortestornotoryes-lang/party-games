@@ -6,6 +6,7 @@ import { PrimaryButton } from '../../../components/UI';
 interface GameOverPhaseProps {
   playerNames: string[];
   scores: Record<string, number>;
+  teams?: [string[], string[]];
   onRematch: () => void;
   onBack: () => void;
 }
@@ -13,6 +14,7 @@ interface GameOverPhaseProps {
 export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   playerNames,
   scores,
+  teams,
   onRematch,
   onBack,
 }) => {
@@ -20,6 +22,13 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   const topScore    = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
   const hasWinner   = topScore > 0 && topScore > secondScore;
+
+  // ── Team mode calculations ────────────────────────────────────────────────
+  const team1Score = teams ? teams[0].reduce((s, p) => s + (scores[p] ?? 0), 0) : 0;
+  const team2Score = teams ? teams[1].reduce((s, p) => s + (scores[p] ?? 0), 0) : 0;
+  const teamWinner = teams
+    ? team1Score > team2Score ? 0 : team2Score > team1Score ? 1 : -1
+    : null; // -1 = draw
 
   return (
     <motion.div
@@ -29,57 +38,128 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
       exit={{ opacity: 0, scale: 0.9 }}
       className="flex flex-col items-center p-6 gap-8 max-w-sm mx-auto w-full"
     >
-      <div className="text-center space-y-2 pt-4">
-        <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
-          Игра завершена
-        </p>
-        {hasWinner ? (
-          <h2 className="text-4xl font-black italic uppercase tracking-tighter text-premium-yellow">
-            {sorted[0]} победил!
-          </h2>
-        ) : (
-          <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
-            Ничья!
-          </h2>
-        )}
-      </div>
+      {/* ── Team result header ─────────────────────────────────────────────── */}
+      {teams ? (
+        <div className="text-center space-y-2 pt-4 w-full">
+          <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
+            Игра завершена
+          </p>
+          {teamWinner === -1 ? (
+            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
+              Ничья!
+            </h2>
+          ) : (
+            <h2 className={`text-4xl font-black italic uppercase tracking-tighter ${
+              teamWinner === 0 ? 'text-premium-orange' : 'text-premium-sky'
+            }`}>
+              Команда {(teamWinner ?? 0) + 1} победила!
+            </h2>
+          )}
 
-      {/* Leaderboard */}
-      <div className="w-full space-y-3">
-        {sorted.map((player, idx) => {
-          const sc       = scores[player] ?? 0;
-          const isWinner = idx === 0 && hasWinner;
-          return (
-            <div
-              key={player}
-              className={`p-5 rounded-2xl border-2 flex items-center justify-between ${
-                isWinner
-                  ? 'border-premium-yellow/60 bg-premium-yellow/10 shadow-[0_0_30px_rgba(234,179,8,0.15)]'
-                  : 'border-white/10 bg-white/5'
-              }`}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <span className={`shrink-0 text-xl font-black italic w-8 ${
-                  isWinner ? 'text-premium-yellow' : 'text-white/20'
+          {/* Team score cards */}
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            {([0, 1] as const).map(ti => {
+              const isWinner = teamWinner === ti;
+              const tscore   = ti === 0 ? team1Score : team2Score;
+              const color    = ti === 0 ? 'orange' : 'sky';
+              return (
+                <div
+                  key={ti}
+                  className={`p-4 rounded-2xl border-2 space-y-2 ${
+                    isWinner
+                      ? ti === 0
+                        ? 'border-premium-orange/60 bg-premium-orange/10 shadow-[0_0_24px_rgba(249,115,22,0.15)]'
+                        : 'border-premium-sky/60 bg-premium-sky/10 shadow-[0_0_24px_rgba(56,189,248,0.15)]'
+                      : 'border-white/10 bg-white/5'
+                  }`}
+                >
+                  <p className={`text-[9px] font-black uppercase tracking-widest ${
+                    ti === 0 ? 'text-premium-orange/70' : 'text-premium-sky/70'
+                  }`}>
+                    Команда {ti + 1}
+                  </p>
+                  <p className={`text-3xl font-black italic tabular-nums ${
+                    isWinner
+                      ? ti === 0 ? 'text-premium-orange' : 'text-premium-sky'
+                      : 'text-white/50'
+                  }`}>
+                    {tscore}
+                  </p>
+                  {/* Members */}
+                  <div className="space-y-1">
+                    {[...teams[ti]]
+                      .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0))
+                      .map(p => (
+                        <div key={p} className="flex justify-between items-center">
+                          <span className="text-[11px] font-bold text-white/50 truncate">{p}</span>
+                          <span className="text-[11px] font-black text-white/40 ml-2 tabular-nums">
+                            {scores[p] ?? 0}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        /* ── Classic / blitz result header ─────────────────────────────────── */
+        <div className="text-center space-y-2 pt-4">
+          <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
+            Игра завершена
+          </p>
+          {hasWinner ? (
+            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-premium-yellow">
+              {sorted[0]} победил!
+            </h2>
+          ) : (
+            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
+              Ничья!
+            </h2>
+          )}
+        </div>
+      )}
+
+      {/* ── Individual leaderboard (classic/blitz always; team as subtitle) ── */}
+      {!teams && (
+        <div className="w-full space-y-3">
+          {sorted.map((player, idx) => {
+            const sc       = scores[player] ?? 0;
+            const isWinner = idx === 0 && hasWinner;
+            return (
+              <div
+                key={player}
+                className={`p-5 rounded-2xl border-2 flex items-center justify-between ${
+                  isWinner
+                    ? 'border-premium-yellow/60 bg-premium-yellow/10 shadow-[0_0_30px_rgba(234,179,8,0.15)]'
+                    : 'border-white/10 bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className={`shrink-0 text-xl font-black italic w-8 ${
+                    isWinner ? 'text-premium-yellow' : 'text-white/20'
+                  }`}>
+                    #{idx + 1}
+                  </span>
+                  <p className={`font-black text-base truncate ${
+                    isWinner ? 'text-premium-yellow' : 'text-white/70'
+                  }`}>
+                    {isWinner ? '🏆 ' : ''}{player}
+                  </p>
+                </div>
+                <span className={`text-4xl font-black italic ml-3 tabular-nums shrink-0 ${
+                  isWinner ? 'text-premium-yellow' : 'text-white/50'
                 }`}>
-                  #{idx + 1}
+                  {sc}
                 </span>
-                <p className={`font-black text-base truncate ${
-                  isWinner ? 'text-premium-yellow' : 'text-white/70'
-                }`}>
-                  {isWinner ? '🏆 ' : ''}{player}
-                </p>
               </div>
-              <span className={`text-4xl font-black italic ml-3 tabular-nums shrink-0 ${
-                isWinner ? 'text-premium-yellow' : 'text-white/50'
-              }`}>
-                {sc}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       <div className="w-full space-y-3">
         <PrimaryButton onClick={onRematch} icon={RotateCcw} variant="outline">

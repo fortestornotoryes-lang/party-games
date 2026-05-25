@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { SectionLabel } from './UI';
 import { Difficulty, GameMode, GameModeOption } from '../types';
-import { Shield, Zap, Target, LucideIcon } from 'lucide-react';
+import { Shield, Zap, Target, Clock, LucideIcon } from 'lucide-react';
 import { getTheme } from '../theme/colors';
 import { contentService } from '../services/contentService';
 import { GameKey } from '../types/games';
@@ -207,6 +207,22 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
             { value: 0,  label: '∞' },
             { value: 15, label: '15 СЕК' },
             { value: 30, label: '30 СЕК' },
+          ]}
+        />
+      )}
+
+      {currentGameId === GameKey.TabooReverse && setTimerSeconds && (
+        <SettingRow
+          label="Время раунда"
+          icon={Clock}
+          color="orange"
+          value={timerSeconds ?? 60}
+          onChange={setTimerSeconds}
+          options={[
+            { value: 30, label: '30 СЕК' },
+            { value: 45, label: '45 СЕК' },
+            { value: 60, label: '60 СЕК' },
+            { value: 90, label: '90 СЕК' },
           ]}
         />
       )}
