@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { RotateCcw, Trophy } from 'lucide-react';
 import { PrimaryButton } from '../../../components/UI';
+import { LeaderboardList } from '../../../components/LeaderboardList';
 
 interface GameOverPhaseProps {
   playerNames: string[];
@@ -124,42 +125,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
       )}
 
       {/* ── Individual leaderboard (classic/blitz always; team as subtitle) ── */}
-      {!teams && (
-        <div className="w-full space-y-3">
-          {sorted.map((player, idx) => {
-            const sc       = scores[player] ?? 0;
-            const isWinner = idx === 0 && hasWinner;
-            return (
-              <div
-                key={player}
-                className={`p-5 rounded-2xl border-2 flex items-center justify-between ${
-                  isWinner
-                    ? 'border-premium-yellow/60 bg-premium-yellow/10 shadow-[0_0_30px_rgba(234,179,8,0.15)]'
-                    : 'border-white/10 bg-white/5'
-                }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className={`shrink-0 text-xl font-black italic w-8 ${
-                    isWinner ? 'text-premium-yellow' : 'text-white/20'
-                  }`}>
-                    #{idx + 1}
-                  </span>
-                  <p className={`font-black text-base truncate ${
-                    isWinner ? 'text-premium-yellow' : 'text-white/70'
-                  }`}>
-                    {isWinner ? '🏆 ' : ''}{player}
-                  </p>
-                </div>
-                <span className={`text-4xl font-black italic ml-3 tabular-nums shrink-0 ${
-                  isWinner ? 'text-premium-yellow' : 'text-white/50'
-                }`}>
-                  {sc}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {!teams && <LeaderboardList players={playerNames} scores={scores} />}
 
       <div className="w-full space-y-3">
         <PrimaryButton onClick={onRematch} icon={RotateCcw} variant="outline">
