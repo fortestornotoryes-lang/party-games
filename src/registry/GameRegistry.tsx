@@ -1,16 +1,16 @@
 import React, {lazy} from 'react';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
-import decryptoImage from '../assets/DecryptoImage.jpg';
+import decryptoImage from '../assets/DecryptoImage.JPG';
 import FakeArtistImage from '../assets/FakeArtistImage.png';
-import CodenamesImage from '../assets/CodenamesImage.jpg';
+import CodenamesImage from '../assets/CodenamesImage.JPG';
 import JustOneImage from '../assets/JustOneImage.png';
 import mafia2 from '../assets/mafia_2.png';
 import telestrationsImg from '../assets/telephone.png';
 import ResistanceImage from '../assets/ResistanceImage.png';
 import SpyHuntImage from '../assets/SpyHuntImage.png';
-import WavelengthImage from '../assets/WavelengthImage.jpg';
-import alieaImage from '../assets/alias.jpg';
-import TabyImage from '../assets/tabyImage2.jpg';
+import WavelengthImage from '../assets/WavelengthImage.JPG';
+import alieaImage from '../assets/alias.JPG';
+import TabyImage from '../assets/tabyImage2.JPG';
 import ConnectFourImage from '../assets/ConnectFourImage2.png';
 import {
     Shield,

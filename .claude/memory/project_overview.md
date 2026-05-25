@@ -43,7 +43,7 @@ src/
   components/
     MainMenu.tsx                   # Список игр из GAMES_REGISTRY
     Setup.tsx                      # Универсальный экран: имена игроков + настройки
-    PassPhoneCard.tsx              # Карточка "передай телефон" с анимацией и badge (используется в играх для pass-phone фаз)
+    PassPhoneCard.tsx              # Карточка "передай телефон" с анимацией и badge
     UniversalGameSettings.tsx      # Слоты настроек (сложность, режим, раунды, таймер)
     GameHeader.tsx                 # Sticky-хедер с кнопкой назад
     DrawingCanvas.tsx              # Канвас-компонент (ResizeObserver + DPR)
@@ -51,6 +51,16 @@ src/
     Settings.tsx                   # Экран настроек приложения
     Result.tsx                     # Экран результата (SPY HUNT)
     UI.tsx                         # Все базовые UI-компоненты (см. components_ui.md)
+    Typography.tsx                 # 7 типографических компонентов (Display/Title/Heading/Label/Body/Caption/Score)
+    # ── Атомарные переиспользуемые компоненты ──
+    TimerBar.tsx                   # Полоска прогресса таймера (pct, color)
+    ProgressDots.tsx               # Точки-индикаторы шагов с motion-анимацией
+    PlayingHeader.tsx              # "Игрок объясняет" + таймер
+    DistributionFlow.tsx           # Абстрактная основа раздачи ролей (ProgressDots + lock→reveal)
+    TabooPassPhase.tsx             # Общая Pass-фаза для Taboo-семейства (PassPhoneCard + PlayerScoreList)
+    PlayerScoreList.tsx            # Список игроков с очками для pass-экранов (auto-sorted)
+    LeaderboardList.tsx            # Ранжированный список победителей для GameOver-экранов
+    StopGameButton.tsx             # Кнопка "Завершить игру"
   games/
     AliasGame/AliasGame.tsx
     CodenamesGame/CodenamesGame.tsx
@@ -58,32 +68,47 @@ src/
     FakeArtistGame/
       FakeArtistGame.tsx
       components/
-        FakeArtistDistribution.tsx
+        FakeArtistDistribution.tsx  # использует DistributionFlow
         FakeArtistVoting.tsx
     JustOneGame/JustOneGame.tsx
     MafiaGame/MafiaGame.tsx
     ResistanceGame/
       ResistanceGame.tsx
       components/
-        ResistanceDistribution.tsx
+        ResistanceDistribution.tsx  # использует DistributionFlow
         ResistanceResult.tsx
-        ResistanceDistribution.tsx
     SpyHuntGame/
       SpyHuntGame.tsx
       components/
-        RoleDistribution.tsx
+        RoleDistribution.tsx        # использует DistributionFlow
     TelestrationsGame/TelestrationsGame.tsx
     WavelengthGame/WavelengthGame.tsx
-  constants/                       # Контент для каждой игры + instructions.ts (GAME_INSTRUCTIONS: GameInstructionsMap)
+    TabooGame/
+      TabooGame.tsx                 # использует useTimer
+      phases/
+        PassPhase.tsx               # обёртка над TabooPassPhase (red)
+        PlayingPhase.tsx            # использует PlayingHeader + TimerBar
+        VerdictPhase.tsx            # использует StopGameButton
+        GameOverPhase.tsx           # использует LeaderboardList
+    TabooReverseGame/
+      TabooReverseGame.tsx          # использует useTimer
+      phases/
+        PassPhase.tsx               # обёртка над TabooPassPhase (orange)
+        PlayingPhase.tsx            # использует PlayingHeader + TimerBar
+        VerdictPhase.tsx            # использует StopGameButton
+        GameOverPhase.tsx           # использует LeaderboardList
+    TruthOrDareGame/TruthOrDareGame.tsx
+  constants/                       # Контент для каждой игры + instructions.ts
   services/
     storageService.ts              # Кастомные слова, использованные слова, настройки, игроки
-    feedbackService.ts             # Sound + вибрация
-    contentService.ts
+    feedbackService.ts             # Sound + вибрация + VIBRATE константы
+    contentService.ts              # использует shuffle/pickRandom из utils/random
   hooks/
-    useCountdown.ts
-    useTimer.ts
+    useCountdown.ts                # Telestrations (отдельный, не совпадает с useTimer)
+    useTimer.ts                    # Универсальный таймер с onTimeUp callback
+    usePlayerCycle.ts              # Циклический перебор игроков { current, idx, isLast, next, reset }
   utils/
-    random.ts
+    random.ts                      # shuffle<T>(), pickRandom<T>() — использовать везде вместо inline sort
     gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance
 ```
 

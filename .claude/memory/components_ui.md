@@ -1,6 +1,6 @@
 ---
 name: components-ui
-description: "Справочник UI-компонентов: Setup (до игры), GameHeader (во время игры), PassPhoneCard, DrawingCanvas, UI.tsx"
+description: "Справочник UI-компонентов: Setup, GameHeader, PassPhoneCard, DrawingCanvas, UI.tsx, атомарные переиспользуемые компоненты"
 metadata: 
   node_type: memory
   type: project
@@ -21,7 +21,7 @@ metadata:
   Текст кнопки
 </PrimaryButton>
 ```
-Внутри вызывает `feedbackService.playSound('click')` и `vibrate(10)`.
+Внутри вызывает `feedbackService.playSound('click')` и `vibrate(VIBRATE.tap)`.
 
 ### GameCard
 ```tsx
@@ -123,6 +123,133 @@ metadata:
 />
 ```
 Карточка формата `aspect-3/4` для pass-phone фаз. Пульсирующая иконка, угловые скобки, badge, имя игрока 42px italic. Внутри использует `motion/react`.
+
+---
+
+## DistributionFlow (src/components/DistributionFlow.tsx)
+
+Абстрактная основа для экранов раздачи ролей. Управляет `currentIndex`, `isRevealed`, ProgressDots, двойным AnimatePresence (переключение игрока + lock→reveal).
+
+```tsx
+<DistributionFlow
+  players={players}           // Player[]
+  onFinish={fn}
+  activeColor="bg-premium-red"  // Tailwind-класс для ProgressDots
+  passAccentColor="red"         // AccentColor для PassPhoneCard
+  passIcon={EyeOff}             // опционально
+  passInstruction="Нажми чтобы увидеть роль"
+  getCardStyle={(player) => ({
+    className: 'min-h-[28rem]',
+    style: { border: '...', boxShadow: '...' },
+  })}
+  renderCard={(player, isLast, onNext) => (
+    <>
+      {/* inner content of the revealed card */}
+    </>
+  )}
+/>
+```
+
+Используется в: SpyHuntGame/RoleDistribution, FakeArtistGame/FakeArtistDistribution, ResistanceGame/ResistanceDistribution.
+
+---
+
+## TabooPassPhase (src/components/TabooPassPhase.tsx)
+
+Общая pass-фаза для семейства Taboo-игр: PassPhoneCard + PlayerScoreList.
+
+```tsx
+<TabooPassPhase
+  playerNames={playerNames}
+  scores={scores}
+  currentExplainer={currentExplainer}
+  teams={isTeam ? teams : undefined}   // опционально — показывает team badges
+  accentColor="red"                    // 'red' | 'orange'
+  icon={Ban}                           // LucideIcon
+  instruction="Только ты должен видеть..."
+  onStart={handleStart}
+/>
+```
+
+Используется в: TabooGame/PassPhase (red, Ban), TabooReverseGame/PassPhase (orange, ListChecks).
+
+---
+
+## TimerBar (src/components/TimerBar.tsx)
+
+```tsx
+<TimerBar pct={timeLeft / total * 100} color="#ef4444" className="mb-4" />
+```
+Тонкая полоска прогресса. Используется в обоих Taboo PlayingPhase.
+
+---
+
+## ProgressDots (src/components/ProgressDots.tsx)
+
+```tsx
+<ProgressDots
+  count={players.length}
+  current={currentIndex}
+  activeColor="bg-premium-red"   // Tailwind-класс активной точки
+  className="mb-8"
+/>
+```
+Анимированные индикаторы шага. Используется в DistributionFlow и SpyHunt/FakeArtist раздачах.
+
+---
+
+## PlayingHeader (src/components/PlayingHeader.tsx)
+
+```tsx
+<PlayingHeader
+  explainer="Алекс"
+  timeLeft={45}
+  timerColor="#ef4444"           // hex — динамический цвет таймера
+  extra={<BlitzCounter ... />}   // опционально
+/>
+```
+Строка "Алекс объясняет" + таймер. Используется в Taboo/PlayingPhase и TabooReverse/PlayingPhase.
+
+---
+
+## PlayerScoreList (src/components/PlayerScoreList.tsx)
+
+Список игроков с очками для pass-экранов. Автосортировка по очкам.
+
+```tsx
+<PlayerScoreList
+  players={playerNames}
+  scores={scores}
+  activePlayer={currentExplainer}   // подсвечивается accentColor
+  activeLabel="объясняет"           // бейдж рядом с активным (default: "объясняет")
+  accentColor="orange"              // 'red'|'orange'|'sky'|'green'|'purple'|'yellow'
+  teams={teams}                     // опционально — team badges для не-активных
+/>
+```
+
+Используется через TabooPassPhase (TabooGame, TabooReverseGame).
+
+---
+
+## LeaderboardList (src/components/LeaderboardList.tsx)
+
+Ранжированный список победителей для GameOver-экранов.
+
+```tsx
+<LeaderboardList players={playerNames} scores={scores} />
+```
+
+Сортирует по убыванию, подсвечивает #1 жёлтым (с трофеем), если победитель единственный. Используется в TabooGame/GameOverPhase и TabooReverseGame/GameOverPhase.
+
+---
+
+## StopGameButton (src/components/StopGameButton.tsx)
+
+```tsx
+<StopGameButton onClick={onStopGame} />
+```
+
+Кнопка "Завершить игру" со StopCircle иконкой. Используется в VerdictPhase обоих Taboo-игр.
 
 ---
 
