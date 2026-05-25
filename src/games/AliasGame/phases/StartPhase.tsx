@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Zap, Trophy, Play } from 'lucide-react';
-import { PrimaryButton } from '@/components/UI';
+import { PrimaryButton, Typography } from '@/components/UI';
 import { WIN_SCORE, TROPHY_THRESHOLD } from '@/constants/aliasContent';
 import { Team } from '../types';
 
@@ -37,10 +37,10 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
           style={{ boxShadow: isRed ? '0 0 60px rgba(255,46,77,0.12)' : '0 0 60px rgba(63,123,255,0.12)' }}
         >
           <Zap className={`w-12 h-12 mb-3 ${teamColor}`} />
-          <h3 className={`text-3xl font-black italic uppercase tracking-tighter ${teamColor}`}>
+          <Typography.Heading size="lg" color={isRed ? 'red' : 'blue'}>
             {currentTeam.name}
-          </h3>
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/25 mt-2">Твой черёд!</p>
+          </Typography.Heading>
+          <Typography.Caption color="dimmer" className="mt-2">Твой черёд!</Typography.Caption>
         </motion.div>
       </div>
 
@@ -55,15 +55,13 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
             } ${i === currentTeamIdx ? 'ring-1 ring-white/10' : ''}`}
           >
             <div className="flex items-center justify-between mb-1.5">
-              <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${
-                i === 0 ? 'text-premium-red/50' : 'text-premium-blue/50'
-              }`}>{t.name}</span>
+              <Typography.Label size="md" color={i === 0 ? 'red' : 'blue'} className="opacity-50">
+                {t.name}
+              </Typography.Label>
               <Trophy className={`w-3 h-3 ${t.score >= TROPHY_THRESHOLD ? 'text-premium-yellow' : 'text-white/10'}`} />
             </div>
-            <div className={`text-4xl font-black italic ${i === 0 ? 'text-premium-red' : 'text-premium-blue'}`}>
-              {t.score}
-            </div>
-            <div className="text-[9px] text-white/15 font-black uppercase tracking-widest mt-0.5">/ {WIN_SCORE}</div>
+            <Typography.Score color={i === 0 ? 'red' : 'blue'}>{t.score}</Typography.Score>
+            <Typography.Caption color="dimmer" className="mt-0.5">/ {WIN_SCORE}</Typography.Caption>
           </div>
         ))}
       </div>

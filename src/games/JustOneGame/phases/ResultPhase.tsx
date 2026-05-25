@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle, XCircle, RotateCcw } from 'lucide-react';
-import { PrimaryButton } from '@/components/UI';
+import { PrimaryButton, Typography } from '@/components/UI';
 
 interface ResultPhaseProps {
   isCorrect: boolean;
@@ -26,9 +26,7 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
             <div className="absolute -inset-12 blur-[50px] rounded-full bg-premium-green/15" />
             <CheckCircle className="w-20 h-20 text-premium-green mx-auto relative" />
           </div>
-          <h2 className="text-[64px] font-black italic uppercase tracking-tighter text-premium-green leading-none">
-            ПРАВИЛЬНО!
-          </h2>
+          <Typography.Display size="lg" color="green" glow align="center">ПРАВИЛЬНО!</Typography.Display>
         </>
       ) : (
         <>
@@ -36,17 +34,17 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
             <div className="absolute -inset-12 blur-[50px] rounded-full bg-premium-red/15" />
             <XCircle className="w-20 h-20 text-premium-red mx-auto relative" />
           </div>
-          <h2 className="text-[64px] font-black italic uppercase tracking-tighter text-premium-red leading-none">
-            ОШИБКА
-          </h2>
+          <Typography.Display size="lg" color="red" glow align="center">ОШИБКА</Typography.Display>
         </>
       )}
 
-      <div className="space-y-1">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/25">Загаданное слово</p>
-        <div className="text-4xl font-black italic uppercase tracking-tighter text-white">{word}</div>
+      <div className="space-y-1 text-center">
+        <Typography.Caption className="tracking-[0.5em]">Загаданное слово</Typography.Caption>
+        <Typography.Display size="md" align="center">{word}</Typography.Display>
         {!isCorrect && (
-          <p className="text-sm text-white/35 font-medium mt-1">Ответ: <span className="italic">{guess}</span></p>
+          <Typography.Body color="faint" align="center" className="mt-1">
+            Ответ: <span className="italic">{guess}</span>
+          </Typography.Body>
         )}
       </div>
     </div>

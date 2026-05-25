@@ -53,12 +53,45 @@ metadata:
 ```
 `h-14 glass-card rounded-premium-md px-6`
 
-### Typography
+### Typography (src/components/Typography.tsx, re-exported from UI.tsx)
+
+7 компонентов, все принимают `color?: TypoColor`, `align?: TypoAlign`, `as?: AsElement`, `className?`.
+
+**TypoColor:** `white` | `body`(white/80) | `muted`(white/50) | `faint`(white/25) | `dimmer`(white/15) | `red` | `blue` | `green` | `sky` | `orange` | `yellow` | `purple`
+
+**TypoAlign:** `left` | `center` | `right`
+
 ```tsx
-<Typography.Title>ЗАГОЛОВОК</Typography.Title>
-<Typography.Heading>Подзаголовок</Typography.Heading>
-<Typography.Description>Описание</Typography.Description>
+// Hero-текст: имена, роли, победители. font-black italic uppercase
+<Typography.Display size="sm|md|lg|xl|2xl" color="white" glow align="center">ПОБЕДА!</Typography.Display>
+// sm=36px, md=48px, lg=60px, xl=70px, 2xl=88px | glow — textShadow цветом
+
+// Заголовок экрана (h1). font-black uppercase italic
+<Typography.Title size="sm|md|lg|xl" color="white">ЗАГОЛОВОК</Typography.Title>
+// sm=20px, md=28px(default), lg=30px, xl=36px
+
+// Подзаголовок/блок (h2). font-black italic uppercase
+<Typography.Heading size="xs|sm|md|lg" color="white">Подзаголовок</Typography.Heading>
+// xs=16px, sm=18px, md=24px(default), lg=30px
+
+// Мелкий uppercase-тег: роли, метки. font-black uppercase
+<Typography.Label size="xs|sm|md" color="muted">ЛИДЕР МИССИИ</Typography.Label>
+// xs=10px/tracking-0.4em(default), sm=11px/0.3em, md=12px/0.2em
+
+// Читаемый текст: инструкции, описания. font-medium leading-relaxed
+<Typography.Body size="xs|sm|base" color="body">Текст правил...</Typography.Body>
+// xs, sm(default), base
+
+// Минимальный хинт: подсказки, вторичные метки. font-black uppercase
+<Typography.Caption size="xs|sm" color="faint">подсказка</Typography.Caption>
+// xs=8px, sm=9px(default) | для цветных меток: color="red" className="opacity-50"
+
+// Числа: очки, счёт, таймер. font-black italic tabular-nums
+<Typography.Score size="sm|md|lg|xl" color="white" glow>{score}</Typography.Score>
+// sm=36px, md=48px(default), lg=60px, xl=72px
 ```
+
+**Импорт:** `import { Typography } from '@/components/UI'` или `import { Typography } from '@/components/Typography'`
 
 ### PageWrapper
 ```tsx

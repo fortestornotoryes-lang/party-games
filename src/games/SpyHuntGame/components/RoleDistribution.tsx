@@ -5,6 +5,7 @@ import { Player } from '../../../types';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
 import { PassPhoneCard } from '../../../components/PassPhoneCard';
 import { ROLE_TOKENS } from '../../../theme/colors';
+import { Typography } from '../../../components/Typography';
 
 interface RoleDistributionProps {
   players: Player[];
@@ -103,27 +104,22 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                   {/* ── SPY ── */}
                   {roleType === 'spy' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">Секретная роль</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
+                      <div className="text-center">
+                        <Typography.Caption color="red" className="opacity-50 tracking-[0.45em]">Секретная роль</Typography.Caption>
+                        <Typography.Title color="muted" className="mt-0.5">{currentPlayer.name}</Typography.Title>
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="space-y-3 text-center">
                         <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 2.5, repeat: Infinity }}>
                           <Ghost className="w-[88px] h-[88px] text-premium-red mx-auto" style={{ filter: ROLE_TOKENS.spy.iconFilter }} />
                         </motion.div>
-                        <h3
-                          className="text-[68px] font-black italic text-premium-red tracking-tighter leading-none"
-                          style={{ textShadow: ROLE_TOKENS.spy.textShadow }}
-                        >
-                          ШПИОН
-                        </h3>
-                        <p className="text-white/30 text-[11px] leading-relaxed">
+                        <Typography.Display size="lg" color="red" glow align="center">ШПИОН</Typography.Display>
+                        <Typography.Body size="xs" color="faint" align="center">
                           Локация неизвестна.<br />Не выдай себя — узнай место.
-                        </p>
+                        </Typography.Body>
                         {difficulty === 'easy' && (
                           <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
-                            <p className="text-[8px] font-black uppercase text-premium-red/55 mb-0.5">Подсказка</p>
+                            <Typography.Caption size="xs" color="red" className="opacity-55 mb-0.5">Подсказка</Typography.Caption>
                             <p className="text-xs text-premium-red font-black">Букв в названии: {location.length}</p>
                           </div>
                         )}
@@ -142,23 +138,19 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                   {/* ── TRAITOR ── */}
                   {roleType === 'traitor' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-orange/50">Секретная роль</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
+                      <div className="text-center">
+                        <Typography.Caption color="orange" className="opacity-50 tracking-[0.45em]">Секретная роль</Typography.Caption>
+                        <Typography.Title color="muted" className="mt-0.5">{currentPlayer.name}</Typography.Title>
                       </div>
 
-                      <div className="space-y-4">
+                      <div className="space-y-4 text-center">
                         <Shield className="w-[72px] h-[72px] text-premium-orange mx-auto" style={{ filter: ROLE_TOKENS.traitor.iconFilter }} />
-                        <h3 className="text-[52px] font-black italic text-premium-orange tracking-tighter leading-none">
-                          ПРЕДАТЕЛЬ
-                        </h3>
+                        <Typography.Display size="md" color="orange" glow align="center">ПРЕДАТЕЛЬ</Typography.Display>
                         <div className="px-4 py-3 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
-                          <p className="text-[8px] font-black uppercase text-premium-orange/50 tracking-widest mb-1">Твоя локация</p>
-                          <p className="text-xl font-black italic text-white uppercase">{location}</p>
+                          <Typography.Caption size="xs" color="orange" className="opacity-50 mb-1">Твоя локация</Typography.Caption>
+                          <Typography.Heading size="sm" align="center">{location}</Typography.Heading>
                         </div>
-                        <p className="text-white/25 text-[10px] leading-relaxed">
-                          Помогай шпиону, запутывай остальных
-                        </p>
+                        <Typography.Caption color="faint">Помогай шпиону, запутывай остальных</Typography.Caption>
                       </div>
 
                       <button
@@ -174,15 +166,15 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                   {/* ── AGENT ── */}
                   {roleType === 'agent' && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-between w-full">
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-green/50">Агент</p>
-                        <h4 className="text-lg font-black italic text-white/50 mt-0.5 text-[28px]">{currentPlayer.name}</h4>
+                      <div className="text-center">
+                        <Typography.Caption color="green" className="opacity-50 tracking-[0.45em]">Агент</Typography.Caption>
+                        <Typography.Title color="muted" className="mt-0.5">{currentPlayer.name}</Typography.Title>
                       </div>
 
-                      <div className="space-y-4">
+                      <div className="space-y-4 text-center">
                         <MapPin className="w-[72px] h-[72px] text-premium-green mx-auto" style={{ filter: ROLE_TOKENS.agent.iconFilter }} />
                         <div className="space-y-1">
-                          <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-green/50">Секретная локация</p>
+                          <Typography.Caption color="green" className="opacity-50 tracking-[0.35em]">Секретная локация</Typography.Caption>
                           <h3
                             className="font-black italic text-white uppercase tracking-tighter leading-tight wrap-break-word"
                             style={{ textShadow: ROLE_TOKENS.agent.textShadow, fontSize: 'clamp(22px, 9vw, 40px)' }}
@@ -191,10 +183,10 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({ players, loc
                           </h3>
                         </div>
                         <div className="px-4 py-3 bg-premium-green/10 border border-premium-green/20 rounded-2xl">
-                          <p className="text-[8px] font-black uppercase text-white/[0.22] tracking-widest mb-1">Твоя роль</p>
-                          <p className="text-base font-black italic text-premium-green uppercase">{currentPlayer.role}</p>
+                          <Typography.Caption size="xs" color="dimmer" className="mb-1">Твоя роль</Typography.Caption>
+                          <Typography.Heading size="sm" color="green">{currentPlayer.role}</Typography.Heading>
                         </div>
-                        <p className="text-white/[0.22] text-[10px]">Вычисли шпиона, не раскрывая локацию</p>
+                        <Typography.Caption color="dimmer">Вычисли шпиона, не раскрывая локацию</Typography.Caption>
                       </div>
 
                       <button

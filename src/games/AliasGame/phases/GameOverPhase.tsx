@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { RotateCcw, Trophy } from 'lucide-react';
-import { PrimaryButton } from '@/components/UI';
+import { PrimaryButton, Typography } from '@/components/UI';
 import { Team } from '../types';
 
 interface GameOverPhaseProps {
@@ -23,12 +23,10 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBac
       <div className="relative">
         <div className={`absolute -inset-16 blur-[70px] rounded-full ${isRed ? 'bg-premium-red/15' : 'bg-premium-blue/15'}`} />
         <Trophy className={`w-24 h-24 mx-auto mb-5 relative ${teamColor}`} />
-        <h2 className="text-[70px] font-black italic uppercase tracking-tighter text-white mb-2 relative leading-none">
-          ПОБЕДА!
-        </h2>
-        <p className={`text-lg font-black uppercase tracking-[0.25em] relative ${teamColor}`}>
+        <Typography.Display size="xl" align="center" className="mb-2 relative">ПОБЕДА!</Typography.Display>
+        <Typography.Label size="md" color={isRed ? 'red' : 'blue'} align="center" className="relative">
           Команда {currentTeam.name}
-        </p>
+        </Typography.Label>
       </div>
       <PrimaryButton onClick={onBack} icon={RotateCcw} variant={isRed ? 'red' : 'blue'}>
         В ГЛАВНОЕ МЕНЮ

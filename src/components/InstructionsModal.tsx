@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
-import {PrimaryButton, Typography} from "@/components/UI.tsx";
+import { PrimaryButton, Typography } from '@/components/UI';
 import { GameTheme } from '../types';
 import { getTheme } from '../theme/colors';
 
@@ -59,9 +59,9 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                  <div className={`w-8 h-0.5 rounded-full ${themeConfig.text} bg-current opacity-60`} />
               </div>
 
-              <p className="text-base text-white/50 leading-relaxed font-medium">
+              <Typography.Body size="base" color="muted">
                 {description}
-              </p>
+              </Typography.Body>
             </div>
 
             <div className="space-y-6 pb-20">
@@ -74,8 +74,8 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                   className="p-6 glass-card rounded-premium-lg flex gap-6 border-white/5 items-center"
                 >
                   <div className="pt-1">
-                    <h4 className={`text-[17px] font-black  uppercase tracking-tighter mb-2 italic ${themeConfig.text}`} >{item.title}</h4>
-                    <p className="text-sm text-white/80 leading-relaxed font-medium">{item.content}</p>
+                    <Typography.Heading size="sm" className={`mb-2 ${themeConfig.text}`}>{item.title}</Typography.Heading>
+                    <Typography.Body>{item.content}</Typography.Body>
                   </div>
                 </motion.div>
               ))}

@@ -150,7 +150,7 @@ export const IconButton: React.FC<{
 };
 
 export { Typography } from './Typography';
-export type { TypoColor, AsElement } from './Typography';
+export type { TypoColor, AsElement, TypoAlign } from './Typography';
 
 export const PageWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
   children, 
