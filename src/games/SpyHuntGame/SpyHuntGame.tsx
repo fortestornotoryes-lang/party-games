@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Timer, List, RotateCcw, HelpCircle, MessageSquare, ChevronDown, ChevronUp, Skull } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Skull } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Player } from '../../types';
-import { storageService } from '../../services/storageService';
-import { feedbackService } from '../../services/feedbackService';
-import { LOCATIONS, QUESTION_IDEAS, GAME_DURATION_BY_DIFFICULTY } from '../../constants/spyHuntContent';
-import { useGameSettings } from '../../contexts/GameSettingsContext';
-import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton } from '../../components/UI';
-import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { Player } from '@/types';
+import { storageService } from '@/services/storageService';
+import { feedbackService } from '@/services/feedbackService';
+import { GAME_DURATION_BY_DIFFICULTY } from '@/constants/spyHuntContent';
+import { useGameSettings } from '@/contexts/GameSettingsContext';
+import { GameHeader } from '@/components/GameHeader';
+import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { RoleDistribution } from './components/RoleDistribution';
-import { initSpyHunt } from '../../utils/gameLogic';
+import { initSpyHunt } from '@/utils/gameLogic';
 import { SpyHuntPhase } from './types';
-import {GameCard} from "@/components/GameCard.tsx";
+import { PlayingPhase } from './phases/PlayingPhase';
+import { RevealPhase }  from './phases/RevealPhase';
 
 interface GameProps {
   playerNames: string[];
@@ -22,14 +22,12 @@ interface GameProps {
 
 export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   const { difficulty, mode } = useGameSettings();
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers]   = useState<Player[]>([]);
   const [location, setLocation] = useState('');
-  const [phase, setPhase] = useState<SpyHuntPhase>(SpyHuntPhase.Distributing);
+  const [phase, setPhase]       = useState<SpyHuntPhase>(SpyHuntPhase.Distributing);
 
   const gameDuration = GAME_DURATION_BY_DIFFICULTY[(difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'] ?? 480;
   const [timeLeft, setTimeLeft] = useState(gameDuration);
-  const [showLocations, setShowLocations] = useState(false);
-  const [showQuestions, setShowQuestions] = useState(false);
 
   useEffect(() => {
     const { players: p, location: loc } = initSpyHunt(playerNames, difficulty, mode);
@@ -44,38 +42,37 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   }, [timeLeft, phase]);
 
   useEffect(() => {
-    if (phase === SpyHuntPhase.Reveal) {
-      const settings = storageService.getSettings();
-      feedbackService.playSound('success');
-      feedbackService.vibrate([50, 30, 50]);
-
-      if (settings.visualEffects) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#ef4444', '#ffffff']
-        });
-      }
+    if (phase !== SpyHuntPhase.Reveal) return;
+    const settings = storageService.getSettings();
+    feedbackService.playSound('success');
+    feedbackService.vibrate([50, 30, 50]);
+    if (settings.visualEffects) {
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ef4444', '#ffffff'] });
     }
   }, [phase]);
 
   const spy = players.find(p => p.isSpy);
+  const subtitle = phase === SpyHuntPhase.Distributing
+    ? 'Раздача ролей'
+    : phase === SpyHuntPhase.Playing
+      ? 'Идет поиск...'
+      : 'Результаты';
 
   if (players.length === 0) return null;
 
   return (
     <div className="flex flex-col min-h-screen pb-10">
-      <GameHeader 
+      <GameHeader
         title={GAMES_REGISTRY.spy.title}
-        subtitle={phase === SpyHuntPhase.Distributing ? "Раздача ролей" : phase === SpyHuntPhase.Playing ? "Идет поиск..." : "Результаты"} 
-        icon={Skull} 
+        subtitle={subtitle}
+        icon={Skull}
         theme="red"
         onBack={onBack}
       />
 
       <AnimatePresence mode="wait">
-        {phase === SpyHuntPhase.Distributing ? (
+
+        {phase === SpyHuntPhase.Distributing && (
           <motion.div
             key="distributing"
             initial={{ opacity: 0 }}
@@ -83,112 +80,31 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             exit={{ opacity: 0 }}
             className="flex-1 flex flex-col"
           >
-            <RoleDistribution 
-              players={players} 
-              location={location} 
-              onFinish={() => setPhase(SpyHuntPhase.Playing)} 
+            <RoleDistribution
+              players={players}
+              location={location}
+              onFinish={() => setPhase(SpyHuntPhase.Playing)}
             />
           </motion.div>
-        ) : phase === SpyHuntPhase.Playing ? (
-          <motion.div 
-            key="playing"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="p-6 space-y-6 flex-1 min-h-0 overflow-y-auto max-w-2xl mx-auto w-full"
-          >
-            <div className="flex justify-center">
-              <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${timeLeft < 60 ? 'border-premium-red bg-premium-red/10' : 'border-white/10 bg-white/5'}`}>
-                <Timer className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`} />
-                <span className="text-3xl font-black italic tracking-tighter">
-                  {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}{timeLeft % 60}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <button onClick={() => setShowQuestions(!showQuestions)} className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all">
-                <div className="flex items-center space-x-3">
-                    <MessageSquare className="w-4 h-4 text-premium-red" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Идеи для вопросов</span>
-                </div>
-                {showQuestions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-
-              {showQuestions && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="grid grid-cols-1 gap-2">
-                      {QUESTION_IDEAS.map((q, i) => <div key={i} className="p-4 bg-white/5 rounded-2xl text-xs text-gray-400 italic border border-white/5">"{q}"</div>)}
-                  </motion.div>
-              )}
-
-              <button onClick={() => setShowLocations(!showLocations)} className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all">
-                <div className="flex items-center space-x-3">
-                    <List className="w-4 h-4 text-premium-sky" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Возможные локации</span>
-                </div>
-                {showLocations ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-
-              {showLocations && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="grid grid-cols-2 gap-2">
-                      {LOCATIONS.map((loc, i) => (
-                        <div key={i} className={`p-3 rounded-xl text-[10px] font-bold text-center border transition-all bg-white/5 border-white/10 text-gray-500`}>
-                          {loc}
-                        </div>
-                      ))}
-                  </motion.div>
-              )}
-            </div>
-
-            <div className="pt-6">
-              <h4 className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] mb-4 text-center">Агенты под подозрением</h4>
-              <div className="grid grid-cols-2 gap-3">
-                {players.map((p) => (
-                    <GameCard key={p.id} className="p-4 flex items-center space-x-3 border-white/5">
-                        <div className="w-2 h-2 rounded-full bg-premium-red/40" />
-                        <span className="text-sm font-black italic uppercase tracking-tight truncate">{p.name}</span>
-                    </GameCard>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-8">
-              <PrimaryButton onClick={() => setPhase(SpyHuntPhase.Reveal)} icon={Skull} className="bg-premium-red !text-white shadow-premium-red/30">
-                РАЗОБЛАЧИТЬ
-              </PrimaryButton>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="reveal"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            className="p-6 flex-1 flex flex-col items-center justify-center space-y-12 max-w-md mx-auto w-full"
-          >
-            <div className="text-center space-y-4">
-               <Skull className="w-24 h-24 text-premium-red mx-auto animate-pulse" />
-               <h2 className="text-5xl font-black italic uppercase text-white tracking-tighter">Шпион раскрыт</h2>
-            </div>
-
-            <GameCard className="w-full p-10 text-center border-premium-red/40 bg-premium-red/5 space-y-6">
-               <div className="space-y-2">
-                  <p className="text-[10px] font-black text-premium-red/60 uppercase tracking-widest">Агент 00</p>
-                  <h3 className="text-5xl font-black italic text-white uppercase break-words px-4">{spy?.name}</h3>
-               </div>
-               <div className="pt-6 border-t border-premium-red/20">
-                  <p className="text-[10px] font-black text-premium-green/60 uppercase tracking-widest">Секретная локация</p>
-                  <p className="text-2xl font-black italic text-white uppercase">{location}</p>
-               </div>
-            </GameCard>
-
-            <PrimaryButton onClick={onBack} icon={RotateCcw} variant="red">
-              ВЕРНУТЬСЯ В МЕНЮ
-            </PrimaryButton>
-          </motion.div>
         )}
+
+        {phase === SpyHuntPhase.Playing && (
+          <PlayingPhase
+            players={players}
+            timeLeft={timeLeft}
+            onReveal={() => setPhase(SpyHuntPhase.Reveal)}
+          />
+        )}
+
+        {phase === SpyHuntPhase.Reveal && (
+          <RevealPhase
+            spy={spy}
+            location={location}
+            onBack={onBack}
+          />
+        )}
+
       </AnimatePresence>
     </div>
   );
 };
-
