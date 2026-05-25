@@ -121,6 +121,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
       }
       case GameKey.TruthOrDare:
       case GameKey.TabooReverse:
+      case GameKey.Taboo:
         return remaining !== undefined ? `${remaining} карт` : undefined;
       case GameKey.FakeArtist:
       case GameKey.Wavelength:
@@ -211,11 +212,11 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         />
       )}
 
-      {currentGameId === GameKey.TabooReverse && setTimerSeconds && (
+      {(currentGameId === GameKey.TabooReverse || currentGameId === GameKey.Taboo) && setTimerSeconds && (
         <SettingRow
           label="Время раунда"
           icon={Clock}
-          color="orange"
+          color={currentGameId === GameKey.Taboo ? 'red' : 'orange'}
           value={timerSeconds ?? 60}
           onChange={setTimerSeconds}
           options={[

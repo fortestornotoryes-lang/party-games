@@ -46,7 +46,8 @@ export enum GameStatus {
   SpyHuntPlaying = 'spy_hunt_playing',
   TruthOrDarePlaying = 'truth_or_dare_playing',
   ConnectFourPlaying = 'connect_four_playing',
-  TabooReversePlaying = 'taboo_reverse_playing'
+  TabooReversePlaying = 'taboo_reverse_playing',
+  TabooPlaying = 'taboo_playing'
 }
 
 export type Difficulty = 'easy' | 'medium' | 'hard';

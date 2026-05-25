@@ -10,6 +10,7 @@ import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesCo
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
 import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '../constants/truthOrDareContent';
 import { TABOO_REVERSE_CARDS } from '../constants/tabooReverseContent';
+import { TABOO_CLASSIC_CARDS } from '../constants/tabooContent';
 import { storageService } from './storageService';
 
 export const contentService = {
@@ -263,6 +264,11 @@ export const contentService = {
       }
       case GameKey.TabooReverse: {
         const cards = TABOO_REVERSE_CARDS.filter(c => c.difficulty === difficulty);
+        const allWords = cards.map(c => c.word);
+        return { total: allWords.length, remaining: allWords.filter(w => !used.includes(w)).length };
+      }
+      case GameKey.Taboo: {
+        const cards = TABOO_CLASSIC_CARDS.filter(c => c.difficulty === difficulty);
         const allWords = cards.map(c => c.word);
         return { total: allWords.length, remaining: allWords.filter(w => !used.includes(w)).length };
       }

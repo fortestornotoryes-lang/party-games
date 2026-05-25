@@ -29,7 +29,8 @@ import {
     Flame,
     LayoutGrid,
     ArrowDown,
-    ListChecks
+    ListChecks,
+    Ban
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -48,6 +49,7 @@ const MafiaGame = lazy(() => import('../games/MafiaGame/MafiaGame'));
 const TruthOrDareGame = lazy(() => import('../games/TruthOrDareGame/TruthOrDareGame').then(m => ({default: m.TruthOrDareGame})));
 const ConnectFourGame = lazy(() => import('../games/ConnectFourGame/ConnectFourGame').then(m => ({default: m.ConnectFourGame})));
 const TabooReverseGame = lazy(() => import('../games/TabooReverseGame/TabooReverseGame').then(m => ({default: m.TabooReverseGame})));
+const TabooGame = lazy(() => import('../games/TabooGame/TabooGame').then(m => ({default: m.TabooGame})));
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Spy]: {
@@ -96,6 +98,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         setupStatus: GameStatus.TruthOrDarePlaying,
         backgroundImage: TruthOrDareImage,
 
+    },
+    [GameKey.Taboo]: {
+        id: GameKey.Taboo,
+        title: 'ТАБУ',
+        subtitle: 'Объясни без запрещённых слов',
+        icon: Ban,
+        theme: 'red',
+        placeholder: 'Игрок',
+        players: '4–10',
+        description: 'Объясняй загаданное слово любыми словами — кроме запрещённых на карточке!',
+        minPlayers: 4,
+        setupStatus: GameStatus.TabooPlaying,
+        backgroundImage: TabyImage,
     },
     [GameKey.TabooReverse]: {
         id: GameKey.TabooReverse,
@@ -277,4 +292,5 @@ export {
     TruthOrDareGame,
     ConnectFourGame,
     TabooReverseGame,
+    TabooGame,
 };

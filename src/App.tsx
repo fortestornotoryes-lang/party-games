@@ -19,6 +19,7 @@ import {
   ResistanceGame,
   SpyHuntGame,
   TabooReverseGame,
+  TabooGame,
   TelestrationsGame,
   TruthOrDareGame,
   WavelengthGame
@@ -71,6 +72,7 @@ function AppContent() {
             case GameStatus.TruthOrDarePlaying: return <TruthOrDareGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.ConnectFourPlaying: return <ConnectFourGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.TabooReversePlaying: return <TabooReverseGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.TabooPlaying: return <TabooGame playerNames={playerNames} onBack={reset} />;
 
             case GameStatus.SpyHuntPlaying: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;
