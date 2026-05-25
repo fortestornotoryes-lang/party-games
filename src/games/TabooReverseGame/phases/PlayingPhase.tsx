@@ -1,8 +1,18 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { SkipForward } from 'lucide-react';
-import { PrimaryButton } from '../../../components/UI';
-import { TabooCard } from '../../../constants/tabooReverseContent';
+import { PrimaryButton } from '@/components/UI.tsx';
+import { TabooCard } from '@/constants/tabooReverseContent.ts';
+
+/** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
+const wordFontSize = (word: string): string => {
+  const n = word.length;
+  if (n <= 6)  return '3.5rem';
+  if (n <= 8)  return '2.8rem';
+  if (n <= 10) return '2.3rem';
+  if (n <= 13) return '1.9rem';
+  return '1.5rem';
+};
 
 interface PlayingPhaseProps {
   card: TabooCard;
@@ -80,8 +90,8 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             Загаданное слово
           </p>
           <h2
-            className="font-black italic uppercase tracking-tighter leading-none text-white"
-            style={{ fontSize: card.word.length > 8 ? '2.8rem' : '3.5rem' }}
+            className="font-black italic uppercase tracking-tighter leading-tight text-white break-words"
+            style={{ fontSize: wordFontSize(card.word) }}
           >
             {card.word}
           </h2>

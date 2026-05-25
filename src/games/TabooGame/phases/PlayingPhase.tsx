@@ -3,6 +3,16 @@ import { motion } from 'motion/react';
 import { PrimaryButton } from '../../../components/UI';
 import { TabooClassicCard } from '../../../constants/tabooContent';
 
+/** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
+const wordFontSize = (word: string): string => {
+  const n = word.length;
+  if (n <= 6)  return '3.5rem';
+  if (n <= 8)  return '2.8rem';
+  if (n <= 10) return '2.3rem';
+  if (n <= 13) return '1.9rem';
+  return '1.5rem';
+};
+
 interface PlayingPhaseProps {
   card: TabooClassicCard;
   currentExplainer: string;
@@ -77,8 +87,8 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
               Загаданное слово
             </p>
             <h2
-              className="font-black italic uppercase tracking-tighter leading-none text-white"
-              style={{ fontSize: card.word.length > 10 ? '2.4rem' : card.word.length > 7 ? '3rem' : '3.8rem' }}
+              className="font-black italic uppercase tracking-tighter leading-tight text-white break-words"
+              style={{ fontSize: wordFontSize(card.word) }}
             >
               {card.word}
             </h2>

@@ -27,14 +27,9 @@
       "Bash(sed -i 's/themeColor=\"text-premium-purple bg-premium-purple\\\\/10 border-premium-purple\\\\/30\"/theme=\"purple\"/g' src/games/DecryptoGame/DecryptoGame.tsx)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Directory -Name)",
       "Bash(Select-Object -First 20)",
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Name -Include \"tailwind.config.*\")"
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Name -Include \"tailwind.config.*\")",
+      "Bash(awk '{ print length, $0 }')"
     ]
-  },
-  "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "context7@claude-plugins-official": true
   },
   "hooks": {
     "PostToolUse": [
@@ -59,5 +54,11 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
   }
 }

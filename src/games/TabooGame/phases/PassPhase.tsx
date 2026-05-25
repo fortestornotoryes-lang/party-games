@@ -23,6 +23,15 @@ export const PassPhase: React.FC<PassPhaseProps> = ({
     exit={{ opacity: 0, y: -20 }}
     className="min-h-full flex flex-col items-center justify-center p-6 gap-8"
   >
+    <PassPhoneCard
+        playerName={currentExplainer}
+        badge="Объяснять"
+        badgeColor="red"
+        instruction="Только ты должен видеть карточку с запрещёнными словами"
+        icon={Ban}
+        accentColor="red"
+        onClick={onStart}
+    />
     {/* Scoreboard */}
     <div className="w-full max-w-sm space-y-2">
       <p className="text-[9px] font-black uppercase tracking-widest text-white/30 text-center mb-3">
@@ -60,14 +69,6 @@ export const PassPhase: React.FC<PassPhaseProps> = ({
         ))}
     </div>
 
-    <PassPhoneCard
-      playerName={currentExplainer}
-      badge="Объяснять"
-      badgeColor="red"
-      instruction="Только ты должен видеть карточку с запрещёнными словами"
-      icon={Ban}
-      accentColor="red"
-      onClick={onStart}
-    />
+
   </motion.div>
 );

@@ -133,12 +133,12 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
                 }}
             />
 
-            <div className={`absolute top-5 left-5  w-45 h-55 border-t border-l  rounded-tl-md ${accent.border}`}/>
-            <div className={`absolute top-5 right-5 w-45 h-55 border-t border-r ${accent.border} rounded-tr-md`}/>
+            <div className={`absolute top-5 left-5 w-10 h-10 border-t border-l  rounded-tl-md ${accent.border}`}/>
+            <div className={`absolute top-5 right-5 w-10 h-10 border-t border-r ${accent.border} rounded-tr-md`}/>
             <div
-                className={`absolute bottom-5 left-5 w-45 h-55 border-b border-l ${accent.border} rounded-bl-md`}/>
+                className={`absolute bottom-5 left-5 w-10 h-10 border-b border-l ${accent.border} rounded-bl-md`}/>
             <div
-                className={`absolute bottom-5 right-5 w-45 h-55 border-b-1 border-r ${accent.border} rounded-br-md`}/>
+                className={`absolute bottom-5 right-5 w-10 h-10 border-b border-r ${accent.border} rounded-br-md`}/>
 
             <div className="text-center space-y-7 px-10 relative z-10">
                 <motion.div
