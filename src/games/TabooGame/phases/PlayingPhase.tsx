@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { PrimaryButton } from '../../../components/UI';
 import { TabooClassicCard } from '../../../constants/tabooContent';
+import { TimerBar } from '../../../components/TimerBar';
+import { PlayingHeader } from '../../../components/PlayingHeader';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
@@ -41,27 +43,10 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       className="flex flex-col min-h-full"
     >
-      {/* Timer bar */}
-      <div className="h-1.5 w-full bg-white/10">
-        <div
-          className="h-full transition-all duration-1000 ease-linear"
-          style={{ width: `${timerPct}%`, backgroundColor: timerColor }}
-        />
-      </div>
+      <TimerBar pct={timerPct} color={timerColor} />
 
       <div className="flex-1 flex flex-col p-6 gap-5 max-w-lg mx-auto w-full">
-        {/* Top row */}
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] font-black uppercase tracking-widest text-white/30">
-            {currentExplainer} объясняет
-          </span>
-          <span
-            className="text-2xl font-black italic tabular-nums"
-            style={{ color: timerColor }}
-          >
-            {timeLeft}с
-          </span>
-        </div>
+        <PlayingHeader explainer={currentExplainer} timeLeft={timeLeft} timerColor={timerColor} />
 
         {/* Forbidden words — shown first so explainer sees the constraints */}
         <div className="p-5 rounded-3xl border-2 border-premium-red/30 bg-premium-red/5">

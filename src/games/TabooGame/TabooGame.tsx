@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { Ban } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GameHeader }       from '../../components/GameHeader';
 import { GAMES_REGISTRY }  from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
-import { feedbackService } from '@/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { storageService }  from '@/services/storageService';
 import {
   TabooClassicCard,
@@ -60,20 +61,20 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   const [phase, setPhase] = useState<TabooPhase>(TabooPhase.Pass);
 
   // ── Timer ──────────────────────────────────────────────────────────────────
-  const [timeLeft, setTimeLeft] = useState(cardTimer);
   const [timedOut, setTimedOut] = useState(false);
 
-  useEffect(() => {
-    if (phase !== TabooPhase.Playing) return;
-    if (timeLeft <= 0) {
-      feedbackService.vibrate([80, 40, 80]);
+  const {
+    timeLeft,
+    start:  startTimer,
+    reset:  resetTimer,
+  } = useTimer({
+    initialTime: cardTimer,
+    onTimeUp: () => {
+      feedbackService.vibrate(VIBRATE.timeout);
       setTimedOut(true);
       setPhase(TabooPhase.Verdict);
-      return;
-    }
-    const id = setInterval(() => setTimeLeft(t => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, timeLeft]);
+    },
+  });
 
   // ── Confetti on game over ──────────────────────────────────────────────────
   useEffect(() => {
@@ -87,10 +88,11 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleStart = useCallback(() => {
-    setTimeLeft(cardTimer);
     setTimedOut(false);
+    resetTimer(cardTimer);
+    startTimer();
     setPhase(TabooPhase.Playing);
-  }, [cardTimer]);
+  }, [cardTimer, resetTimer, startTimer]);
 
   const handleGuessed = useCallback(() => {
     setPhase(TabooPhase.Verdict);
@@ -102,7 +104,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     if (penalty) {
       newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
       feedbackService.playSound('error');
-      feedbackService.vibrate(100);
+      feedbackService.vibrate(VIBRATE.error);
     } else if (guesser) {
       newScores[guesser] = (newScores[guesser] ?? 0) + 1;
       feedbackService.playSound('success');

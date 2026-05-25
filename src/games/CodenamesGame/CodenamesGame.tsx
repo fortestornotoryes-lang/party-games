@@ -5,6 +5,7 @@ import {PrimaryButton, Typography} from '../../components/UI';
 import {Grid, Eye, EyeOff, User, Users, AlertTriangle, Zap, ListChecks} from 'lucide-react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {contentService} from '../../services/contentService';
+import { shuffle } from '../../utils/random';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 import {CodenamesPhase} from './types';
 import {PassPhoneCard} from "@/components/PassPhoneCard.tsx";
@@ -48,7 +49,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
         if (playerNames.length < 4) return;
 
         // Shuffle players
-        const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
+        const shuffled = shuffle(playerNames);
         setRedCaptain(shuffled[0]);
         setBlueCaptain(shuffled[1]);
 
@@ -92,7 +93,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
             ];
         }
 
-        colorAssignment = colorAssignment.sort(() => Math.random() - 0.5);
+        colorAssignment = shuffle(colorAssignment);
 
         const newCards = shuffledWords.map((word, i) => ({
             id: i,

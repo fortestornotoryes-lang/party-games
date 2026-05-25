@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { SkipForward } from 'lucide-react';
-import { PrimaryButton } from '@/components/UI.tsx';
-import { TabooCard } from '@/constants/tabooReverseContent.ts';
+import { PrimaryButton } from '@/components/UI';
+import { TabooCard } from '@/constants/tabooReverseContent';
+import { TimerBar } from '@/components/TimerBar';
+import { PlayingHeader } from '@/components/PlayingHeader';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
@@ -48,41 +50,20 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       className="flex flex-col min-h-full"
     >
-      {/* Timer bar */}
-      <div className="h-1.5 w-full bg-white/10">
-        <div
-          className="h-full transition-all duration-1000 ease-linear"
-          style={{ width: `${timerPct}%`, backgroundColor: timerColor }}
-        />
-      </div>
+      <TimerBar pct={timerPct} color={timerColor} />
 
       <div className="flex-1 flex flex-col p-6 gap-6 max-w-lg mx-auto w-full">
-        {/* Top row: explainer label + timer + blitz stats */}
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] font-black uppercase tracking-widest text-white/30">
-            {currentExplainer} объясняет
-          </span>
-
-          <div className="flex items-center gap-3">
-            {/* Blitz counters */}
-            {isBlitz && blitzStats && (
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black tabular-nums text-premium-green">
-                  ✓{blitzStats.guessed}
-                </span>
-                <span className="text-[11px] font-black tabular-nums text-premium-red">
-                  ✗{blitzStats.skipped}
-                </span>
-              </div>
-            )}
-            <span
-              className="text-2xl font-black italic tabular-nums"
-              style={{ color: timerColor }}
-            >
-              {timeLeft}с
-            </span>
-          </div>
-        </div>
+        <PlayingHeader
+          explainer={currentExplainer}
+          timeLeft={timeLeft}
+          timerColor={timerColor}
+          extra={isBlitz && blitzStats && (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-black tabular-nums text-premium-green">✓{blitzStats.guessed}</span>
+              <span className="text-[11px] font-black tabular-nums text-premium-red">✗{blitzStats.skipped}</span>
+            </div>
+          )}
+        />
 
         {/* Secret word */}
         <div className="p-8 rounded-4xl border-2 border-premium-orange/30 bg-premium-orange/5 text-center">

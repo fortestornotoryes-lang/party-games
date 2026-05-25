@@ -28,7 +28,15 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Directory -Name)",
       "Bash(Select-Object -First 20)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\" -Recurse -Name -Include \"tailwind.config.*\")",
-      "Bash(awk '{ print length, $0 }')"
+      "Bash(awk '{ print length, $0 }')",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\\\\games\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(cd C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\\\\games *)"
     ]
   },
   "hooks": {

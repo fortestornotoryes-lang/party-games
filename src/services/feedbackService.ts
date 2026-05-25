@@ -1,6 +1,25 @@
 import { storageService } from './storageService';
 
 /**
+ * Стандартные вибропаттерны для единообразного UX.
+ * Использовать вместо магических чисел в callsite'ах.
+ */
+export const VIBRATE = {
+  /** Правильный ответ / угадано */
+  correct: [50, 30, 50] as number[],
+  /** Неправильный ответ / ошибка */
+  error: 100,
+  /** Победа / конец игры */
+  win: [100, 50, 100] as number[],
+  /** Таймер истёк */
+  timeout: [80, 40, 80] as number[],
+  /** Лёгкий тап / клик */
+  tap: 10,
+  /** Двойной импульс — конец раунда / переход */
+  celebrate: [50, 30, 50, 30, 50] as number[],
+} as const;
+
+/**
  * Feedback Service for Haptics and Sound Effects
  */
 export const feedbackService = {

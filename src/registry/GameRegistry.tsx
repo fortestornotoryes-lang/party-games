@@ -2,7 +2,7 @@ import React, {lazy} from 'react';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import decryptoImage from '../assets/DecryptoImage.jpg';
 import FakeArtistImage from '../assets/FakeArtistImage.png';
-import CodenamesImage from '../assets/Codenames.jpg';
+import CodenamesImage from '../assets/CodenamesImage.jpg';
 import JustOneImage from '../assets/JustOneImage.png';
 import mafia2 from '../assets/mafia_2.png';
 import telestrationsImg from '../assets/telephone.png';
@@ -60,8 +60,8 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         theme: 'indigo',
         placeholder: 'Игрок',
         description: '1 игрок — шпион. Все остальные знают локацию. Шпион должен догадаться, где он находится, по вопросам.',
-        players: '4–7',
-        minPlayers: 4,
+        players: '3–7',
+        minPlayers: 3,
         setupStatus: GameStatus.SpyHuntPlaying,
         modes: [
             {id: 'classic', name: 'Классика', description: '1 шпион, все остальные знают локацию', icon: Target},

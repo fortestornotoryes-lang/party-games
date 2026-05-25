@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 import { storageService } from '@/services/storageService';
 import { feedbackService } from '@/services/feedbackService';
 import { contentService } from '@/services/contentService';
+import { shuffle, pickRandom } from '@/utils/random';
+import { VIBRATE } from '@/services/feedbackService';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/constants/aliasContent';
 import { GameKey } from '@/types/games';
 import { GameHeader } from '@/components/GameHeader';
@@ -39,7 +41,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   });
 
   useEffect(() => {
-    const shuffled = [...playerNames].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(playerNames);
     const mid = Math.ceil(shuffled.length / 2);
     setTeams([
       { name: TEAMS_CONFIG[0].name, color: TEAMS_CONFIG[0].color, players: shuffled.slice(0, mid), score: 0 },
@@ -49,7 +51,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
   const nextWord = () => {
     const available = contentService.getAliasWords(difficulty);
-    const word = available[Math.floor(Math.random() * available.length)];
+    const word = pickRandom(available);
     setCurrentWord(word);
     storageService.markWordAsUsed(GameKey.Alias, word);
   };
@@ -64,14 +66,14 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
   const handleCorrect = () => {
     feedbackService.playSound('success');
-    feedbackService.vibrate(20);
+    feedbackService.vibrate(VIBRATE.correct);
     setRoundScore(s => s + 1);
     nextWord();
   };
 
   const handleSkip = () => {
     feedbackService.playSound('error');
-    feedbackService.vibrate(50);
+    feedbackService.vibrate(VIBRATE.error);
     setRoundScore(s => s - 1);
     nextWord();
   };
@@ -93,7 +95,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     if (phase !== AliasPhase.GameOver) return;
     const settings = storageService.getSettings();
     feedbackService.playSound('success');
-    feedbackService.vibrate([100, 50, 100]);
+    feedbackService.vibrate(VIBRATE.win);
     if (settings.visualEffects) {
       confetti({
         particleCount: 200, spread: 80, origin: { y: 0.6 },

@@ -4,7 +4,7 @@ import { Skull } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Player } from '@/types';
 import { storageService } from '@/services/storageService';
-import { feedbackService } from '@/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { GAME_DURATION_BY_DIFFICULTY } from '@/constants/spyHuntContent';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { GameHeader } from '@/components/GameHeader';
@@ -45,7 +45,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
     if (phase !== SpyHuntPhase.Reveal) return;
     const settings = storageService.getSettings();
     feedbackService.playSound('success');
-    feedbackService.vibrate([50, 30, 50]);
+    feedbackService.vibrate(VIBRATE.correct);
     if (settings.visualEffects) {
       confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ef4444', '#ffffff'] });
     }

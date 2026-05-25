@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Radio } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { feedbackService } from '@/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { usePlayerCycle } from '@/hooks/usePlayerCycle';
 import { storageService } from '@/services/storageService';
 import { contentService } from '@/services/contentService';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
@@ -25,7 +26,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const [currentPair, setCurrentPair] = useState<string[]>(['', '']);
   const [targetValue, setTargetValue] = useState(50);
   const [guessValue, setGuessValue]   = useState(50);
-  const [psychicIdx, setPsychicIdx]   = useState(0);
+  const { current: psychic, idx: psychicIdx, next: nextPsychic } = usePlayerCycle(playerNames);
 
   useEffect(() => {
     startNewRound();
@@ -39,8 +40,6 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
     setGuessValue(50);
     setPhase(WavelengthPhase.Pass);
   };
-
-  const psychic = playerNames[psychicIdx];
 
   const calculateScore = () => {
     const diff = Math.abs(guessValue - targetValue);
@@ -58,14 +57,14 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
     if (score >= 3) {
       feedbackService.playSound('success');
-      feedbackService.vibrate([50, 30, 50]);
+      feedbackService.vibrate(VIBRATE.correct);
       if (settings.visualEffects) {
         const colors = score === 4 ? ['#a855f7', '#ffffff', '#eab308'] : ['#a855f7', '#ffffff'];
         confetti({ particleCount: score === 4 ? 200 : 100, spread: 80, origin: { y: 0.6 }, colors });
       }
     } else if (score === 0) {
       feedbackService.playSound('error');
-      feedbackService.vibrate(100);
+      feedbackService.vibrate(VIBRATE.error);
     } else {
       feedbackService.playSound('click');
     }
@@ -115,7 +114,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
               targetValue={targetValue}
               guessValue={guessValue}
               score={score}
-              onNext={() => setPsychicIdx(i => (i + 1) % playerNames.length)}
+              onNext={nextPsychic}
             />
           )}
 

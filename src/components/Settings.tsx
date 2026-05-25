@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Plus, Trash2, RefreshCw, Database, Search } from 'lucide-react';
 import { storageService, GameSettings } from '../services/storageService';
-import { feedbackService } from '../services/feedbackService';
+import { feedbackService, VIBRATE } from '../services/feedbackService';
 import { GameKey } from '../types/games';
 import { Difficulty } from '../types';
 import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
@@ -126,7 +126,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     const next = { ...settings, [key]: !settings[key] };
     setSettings(next);
     storageService.saveSettings(next);
-    if (key === 'vibration') feedbackService.vibrate(20);
+    if (key === 'vibration') feedbackService.vibrate(VIBRATE.tap);
     if (key === 'sounds') feedbackService.playSound('click');
   };
 

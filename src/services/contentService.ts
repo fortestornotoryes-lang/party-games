@@ -12,6 +12,7 @@ import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '../constants/truthOrD
 import { TABOO_REVERSE_CARDS } from '../constants/tabooReverseContent';
 import { TABOO_CLASSIC_CARDS } from '../constants/tabooContent';
 import { storageService } from './storageService';
+import { shuffle, pickRandom } from '../utils/random';
 
 export const contentService = {
   getAliasWords(difficulty: Difficulty): string[] {
@@ -52,7 +53,7 @@ export const contentService = {
       available = all;
     }
 
-    const selected = [...available].sort(() => Math.random() - 0.5).slice(0, 25);
+    const selected = shuffle(available).slice(0, 25);
     selected.forEach(w => storageService.markWordAsUsed(GameKey.Codenames, w));
     return selected;
   },
@@ -72,7 +73,7 @@ export const contentService = {
       available = all;
     }
 
-    const selected = [...available].sort(() => Math.random() - 0.5).slice(0, count);
+    const selected = shuffle(available).slice(0, count);
     selected.forEach(w => storageService.markWordAsUsed(GameKey.Decrypto, w));
     return selected;
   },
@@ -92,7 +93,7 @@ export const contentService = {
       available = all;
     }
 
-    const word = available[Math.floor(Math.random() * available.length)];
+    const word = pickRandom(available);
     storageService.markWordAsUsed(GameKey.JustOne, word);
     return word;
   },
@@ -116,7 +117,7 @@ export const contentService = {
       available = all;
     }
 
-    const pair = available[Math.floor(Math.random() * available.length)];
+    const pair = pickRandom(available);
     storageService.markWordAsUsed(GameKey.Wavelength, pair.join(' - '));
     return pair;
   },
@@ -136,7 +137,7 @@ export const contentService = {
       available = all;
     }
 
-    const word = available[Math.floor(Math.random() * available.length)];
+    const word = pickRandom(available);
     storageService.markWordAsUsed(GameKey.Telestrations, word);
     return word;
   },
@@ -157,7 +158,7 @@ export const contentService = {
       available = pool;
     }
 
-    const item = available[Math.floor(Math.random() * available.length)];
+    const item = pickRandom(available);
     storageService.markWordAsUsed(GameKey.FakeArtist, item.word);
     return item;
   },
@@ -184,7 +185,7 @@ export const contentService = {
       available = all;
     }
 
-    const location = available[Math.floor(Math.random() * available.length)];
+    const location = pickRandom(available);
     storageService.markWordAsUsed(GameKey.Spy, location.name);
     return location;
   },
@@ -201,7 +202,7 @@ export const contentService = {
       available = all;
     }
 
-    const question = available[Math.floor(Math.random() * available.length)];
+    const question = pickRandom(available);
     storageService.markWordAsUsed(GameKey.TruthOrDare, question);
     return question;
   },

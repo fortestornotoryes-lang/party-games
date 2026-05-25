@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Pencil } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '../../services/storageService';
-import { feedbackService } from '../../services/feedbackService';
+import { feedbackService, VIBRATE } from '../../services/feedbackService';
 import { contentService } from '../../services/contentService';
 import { DIFFICULTY_CONFIG, Difficulty } from '../../constants/telestrationsContent';
 import { shuffle } from '../../utils/random';
@@ -79,7 +79,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     setSteps(newSteps);
     if (currentRound === shuffledPlayers.length - 1) {
       feedbackService.playSound('success');
-      feedbackService.vibrate([50, 30, 50, 30, 50]);
+      feedbackService.vibrate(VIBRATE.celebrate);
       if (settings.visualEffects) {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f97316', '#ffffff'] });
       }

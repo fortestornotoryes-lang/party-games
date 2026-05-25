@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { ListChecks } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GameHeader }        from '../../components/GameHeader';
 import { GAMES_REGISTRY }   from '../../registry/GameRegistry';
 import { useGameSettings }  from '../../contexts/GameSettingsContext';
-import { feedbackService }  from '@/services/feedbackService';
+import { feedbackService, VIBRATE }  from '@/services/feedbackService';
 import { storageService }   from '@/services/storageService';
 import { TabooCard, getNextTabooCard, TABOO_REVERSE_CARDS } from '@/constants/tabooReverseContent';
 import { TabooReversePhase, BlitzResult } from './types';
@@ -75,7 +76,6 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   const [phase, setPhase] = useState<TabooReversePhase>(TabooReversePhase.Pass);
 
   // ── Playing state ──────────────────────────────────────────────────────────
-  const [timeLeft, setTimeLeft] = useState(cardTimer);
   const [timedOut, setTimedOut] = useState(false);
 
   // ── Verdict state (classic / team) ────────────────────────────────────────
@@ -102,17 +102,20 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   }, [difficulty]);
 
   // ── Timer ─────────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (phase !== TabooReversePhase.Playing) return;
-    if (timeLeft <= 0) {
-      feedbackService.vibrate([80, 40, 80]);
-      setTimedOut(true);
-      setPhase(isBlitz ? TabooReversePhase.BlitzVerdict : TabooReversePhase.Verdict);
-      return;
-    }
-    const id = setInterval(() => setTimeLeft(t => t - 1), 1000);
-    return () => clearInterval(id);
-  }, [phase, timeLeft, isBlitz]);
+  const handleTimeUp = useCallback(() => {
+    feedbackService.vibrate(VIBRATE.timeout);
+    setTimedOut(true);
+    setPhase(isBlitz ? TabooReversePhase.BlitzVerdict : TabooReversePhase.Verdict);
+  }, [isBlitz]);
+
+  const {
+    timeLeft,
+    start:  startTimer,
+    reset:  resetTimer,
+  } = useTimer({
+    initialTime: cardTimer,
+    onTimeUp:    handleTimeUp,
+  });
 
   // ── Confetti on game over ──────────────────────────────────────────────────
   useEffect(() => {
@@ -126,12 +129,13 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleStart = useCallback(() => {
-    setTimeLeft(cardTimer);
     setTimedOut(false);
     setUsedWordIdxs(new Set());
     setBlitzResults([]);
+    resetTimer(cardTimer);
+    startTimer();
     setPhase(TabooReversePhase.Playing);
-  }, [cardTimer]);
+  }, [cardTimer, resetTimer, startTimer]);
 
   // Called when "УГАДАНО!" is pressed during Playing.
   // Classic/team → go to Verdict.  Blitz → record and load next card.
@@ -139,7 +143,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     if (isBlitz) {
       setBlitzResults(prev => [...prev, { card, status: 'guessed' }]);
       feedbackService.playSound('success');
-      feedbackService.vibrate(40);
+      feedbackService.vibrate(VIBRATE.correct);
       cycleCard(card, usedCardIds);
     } else {
       setPhase(TabooReversePhase.Verdict);
@@ -149,7 +153,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   // Blitz only: skip current card (−1 to explainer)
   const handleSkip = useCallback(() => {
     setBlitzResults(prev => [...prev, { card, status: 'skipped' }]);
-    feedbackService.vibrate(80);
+    feedbackService.vibrate(VIBRATE.error);
     cycleCard(card, usedCardIds);
   }, [card, usedCardIds, cycleCard]);
 
@@ -168,7 +172,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     if (penalty) {
       newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
       feedbackService.playSound('error');
-      feedbackService.vibrate(100);
+      feedbackService.vibrate(VIBRATE.error);
     } else if (guesser) {
       const allWordsUsed = usedWordIdxs.size === card.required.length;
       const points = allWordsUsed ? 2 : 1;

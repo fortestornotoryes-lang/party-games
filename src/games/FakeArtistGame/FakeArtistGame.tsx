@@ -4,7 +4,7 @@ import { Palette, Brush, Undo2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Player } from '../../types';
 import { storageService } from '../../services/storageService';
-import { feedbackService } from '../../services/feedbackService';
+import { feedbackService, VIBRATE } from '../../services/feedbackService';
 import { GameHeader } from '../../components/GameHeader';
 import { PrimaryButton } from '../../components/UI';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
@@ -125,7 +125,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
     const settings = storageService.getSettings();
     if (turnIndex === players.length * gameState.rounds - 1) {
       feedbackService.playSound('success');
-      feedbackService.vibrate([50, 30, 50]);
+      feedbackService.vibrate(VIBRATE.correct);
       if (settings.visualEffects) {
         confetti({
           particleCount: 100,

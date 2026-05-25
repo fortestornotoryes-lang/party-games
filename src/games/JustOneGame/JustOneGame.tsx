@@ -3,7 +3,8 @@ import { AnimatePresence } from 'motion/react';
 import { Lightbulb } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '@/services/storageService';
-import { feedbackService } from '@/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { usePlayerCycle } from '@/hooks/usePlayerCycle';
 import { contentService } from '@/services/contentService';
 import { GameHeader } from '@/components/GameHeader';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
@@ -18,7 +19,7 @@ interface JustOneGameProps { playerNames: string[]; onBack: () => void; }
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
   const { difficulty } = useGameSettings();
-  const [guesserIdx, setGuesserIdx]     = useState(0);
+  const { current: guesser, idx: guesserIdx, next: nextGuesser } = usePlayerCycle(playerNames);
   const [word, setWord]                 = useState('');
   const [hints, setHints]               = useState<Record<string, string>>({});
   const [phase, setPhase]               = useState<JustOnePhase>(JustOnePhase.Pass);
@@ -54,19 +55,18 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     const settings = storageService.getSettings();
     if (correct) {
       feedbackService.playSound('success');
-      feedbackService.vibrate([50, 30, 50]);
+      feedbackService.vibrate(VIBRATE.correct);
       if (settings.visualEffects) {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#FFCC1F', '#ffffff'] });
       }
     } else {
       feedbackService.playSound('error');
-      feedbackService.vibrate(100);
+      feedbackService.vibrate(VIBRATE.error);
     }
     setPhase(JustOnePhase.Result);
   };
 
-  const guesser  = playerNames[guesserIdx];
-  const hinters  = playerNames.filter((_, i) => i !== guesserIdx);
+  const hinters = playerNames.filter((_, i) => i !== guesserIdx);
 
   return (
     <div className="flex flex-col h-screen">
@@ -114,7 +114,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
               isCorrect={isCorrect}
               word={word}
               guess={guess}
-              onNext={() => setGuesserIdx(i => (i + 1) % playerNames.length)}
+              onNext={nextGuesser}
             />
           )}
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { usePlayerCycle } from '@/hooks/usePlayerCycle';
 import { AnimatePresence } from 'motion/react';
 import { Flame } from 'lucide-react';
 import { GameHeader } from '@/components/GameHeader';
@@ -18,11 +19,9 @@ interface TruthOrDareGameProps {
 export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, onBack }) => {
   const { difficulty } = useGameSettings();
   const [phase, setPhase] = useState<TruthOrDarePhase>(TruthOrDarePhase.Pass);
-  const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
+  const { current: currentPlayer, next: nextPlayer } = usePlayerCycle(playerNames);
   const [choice, setChoice] = useState<ChoiceType | null>(null);
   const [content, setContent] = useState('');
-
-  const currentPlayer = playerNames[currentPlayerIdx];
 
   const handleChoice = (type: ChoiceType) => {
     const text = contentService.getTruthOrDareQuestion(type, difficulty);
@@ -32,7 +31,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
   };
 
   const handleDone = () => {
-    setCurrentPlayerIdx(i => (i + 1) % playerNames.length);
+    nextPlayer();
     setChoice(null);
     setContent('');
     setPhase(TruthOrDarePhase.Pass);

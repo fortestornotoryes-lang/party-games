@@ -1,7 +1,7 @@
 import React from 'react';
 import {motion, useMotionValue, useSpring, useTransform} from 'motion/react';
 import {LucideIcon} from 'lucide-react';
-import {feedbackService} from '../services/feedbackService';
+import { feedbackService, VIBRATE } from '../services/feedbackService';
 
 export const ParallaxBackground = () => {
   const mouseX = useMotionValue(0);
@@ -65,7 +65,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 }) => {
   const handleClick = () => {
     feedbackService.playSound('click');
-    feedbackService.vibrate(10);
+    feedbackService.vibrate(VIBRATE.tap);
     if (onClick) onClick();
   };
 
@@ -129,7 +129,7 @@ export const IconButton: React.FC<{
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     feedbackService.playSound('click');
-    feedbackService.vibrate(10);
+    feedbackService.vibrate(VIBRATE.tap);
     onClick();
   };
 
