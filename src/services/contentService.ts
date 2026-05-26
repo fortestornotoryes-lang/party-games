@@ -1,16 +1,16 @@
 import { Difficulty } from '../types';
 import { GameKey } from '../types/games';
-import { ALIAS_CATEGORIES } from '../constants/aliasContent';
-import { JUST_ONE_DATA_BY_DIFFICULTY } from '../constants/justOneContent';
-import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../constants/wavelengthContent';
-import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '../constants/fakeArtistContent';
-import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
-import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../constants/telestrationsContent';
-import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../constants/codenamesContent';
-import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../constants/decryptoContent';
-import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '../constants/truthOrDareContent';
-import { TABOO_REVERSE_CARDS } from '../constants/tabooReverseContent';
-import { TABOO_CLASSIC_CARDS } from '../constants/tabooContent';
+import { ALIAS_CATEGORIES } from '@/constants/aliasContent';
+import { JUST_ONE_DATA_BY_DIFFICULTY } from '@/constants/justOneContent';
+import { WAVELENGTH_DATA_BY_DIFFICULTY } from '@/constants/wavelengthContent';
+import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '@/constants/fakeArtistContent';
+import { LOCATIONS_BY_DIFFICULTY, SpyDifficulty } from '@/constants/spyHuntContent';
+import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '@/constants/telestrationsContent';
+import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '@/constants/codenamesContent';
+import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '@/constants/decryptoContent';
+import { TRUTHS_BY_DIFFICULTY, DARES_BY_DIFFICULTY } from '@/constants/truthOrDareContent';
+import { TABOO_REVERSE_CARDS } from '@/constants/tabooReverseContent';
+import { TABOO_CLASSIC_CARDS } from '@/constants/tabooContent';
 import { storageService } from './storageService';
 import { shuffle, pickRandom } from '../utils/random';
 

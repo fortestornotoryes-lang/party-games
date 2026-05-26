@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { RotateCcw, Trophy } from 'lucide-react';
-import { PrimaryButton } from '../../../components/UI';
-import { LeaderboardList } from '../../../components/LeaderboardList';
+import { PrimaryButton } from '@/components/UI';
+import { LeaderboardList } from '@/components/LeaderboardList';
 
 interface GameOverPhaseProps {
   playerNames: string[];

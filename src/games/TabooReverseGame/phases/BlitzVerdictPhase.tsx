@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, XCircle, StopCircle } from 'lucide-react';
-import { PrimaryButton } from '../../../components/UI';
+import { PrimaryButton } from '@/components/UI';
 import { BlitzResult } from '../types';
 
 interface BlitzVerdictPhaseProps {

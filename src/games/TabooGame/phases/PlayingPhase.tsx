@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { PrimaryButton } from '../../../components/UI';
-import { TabooClassicCard } from '../../../constants/tabooContent';
-import { TimerBar } from '../../../components/TimerBar';
-import { PlayingHeader } from '../../../components/PlayingHeader';
+import { PrimaryButton } from '@/components/UI.tsx';
+import { TabooClassicCard } from '@/constants/tabooContent.ts';
+import { TimerBar } from '@/components/TimerBar.tsx';
+import { PlayingHeader } from '@/components/PlayingHeader.tsx';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
@@ -30,6 +32,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   cardTimer,
   onGuessed,
 }) => {
+  const { t } = useTranslation();
   const timerPct   = (timeLeft / cardTimer) * 100;
   const timerColor =
     timerPct > 50 ? '#22c55e' :
@@ -51,7 +54,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         {/* Forbidden words — shown first so explainer sees the constraints */}
         <div className="p-5 rounded-3xl border-2 border-premium-red/30 bg-premium-red/5">
           <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-red/60 mb-3 text-center">
-            🚫 Запрещённые слова
+            🚫 {t(`${NS.TABOO}.forbiddenWords`)}
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             {card.forbidden.map((w, i) => (
@@ -69,7 +72,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         <div className="flex-1 flex items-center justify-center">
           <div className="p-8 rounded-4xl border-2 border-white/15 bg-white/5 text-center w-full">
             <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30 mb-3">
-              Загаданное слово
+              {t(`${NS.TABOO}.wordToGuess`)}
             </p>
             <h2
               className="font-black italic uppercase tracking-tighter leading-tight text-white break-words"
@@ -86,10 +89,10 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             onClick={onGuessed}
             className="bg-premium-green! text-white! shadow-premium-green/30"
           >
-            СЛОВО УГАДАНО!
+            {t(`${NS.TABOO}.wordGuessed`)}
           </PrimaryButton>
           <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20">
-            Запрещённые слова произносить нельзя
+            {t(`${NS.TABOO}.forbiddenHint`)}
           </p>
         </div>
       </div>

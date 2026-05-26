@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LayoutGrid, RotateCcw, ArrowDown, ArrowUp } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton } from '../../components/UI';
+import { GameHeader } from '@/components/GameHeader';
+import { PrimaryButton } from '@/components/UI';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 
 type Cell = 0 | 1 | 2;

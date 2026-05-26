@@ -3,7 +3,7 @@ import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { Ban } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { GameHeader }       from '../../components/GameHeader';
+import { GameHeader }       from '@/components/GameHeader';
 import { GAMES_REGISTRY }  from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
@@ -15,6 +15,8 @@ import {
 } from '@/constants/tabooContent';
 import { TabooPhase } from './types';
 import { GameKey }    from '@/types/games';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { PassPhase }    from './phases/PassPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
 import { VerdictPhase } from './phases/VerdictPhase';
@@ -27,6 +29,7 @@ interface TabooGameProps {
 
 export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => {
   const { difficulty, timerSeconds } = useGameSettings();
+  const { t } = useTranslation();
   const cardTimer = timerSeconds;
 
   // ── Players & scores ───────────────────────────────────────────────────────
@@ -156,7 +159,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     <div className="flex flex-col min-h-screen safe-top safe-bottom">
       <GameHeader
         title={GAMES_REGISTRY.taboo.title}
-        subtitle={`Раунд ${roundNum}`}
+        subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
         icon={Ban}
         theme="red"
         onBack={onBack}

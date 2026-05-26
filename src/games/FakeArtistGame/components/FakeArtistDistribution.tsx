@@ -4,9 +4,9 @@ import { Palette, Ghost, EyeOff } from 'lucide-react';
 import { Player } from '../../../types';
 import { contentService } from '../../../services/contentService';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
-import { FakeArtistDifficulty } from '../../../constants/fakeArtistContent';
+import { FakeArtistDifficulty } from '@/constants/fakeArtistContent';
 import { rgba } from '../../../theme/colors';
-import { DistributionFlow } from '../../../components/DistributionFlow';
+import { DistributionFlow } from '@/components/DistributionFlow';
 
 interface Props {
   players: Player[];

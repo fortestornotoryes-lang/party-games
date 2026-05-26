@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Pencil, ArrowRight } from 'lucide-react';
-import { DIFFICULTY_CONFIG, Difficulty } from '../../../constants/telestrationsContent';
+import { DIFFICULTY_CONFIG, Difficulty } from '@/constants/telestrationsContent';
 
 interface Props {
   playerCount: number;

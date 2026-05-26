@@ -1,6 +1,8 @@
 import React from 'react';
 import { Ban } from 'lucide-react';
-import { TabooPassPhase } from '../../../components/TabooPassPhase';
+import { TabooPassPhase } from '@/components/TabooPassPhase';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface PassPhaseProps {
   playerNames: string[];
@@ -9,11 +11,14 @@ interface PassPhaseProps {
   onStart: () => void;
 }
 
-export const PassPhase: React.FC<PassPhaseProps> = (props) => (
-  <TabooPassPhase
-    {...props}
-    accentColor="red"
-    icon={Ban}
-    instruction="Только ты должен видеть карточку с запрещёнными словами"
-  />
-);
+export const PassPhase: React.FC<PassPhaseProps> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <TabooPassPhase
+      {...props}
+      accentColor="red"
+      icon={Ban}
+      instruction={t(`${NS.TABOO}.passInstruction`)}
+    />
+  );
+};

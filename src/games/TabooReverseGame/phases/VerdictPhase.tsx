@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { TabooCard } from '../../../constants/tabooReverseContent';
-import { StopGameButton } from '../../../components/StopGameButton';
+import { TabooCard } from '@/constants/tabooReverseContent';
+import { StopGameButton } from '@/components/StopGameButton';
 
 interface VerdictPhaseProps {
   card: TabooCard;

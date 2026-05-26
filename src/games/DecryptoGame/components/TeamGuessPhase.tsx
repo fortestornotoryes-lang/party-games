@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { PrimaryButton } from '../../../components/UI';
+import { PrimaryButton } from '@/components/UI';
 import { TeamColor } from '../types';
 import { WordGrid } from './WordGrid';
 import { CodeInput } from './CodeInput';

@@ -4,8 +4,8 @@ import { MapPin, Ghost, Shield } from 'lucide-react';
 import { Player } from '../../../types';
 import { useGameSettings } from '../../../contexts/GameSettingsContext';
 import { ROLE_TOKENS } from '../../../theme/colors';
-import { Typography } from '../../../components/Typography';
-import { DistributionFlow } from '../../../components/DistributionFlow';
+import { Typography } from '@/components/Typography';
+import { DistributionFlow } from '@/components/DistributionFlow';
 
 interface RoleDistributionProps {
   players: Player[];

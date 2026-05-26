@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { LucideIcon } from 'lucide-react';
 import { PassPhoneCard } from './PassPhoneCard';
 import { PlayerScoreList } from './PlayerScoreList';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 type AccentColor = 'red' | 'orange';
 
@@ -32,7 +34,9 @@ export const TabooPassPhase: React.FC<TabooPassPhaseProps> = ({
   icon,
   instruction,
   onStart,
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <motion.div
     key="pass"
     initial={{ opacity: 0, y: 20 }}
@@ -42,7 +46,7 @@ export const TabooPassPhase: React.FC<TabooPassPhaseProps> = ({
   >
     <PassPhoneCard
       playerName={currentExplainer}
-      badge="Объяснять"
+      badge={t(`${NS.TABOO}.explainerBadge`)}
       badgeColor={accentColor}
       instruction={instruction}
       icon={icon}
@@ -57,4 +61,5 @@ export const TabooPassPhase: React.FC<TabooPassPhaseProps> = ({
       teams={teams}
     />
   </motion.div>
-);
+  );
+};

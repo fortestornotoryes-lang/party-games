@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { PrimaryButton } from '../../../components/UI';
+import { PrimaryButton } from '@/components/UI';
 import { TeamColor, RoundData } from '../types';
 import { tText, tLabel } from '../helpers';
 import { CodeInput } from './CodeInput';

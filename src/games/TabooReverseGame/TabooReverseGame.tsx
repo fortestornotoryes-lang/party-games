@@ -3,7 +3,7 @@ import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { ListChecks } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { GameHeader }        from '../../components/GameHeader';
+import { GameHeader }        from '@/components/GameHeader';
 import { GAMES_REGISTRY }   from '../../registry/GameRegistry';
 import { useGameSettings }  from '../../contexts/GameSettingsContext';
 import { feedbackService, VIBRATE }  from '@/services/feedbackService';

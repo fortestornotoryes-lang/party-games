@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Users, KeyRound, AlertOctagon, Key, Trophy } from 'lucide-react';
-import { GameHeader } from '../../components/GameHeader';
-import { PrimaryButton } from '../../components/UI';
+import { GameHeader } from '@/components/GameHeader';
+import { PrimaryButton } from '@/components/UI';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListChecks } from 'lucide-react';
-import { TabooPassPhase } from '../../../components/TabooPassPhase';
+import { TabooPassPhase } from '@/components/TabooPassPhase';
 
 interface PassPhaseProps {
   playerNames: string[];

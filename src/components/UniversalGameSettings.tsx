@@ -6,9 +6,9 @@ import { Shield, Zap, Target, Clock, LucideIcon } from 'lucide-react';
 import { getTheme } from '../theme/colors';
 import { contentService } from '../services/contentService';
 import { GameKey } from '../types/games';
-import { GAME_DURATION_BY_DIFFICULTY, SpyDifficulty } from '../constants/spyHuntContent';
-import { ALIAS_DIFFICULTY_CONFIG, AliasDifficulty } from '../constants/aliasContent';
-import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG } from '../constants/telestrationsContent';
+import { GAME_DURATION_BY_DIFFICULTY, SpyDifficulty } from '@/constants/spyHuntContent';
+import { ALIAS_DIFFICULTY_CONFIG, AliasDifficulty } from '@/constants/aliasContent';
+import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG } from '@/constants/telestrationsContent';
 
 // ─── universal setting row ────────────────────────────────────────────────────
 

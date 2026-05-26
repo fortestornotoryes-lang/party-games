@@ -59,7 +59,7 @@ export enum <GameName>Phase {
 ### `src/games/<GameName>Game/<GameName>Game.tsx`
 ```tsx
 import { motion, AnimatePresence } from 'motion/react';
-import { GameHeader } from '../../components/GameHeader';
+import { GameHeader } from '@/components/GameHeader';
 import { Player } from '../../types';
 import { <GameName>Phase } from './types';
 

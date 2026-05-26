@@ -1,7 +1,7 @@
 ﻿import React, {useState, useEffect} from 'react';
 import {motion, AnimatePresence} from 'motion/react';
-import {GameHeader} from '../../components/GameHeader';
-import {PrimaryButton, Typography} from '../../components/UI';
+import {GameHeader} from '@/components/GameHeader';
+import {PrimaryButton, Typography} from '@/components/UI';
 import {Grid, Eye, EyeOff, User, Users, AlertTriangle, Zap, ListChecks} from 'lucide-react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {contentService} from '../../services/contentService';

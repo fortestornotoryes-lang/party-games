@@ -68,14 +68,11 @@ export interface CommonTranslations {
 
 /**
  * Корневой тип переводов.
- * При добавлении новой игры — добавь её namespace сюда.
+ * При добавлении новой игры — добавь её namespace сюда (optional).
  */
 export interface Translations {
   common: CommonTranslations;
-  // Игры добавляются инкрементально:
-  // alias?: AliasTranslations;
-  // taboo?: TabooTranslations;
-  // ...
+  // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]: Record<string, unknown> | CommonTranslations;
 }
 ```
@@ -238,14 +235,32 @@ export function useTranslation() {
 }
 ```
 
-### 2.5 Добавь `language` в `storageService.ts`
+### 2.5 `src/i18n/keys.ts`
+
+Namespace-константы. Строка неймспейса определена **один раз** — ключи строятся через неё.
+
+```ts
+/**
+ * i18n namespace constants.
+ * Используй вместо магических строк: t(`${NS.TABOO}.forbiddenWords`)
+ * При добавлении новой игры — добавь её в NS.
+ */
+export const NS = {
+  COMMON: 'common',
+  // Игры добавляются инкрементально:
+  // TABOO: 'taboo',
+  // ALIAS: 'alias',
+} as const;
+```
+
+### 2.6 Добавь `language` в `storageService.ts`
 
 В интерфейс `GameSettings` добавь поле:
 ```ts
 language?: string;
 ```
 
-### 2.6 Оберни `AppContent` в `LanguageProvider` (`src/App.tsx`)
+### 2.7 Оберни `AppContent` в `LanguageProvider` (`src/App.tsx`)
 
 ```tsx
 // импорт
@@ -263,7 +278,7 @@ export default function App() {
 }
 ```
 
-### 2.7 Добавь переключатель языка в `Settings.tsx`
+### 2.8 Добавь переключатель языка в `Settings.tsx`
 
 Прочитай файл. Найди блок с переключателями (vibration, sounds, visualEffects). Добавь аналогичный переключатель для языка рядом с ними:
 
@@ -307,6 +322,8 @@ const { lang, setLang } = useLanguage();
 - `src/games/<GameName>Game/phases/*.tsx` (все фазы)
 - `src/games/<GameName>Game/components/*.tsx` (компоненты, если есть)
 
+Также прочитай `src/i18n/keys.ts` — чтобы знать, какие неймспейсы уже зарегистрированы.
+
 ### 3.2 Составь список всех UI-строк
 
 Пройди по каждому файлу и выпиши **все хардкодированные русские строки** в JSX:
@@ -322,7 +339,7 @@ const { lang, setLang } = useLanguage();
 
 ### 3.3 Определи, какие строки уже есть в `common`
 
-Сопоставь найденные строки с ключами `common.*` в `ru.ts`. Если строка уже покрыта `common` — используй `t('common.back')` и т.д. Для строк, специфичных для игры — создай новый namespace.
+Сопоставь найденные строки с ключами `common.*` в `ru.ts`. Если строка уже покрыта `common` — используй `t(\`${NS.COMMON}.back\`)` и т.д. Для строк, специфичных для игры — создай новый namespace.
 
 ### 3.4 Создай namespace игры в `src/i18n/types.ts`
 
@@ -336,9 +353,6 @@ export interface AliasTranslations {
   };
   explainFaster: string;    // "Объясни слово быстрее всех"
   roundScore: string;       // "За раунд: {{n}}"
-  teamScore: string;        // "Счёт команды"
-  winScore: string;         // "До {{n}} очков"
-  correct: string;          // "✓ УГАДАНО" (если отличается от common)
   // ...все остальные строки
 }
 
@@ -348,7 +362,20 @@ alias?: AliasTranslations;
 
 Важно: делай namespace `optional` (`alias?`) — пока остальные игры не обработаны, их ключей нет.
 
-### 3.5 Добавь переводы в `ru.ts` и `en.ts`
+### 3.5 Зарегистрируй неймспейс в `src/i18n/keys.ts`
+
+Добавь строку неймспейса в объект `NS`:
+
+```ts
+export const NS = {
+  COMMON: 'common',
+  ALIAS: 'alias',   // ← добавлено
+} as const;
+```
+
+Неймспейс определяется **один раз** в этом файле. В компонентах используется только через `NS.ALIAS`.
+
+### 3.6 Добавь переводы в `ru.ts` и `en.ts`
 
 Добавь весь namespace в конец объекта в обоих файлах:
 
@@ -376,13 +403,14 @@ alias: {
 - Строки с переменными: `Раунд {{n}}`, `Ход: {{player}}`
 - Если строка уже есть в `common` — НЕ дублируй в namespace игры
 
-### 3.6 Замени строки в компонентах игры
+### 3.7 Замени строки в компонентах игры
 
 В каждом файле игры:
 
-1. Добавь импорт хука:
+1. Добавь импорты:
 ```ts
 import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 ```
 
 2. Деструктурируй в компоненте:
@@ -390,7 +418,7 @@ import { useTranslation } from '@/i18n';
 const { t } = useTranslation();
 ```
 
-3. Замени хардкодированные строки:
+3. Замени хардкодированные строки — **неймспейс всегда через `NS`**:
 ```tsx
 // Было:
 <p>Передай телефон</p>
@@ -398,21 +426,23 @@ const { t } = useTranslation();
 <button>Назад</button>
 
 // Стало:
-<p>{t('common.passPhone')}</p>
-<span>{t('common.roundN', { n: roundNum })}</span>
-<button>{t('common.back')}</button>
+<p>{t(`${NS.COMMON}.passPhone`)}</p>
+<span>{t(`${NS.COMMON}.roundN`, { n: roundNum })}</span>
+<button>{t(`${NS.COMMON}.back`)}</button>
 ```
 
-4. Шаблонные строки в JSX-атрибутах:
+4. Строки игрового неймспейса:
 ```tsx
 // Было:
+<p>Объясни слово быстрее всех</p>
 subtitle={`Раунд ${roundNum}`}
 
 // Стало:
-subtitle={t('common.roundN', { n: roundNum })}
+<p>{t(`${NS.ALIAS}.explainFaster`)}</p>
+subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
 ```
 
-### 3.7 Замени сырой текст на Typography-компоненты (попутно)
+### 3.8 Замени сырой текст на Typography-компоненты (попутно)
 
 Если в компонентах игры есть сырые `<p>`, `<h2>`, `<span>` с текстом — замени на `<Typography.X>` согласно дизайн-системе:
 
@@ -432,6 +462,7 @@ subtitle={t('common.roundN', { n: roundNum })}
 1. Запусти `npx tsc --noEmit` — нет ошибок.
 2. Убедись, что в `ru.ts` и `en.ts` количество ключей в namespace игры совпадает.
 3. Убедись, что ни одна строка-ключ не дублирует `common.*`.
+4. Убедись, что в компонентах нет магических строк вида `t('taboo.xxx')` — только `t(\`${NS.TABOO}.xxx\`)`.
 
 ---
 
@@ -449,6 +480,9 @@ subtitle={t('common.roundN', { n: roundNum })}
 ## Правила которые НЕЛЬЗЯ нарушать
 
 - `import { useTranslation } from '@/i18n'` — всегда такой путь
+- `import { NS } from '@/i18n/keys'` — всегда такой путь
+- Строка неймспейса (`'taboo'`, `'alias'`) определяется **только** в `keys.ts` в объекте `NS` — нигде больше
+- В компонентах всегда шаблонная строка: `` t(`${NS.TABOO}.key`) `` — никогда `t('taboo.key')`
 - Не трогать `contentService` — это игровой контент, не UI
 - Не переводить имена игр в `GAMES_REGISTRY` (только игровые экраны)
 - Не создавать отдельные файлы типа `aliasTranslations.ts` — всё в `ru.ts` / `en.ts`

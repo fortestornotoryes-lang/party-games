@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Shield, Skull } from 'lucide-react';
 import { Player } from '../../../types';
-import { DistributionFlow } from '../../../components/DistributionFlow';
+import { DistributionFlow } from '@/components/DistributionFlow';
 
 interface Props {
   players: Player[];

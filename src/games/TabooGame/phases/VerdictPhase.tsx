@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { TabooClassicCard } from '../../../constants/tabooContent';
-import { StopGameButton } from '../../../components/StopGameButton';
+import { TabooClassicCard } from '@/constants/tabooContent';
+import { StopGameButton } from '@/components/StopGameButton';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface VerdictPhaseProps {
   card: TabooClassicCard;
@@ -19,7 +21,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
   otherPlayers,
   onVerdict,
   onStopGame,
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <motion.div
     key="verdict"
     initial={{ opacity: 0, y: 20 }}
@@ -31,11 +35,11 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     <div className="text-center space-y-2 pt-2">
       {timedOut && (
         <p className="text-[9px] font-black uppercase tracking-widest text-premium-red/70">
-          Время вышло!
+          {t(`${NS.TABOO}.timeOut`)}
         </p>
       )}
       <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">
-        Загаданное слово
+        {t(`${NS.TABOO}.wordToGuess`)}
       </p>
       <h2 className="text-5xl font-black italic uppercase tracking-tighter text-white">
         {card.word}
@@ -45,7 +49,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     {/* Forbidden words reminder */}
     <div className="p-4 rounded-2xl border border-premium-red/20 bg-premium-red/5">
       <p className="text-[9px] font-black uppercase tracking-[0.4em] text-premium-red/50 mb-2 text-center">
-        Запрещённые слова
+        {t(`${NS.TABOO}.forbiddenWords`)}
       </p>
       <div className="flex flex-wrap gap-2 justify-center">
         {card.forbidden.map((w, i) => (
@@ -64,7 +68,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     {/* Who guessed? */}
     <div className="space-y-3">
       <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30 text-center">
-        Кто угадал?
+        {t(`${NS.TABOO}.whoGuessed`)}
       </p>
 
       {otherPlayers.map(player => (
@@ -86,7 +90,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
         onClick={() => onVerdict(null)}
         className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
       >
-        <p className="font-black italic text-white/50 text-base">Никто не угадал</p>
+        <p className="font-black italic text-white/50 text-base">{t(`${NS.TABOO}.noOneGuessed`)}</p>
         <span className="text-3xl font-black italic text-white/30 ml-4">0</span>
       </button>
 
@@ -96,9 +100,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
       >
         <div className="text-left">
           <p className="font-black italic text-premium-red text-base leading-tight">
-            {currentExplainer} произнёс запрещённое слово
+            {t(`${NS.TABOO}.saidForbidden`, { player: currentExplainer })}
           </p>
-          <p className="text-[10px] text-white/30 mt-0.5">Штраф объяснявшему</p>
+          <p className="text-[10px] text-white/30 mt-0.5">{t(`${NS.TABOO}.penaltyHint`)}</p>
         </div>
         <span className="text-3xl font-black italic text-premium-red ml-4">−1</span>
       </button>
@@ -108,4 +112,5 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
     <StopGameButton onClick={onStopGame} />
   </motion.div>
-);
+  );
+};

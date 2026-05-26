@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { LucideIcon } from 'lucide-react';
-import { PrimaryButton } from '../../../components/UI';
+import { PrimaryButton } from '@/components/UI';
 import { TeamColor, TeamState } from '../types';
 import { tText, tBg, tBadge, tLabel, tGlow } from '../helpers';
 import { ScoreRow } from './ScoreRow';
