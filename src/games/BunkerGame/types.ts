@@ -94,9 +94,9 @@ export function getHiddenTraits(
 export function getRevealedTrait(
   char: BunkerCharacter,
   round: number,
-): { label: string; entry: AttributeEntry } | null {
-  if (round === 1) return { label: TRAIT_LABELS.profession, entry: char.profession };
+): { traitKey: string; label: string; entry: AttributeEntry } | null {
+  if (round === 1) return { traitKey: 'profession', label: TRAIT_LABELS.profession, entry: char.profession };
   const key = char.revealOrder[round - 2];
   if (!key) return null;
-  return { label: TRAIT_LABELS[key], entry: char[key] };
+  return { traitKey: key, label: TRAIT_LABELS[key], entry: char[key] };
 }

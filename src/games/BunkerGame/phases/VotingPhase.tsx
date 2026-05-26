@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Check, UserX, Vote } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface VotingPhaseProps {
@@ -18,6 +20,8 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
   directorName = null,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
+
   // Director occupies one guaranteed spot — exclude from voting
   const votable     = directorName
     ? characters.filter(c => c.playerName !== directorName)
@@ -58,10 +62,10 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
       <div className="text-center space-y-1">
         <div className="flex items-center justify-center gap-2">
           <Vote className="w-4 h-4 text-premium-red" />
-          <Typography.Label size="sm" color="red">ГОЛОСОВАНИЕ</Typography.Label>
+          <Typography.Label size="sm" color="red">{t(`${NS.BUNKER}.votingLabel`)}</Typography.Label>
         </div>
         <Typography.Title size="sm" color="white" align="center">
-          Кто НЕ войдёт в бункер?
+          {t(`${NS.BUNKER}.whoWontEnter`)}
         </Typography.Title>
       </div>
 
@@ -82,13 +86,11 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
           >
             {remaining > 0 ? (
               <Typography.Body size="sm" color="body" align="center">
-                Выберите ещё{' '}
-                <span className="text-premium-red font-black">{remaining}</span>
-                {' '}чел. для исключения
+                {t(`${NS.BUNKER}.selectMore`, { n: remaining })}
               </Typography.Body>
             ) : (
               <Typography.Body size="sm" color="green" align="center">
-                ✓ Выбрано {toEliminate} — подтвердите решение
+                {t(`${NS.BUNKER}.selectionDone`, { n: toEliminate })}
               </Typography.Body>
             )}
           </motion.div>
@@ -111,7 +113,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
               className="ml-2 text-[10px] font-black uppercase tracking-wider"
               style={{ color: 'var(--color-premium-yellow)' }}
             >
-              Директор — защищён
+              {t(`${NS.BUNKER}.directorProtected`)}
             </span>
           </div>
         </div>
@@ -159,7 +161,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                       <div className="flex items-center gap-1">
                         <UserX className="w-3.5 h-3.5 text-premium-red" />
                         <span className="text-[10px] font-black text-premium-red uppercase tracking-wider">
-                          Исключён
+                          {t(`${NS.BUNKER}.eliminatedBadge`)}
                         </span>
                       </div>
                     )}
@@ -197,7 +199,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
         variant="red"
         icon={UserX}
       >
-        ПОДТВЕРДИТЬ ГОЛОСОВАНИЕ
+        {t(`${NS.BUNKER}.confirmVoteBtn`)}
       </PrimaryButton>
     </motion.div>
   );

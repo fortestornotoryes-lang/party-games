@@ -4,6 +4,8 @@ import { ChevronRight, Crown, Shield } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { rgba } from '@/theme/colors';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface DictatorRevealPhaseProps {
   directorName: string;
@@ -14,6 +16,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
   directorName,
   onContinue,
 }) => {
+  const { t } = useTranslation();
   const [isRevealed, setIsRevealed] = useState(false);
 
   const handleReveal = () => {
@@ -37,13 +40,13 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
       <div className="text-center space-y-2 mt-2">
         <div className="flex items-center justify-center gap-2">
           <Crown className="w-4 h-4" style={{ color: 'var(--color-premium-yellow)' }} />
-          <Typography.Label size="sm" color="muted">РЕЖИМ: ДИКТАТОР</Typography.Label>
+          <Typography.Label size="sm" color="muted">{t(`${NS.BUNKER}.modeDictator`)}</Typography.Label>
         </div>
         <Typography.Heading size="md" color="white" align="center">
-          Директор бункера избран
+          {t(`${NS.BUNKER}.directorElected`)}
         </Typography.Heading>
         <Typography.Body size="sm" color="muted" align="center">
-          Один игрок автоматически занимает место в бункере и не может быть исключён голосованием
+          {t(`${NS.BUNKER}.directorDesc`)}
         </Typography.Body>
       </div>
 
@@ -65,7 +68,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
               style={{ color: 'var(--color-premium-yellow)', opacity: 0.4 }}
             />
             <Typography.Heading size="sm" color="muted" align="center">
-              Нажмите, чтобы узнать директора
+              {t(`${NS.BUNKER}.tapToRevealDirector`)}
             </Typography.Heading>
           </motion.button>
         ) : (
@@ -114,7 +117,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
                 className="text-[10px] font-black uppercase tracking-[0.25em]"
                 style={{ color: 'var(--color-premium-yellow)' }}
               >
-                Гарантированное место в бункере
+                {t(`${NS.BUNKER}.guaranteedSpot`)}
               </span>
             </motion.div>
 
@@ -124,7 +127,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
               transition={{ delay: 0.5 }}
             >
               <Typography.Caption color="faint" align="center">
-                Этот игрок не участвует в голосовании
+                {t(`${NS.BUNKER}.notInVoting`)}
               </Typography.Caption>
             </motion.div>
           </motion.div>
@@ -138,7 +141,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
           className="mt-auto"
         >
           <PrimaryButton onClick={handleContinue} variant="outline" icon={ChevronRight}>
-            К РАСКРЫТИЮ ЧЕРТ
+            {t(`${NS.BUNKER}.toRevealTraits`)}
           </PrimaryButton>
         </motion.div>
       )}

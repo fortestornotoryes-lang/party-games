@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { RotateCcw, Skull, Trophy, AlertTriangle, Zap } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import type { BunkerCharacter, BunkerResources, SurvivalOutcome } from '../types';
 
 interface ResultsPhaseProps {
@@ -13,22 +15,25 @@ interface ResultsPhaseProps {
   onRestart: () => void;
 }
 
+const OUTCOME_COLOR_MAP: Record<SurvivalOutcome, 'green' | 'yellow' | 'orange' | 'red'> = {
+  full_victory: 'green',
+  partial:      'yellow',
+  pyrrhic:      'orange',
+  defeat:       'red',
+};
+
 const OUTCOME_CONFIG: Record<
   SurvivalOutcome,
   {
-    title: string;
-    subtitle: string;
     emoji: string;
     color: string;
     bgColor: string;
     borderColor: string;
     shadow: string;
-    icon: React.FC<{ className?: string }>;
+    icon: React.FC<{ className?: string; style?: React.CSSProperties }>;
   }
 > = {
   full_victory: {
-    title: 'БУНКЕР ВЫЖИЛ',
-    subtitle: 'Команда прошла все испытания. Цивилизация продолжается.',
     emoji: '🏆',
     color: '#00D88A',
     bgColor: 'rgba(0,216,138,0.1)',
@@ -37,8 +42,6 @@ const OUTCOME_CONFIG: Record<
     icon: Trophy,
   },
   partial: {
-    title: 'ВЫЖИЛИ',
-    subtitle: 'Критические ресурсы на исходе, но команда держится.',
     emoji: '⚠️',
     color: '#FFCC1F',
     bgColor: 'rgba(255,204,31,0.1)',
@@ -47,8 +50,6 @@ const OUTCOME_CONFIG: Record<
     icon: AlertTriangle,
   },
   pyrrhic: {
-    title: 'ПИРРОВА ПОБЕДА',
-    subtitle: 'Бункер устоял, но ценой огромных потерь. Будущее туманно.',
     emoji: '💀',
     color: '#FF8A1F',
     bgColor: 'rgba(255,138,31,0.1)',
@@ -57,8 +58,6 @@ const OUTCOME_CONFIG: Record<
     icon: Zap,
   },
   defeat: {
-    title: 'БУНКЕР ПАЛ',
-    subtitle: 'Критический сбой жизнеобеспечения. Никто не выжил.',
     emoji: '☠️',
     color: '#FF2E4D',
     bgColor: 'rgba(255,46,77,0.1)',
@@ -68,12 +67,12 @@ const OUTCOME_CONFIG: Record<
   },
 };
 
-const RESOURCE_META: { key: keyof BunkerResources; label: string; emoji: string }[] = [
-  { key: 'food',     label: 'Питание',       emoji: '🍎' },
-  { key: 'water',    label: 'Вода',          emoji: '💧' },
-  { key: 'medicine', label: 'Медицина',      emoji: '💊' },
-  { key: 'energy',   label: 'Энергия',       emoji: '⚡' },
-  { key: 'morale',   label: 'Моральный дух', emoji: '🧠' },
+const RESOURCE_META: { key: keyof BunkerResources; emoji: string }[] = [
+  { key: 'food',     emoji: '🍎' },
+  { key: 'water',    emoji: '💧' },
+  { key: 'medicine', emoji: '💊' },
+  { key: 'energy',   emoji: '⚡' },
+  { key: 'morale',   emoji: '🧠' },
 ];
 
 function barColor(val: number) {
@@ -90,6 +89,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
   outcome,
   onRestart,
 }) => {
+  const { t } = useTranslation();
   const cfg = OUTCOME_CONFIG[outcome];
   const Icon = cfg.icon;
 
@@ -122,11 +122,11 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
       >
         <div className="text-6xl">{cfg.emoji}</div>
         <Icon className="w-8 h-8 mx-auto" style={{ color: cfg.color }} />
-        <Typography.Display size="md" glow align="center" style={{ color: cfg.color } as React.CSSProperties}>
-          {cfg.title}
+        <Typography.Display size="md" glow align="center" color={OUTCOME_COLOR_MAP[outcome]}>
+          {t(`${NS.BUNKER}.outcomes.${outcome}.title`)}
         </Typography.Display>
         <Typography.Body size="sm" color="body" align="center">
-          {cfg.subtitle}
+          {t(`${NS.BUNKER}.outcomes.${outcome}.subtitle`)}
         </Typography.Body>
       </motion.div>
 
@@ -137,9 +137,9 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         transition={{ delay: 0.25 }}
         className="space-y-2"
       >
-        <Typography.Label size="xs" color="muted">Финальные ресурсы</Typography.Label>
+        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.finalResources`)}</Typography.Label>
         <div className="space-y-1.5">
-          {RESOURCE_META.map(({ key, label, emoji }) => {
+          {RESOURCE_META.map(({ key, emoji }) => {
             const val = resources[key];
             const color = barColor(val);
             return (
@@ -160,7 +160,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                 >
                   {val}%
                 </span>
-                <span className="text-[10px] text-white/25 w-14 flex-shrink-0">{label}</span>
+                <span className="text-[10px] text-white/25 w-14 flex-shrink-0">{t(`${NS.BUNKER}.resources.${key}`)}</span>
               </div>
             );
           })}
@@ -174,7 +174,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         transition={{ delay: 0.4 }}
         className="space-y-2"
       >
-        <Typography.Label size="xs" color="muted">🏠 Выжившие в бункере</Typography.Label>
+        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.survivorsLabel`)}</Typography.Label>
         <div className="space-y-1.5">
           {bunkerTeam.map(char => (
             <div
@@ -210,7 +210,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
           transition={{ delay: 0.5 }}
           className="space-y-2"
         >
-          <Typography.Label size="xs" color="muted">🚪 Не попали в бункер</Typography.Label>
+          <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.outsidersLabel`)}</Typography.Label>
           <div className="flex flex-wrap gap-1.5">
             {eliminated.map(char => (
               <div
@@ -232,7 +232,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
       {/* Restart */}
       <div className="mt-auto pt-2">
         <PrimaryButton onClick={onRestart} variant="outline" icon={RotateCcw}>
-          НОВАЯ ИГРА
+          {t(`${NS.BUNKER}.newGameBtn`)}
         </PrimaryButton>
       </div>
     </motion.div>

@@ -4,6 +4,7 @@
  * При добавлении новой игры — добавь её сюда.
  */
 export const NS = {
-  COMMON: 'common',
-  TABOO:  'taboo',
+  COMMON:  'common',
+  TABOO:   'taboo',
+  BUNKER:  'bunker',
 } as const;

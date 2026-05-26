@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Cpu } from 'lucide-react';
 import { Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import type { BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent } from '../types';
 
 interface SurvivalPhaseProps {
@@ -15,12 +17,12 @@ interface SurvivalPhaseProps {
   onReveal: () => void;
 }
 
-const RESOURCE_META: { key: keyof BunkerResources; label: string; emoji: string }[] = [
-  { key: 'food',     label: 'Питание',    emoji: '🍎' },
-  { key: 'water',    label: 'Вода',       emoji: '💧' },
-  { key: 'medicine', label: 'Медицина',   emoji: '💊' },
-  { key: 'energy',   label: 'Энергия',    emoji: '⚡' },
-  { key: 'morale',   label: 'Моральный дух', emoji: '🧠' },
+const RESOURCE_META: { key: keyof BunkerResources; emoji: string }[] = [
+  { key: 'food',     emoji: '🍎' },
+  { key: 'water',    emoji: '💧' },
+  { key: 'medicine', emoji: '💊' },
+  { key: 'energy',   emoji: '⚡' },
+  { key: 'morale',   emoji: '🧠' },
 ];
 
 function barColor(val: number) {
@@ -41,6 +43,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
   outcome,
   onReveal,
 }) => {
+  const { t } = useTranslation();
   const [step, setStep] = useState<Step>('team');
   const [displayedResources, setDisplayedResources] = useState<BunkerResources>({
     food: 100, water: 100, medicine: 100, energy: 100, morale: 100,
@@ -72,7 +75,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
       <div className="text-center space-y-1">
         <div className="flex items-center justify-center gap-2">
           <Cpu className="w-4 h-4 text-premium-sky animate-pulse" />
-          <Typography.Label size="sm" color="sky">СИМУЛЯЦИЯ ВЫЖИВАНИЯ</Typography.Label>
+          <Typography.Label size="sm" color="sky">{t(`${NS.BUNKER}.survivalLabel`)}</Typography.Label>
         </div>
         <Typography.Caption color="faint">{scenario.emoji} {scenario.title}</Typography.Caption>
       </div>
@@ -84,7 +87,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2"
         >
-            <Typography.Label size="xs" color="muted">🏠 Команда в бункере</Typography.Label>
+            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.teamInBunker`)}</Typography.Label>
             <div className="flex flex-wrap gap-1.5">
               {bunkerTeam.map((c, i) => (
                 <motion.div
@@ -129,7 +132,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2"
         >
-            <Typography.Label size="xs" color="muted">⚡ События в бункере</Typography.Label>
+            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.eventsInBunker`)}</Typography.Label>
             <div className="space-y-1.5">
               {events.map((ev, i) => (
                 <motion.div
@@ -165,9 +168,9 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2"
         >
-            <Typography.Label size="xs" color="muted">📊 Ресурсы бункера</Typography.Label>
+            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.resourcesLabel`)}</Typography.Label>
             <div className="space-y-2">
-              {RESOURCE_META.map(({ key, label, emoji }) => {
+              {RESOURCE_META.map(({ key, emoji }) => {
                 const val = displayedResources[key];
                 const color = barColor(val);
                 return (
@@ -175,7 +178,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm">{emoji}</span>
-                        <span className="text-[10px] text-white/50 font-black uppercase tracking-wider">{label}</span>
+                        <span className="text-[10px] text-white/50 font-black uppercase tracking-wider">{t(`${NS.BUNKER}.resources.${key}`)}</span>
                       </div>
                       <motion.span
                         key={val}
@@ -222,7 +225,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                 : '0 20px 50px rgba(0,216,138,0.4)',
             }}
           >
-            УЗНАТЬ ИТОГ →
+            {t(`${NS.BUNKER}.seeResultsBtn`)}
           </motion.button>
         )}
       </AnimatePresence>

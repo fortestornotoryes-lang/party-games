@@ -6,6 +6,8 @@ import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { GameKey } from '@/types/games';
 import { pickRandom, shuffle } from '@/utils/random';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import {
   CATASTROPHE_SCENARIOS,
   SURVIVAL_EVENTS,
@@ -32,6 +34,7 @@ const TOTAL_REVEAL_ROUNDS = 5;
 const CAPACITY_PCT: Record<string, number> = { easy: 0.8, medium: 0.6, hard: 0.4 };
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) => {
+  const { t } = useTranslation();
   const { mode, difficulty } = useGameSettings();
   const isDictator = mode === 'dictator';
   const isTribunal = mode === 'tribunal';
@@ -78,14 +81,14 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
   // ── Subtitle for GameHeader ────────────────────────────────────────────────
   const subtitle = (() => {
     switch (phase) {
-      case BunkerPhase.Briefing:        return 'Катастрофа';
-      case BunkerPhase.DictatorReveal:  return 'Директор бункера';
-      case BunkerPhase.RevealPass:      return `Раунд ${revealRound} из ${TOTAL_REVEAL_ROUNDS}`;
-      case BunkerPhase.Discussion:      return `Обсуждение · Раунд ${revealRound}`;
-      case BunkerPhase.Voting:          return 'Голосование';
-      case BunkerPhase.Tribunal:        return 'Трибунал';
-      case BunkerPhase.SurvivalSim:     return 'Симуляция';
-      case BunkerPhase.Results:         return 'Итоги';
+      case BunkerPhase.Briefing:        return t(`${NS.BUNKER}.subtitleCatastrophe`);
+      case BunkerPhase.DictatorReveal:  return t(`${NS.BUNKER}.subtitleDirector`);
+      case BunkerPhase.RevealPass:      return t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: TOTAL_REVEAL_ROUNDS });
+      case BunkerPhase.Discussion:      return t(`${NS.BUNKER}.subtitleDiscussion`, { n: revealRound });
+      case BunkerPhase.Voting:          return t(`${NS.BUNKER}.subtitleVoting`);
+      case BunkerPhase.Tribunal:        return t(`${NS.BUNKER}.subtitleTribunal`);
+      case BunkerPhase.SurvivalSim:     return t(`${NS.BUNKER}.subtitleSurvival`);
+      case BunkerPhase.Results:         return t(`${NS.BUNKER}.subtitleResults`);
       default:                          return '';
     }
   })();

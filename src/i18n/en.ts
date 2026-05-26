@@ -31,6 +31,148 @@ export const en: Translations = {
       hard: 'Hard',
     },
   },
+  bunker: {
+    // BunkerGame.tsx — subtitles
+    subtitleCatastrophe:  'Catastrophe',
+    subtitleDirector:     'Bunker Director',
+    roundOf:              'Round {{current}} of {{total}}',
+    subtitleDiscussion:   'Discussion · Round {{n}}',
+    subtitleVoting:       'Voting',
+    subtitleTribunal:     'Tribunal',
+    subtitleSurvival:     'Simulation',
+    subtitleResults:      'Results',
+
+    // BriefingPhase
+    emergencyAlert:  'EMERGENCY ALERT',
+    playersInGroup:  'Players in group',
+    bunkerSpots:     'Bunker spots',
+    wontEnter:       "Won't enter: {{n}}",
+    willEnter:       'Will enter: {{n}}',
+    distributeCards: 'DEAL CHARACTER CARDS',
+
+    // DictatorRevealPhase
+    modeDictator:          'MODE: DICTATOR',
+    directorElected:       'Bunker Director Elected',
+    directorDesc:          'One player automatically takes a spot in the bunker and cannot be eliminated by voting',
+    tapToRevealDirector:   'Tap to reveal the director',
+    guaranteedSpot:        'Guaranteed bunker spot',
+    notInVoting:           'This player is exempt from voting',
+    toRevealTraits:        'TO TRAIT REVEAL',
+
+    // RevealPhase — ordinal names for rounds
+    roundOrdinals: {
+      first:  '1',
+      second: '2',
+      third:  '3',
+      fourth: '4',
+      fifth:  '5',
+    },
+    playerOf:        '{{current}} of {{total}}',
+    passPhoneTo:     'Pass the phone',
+    tapToSeeTrait:   'Tap to see the trait',
+    onlyPlayerSees:  'Only {{player}} should see the screen',
+    announceAloud:   'Announce this aloud to the group',
+    allAnnouncedBtn: 'ALL ANNOUNCED — TO DISCUSSION',
+    announcedNextBtn:'ANNOUNCED — NEXT',
+
+    // DiscussionPhase
+    discussionOf: 'DISCUSSION',
+    discussionRoundNames: {
+      r1: 'PROFESSIONS',
+      r2: 'ROUND 2',
+      r3: 'ROUND 3',
+      r4: 'ROUND 4',
+      r5: 'ROUND 5',
+    },
+    revealedThisRound: 'Revealed this round',
+    revealedBefore:    'Previously revealed',
+    toVoting:          'TO VOTING',
+    nextRoundBtn:      'NEXT ROUND ({{next}}/{{total}})',
+
+    // VotingPhase
+    votingLabel:      'VOTING',
+    whoWontEnter:     'Who will NOT enter the bunker?',
+    selectMore:       'Select {{n}} more to eliminate',
+    selectionDone:    '✓ {{n}} selected — confirm your decision',
+    directorProtected:'Director — protected',
+    eliminatedBadge:  'Eliminated',
+    confirmVoteBtn:   'CONFIRM VOTE',
+
+    // TribunalPhase
+    tribunalLabel:        'TRIBUNAL',
+    eliminatedCanAppeal:  'Eliminated players can appeal the decision',
+    tribunalDesc:         'One player reveals a hidden trait and requests a revote',
+    eliminatedPlayers:    'Eliminated players',
+    appealBtn:            'Appeal',
+    skipToSimBtn:         'SKIP — TO SIMULATION',
+    appealLabel:          'APPEAL',
+    revealingHiddenTrait: '{{player}} reveals a hidden trait',
+    wasHidden:            '{{label}} — was hidden',
+    tribunalVoteLabel:    'TRIBUNAL VOTE',
+    includeInBunker:      'Include {{player}} in the bunker?',
+    majorityDecides:      'Majority vote is decisive',
+    pardonBtn:            'PARDON',
+    pardonDesc:           'Allow into the bunker, choose who frees their spot',
+    excludeBtn:           'EXCLUDE',
+    excludeDesc:          'Decision stands',
+    playerPardonedBadge:  '🕊️ {{player}} pardoned',
+    whoFreesSpot:         'Who frees their spot?',
+    chooseFromBunker:     'Choose someone already in the bunker',
+    excludeSmall:         'Exclude',
+    playerPardonedTitle:  '{{player}} PARDONED',
+    playerExcludedTitle:  '{{player}} EXCLUDED',
+    spotFreedBy:          '{{player}} frees their spot',
+    toSurvivalBtn:        'TO SURVIVAL SIMULATION',
+
+    // SurvivalPhase
+    survivalLabel:  'SURVIVAL SIMULATION',
+    teamInBunker:   '🏠 Bunker team',
+    eventsInBunker: '⚡ Bunker events',
+    resourcesLabel: '📊 Bunker resources',
+    resources: {
+      food:     'Food',
+      water:    'Water',
+      medicine: 'Medicine',
+      energy:   'Energy',
+      morale:   'Morale',
+    },
+    seeResultsBtn: 'SEE RESULTS →',
+
+    // ResultsPhase
+    outcomes: {
+      full_victory: {
+        title:    'BUNKER SURVIVED',
+        subtitle: 'The team passed all trials. Civilization continues.',
+      },
+      partial: {
+        title:    'SURVIVED',
+        subtitle: 'Critical resources are running low, but the team holds on.',
+      },
+      pyrrhic: {
+        title:    'PYRRHIC VICTORY',
+        subtitle: 'The bunker held, but at great cost. The future is uncertain.',
+      },
+      defeat: {
+        title:    'BUNKER FELL',
+        subtitle: 'Critical life support failure. No one survived.',
+      },
+    },
+    finalResources: 'Final resources',
+    survivorsLabel: '🏠 Bunker survivors',
+    outsidersLabel: '🚪 Did not enter the bunker',
+    newGameBtn:     'NEW GAME',
+
+    // Trait labels
+    traitLabels: {
+      profession:  'Profession',
+      health:      'Health',
+      hobby:       'Hobby',
+      phobia:      'Phobia',
+      trait:       'Character trait',
+      item:        'Item',
+      specialFact: 'Special fact',
+    },
+  },
   taboo: {
     passInstruction: 'Only you should see the card with forbidden words',
     explainerBadge: 'Explain',

@@ -5,6 +5,8 @@ import { PrimaryButton, Typography } from '@/components/UI';
 import { TimerBar } from '@/components/TimerBar';
 import { useTimer } from '@/hooks/useTimer';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface DiscussionPhaseProps {
@@ -16,23 +18,16 @@ interface DiscussionPhaseProps {
 
 const DISCUSSION_SECONDS = 150; // 2.5 minutes
 
-const ROUND_LABELS: Record<number, string> = {
-  1: 'ПРОФЕССИИ',
-  2: 'ВТОРОЙ РАУНД',
-  3: 'ТРЕТИЙ РАУНД',
-  4: 'ЧЕТВЁРТЫЙ РАУНД',
-  5: 'ПЯТЫЙ РАУНД',
-};
-
 export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
   characters,
   revealRound,
   totalRounds,
   onNext,
 }) => {
+  const { t } = useTranslation();
   const isLastRound = revealRound === totalRounds;
 
-  const { timeLeft, isRunning, start, reset } = useTimer({
+  const { timeLeft, start, reset } = useTimer({
     initialTime: DISCUSSION_SECONDS,
     onTimeUp: () => {
       feedbackService.vibrate(VIBRATE.timeout);
@@ -68,10 +63,12 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       <div className="text-center space-y-1">
         <div className="flex items-center justify-center gap-2">
           <MessageCircle className="w-4 h-4 text-premium-green" />
-          <Typography.Label size="sm" color="green">ОБСУЖДЕНИЕ — {ROUND_LABELS[revealRound]}</Typography.Label>
+          <Typography.Label size="sm" color="green">
+            {t(`${NS.BUNKER}.discussionOf`)} — {t(`${NS.BUNKER}.discussionRoundNames.r${revealRound}`)}
+          </Typography.Label>
         </div>
         <Typography.Caption color="faint">
-          Раунд {revealRound} из {totalRounds}
+          {t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: totalRounds })}
         </Typography.Caption>
       </div>
 
@@ -91,7 +88,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
 
       {/* What was revealed this round */}
       <div className="space-y-2">
-        <Typography.Label size="xs" color="muted">Раскрыто в этом раунде</Typography.Label>
+        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.revealedThisRound`)}</Typography.Label>
         <div className="space-y-1.5">
           {characters.map(char => {
             const rev = getRevealedTrait(char, revealRound);
@@ -108,7 +105,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                 <span className="text-xl w-7 text-center flex-shrink-0">{rev.entry.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-[9px] text-white/30 font-black uppercase tracking-widest">
-                    {char.playerName} · {char.age} л · {char.gender} · {rev.label}
+                    {char.playerName} · {char.age} л · {char.gender} · {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                   </div>
                   <div className="text-sm font-bold text-white truncate">{rev.entry.name}</div>
                 </div>
@@ -124,7 +121,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       {/* Previous rounds summary (compact) */}
       {revealRound > 1 && (
         <div className="space-y-2">
-          <Typography.Label size="xs" color="muted">Ранее раскрыто</Typography.Label>
+          <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.revealedBefore`)}</Typography.Label>
           <div className="space-y-1">
             {characters.map(char => {
               const prev: string[] = [];
@@ -150,7 +147,9 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
           variant={isLastRound ? 'premium' : 'outline'}
           icon={ChevronRight}
         >
-          {isLastRound ? 'К ГОЛОСОВАНИЮ' : `СЛЕДУЮЩИЙ РАУНД (${revealRound + 1}/${totalRounds})`}
+          {isLastRound
+            ? t(`${NS.BUNKER}.toVoting`)
+            : t(`${NS.BUNKER}.nextRoundBtn`, { next: revealRound + 1, total: totalRounds })}
         </PrimaryButton>
       </div>
     </motion.div>

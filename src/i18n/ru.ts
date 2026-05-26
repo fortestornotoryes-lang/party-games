@@ -31,6 +31,148 @@ export const ru: Translations = {
       hard: 'Сложно',
     },
   },
+  bunker: {
+    // BunkerGame.tsx — subtitles
+    subtitleCatastrophe:  'Катастрофа',
+    subtitleDirector:     'Директор бункера',
+    roundOf:              'Раунд {{current}} из {{total}}',
+    subtitleDiscussion:   'Обсуждение · Раунд {{n}}',
+    subtitleVoting:       'Голосование',
+    subtitleTribunal:     'Трибунал',
+    subtitleSurvival:     'Симуляция',
+    subtitleResults:      'Итоги',
+
+    // BriefingPhase
+    emergencyAlert:  'ЭКСТРЕННОЕ ОПОВЕЩЕНИЕ',
+    playersInGroup:  'Игроков в группе',
+    bunkerSpots:     'Мест в бункере',
+    wontEnter:       'Не попадут: {{n}}',
+    willEnter:       'Войдут: {{n}}',
+    distributeCards: 'РАЗДАТЬ КАРТОЧКИ ПЕРСОНАЖЕЙ',
+
+    // DictatorRevealPhase
+    modeDictator:          'РЕЖИМ: ДИКТАТОР',
+    directorElected:       'Директор бункера избран',
+    directorDesc:          'Один игрок автоматически занимает место в бункере и не может быть исключён голосованием',
+    tapToRevealDirector:   'Нажмите, чтобы узнать директора',
+    guaranteedSpot:        'Гарантированное место в бункере',
+    notInVoting:           'Этот игрок не участвует в голосовании',
+    toRevealTraits:        'К РАСКРЫТИЮ ЧЕРТ',
+
+    // RevealPhase — ordinal names for rounds
+    roundOrdinals: {
+      first:  'ПЕРВЫЙ',
+      second: 'ВТОРОЙ',
+      third:  'ТРЕТИЙ',
+      fourth: 'ЧЕТВЁРТЫЙ',
+      fifth:  'ПЯТЫЙ',
+    },
+    playerOf:        '{{current}} из {{total}}',
+    passPhoneTo:     'Передайте телефон',
+    tapToSeeTrait:   'Нажмите, чтобы увидеть черту',
+    onlyPlayerSees:  'Только {{player}} должен видеть экран',
+    announceAloud:   'Объявите это вслух всей группе',
+    allAnnouncedBtn: 'ВСЕ ОБЪЯВИЛИ — К ОБСУЖДЕНИЮ',
+    announcedNextBtn:'ОБЪЯВИЛ — СЛЕДУЮЩИЙ',
+
+    // DiscussionPhase
+    discussionOf: 'ОБСУЖДЕНИЕ',
+    discussionRoundNames: {
+      r1: 'ПРОФЕССИИ',
+      r2: 'ВТОРОЙ РАУНД',
+      r3: 'ТРЕТИЙ РАУНД',
+      r4: 'ЧЕТВЁРТЫЙ РАУНД',
+      r5: 'ПЯТЫЙ РАУНД',
+    },
+    revealedThisRound: 'Раскрыто в этом раунде',
+    revealedBefore:    'Ранее раскрыто',
+    toVoting:          'К ГОЛОСОВАНИЮ',
+    nextRoundBtn:      'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})',
+
+    // VotingPhase
+    votingLabel:      'ГОЛОСОВАНИЕ',
+    whoWontEnter:     'Кто НЕ войдёт в бункер?',
+    selectMore:       'Выберите ещё {{n}} чел. для исключения',
+    selectionDone:    '✓ Выбрано {{n}} — подтвердите решение',
+    directorProtected:'Директор — защищён',
+    eliminatedBadge:  'Исключён',
+    confirmVoteBtn:   'ПОДТВЕРДИТЬ ГОЛОСОВАНИЕ',
+
+    // TribunalPhase
+    tribunalLabel:         'ТРИБУНАЛ',
+    eliminatedCanAppeal:   'Исключённые могут оспорить решение',
+    tribunalDesc:          'Один игрок раскроет скрытую черту и попросит пересмотреть голосование',
+    eliminatedPlayers:     'Исключённые игроки',
+    appealBtn:             'Оспорить',
+    skipToSimBtn:          'ПРОПУСТИТЬ — К СИМУЛЯЦИИ',
+    appealLabel:           'АПЕЛЛЯЦИЯ',
+    revealingHiddenTrait:  '{{player}} раскрывает скрытую черту',
+    wasHidden:             '{{label}} — было скрыто',
+    tribunalVoteLabel:     'ГОЛОСОВАНИЕ ТРИБУНАЛА',
+    includeInBunker:       'Включить {{player}} в бункер?',
+    majorityDecides:       'Большинство голосов — решающее',
+    pardonBtn:             'ПОМИЛОВАТЬ',
+    pardonDesc:            'Впустить в бункер, выбрать кто освобождает место',
+    excludeBtn:            'ИСКЛЮЧИТЬ',
+    excludeDesc:           'Решение остаётся в силе',
+    playerPardonedBadge:   '🕊️ {{player}} помилован',
+    whoFreesSpot:          'Кто освобождает место?',
+    chooseFromBunker:      'Выберите одного из тех, кто уже в бункере',
+    excludeSmall:          'Исключить',
+    playerPardonedTitle:   '{{player}} ПОМИЛОВАН',
+    playerExcludedTitle:   '{{player}} ИСКЛЮЧЁН',
+    spotFreedBy:           'Место освобождает {{player}}',
+    toSurvivalBtn:         'К СИМУЛЯЦИИ ВЫЖИВАНИЯ',
+
+    // SurvivalPhase
+    survivalLabel:   'СИМУЛЯЦИЯ ВЫЖИВАНИЯ',
+    teamInBunker:    '🏠 Команда в бункере',
+    eventsInBunker:  '⚡ События в бункере',
+    resourcesLabel:  '📊 Ресурсы бункера',
+    resources: {
+      food:     'Питание',
+      water:    'Вода',
+      medicine: 'Медицина',
+      energy:   'Энергия',
+      morale:   'Моральный дух',
+    },
+    seeResultsBtn: 'УЗНАТЬ ИТОГ →',
+
+    // ResultsPhase
+    outcomes: {
+      full_victory: {
+        title:    'БУНКЕР ВЫЖИЛ',
+        subtitle: 'Команда прошла все испытания. Цивилизация продолжается.',
+      },
+      partial: {
+        title:    'ВЫЖИЛИ',
+        subtitle: 'Критические ресурсы на исходе, но команда держится.',
+      },
+      pyrrhic: {
+        title:    'ПИРРОВА ПОБЕДА',
+        subtitle: 'Бункер устоял, но ценой огромных потерь. Будущее туманно.',
+      },
+      defeat: {
+        title:    'БУНКЕР ПАЛ',
+        subtitle: 'Критический сбой жизнеобеспечения. Никто не выжил.',
+      },
+    },
+    finalResources: 'Финальные ресурсы',
+    survivorsLabel: '🏠 Выжившие в бункере',
+    outsidersLabel: '🚪 Не попали в бункер',
+    newGameBtn:     'НОВАЯ ИГРА',
+
+    // Trait labels
+    traitLabels: {
+      profession:  'Профессия',
+      health:      'Здоровье',
+      hobby:       'Хобби',
+      phobia:      'Фобия',
+      trait:       'Черта характера',
+      item:        'Предмет',
+      specialFact: 'Особый факт',
+    },
+  },
   taboo: {
     passInstruction: 'Только ты должен видеть карточку с запрещёнными словами',
     explainerBadge: 'Объяснять',

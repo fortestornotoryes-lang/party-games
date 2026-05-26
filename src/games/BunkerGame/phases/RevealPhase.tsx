@@ -4,6 +4,8 @@ import { ChevronRight, Fingerprint, Megaphone, Eye } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { rgba } from '@/theme/colors';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface RevealPhaseProps {
@@ -14,7 +16,7 @@ interface RevealPhaseProps {
 }
 
 const ROUND_COLORS = ['', 'orange', 'yellow', 'sky', 'green', 'purple'] as const;
-const ROUND_LABELS = ['', 'ПЕРВЫЙ', 'ВТОРОЙ', 'ТРЕТИЙ', 'ЧЕТВЁРТЫЙ', 'ПЯТЫЙ'];
+const ORDINAL_KEYS = ['', 'first', 'second', 'third', 'fourth', 'fifth'] as const;
 
 export const RevealPhase: React.FC<RevealPhaseProps> = ({
   characters,
@@ -22,6 +24,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
   revealPlayerIdx,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
   const [isRevealed, setIsRevealed] = useState(false);
 
   const char = characters[revealPlayerIdx];
@@ -67,14 +70,14 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
           ))}
         </div>
         <Typography.Label size="xs" color="muted">
-          РАУНД {ROUND_LABELS[revealRound]}
+          {t(`${NS.COMMON}.round`)} {t(`${NS.BUNKER}.roundOrdinals.${ORDINAL_KEYS[revealRound]}`)}
         </Typography.Label>
       </div>
 
       {/* Player counter */}
       <div className="text-center">
         <Typography.Caption color="faint">
-          {revealPlayerIdx + 1} из {characters.length}
+          {t(`${NS.BUNKER}.playerOf`, { current: revealPlayerIdx + 1, total: characters.length })}
         </Typography.Caption>
       </div>
 
@@ -87,7 +90,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
         }}
       >
         <Fingerprint className="w-8 h-8 text-white/20 mx-auto" />
-        <Typography.Label size="xs" color="muted">Передайте телефон</Typography.Label>
+        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.passPhoneTo`)}</Typography.Label>
         <Typography.Title size="md" color="white" align="center">
           {char.playerName.toUpperCase()}
         </Typography.Title>
@@ -117,10 +120,10 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
               style={{ color: `var(--color-premium-${colorName})`, opacity: 0.5 }}
             />
             <Typography.Heading size="sm" color="muted" align="center">
-              Нажмите, чтобы увидеть черту
+              {t(`${NS.BUNKER}.tapToSeeTrait`)}
             </Typography.Heading>
             <Typography.Caption color="faint" align="center">
-              Только {char.playerName} должен видеть экран
+              {t(`${NS.BUNKER}.onlyPlayerSees`, { player: char.playerName })}
             </Typography.Caption>
           </motion.button>
         ) : (
@@ -146,7 +149,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                 color: `var(--color-premium-${colorName})`,
               }}
             >
-              {revealed.label}
+              {t(`${NS.BUNKER}.traitLabels.${revealed.traitKey}`)}
             </div>
 
             {/* Emoji */}
@@ -179,7 +182,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             >
               <Megaphone className="w-4 h-4 text-white/30" />
               <Typography.Body size="xs" color="muted" align="center">
-                Объявите это вслух всей группе
+                {t(`${NS.BUNKER}.announceAloud`)}
               </Typography.Body>
             </motion.div>
           </motion.div>
@@ -197,7 +200,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             className="mt-auto"
           >
             <PrimaryButton onClick={handleConfirm} variant="outline" icon={ChevronRight}>
-              {isLast ? 'ВСЕ ОБЪЯВИЛИ — К ОБСУЖДЕНИЮ' : 'ОБЪЯВИЛ — СЛЕДУЮЩИЙ'}
+              {isLast ? t(`${NS.BUNKER}.allAnnouncedBtn`) : t(`${NS.BUNKER}.announcedNextBtn`)}
             </PrimaryButton>
           </motion.div>
         )}

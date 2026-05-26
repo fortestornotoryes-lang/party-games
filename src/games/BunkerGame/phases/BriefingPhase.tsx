@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Users, Siren } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import type { CatastropheScenario } from '../types';
 
 interface BriefingPhaseProps {
@@ -18,6 +20,8 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
   bunkerCapacity,
   onStart,
 }) => {
+  const { t } = useTranslation();
+
   const handleStart = () => {
     feedbackService.vibrate(VIBRATE.tap);
     onStart();
@@ -35,7 +39,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
       {/* Alarm header */}
       <div className="flex items-center gap-2 justify-center">
         <Siren className="w-5 h-5 text-premium-orange animate-pulse" />
-        <Typography.Label size="sm" color="orange">ЭКСТРЕННОЕ ОПОВЕЩЕНИЕ</Typography.Label>
+        <Typography.Label size="sm" color="orange">{t(`${NS.BUNKER}.emergencyAlert`)}</Typography.Label>
         <Siren className="w-5 h-5 text-premium-orange animate-pulse" />
       </div>
 
@@ -87,7 +91,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-white/40" />
-            <Typography.Label size="xs" color="muted">Игроков в группе</Typography.Label>
+            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.playersInGroup`)}</Typography.Label>
           </div>
           <Typography.Heading size="sm" color="white">{playerCount}</Typography.Heading>
         </div>
@@ -98,7 +102,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-base">🏠</span>
-            <Typography.Label size="xs" color="muted">Мест в бункере</Typography.Label>
+            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.bunkerSpots`)}</Typography.Label>
           </div>
           <Typography.Heading size="sm" color="orange">{bunkerCapacity}</Typography.Heading>
         </div>
@@ -117,8 +121,8 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
           ))}
         </div>
         <div className="mt-2 flex justify-between">
-          <Typography.Caption color="faint">Не попадут: {playerCount - bunkerCapacity}</Typography.Caption>
-          <Typography.Caption color="orange">Войдут: {bunkerCapacity}</Typography.Caption>
+          <Typography.Caption color="faint">{t(`${NS.BUNKER}.wontEnter`, { n: playerCount - bunkerCapacity })}</Typography.Caption>
+          <Typography.Caption color="orange">{t(`${NS.BUNKER}.willEnter`, { n: bunkerCapacity })}</Typography.Caption>
         </div>
       </motion.div>
 
@@ -133,7 +137,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
           onClick={handleStart}
           variant="premium"
         >
-          РАЗДАТЬ КАРТОЧКИ ПЕРСОНАЖЕЙ
+          {t(`${NS.BUNKER}.distributeCards`)}
         </PrimaryButton>
       </motion.div>
     </motion.div>

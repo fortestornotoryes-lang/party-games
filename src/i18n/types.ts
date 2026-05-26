@@ -49,6 +49,137 @@ export interface TabooTranslations {
   backToMenu: string;       // "В МЕНЮ"
 }
 
+export interface BunkerTranslations {
+  // BunkerGame.tsx — subtitles
+  subtitleCatastrophe: string;
+  subtitleDirector: string;
+  roundOf: string;              // 'Раунд {{current}} из {{total}}'
+  subtitleDiscussion: string;   // 'Обсуждение · Раунд {{n}}'
+  subtitleVoting: string;
+  subtitleTribunal: string;
+  subtitleSurvival: string;
+  subtitleResults: string;
+
+  // BriefingPhase
+  emergencyAlert: string;
+  playersInGroup: string;
+  bunkerSpots: string;
+  wontEnter: string;            // 'Не попадут: {{n}}'
+  willEnter: string;            // 'Войдут: {{n}}'
+  distributeCards: string;
+
+  // DictatorRevealPhase
+  modeDictator: string;
+  directorElected: string;
+  directorDesc: string;
+  tapToRevealDirector: string;
+  guaranteedSpot: string;
+  notInVoting: string;
+  toRevealTraits: string;
+
+  // RevealPhase
+  roundOrdinals: {
+    first: string;
+    second: string;
+    third: string;
+    fourth: string;
+    fifth: string;
+  };
+  playerOf: string;             // '{{current}} из {{total}}'
+  passPhoneTo: string;          // 'Передайте телефон'
+  tapToSeeTrait: string;
+  onlyPlayerSees: string;       // 'Только {{player}} должен видеть экран'
+  announceAloud: string;
+  allAnnouncedBtn: string;
+  announcedNextBtn: string;
+
+  // DiscussionPhase
+  discussionOf: string;         // 'ОБСУЖДЕНИЕ'
+  discussionRoundNames: {
+    r1: string;
+    r2: string;
+    r3: string;
+    r4: string;
+    r5: string;
+  };
+  revealedThisRound: string;
+  revealedBefore: string;
+  toVoting: string;
+  nextRoundBtn: string;         // 'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})'
+
+  // VotingPhase
+  votingLabel: string;
+  whoWontEnter: string;
+  selectMore: string;           // 'Выберите ещё {{n}} для исключения'
+  selectionDone: string;        // '✓ Выбрано {{n}} — подтвердите решение'
+  directorProtected: string;
+  eliminatedBadge: string;
+  confirmVoteBtn: string;
+
+  // TribunalPhase
+  tribunalLabel: string;
+  eliminatedCanAppeal: string;
+  tribunalDesc: string;
+  eliminatedPlayers: string;
+  appealBtn: string;
+  skipToSimBtn: string;
+  appealLabel: string;
+  revealingHiddenTrait: string; // '{{player}} раскрывает скрытую черту'
+  wasHidden: string;            // '{{label}} — было скрыто'
+  tribunalVoteLabel: string;
+  includeInBunker: string;      // 'Включить {{player}} в бункер?'
+  majorityDecides: string;
+  pardonBtn: string;
+  pardonDesc: string;
+  excludeBtn: string;
+  excludeDesc: string;
+  playerPardonedBadge: string;  // '🕊️ {{player}} помилован'
+  whoFreesSpot: string;
+  chooseFromBunker: string;
+  excludeSmall: string;
+  playerPardonedTitle: string;  // '{{player}} ПОМИЛОВАН'
+  playerExcludedTitle: string;  // '{{player}} ИСКЛЮЧЁН'
+  spotFreedBy: string;          // 'Место освобождает {{player}}'
+  toSurvivalBtn: string;
+
+  // SurvivalPhase
+  survivalLabel: string;
+  teamInBunker: string;
+  eventsInBunker: string;
+  resourcesLabel: string;
+  resources: {
+    food: string;
+    water: string;
+    medicine: string;
+    energy: string;
+    morale: string;
+  };
+  seeResultsBtn: string;
+
+  // ResultsPhase outcomes
+  outcomes: {
+    full_victory: { title: string; subtitle: string };
+    partial: { title: string; subtitle: string };
+    pyrrhic: { title: string; subtitle: string };
+    defeat: { title: string; subtitle: string };
+  };
+  finalResources: string;
+  survivorsLabel: string;
+  outsidersLabel: string;
+  newGameBtn: string;
+
+  // Trait labels (from types.ts TRAIT_LABELS)
+  traitLabels: {
+    profession: string;
+    health: string;
+    hobby: string;
+    phobia: string;
+    trait: string;
+    item: string;
+    specialFact: string;
+  };
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -56,6 +187,7 @@ export interface TabooTranslations {
 export interface Translations {
   common: CommonTranslations;
   taboo?: TabooTranslations;
+  bunker?: BunkerTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
-  [gameKey: string]: Record<string, unknown> | CommonTranslations | TabooTranslations | undefined;
+  [gameKey: string]: Record<string, unknown> | CommonTranslations | TabooTranslations | BunkerTranslations | undefined;
 }

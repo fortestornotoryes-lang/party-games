@@ -4,6 +4,8 @@ import { ChevronRight, Scale, X } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { rgba } from '@/theme/colors';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { getHiddenTraits, type BunkerCharacter, type AttributeEntry, type TraitKey } from '../types';
 import { pickRandom } from '@/utils/random';
 
@@ -30,6 +32,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
   bunkerTeam,
   onDone,
 }) => {
+  const { t } = useTranslation();
   const [step,        setStep]        = useState<TribunalStep>('choose');
   const [appellant,   setAppellant]   = useState<BunkerCharacter | null>(null);
   const [appealTrait, setAppealTrait] = useState<AppealTrait | null>(null);
@@ -95,18 +98,18 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         <div className="text-center space-y-1">
           <div className="flex items-center justify-center gap-2">
             <Scale className="w-4 h-4" style={{ color: 'var(--color-premium-yellow)' }} />
-            <Typography.Label size="sm" color="muted">ТРИБУНАЛ</Typography.Label>
+            <Typography.Label size="sm" color="muted">{t(`${NS.BUNKER}.tribunalLabel`)}</Typography.Label>
           </div>
           <Typography.Title size="sm" color="white" align="center">
-            Исключённые могут оспорить решение
+            {t(`${NS.BUNKER}.eliminatedCanAppeal`)}
           </Typography.Title>
           <Typography.Caption color="faint" align="center">
-            Один игрок раскроет скрытую черту и попросит пересмотреть голосование
+            {t(`${NS.BUNKER}.tribunalDesc`)}
           </Typography.Caption>
         </div>
 
         <div className="space-y-2">
-          <Typography.Label size="xs" color="muted">Исключённые игроки</Typography.Label>
+          <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.eliminatedPlayers`)}</Typography.Label>
           <div className="space-y-2">
             {eliminated.map(char => (
               <motion.button
@@ -139,7 +142,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     className="text-[10px] font-black uppercase tracking-wider"
                     style={{ color: 'var(--color-premium-yellow)' }}
                   >
-                    Оспорить
+                    {t(`${NS.BUNKER}.appealBtn`)}
                   </span>
                 </div>
               </motion.button>
@@ -149,7 +152,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
         <div className="mt-auto">
           <PrimaryButton onClick={handleSkip} variant="outline" icon={ChevronRight}>
-            ПРОПУСТИТЬ — К СИМУЛЯЦИИ
+            {t(`${NS.BUNKER}.skipToSimBtn`)}
           </PrimaryButton>
         </div>
       </motion.div>
@@ -161,9 +164,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         className="flex flex-col min-h-full px-5 py-6 gap-6"
       >
         <div className="text-center space-y-1">
-          <Typography.Label size="sm" color="muted">АПЕЛЛЯЦИЯ</Typography.Label>
+          <Typography.Label size="sm" color="muted">{t(`${NS.BUNKER}.appealLabel`)}</Typography.Label>
           <Typography.Title size="sm" color="white" align="center">
-            {appellant.playerName} раскрывает скрытую черту
+            {t(`${NS.BUNKER}.revealingHiddenTrait`, { player: appellant.playerName })}
           </Typography.Title>
         </div>
 
@@ -187,7 +190,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 color: 'var(--color-premium-yellow)',
               }}
             >
-              {appealTrait.label} — было скрыто
+              {t(`${NS.BUNKER}.wasHidden`, { label: t(`${NS.BUNKER}.traitLabels.${appealTrait.key}`) })}
             </div>
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
@@ -210,7 +213,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         </div>
 
         <PrimaryButton onClick={handleRevealContinue} icon={ChevronRight}>
-          К ГОЛОСОВАНИЮ
+          {t(`${NS.BUNKER}.toVoting`)}
         </PrimaryButton>
       </motion.div>
     );
@@ -221,12 +224,12 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         className="flex flex-col min-h-full px-5 py-6 gap-6"
       >
         <div className="text-center space-y-1">
-          <Typography.Label size="sm" color="muted">ГОЛОСОВАНИЕ ТРИБУНАЛА</Typography.Label>
+          <Typography.Label size="sm" color="muted">{t(`${NS.BUNKER}.tribunalVoteLabel`)}</Typography.Label>
           <Typography.Title size="sm" color="white" align="center">
-            Включить {appellant.playerName} в бункер?
+            {t(`${NS.BUNKER}.includeInBunker`, { player: appellant.playerName })}
           </Typography.Title>
           <Typography.Caption color="faint" align="center">
-            Большинство голосов — решающее
+            {t(`${NS.BUNKER}.majorityDecides`)}
           </Typography.Caption>
         </div>
 
@@ -241,9 +244,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             }}
           >
             <div className="text-4xl">🕊️</div>
-            <Typography.Heading size="sm" color="white" align="center">ПОМИЛОВАТЬ</Typography.Heading>
+            <Typography.Heading size="sm" color="white" align="center">{t(`${NS.BUNKER}.pardonBtn`)}</Typography.Heading>
             <Typography.Caption color="faint" align="center">
-              Впустить в бункер, выбрать кто освобождает место
+              {t(`${NS.BUNKER}.pardonDesc`)}
             </Typography.Caption>
           </motion.button>
 
@@ -257,8 +260,8 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             }}
           >
             <div className="text-4xl">⛔</div>
-            <Typography.Heading size="sm" color="white" align="center">ИСКЛЮЧИТЬ</Typography.Heading>
-            <Typography.Caption color="faint" align="center">Решение остаётся в силе</Typography.Caption>
+            <Typography.Heading size="sm" color="white" align="center">{t(`${NS.BUNKER}.excludeBtn`)}</Typography.Heading>
+            <Typography.Caption color="faint" align="center">{t(`${NS.BUNKER}.excludeDesc`)}</Typography.Caption>
           </motion.button>
         </div>
       </motion.div>
@@ -278,13 +281,13 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               color: 'var(--color-premium-green)',
             }}
           >
-            🕊️ {appellant.playerName} помилован
+            {t(`${NS.BUNKER}.playerPardonedBadge`, { player: appellant.playerName })}
           </div>
           <Typography.Title size="sm" color="white" align="center">
-            Кто освобождает место?
+            {t(`${NS.BUNKER}.whoFreesSpot`)}
           </Typography.Title>
           <Typography.Caption color="faint" align="center">
-            Выберите одного из тех, кто уже в бункере
+            {t(`${NS.BUNKER}.chooseFromBunker`)}
           </Typography.Caption>
         </div>
 
@@ -312,7 +315,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               >
                 <X className="w-3.5 h-3.5 text-premium-red" />
                 <span className="text-[10px] font-black uppercase tracking-wider text-premium-red">
-                  Исключить
+                  {t(`${NS.BUNKER}.excludeSmall`)}
                 </span>
               </div>
             </motion.button>
@@ -343,13 +346,12 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
           <div className="text-center space-y-2">
             <Typography.Display size="sm" color="white" glow align="center">
               {pardoned
-                ? `${appellant?.playerName} ПОМИЛОВАН`
-                : `${appellant?.playerName} ИСКЛЮЧЁН`}
+                ? t(`${NS.BUNKER}.playerPardonedTitle`, { player: appellant?.playerName ?? '' })
+                : t(`${NS.BUNKER}.playerExcludedTitle`, { player: appellant?.playerName ?? '' })}
             </Typography.Display>
             {pardoned && swapTarget && (
               <Typography.Body size="sm" color="muted" align="center">
-                Место освобождает{' '}
-                <span className="text-premium-red font-black">{swapTarget}</span>
+                {t(`${NS.BUNKER}.spotFreedBy`, { player: swapTarget })}
               </Typography.Body>
             )}
           </div>
@@ -360,7 +362,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               variant={pardoned ? 'premium' : 'outline'}
               icon={ChevronRight}
             >
-              К СИМУЛЯЦИИ ВЫЖИВАНИЯ
+              {t(`${NS.BUNKER}.toSurvivalBtn`)}
             </PrimaryButton>
           </div>
         </motion.div>
