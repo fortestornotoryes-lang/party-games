@@ -15,7 +15,8 @@ export enum GameKey {
     TruthOrDare = 'truth_or_dare',
     ConnectFour = 'connect_four',
     TabooReverse = 'taboo_reverse',
-    Taboo = 'taboo'
+    Taboo = 'taboo',
+    Bunker = 'bunker',
 }
 
 export interface InstructionItem {

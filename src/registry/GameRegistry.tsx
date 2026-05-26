@@ -12,6 +12,7 @@ import WavelengthImage from '../assets/WavelengthImage.JPG';
 import alieaImage from '../assets/alias.JPG';
 import TabyImage from '../assets/tabyImage2.JPG';
 import ConnectFourImage from '../assets/ConnectFourImage2.png';
+import hopperImage from '../assets/hopperImage.png';
 import {
     Shield,
     Palette,
@@ -28,7 +29,8 @@ import {
     LayoutGrid,
     ArrowDown,
     ListChecks,
-    Ban
+    Ban,
+    Siren,
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -48,16 +50,17 @@ const TruthOrDareGame = lazy(() => import('../games/TruthOrDareGame/TruthOrDareG
 const ConnectFourGame = lazy(() => import('../games/ConnectFourGame/ConnectFourGame').then(m => ({default: m.ConnectFourGame})));
 const TabooReverseGame = lazy(() => import('../games/TabooReverseGame/TabooReverseGame').then(m => ({default: m.TabooReverseGame})));
 const TabooGame = lazy(() => import('../games/TabooGame/TabooGame').then(m => ({default: m.TabooGame})));
+const BunkerGame = lazy(() => import('../games/BunkerGame/BunkerGame').then(m => ({default: m.BunkerGame})));
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Spy]: {
         id: GameKey.Spy,
         title: 'SPY HUNT',
-        subtitle: 'Поиск тайного агента',
+        subtitle: 'Вычисли шпиона среди своих',
         icon: Shield,
         theme: 'indigo',
         placeholder: 'Игрок',
-        description: '1 игрок — шпион. Все остальные знают локацию. Шпион должен догадаться, где он находится, по вопросам.',
+        description: 'Один игрок не знает локацию. Остальные задают вопросы и отвечают так, чтобы не выдать место, но помочь найти шпиона.',
         players: '3–7',
         minPlayers: 3,
         setupStatus: GameStatus.SpyHuntPlaying,
@@ -72,11 +75,11 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.FakeArtist]: {
         id: GameKey.FakeArtist,
         title: 'FAKE ARTIST',
-        subtitle: 'Найдите фейкового автора',
+        subtitle: 'Найди того, кто рисует вслепую',
         icon: Palette,
         theme: 'lime',
         placeholder: 'Игрок',
-        description: 'В этой игре один игрок — фейковый художник, который не знает, что рисуют остальные.',
+        description: 'Все рисуют одно и то же, но один игрок не знает слово и пытается подстроиться под остальных, не выдав себя.',
         players: '4–7',
         minPlayers: 4,
         setupStatus: GameStatus.FakeArtistPlaying,
@@ -86,12 +89,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.TruthOrDare]: {
         id: GameKey.TruthOrDare,
         title: 'ПРАВДА ИЛИ ДЕЙСТВИЕ',
-        subtitle: 'Честность или риск',
+        subtitle: 'Выбирай: откровение или вызов',
         icon: Flame,
         theme: 'red',
         placeholder: 'Игрок',
         players: '2+',
-        description: 'Классическая игра: ответь честно на вопрос или выполни задание',
+        description: 'Задавайте неудобные вопросы, выполняйте смелые задания и проверяйте, кто готов рискнуть ради веселья.',
         minPlayers: 2,
         setupStatus: GameStatus.TruthOrDarePlaying,
         backgroundImage: TruthOrDareImage,
@@ -100,12 +103,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Taboo]: {
         id: GameKey.Taboo,
         title: 'ТАБУ',
-        subtitle: 'Объясни без запрещённых слов',
+        subtitle: 'Объясняй, не называя лишнего',
         icon: Ban,
         theme: 'red',
         placeholder: 'Игрок',
         players: '4–10',
-        description: 'Объясняй загаданное слово любыми словами — кроме запрещённых на карточке!',
+        description: 'Нужно объяснить слово команде, не используя самые очевидные и запрещённые подсказки с карточки.',
         minPlayers: 4,
         setupStatus: GameStatus.TabooPlaying,
         backgroundImage: TabyImage,
@@ -113,12 +116,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.TabooReverse]: {
         id: GameKey.TabooReverse,
         title: 'ТАБУ НАОБОРОТ',
-        subtitle: 'Запрещённые слова — твои подсказки',
+        subtitle: 'Подсказки под запретом — больше нет',
         icon: ListChecks,
         theme: 'orange',
         placeholder: 'Игрок',
         players: '4–10',
-        description: 'Объясняй загаданное слово, используя только запрещённые слова. Само слово называть нельзя!',
+        description: 'Объясняй слово только через запрещённые ассоциации, но не произноси сам ответ. Чем точнее намёк, тем быстрее угадают.',
         minPlayers: 4,
         setupStatus: GameStatus.TabooReversePlaying,
         backgroundImage: TabyImage,
@@ -131,12 +134,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Telestrations]: {
         id: GameKey.Telestrations,
         title: 'TELESTRATIONS',
-        subtitle: 'Испорченный рисунок',
+        subtitle: 'Рисунок превращается в хаос',
         icon: Pencil,
         theme: 'green',
         placeholder: 'Игрок',
         players: '4–12',
-        description: 'Рисуй и угадывай по цепочке',
+        description: 'Передавайте слова и рисунки по цепочке, а потом смотрите, как исходная идея смешно меняется на каждом ходе.',
         minPlayers: 4,
         setupStatus: GameStatus.TelestrationsPlaying,
         backgroundImage: telestrationsImg,
@@ -173,7 +176,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         theme: 'pink',
         placeholder: 'Шифровальщик',
         players: '4+',
-        description: 'Шифруй свои, перехватывай чужие',
+        description: 'Шифруйте числовые коды для своей команды так, чтобы союзники поняли намёк, а соперники не смогли его перехватить.',
         minPlayers: 4,
         setupStatus: GameStatus.DecryptoPlaying,
         modes: [
@@ -192,7 +195,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         theme: 'red',
         placeholder: 'Игрок',
         players: '4+',
-        description: 'Объясни слово быстрее всех',
+        description: 'За ограниченное время объясняйте как можно больше слов, не используя однокоренные формы и прямые подсказки.',
         minPlayers: 4,
         setupStatus: GameStatus.AliasPlaying,
         backgroundImage: alieaImage,
@@ -274,6 +277,21 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             { id: 'pop_out',      name: 'Pop Out',       description: '7×6 — вытащи нижнюю фишку из столбца', icon: ArrowDown },
         ],
     },
+
+    [GameKey.Bunker]: {
+        id: GameKey.Bunker,
+        title: 'БУНКЕР',
+        subtitle: 'Кто заслуживает выжить?',
+        icon: Siren,
+        theme: 'orange',
+        placeholder: 'Выживший',
+        players: '4–10',
+        description: 'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
+        minPlayers: 4,
+        setupStatus: GameStatus.BunkerPlaying,
+        backgroundImage:hopperImage,
+
+    },
 } as const;
 
 export {
@@ -291,4 +309,5 @@ export {
     ConnectFourGame,
     TabooReverseGame,
     TabooGame,
+    BunkerGame,
 };

@@ -108,7 +108,7 @@ export const Setup: React.FC<SetupProps> = ({
                                                 instructions,
                                                 description,
                                                 minPlayers = 3,
-                                                maxPlayers = 8,
+                                                maxPlayers = 15,
                                                 children
                                             }) => {
     const {difficulty} = useGameSettings();
