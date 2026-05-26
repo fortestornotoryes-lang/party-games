@@ -5,7 +5,10 @@ import type {
   AttributeEntry,
   BunkerCharacter,
   TraitKey,
+  ResourceKey,
+  BunkerResources,
 } from '../games/BunkerGame/types';
+import { ALL_TRAIT_KEYS } from '../games/BunkerGame/types';
 
 // ─── Катастрофы ───────────────────────────────────────────────────────────────
 
@@ -668,8 +671,7 @@ function randomAge(): number {
 
 // ─── Генерация персонажа ──────────────────────────────────────────────────────
 
-// All non-profession trait keys — shuffled per player to determine reveal order
-const ALL_TRAIT_KEYS: TraitKey[] = ['health', 'hobby', 'trait', 'item', 'specialFact', 'phobia'];
+// ALL_TRAIT_KEYS is imported from types.ts (canonical source)
 
 // How many traits to reveal after round 1 (rounds 2…N).
 // Must be ≤ ALL_TRAIT_KEYS.length (6). Currently 4 → 5 total rounds.
@@ -694,16 +696,6 @@ export function generateCharacter(playerName: string): BunkerCharacter {
 }
 
 // ─── Расчёт выживания ─────────────────────────────────────────────────────────
-
-export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
-
-export interface BunkerResources {
-  food: number;
-  water: number;
-  medicine: number;
-  energy: number;
-  morale: number;
-}
 
 export function calculateSurvival(
   bunkerTeam: BunkerCharacter[],

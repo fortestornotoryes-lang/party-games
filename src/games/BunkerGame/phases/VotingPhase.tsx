@@ -19,10 +19,10 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
   onConfirm,
 }) => {
   // Director occupies one guaranteed spot — exclude from voting
-  const votable      = directorName
+  const votable     = directorName
     ? characters.filter(c => c.playerName !== directorName)
     : characters;
-  const toEliminate  = characters.length - bunkerCapacity;
+  const toEliminate = Math.max(0, characters.length - bunkerCapacity);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const toggle = (name: string) => {
@@ -52,7 +52,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-full px-5 py-6 gap-5"
+      className="flex flex-col min-h-full px-5 py-6 gap-5"
     >
       {/* Header */}
       <div className="text-center space-y-1">

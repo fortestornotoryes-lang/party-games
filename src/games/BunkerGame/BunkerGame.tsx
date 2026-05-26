@@ -12,7 +12,7 @@ import {
   generateCharacter,
   calculateSurvival,
 } from '@/constants/bunkerContent';
-import { BunkerPhase, getRevealedTrait } from './types';
+import { BunkerPhase } from './types';
 import type { BunkerCharacter, CatastropheScenario, SurvivalEvent, BunkerResources, SurvivalOutcome } from './types';
 import { BriefingPhase }        from './phases/BriefingPhase';
 import { DictatorRevealPhase }  from './phases/DictatorRevealPhase';
@@ -29,6 +29,7 @@ interface BunkerGameProps {
 }
 
 const TOTAL_REVEAL_ROUNDS = 5;
+const CAPACITY_PCT: Record<string, number> = { easy: 0.8, medium: 0.6, hard: 0.4 };
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) => {
   const { mode, difficulty } = useGameSettings();
@@ -36,7 +37,6 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
   const isTribunal = mode === 'tribunal';
 
   // ── Initial setup (stable for the lifetime of this game instance) ──────────
-  const CAPACITY_PCT: Record<string, number> = { easy: 0.8, medium: 0.6, hard: 0.4 };
 
   const bunkerCapacity = useMemo(
     () => Math.max(2, Math.round(playerNames.length * (CAPACITY_PCT[difficulty] ?? 0.6))),
@@ -71,16 +71,16 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
     if (eliminatedNames.length === 0) {
       return { resources: { food: 100, water: 100, medicine: 100, energy: 100, morale: 100 }, outcome: 'full_victory' };
     }
-    return calculateSurvival(bunkerTeam, scenario, events);
-  }, [eliminatedNames, bunkerTeam, scenario, events]);
+    const team = characters.filter(c => !eliminatedNames.includes(c.playerName));
+    return calculateSurvival(team, scenario, events);
+  }, [eliminatedNames, characters, scenario, events]);
 
   // ── Subtitle for GameHeader ────────────────────────────────────────────────
   const subtitle = (() => {
     switch (phase) {
       case BunkerPhase.Briefing:        return 'Катастрофа';
       case BunkerPhase.DictatorReveal:  return 'Директор бункера';
-      case BunkerPhase.RevealPass:
-      case BunkerPhase.RevealShow:      return `Раунд ${revealRound} из ${TOTAL_REVEAL_ROUNDS}`;
+      case BunkerPhase.RevealPass:      return `Раунд ${revealRound} из ${TOTAL_REVEAL_ROUNDS}`;
       case BunkerPhase.Discussion:      return `Обсуждение · Раунд ${revealRound}`;
       case BunkerPhase.Voting:          return 'Голосование';
       case BunkerPhase.Tribunal:        return 'Трибунал';
@@ -157,7 +157,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
         onBack={onBack}
       />
 
-      <div className="flex-1 overflow-y-auto overscroll-contain">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <AnimatePresence mode="wait">
           {phase === BunkerPhase.Briefing && (
             <BriefingPhase
@@ -177,7 +177,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
             />
           )}
 
-          {(phase === BunkerPhase.RevealPass || phase === BunkerPhase.RevealShow) && (
+          {phase === BunkerPhase.RevealPass && (
             <RevealPhase
               key={`reveal-${revealRound}-${revealPlayerIdx}`}
               characters={characters}

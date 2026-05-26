@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight, Scale, X } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
@@ -8,9 +8,9 @@ import { getHiddenTraits, type BunkerCharacter, type AttributeEntry, type TraitK
 import { pickRandom } from '@/utils/random';
 
 interface TribunalPhaseProps {
-  characters:    BunkerCharacter[];
+  characters:      BunkerCharacter[];
   eliminatedNames: string[];
-  bunkerTeam:    BunkerCharacter[];
+  bunkerTeam:      BunkerCharacter[];
   onDone: (finalEliminatedNames: string[]) => void;
 }
 
@@ -22,27 +22,34 @@ interface AppealTrait {
   entry: AttributeEntry;
 }
 
+const SLIDE = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } } as const;
+
 export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
   characters,
   eliminatedNames,
   bunkerTeam,
   onDone,
 }) => {
-  const [step,       setStep]       = useState<TribunalStep>('choose');
-  const [appellant,  setAppellant]  = useState<BunkerCharacter | null>(null);
+  const [step,        setStep]        = useState<TribunalStep>('choose');
+  const [appellant,   setAppellant]   = useState<BunkerCharacter | null>(null);
   const [appealTrait, setAppealTrait] = useState<AppealTrait | null>(null);
-  const [voteResult, setVoteResult] = useState<'pardoned' | 'rejected' | null>(null);
-  const [swapTarget, setSwapTarget] = useState<string | null>(null);
+  const [voteResult,  setVoteResult]  = useState<'pardoned' | 'rejected' | null>(null);
+  const [swapTarget,  setSwapTarget]  = useState<string | null>(null);
 
   const eliminated = characters.filter(c => eliminatedNames.includes(c.playerName));
 
   const handleAppeal = (char: BunkerCharacter) => {
     feedbackService.vibrate(VIBRATE.tap);
     const hidden = getHiddenTraits(char);
-    const trait  = pickRandom(hidden);
     setAppellant(char);
-    setAppealTrait(trait);
-    setStep('reveal');
+    if (hidden.length > 0) {
+      setAppealTrait(pickRandom(hidden));
+      setStep('reveal');
+    } else {
+      // All traits already revealed — skip straight to vote
+      setAppealTrait(null);
+      setStep('vote');
+    }
   };
 
   const handleSkip = () => {
@@ -70,24 +77,20 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
   const handleFinish = () => {
     feedbackService.vibrate(VIBRATE.tap);
     if (voteResult === 'pardoned' && appellant && swapTarget) {
-      const final = [
+      onDone([
         ...eliminatedNames.filter(n => n !== appellant.playerName),
         swapTarget,
-      ];
-      onDone(final);
+      ]);
     } else {
       onDone(eliminatedNames);
     }
   };
 
-  // ── CHOOSE ──────────────────────────────────────────────────────────────────
-  if (step === 'choose') {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="flex flex-col h-full px-5 py-6 gap-5"
+  const stepContent = (() => {
+    // ── CHOOSE ────────────────────────────────────────────────────────────────
+    if (step === 'choose') return (
+      <motion.div key="choose" {...SLIDE}
+        className="flex flex-col min-h-full px-5 py-6 gap-5"
       >
         <div className="text-center space-y-1">
           <div className="flex items-center justify-center gap-2">
@@ -151,16 +154,11 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         </div>
       </motion.div>
     );
-  }
 
-  // ── REVEAL ───────────────────────────────────────────────────────────────────
-  if (step === 'reveal' && appellant && appealTrait) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="flex flex-col h-full px-5 py-6 gap-6"
+    // ── REVEAL ────────────────────────────────────────────────────────────────
+    if (step === 'reveal' && appellant && appealTrait) return (
+      <motion.div key="reveal" {...SLIDE}
+        className="flex flex-col min-h-full px-5 py-6 gap-6"
       >
         <div className="text-center space-y-1">
           <Typography.Label size="sm" color="muted">АПЕЛЛЯЦИЯ</Typography.Label>
@@ -216,16 +214,11 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         </PrimaryButton>
       </motion.div>
     );
-  }
 
-  // ── VOTE ─────────────────────────────────────────────────────────────────────
-  if (step === 'vote' && appellant) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="flex flex-col h-full px-5 py-6 gap-6"
+    // ── VOTE ──────────────────────────────────────────────────────────────────
+    if (step === 'vote' && appellant) return (
+      <motion.div key="vote" {...SLIDE}
+        className="flex flex-col min-h-full px-5 py-6 gap-6"
       >
         <div className="text-center space-y-1">
           <Typography.Label size="sm" color="muted">ГОЛОСОВАНИЕ ТРИБУНАЛА</Typography.Label>
@@ -248,9 +241,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             }}
           >
             <div className="text-4xl">🕊️</div>
-            <Typography.Heading size="sm" color="white" align="center">
-              ПОМИЛОВАТЬ
-            </Typography.Heading>
+            <Typography.Heading size="sm" color="white" align="center">ПОМИЛОВАТЬ</Typography.Heading>
             <Typography.Caption color="faint" align="center">
               Впустить в бункер, выбрать кто освобождает место
             </Typography.Caption>
@@ -266,26 +257,17 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             }}
           >
             <div className="text-4xl">⛔</div>
-            <Typography.Heading size="sm" color="white" align="center">
-              ИСКЛЮЧИТЬ
-            </Typography.Heading>
-            <Typography.Caption color="faint" align="center">
-              Решение остаётся в силе
-            </Typography.Caption>
+            <Typography.Heading size="sm" color="white" align="center">ИСКЛЮЧИТЬ</Typography.Heading>
+            <Typography.Caption color="faint" align="center">Решение остаётся в силе</Typography.Caption>
           </motion.button>
         </div>
       </motion.div>
     );
-  }
 
-  // ── SWAP ──────────────────────────────────────────────────────────────────────
-  if (step === 'swap' && appellant) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="flex flex-col h-full px-5 py-6 gap-5"
+    // ── SWAP ──────────────────────────────────────────────────────────────────
+    if (step === 'swap' && appellant) return (
+      <motion.div key="swap" {...SLIDE}
+        className="flex flex-col min-h-full px-5 py-6 gap-5"
       >
         <div className="text-center space-y-2">
           <div
@@ -319,19 +301,14 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               }}
             >
               <div>
-                <div className="font-black italic uppercase text-white leading-none">
-                  {char.playerName}
-                </div>
+                <div className="font-black italic uppercase text-white leading-none">{char.playerName}</div>
                 <div className="text-xs text-white/40 mt-1">
                   {char.age} л · {char.gender} · {char.profession.emoji} {char.profession.name}
                 </div>
               </div>
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl flex-shrink-0"
-                style={{
-                  background: rgba('red', 0.12),
-                  border: `1px solid ${rgba('red', 0.3)}`,
-                }}
+                style={{ background: rgba('red', 0.12), border: `1px solid ${rgba('red', 0.3)}` }}
               >
                 <X className="w-3.5 h-3.5 text-premium-red" />
                 <span className="text-[10px] font-black uppercase tracking-wider text-premium-red">
@@ -343,54 +320,59 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         </div>
       </motion.div>
     );
-  }
 
-  // ── RESULT ────────────────────────────────────────────────────────────────────
-  if (step === 'result') {
-    const pardoned = voteResult === 'pardoned';
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="flex flex-col h-full px-5 py-6 gap-6 items-center justify-center"
-      >
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-          className="text-7xl leading-none"
+    // ── RESULT ────────────────────────────────────────────────────────────────
+    if (step === 'result') {
+      const pardoned = voteResult === 'pardoned';
+      return (
+        <motion.div key="result"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="flex flex-col min-h-full px-5 py-6 gap-6 items-center justify-center"
         >
-          {pardoned ? '🕊️' : '⛔'}
-        </motion.div>
-
-        <div className="text-center space-y-2">
-          <Typography.Display size="sm" color="white" glow align="center">
-            {pardoned
-              ? `${appellant?.playerName} ПОМИЛОВАН`
-              : `${appellant?.playerName} ИСКЛЮЧЁН`}
-          </Typography.Display>
-          {pardoned && swapTarget && (
-            <Typography.Body size="sm" color="muted" align="center">
-              Место освобождает{' '}
-              <span className="text-premium-red font-black">{swapTarget}</span>
-            </Typography.Body>
-          )}
-        </div>
-
-        <div className="w-full mt-auto">
-          <PrimaryButton
-            onClick={handleFinish}
-            variant={pardoned ? 'premium' : 'outline'}
-            icon={ChevronRight}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            className="text-7xl leading-none"
           >
-            К СИМУЛЯЦИИ ВЫЖИВАНИЯ
-          </PrimaryButton>
-        </div>
-      </motion.div>
-    );
-  }
+            {pardoned ? '🕊️' : '⛔'}
+          </motion.div>
 
-  return null;
+          <div className="text-center space-y-2">
+            <Typography.Display size="sm" color="white" glow align="center">
+              {pardoned
+                ? `${appellant?.playerName} ПОМИЛОВАН`
+                : `${appellant?.playerName} ИСКЛЮЧЁН`}
+            </Typography.Display>
+            {pardoned && swapTarget && (
+              <Typography.Body size="sm" color="muted" align="center">
+                Место освобождает{' '}
+                <span className="text-premium-red font-black">{swapTarget}</span>
+              </Typography.Body>
+            )}
+          </div>
+
+          <div className="w-full mt-auto">
+            <PrimaryButton
+              onClick={handleFinish}
+              variant={pardoned ? 'premium' : 'outline'}
+              icon={ChevronRight}
+            >
+              К СИМУЛЯЦИИ ВЫЖИВАНИЯ
+            </PrimaryButton>
+          </div>
+        </motion.div>
+      );
+    }
+
+    return null;
+  })();
+
+  return (
+    <AnimatePresence mode="wait">
+      {stepContent}
+    </AnimatePresence>
+  );
 };

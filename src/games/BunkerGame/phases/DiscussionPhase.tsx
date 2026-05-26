@@ -10,7 +10,7 @@ import { getRevealedTrait, type BunkerCharacter } from '../types';
 interface DiscussionPhaseProps {
   characters: BunkerCharacter[];
   revealRound: number;       // 1, 2, or 3
-  totalRounds: number;       // always 3
+  totalRounds: number;
   onNext: () => void;        // go to next reveal round or voting
 }
 
@@ -62,7 +62,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-full px-5 py-6 gap-5"
+      className="flex flex-col min-h-full px-5 py-6 gap-5"
     >
       {/* Header */}
       <div className="text-center space-y-1">
@@ -94,7 +94,8 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
         <Typography.Label size="xs" color="muted">Раскрыто в этом раунде</Typography.Label>
         <div className="space-y-1.5">
           {characters.map(char => {
-            const rev = getRevealedTrait(char, revealRound)!;
+            const rev = getRevealedTrait(char, revealRound);
+            if (!rev) return null;
             return (
               <div
                 key={char.playerName}

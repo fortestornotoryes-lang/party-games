@@ -1,9 +1,7 @@
 export enum BunkerPhase {
   Briefing        = 'briefing',
-  Distribution    = 'distribution',
   DictatorReveal  = 'dictator_reveal',
   RevealPass      = 'reveal_pass',
-  RevealShow      = 'reveal_show',
   Discussion      = 'discussion',
   Voting          = 'voting',
   Tribunal        = 'tribunal',

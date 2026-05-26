@@ -77,14 +77,13 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
         <Typography.Caption color="faint">{scenario.emoji} {scenario.title}</Typography.Caption>
       </div>
 
-      {/* Team in bunker */}
-      <AnimatePresence>
-        {(step === 'team' || step === 'events' || step === 'resources' || step === 'done') && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-2"
-          >
+      {/* Team in bunker — visible from first step onward, never exits */}
+      {(step === 'team' || step === 'events' || step === 'resources' || step === 'done') && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2"
+        >
             <Typography.Label size="xs" color="muted">🏠 Команда в бункере</Typography.Label>
             <div className="flex flex-wrap gap-1.5">
               {bunkerTeam.map((c, i) => (
@@ -122,16 +121,14 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
 
-      {/* Events */}
-      <AnimatePresence>
-        {(step === 'events' || step === 'resources' || step === 'done') && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-2"
-          >
+      {/* Events — visible from second step onward, never exits */}
+      {(step === 'events' || step === 'resources' || step === 'done') && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2"
+        >
             <Typography.Label size="xs" color="muted">⚡ События в бункере</Typography.Label>
             <div className="space-y-1.5">
               {events.map((ev, i) => (
@@ -160,16 +157,14 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
 
-      {/* Resource bars */}
-      <AnimatePresence>
-        {(step === 'resources' || step === 'done') && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-2"
-          >
+      {/* Resource bars — visible from third step onward, never exits */}
+      {(step === 'resources' || step === 'done') && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2"
+        >
             <Typography.Label size="xs" color="muted">📊 Ресурсы бункера</Typography.Label>
             <div className="space-y-2">
               {RESOURCE_META.map(({ key, label, emoji }) => {
@@ -207,14 +202,15 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
 
       {/* See results button */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {step === 'done' && (
           <motion.button
+            key="reveal-btn"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
             onClick={onReveal}
             className="mt-auto w-full h-16 rounded-premium-md font-black italic text-xl text-black uppercase transition-all active:scale-95"
             style={{

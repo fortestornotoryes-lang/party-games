@@ -31,7 +31,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-full px-5 py-6 gap-6"
+      className="flex flex-col min-h-full px-5 py-6 gap-6"
     >
       {/* Header */}
       <div className="text-center space-y-2 mt-2">

@@ -30,7 +30,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col h-full px-5 py-6 gap-6"
+      className="flex flex-col min-h-full px-5 py-6 gap-6"
     >
       {/* Alarm header */}
       <div className="flex items-center gap-2 justify-center">

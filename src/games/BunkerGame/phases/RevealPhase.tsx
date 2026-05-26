@@ -8,7 +8,7 @@ import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface RevealPhaseProps {
   characters: BunkerCharacter[];
-  revealRound: number;        // 1, 2, or 3
+  revealRound: number;        // 1 … TOTAL_REVEAL_ROUNDS
   revealPlayerIdx: number;    // which player is currently revealing
   onConfirm: () => void;      // player confirmed they announced their trait
 }
@@ -25,7 +25,8 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
   const [isRevealed, setIsRevealed] = useState(false);
 
   const char = characters[revealPlayerIdx];
-  const revealed = getRevealedTrait(char, revealRound)!;
+  const revealed = getRevealedTrait(char, revealRound);
+  if (!revealed) return null;
   const colorName = ROUND_COLORS[revealRound];
   const isLast = revealPlayerIdx === characters.length - 1;
 
@@ -46,7 +47,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
       transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-      className="flex flex-col h-full px-5 py-6 gap-5"
+      className="flex flex-col min-h-full px-5 py-6 gap-5"
     >
       {/* Round indicator */}
       <div className="flex items-center justify-center gap-3">
@@ -186,7 +187,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       </AnimatePresence>
 
       {/* Confirm button — only shown after reveal */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isRevealed && (
           <motion.div
             key="confirm-btn"
