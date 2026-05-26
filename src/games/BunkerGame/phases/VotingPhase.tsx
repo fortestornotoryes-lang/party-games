@@ -6,17 +6,23 @@ import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface VotingPhaseProps {
-  characters: BunkerCharacter[];
+  characters:     BunkerCharacter[];
   bunkerCapacity: number;
+  directorName?:  string | null;
   onConfirm: (eliminatedNames: string[]) => void;
 }
 
 export const VotingPhase: React.FC<VotingPhaseProps> = ({
   characters,
   bunkerCapacity,
+  directorName = null,
   onConfirm,
 }) => {
-  const toEliminate = characters.length - bunkerCapacity;
+  // Director occupies one guaranteed spot — exclude from voting
+  const votable      = directorName
+    ? characters.filter(c => c.playerName !== directorName)
+    : characters;
+  const toEliminate  = characters.length - bunkerCapacity;
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const toggle = (name: string) => {
@@ -89,9 +95,31 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
         </AnimatePresence>
       </div>
 
+      {/* Director safe badge */}
+      {directorName && (
+        <div
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl"
+          style={{
+            background: 'rgba(255,204,31,0.07)',
+            border: '1px solid rgba(255,204,31,0.25)',
+          }}
+        >
+          <span className="text-lg">👑</span>
+          <div className="flex-1 min-w-0">
+            <span className="font-black italic uppercase text-white">{directorName}</span>
+            <span
+              className="ml-2 text-[10px] font-black uppercase tracking-wider"
+              style={{ color: 'var(--color-premium-yellow)' }}
+            >
+              Директор — защищён
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Player list */}
       <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
-        {characters.map(char => {
+        {votable.map(char => {
           const isSelected = selected.has(char.playerName);
           const revealed = [1, 2, 3, 4, 5]
             .map(r => getRevealedTrait(char, r))

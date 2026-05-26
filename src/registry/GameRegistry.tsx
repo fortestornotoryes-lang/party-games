@@ -31,6 +31,8 @@ import {
     ListChecks,
     Ban,
     Siren,
+    Crown,
+    Scale,
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -289,8 +291,12 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description: 'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
         minPlayers: 4,
         setupStatus: GameStatus.BunkerPlaying,
-        backgroundImage:hopperImage,
-
+        backgroundImage: hopperImage,
+        modes: [
+            { id: 'classic',  name: 'Классика',  description: '5 раундов раскрытия, честное голосование',                          icon: Target },
+            { id: 'dictator', name: 'Диктатор',  description: 'Один игрок — директор бункера, его место гарантировано',             icon: Crown  },
+            { id: 'tribunal', name: 'Трибунал',  description: 'После голосования один исключённый может раскрыть скрытую черту',     icon: Scale  },
+        ],
     },
 } as const;
 

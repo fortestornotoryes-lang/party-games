@@ -1,12 +1,14 @@
 export enum BunkerPhase {
-  Briefing       = 'briefing',
-  Distribution   = 'distribution',
-  RevealPass     = 'reveal_pass',
-  RevealShow     = 'reveal_show',
-  Discussion     = 'discussion',
-  Voting         = 'voting',
-  SurvivalSim    = 'survival_sim',
-  Results        = 'results',
+  Briefing        = 'briefing',
+  Distribution    = 'distribution',
+  DictatorReveal  = 'dictator_reveal',
+  RevealPass      = 'reveal_pass',
+  RevealShow      = 'reveal_show',
+  Discussion      = 'discussion',
+  Voting          = 'voting',
+  Tribunal        = 'tribunal',
+  SurvivalSim     = 'survival_sim',
+  Results         = 'results',
 }
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
@@ -76,6 +78,19 @@ export const TRAIT_LABELS: Record<string, string> = {
   item:        'Предмет',
   specialFact: 'Особый факт',
 };
+
+export const ALL_TRAIT_KEYS: readonly TraitKey[] = [
+  'health', 'hobby', 'phobia', 'trait', 'item', 'specialFact',
+];
+
+/** Returns the traits that were NOT revealed during any round (still hidden). */
+export function getHiddenTraits(
+  char: BunkerCharacter,
+): Array<{ key: TraitKey; label: string; entry: AttributeEntry }> {
+  return ALL_TRAIT_KEYS
+    .filter(k => !char.revealOrder.includes(k))
+    .map(k => ({ key: k, label: TRAIT_LABELS[k], entry: char[k] }));
+}
 
 // Helper: get the trait revealed in a given round for a character
 export function getRevealedTrait(
