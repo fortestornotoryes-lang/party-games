@@ -7,6 +7,7 @@ import {storageService} from './services/storageService';
 import {Settings} from './components/Settings';
 import {Settings as SettingsIcon} from 'lucide-react';
 import {GameSettingsProvider, useGameSettings} from './contexts/GameSettingsContext';
+import {LanguageProvider} from './i18n';
 import {
   AliasGame,
   CodenamesGame,
@@ -139,7 +140,9 @@ function AppContent() {
 export default function App() {
   return (
     <GameSettingsProvider>
-      <AppContent />
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
     </GameSettingsProvider>
   );
 }

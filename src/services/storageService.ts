@@ -16,6 +16,7 @@ export interface GameSettings {
   visualEffects?: boolean;
   vibration?: boolean;
   sounds?: boolean;
+  language?: string;
   [key: string]: string | number | boolean | undefined;
 }
 

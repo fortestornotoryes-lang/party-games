@@ -6,6 +6,7 @@ import { feedbackService, VIBRATE } from '../services/feedbackService';
 import { GameKey } from '../types/games';
 import { Difficulty } from '../types';
 import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
+import { useLanguage } from '../i18n';
 import { Pagination } from './Pagination';
 import {TextInput} from "@/components/TextInput.tsx";
 
@@ -73,6 +74,7 @@ const SettingToggle: React.FC<{
 export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'words'>('general');
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
+  const { lang, setLang } = useLanguage();
 
   // Words tab state
   const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set([GameKey.JustOne]));
@@ -242,6 +244,25 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                 <SettingToggle label="Визуальные эффекты" description="Конфетти и анимации"  value={!!settings.visualEffects} onToggle={() => toggleSetting('visualEffects')} />
                 <SettingToggle label="Вибрация"           description="Тактильный отклик"     value={!!settings.vibration}     onToggle={() => toggleSetting('vibration')} />
                 <SettingToggle label="Звуки"              description="Звуковые эффекты"       value={!!settings.sounds}        onToggle={() => toggleSetting('sounds')} />
+              </div>
+            </div>
+
+            <div className="glass-card rounded-3xl p-6 border border-white/5">
+              <SectionLabel className="mb-5">Язык / Language</SectionLabel>
+              <div className="flex gap-2">
+                {(['ru', 'en'] as const).map(l => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    className={`flex-1 py-3 rounded-2xl text-xs font-black uppercase tracking-wider border transition-all ${
+                      lang === l
+                        ? 'bg-white/15 text-white border-white/25'
+                        : 'bg-white/3 text-white/30 border-white/5'
+                    }`}
+                  >
+                    {l === 'ru' ? '🇷🇺  Русский' : '🇬🇧  English'}
+                  </button>
+                ))}
               </div>
             </div>
 
