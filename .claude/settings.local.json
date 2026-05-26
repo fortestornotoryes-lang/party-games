@@ -36,7 +36,11 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\" -Directory)",
       "Bash(Select-Object Name)",
-      "Bash(cd C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\\\\games *)"
+      "Bash(cd C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\src\\\\games *)",
+      "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\.claude\\\\skills\\\\i18n-game\")",
+      "Bash(Out-Null)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'feat: add i18n-game skill *)"
     ]
   },
   "hooks": {
