@@ -3,10 +3,9 @@ import { AnimatePresence } from 'motion/react';
 import { Brain } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { storageService } from '@/services/storageService';
-import { feedbackService } from '@/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { contentService } from '@/services/contentService';
 import { shuffle, pickRandom } from '@/utils/random';
-import { VIBRATE } from '@/services/feedbackService';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/constants/aliasContent';
 import { GameKey } from '@/types/games';
 import { GameHeader } from '@/components/GameHeader';
@@ -94,7 +93,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   useEffect(() => {
     if (phase !== AliasPhase.GameOver) return;
     const settings = storageService.getSettings();
-    feedbackService.playSound('success');
+    feedbackService.playSound('win');
     feedbackService.vibrate(VIBRATE.win);
     if (settings.visualEffects) {
       confetti({

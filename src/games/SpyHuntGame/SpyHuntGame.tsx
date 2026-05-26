@@ -39,8 +39,8 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   useEffect(() => {
     if (phase !== SpyHuntPhase.Reveal) return;
     const settings = storageService.getSettings();
-    feedbackService.playSound('success');
-    feedbackService.vibrate(VIBRATE.correct);
+    feedbackService.playSound('win');
+    feedbackService.vibrate(VIBRATE.win);
     if (settings.visualEffects) {
       confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ef4444', '#ffffff'] });
     }

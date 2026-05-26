@@ -79,6 +79,8 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   // ── Confetti on game over ──────────────────────────────────────────────────
   useEffect(() => {
     if (phase === TabooPhase.GameOver) {
+      feedbackService.playSound('win');
+      feedbackService.vibrate(VIBRATE.win);
       const settings = storageService.getSettings();
       if (settings.visualEffects) {
         confetti({ particleCount: 200, spread: 80, origin: { y: 0.5 } });

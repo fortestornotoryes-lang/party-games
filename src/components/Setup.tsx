@@ -4,6 +4,7 @@ import {UserPlus, UserMinus, Play, HelpCircle, ArrowLeft, LucideIcon, GripVertic
 import {PrimaryButton, Typography,} from './UI';
 import {InstructionsModal} from './InstructionsModal';
 import {storageService} from '../services/storageService';
+import {shuffle} from '../utils/random';
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {GameTheme} from '../types';
 import {getTheme, ThemeTokens} from '../theme/colors';
@@ -117,7 +118,7 @@ export const Setup: React.FC<SetupProps> = ({
         if (savedNames.length >= minPlayers) {
             return savedNames.slice(0, maxPlayers).map(name => ({id: makeId(), name}));
         }
-        const shuffled = [...DEFAULT_NAMES].sort(() => Math.random() - 0.5);
+        const shuffled = shuffle(DEFAULT_NAMES);
         return Array.from({length: minPlayers}, (_, i) => ({
             id: makeId(),
             name: shuffled[i] ?? `${playerPlaceholder} ${i + 1}`
@@ -145,7 +146,7 @@ export const Setup: React.FC<SetupProps> = ({
         setPlayers(prev => prev.map(p => p.id === id ? {...p, name} : p));
     };
     const shufflePlayers = () => {
-        setPlayers(prev => [...prev].sort(() => Math.random() - 0.5));
+        setPlayers(prev => shuffle(prev));
     };
 
     const isReady = players.every(p => p.name.trim() !== '');
