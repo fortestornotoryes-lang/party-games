@@ -73,7 +73,7 @@ export const TelestrationsStart: React.FC<Props> = ({
     <button
       onClick={onReady}
       disabled={!wordRevealed}
-      className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+      className="w-full max-w-sm py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
     >
       <span>Я готов рисовать</span>
       <ArrowRight className="w-5 h-5" />

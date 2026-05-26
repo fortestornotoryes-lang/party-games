@@ -39,7 +39,7 @@ export const TelestrationsGuess: React.FC<Props> = ({
       ))}
     </div>
 
-    <div className="w-full max-w-sm rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
       <img src={lastDrawing} alt="Drawing" className="w-full h-auto block" />
     </div>
 

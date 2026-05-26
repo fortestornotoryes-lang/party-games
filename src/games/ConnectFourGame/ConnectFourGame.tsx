@@ -267,7 +267,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
         {/* Board */}
         <div
-          className={`rounded-[2rem] p-[10px] border-2 transition-colors duration-500 ${
+          className={`rounded-2xl p-[10px] border-2 transition-colors duration-500 ${
             win
               ? win.player === 1
                 ? 'bg-premium-red/5 border-premium-red/25'
@@ -342,7 +342,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               initial={{ opacity: 0, y: 16, scale: 0.94 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-              className={`p-6 rounded-[2rem] border-2 text-center ${
+              className={`p-6 rounded-2xl border-2 text-center ${
                 win
                   ? win.player === 1
                     ? 'bg-premium-red/10 border-premium-red/40 shadow-[0_0_40px_rgba(255,46,77,0.18)]'

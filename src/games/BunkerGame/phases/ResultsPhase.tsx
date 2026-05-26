@@ -113,7 +113,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 240, damping: 22 }}
-        className="rounded-[2rem] p-7 text-center space-y-3"
+        className="rounded-2xl p-7 text-center space-y-3"
         style={{
           background: cfg.bgColor,
           border: `2px solid ${cfg.borderColor}`,

@@ -42,7 +42,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
             key={diff}
             whileTap={{ scale: 0.97 }}
             onClick={() => onDifficultyChange(diff)}
-            className={`w-full p-4 rounded-[2rem] border text-left flex items-center gap-4 transition-all ${
+            className={`w-full p-4 rounded-2xl border text-left flex items-center gap-4 transition-all ${
               isSelected ? `${cfg.border} ${cfg.bg}` : 'border-white/10 bg-white/5 opacity-50'
             }`}
           >
@@ -63,7 +63,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
     <motion.button
       whileTap={{ scale: 0.97 }}
       onClick={onStart}
-      className="w-full max-w-sm py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
+      className="w-full max-w-sm py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
     >
       <span>Начать</span>
       <ArrowRight className="w-5 h-5" />

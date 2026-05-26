@@ -44,7 +44,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
         </div>
 
         <div className="space-y-4">
-          <div className="p-6 bg-white/5 border border-white/10 rounded-[2rem] space-y-4">
+          <div className="p-6 bg-white/5 border border-white/10 rounded-2xl space-y-4">
              <div className="flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-white/30">
                <span>Шпионы этой игры</span>
                <Award className="w-4 h-4" />
@@ -68,7 +68,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({ players, win
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           onClick={onRestart}
-          className="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-zinc-200 transition-all shadow-2xl"
+          className="w-full py-6 bg-white text-black rounded-2xl font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-zinc-200 transition-all shadow-2xl"
         >
           <RotateCcw className="w-5 h-5" />
           <span className="text-sm">В штаб</span>

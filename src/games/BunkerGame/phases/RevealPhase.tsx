@@ -105,7 +105,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={handleReveal}
-            className="w-full rounded-[2rem] p-8 text-center space-y-3 active:scale-[0.98] transition-transform"
+            className="w-full rounded-2xl p-8 text-center space-y-3 active:scale-[0.98] transition-transform"
             style={{
               background: `linear-gradient(160deg, ${rgba(colorName as any, 0.08)} 0%, rgba(0,0,0,0.3) 100%)`,
               border: `1.5px dashed ${rgba(colorName as any, 0.3)}`,
@@ -129,7 +129,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-            className="rounded-[2rem] p-6 text-center space-y-4"
+            className="rounded-2xl p-6 text-center space-y-4"
             style={{
               background: `linear-gradient(160deg, ${rgba(colorName as any, 0.12)} 0%, rgba(0,0,0,0.3) 100%)`,
               border: `1.5px solid ${rgba(colorName as any, 0.35)}`,

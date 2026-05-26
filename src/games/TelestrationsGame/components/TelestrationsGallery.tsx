@@ -69,7 +69,7 @@ export const TelestrationsGallery: React.FC<Props> = ({ initialWord, steps, onNe
       <div className="pointer-events-auto flex flex-col gap-3 max-w-sm mx-auto">
         <button
           onClick={onNewGame}
-          className="w-full py-5 bg-white text-black rounded-[2rem] font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
+          className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
         >
           <Shuffle className="w-5 h-5" />
           <span>Новая игра</span>
