@@ -111,6 +111,16 @@
     }
 }
 
+/* ── Safelist for dynamically generated theme tokens (colors.ts makeSimpleTokens) ── */
+@source inline("{text,bg,border}-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}");
+@source inline("bg-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/{5,10,20}");
+@source inline("border-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/{20,30,40,50}");
+@source inline("shadow-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/20");
+@source inline("focus:border-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/50");
+@source inline("hover:bg-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/{5,10}");
+@source inline("hover:text-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}");
+@source inline("hover:border-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/20");
+
 @layer base {
     html {
         -webkit-tap-highlight-color: transparent;

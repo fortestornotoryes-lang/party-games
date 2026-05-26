@@ -10,6 +10,7 @@ import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { GameHeader } from '@/components/GameHeader';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { RoleDistribution } from './components/RoleDistribution';
+import { useTimer } from '@/hooks/useTimer';
 import { initSpyHunt } from '@/utils/gameLogic';
 import { SpyHuntPhase } from './types';
 import { PlayingPhase } from './phases/PlayingPhase';
@@ -27,19 +28,13 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   const [phase, setPhase]       = useState<SpyHuntPhase>(SpyHuntPhase.Distributing);
 
   const gameDuration = GAME_DURATION_BY_DIFFICULTY[(difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'] ?? 480;
-  const [timeLeft, setTimeLeft] = useState(gameDuration);
+  const { timeLeft, start: startTimer } = useTimer({ initialTime: gameDuration });
 
   useEffect(() => {
     const { players: p, location: loc } = initSpyHunt(playerNames, difficulty, mode);
     setPlayers(p);
     setLocation(loc);
   }, [playerNames, difficulty, mode]);
-
-  useEffect(() => {
-    if (timeLeft <= 0 || phase !== SpyHuntPhase.Playing) return;
-    const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft, phase]);
 
   useEffect(() => {
     if (phase !== SpyHuntPhase.Reveal) return;
@@ -83,7 +78,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
             <RoleDistribution
               players={players}
               location={location}
-              onFinish={() => setPhase(SpyHuntPhase.Playing)}
+              onFinish={() => { setPhase(SpyHuntPhase.Playing); startTimer(); }}
             />
           </motion.div>
         )}

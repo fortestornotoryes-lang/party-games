@@ -4,6 +4,7 @@ import { Radio } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { usePlayerCycle } from '@/hooks/usePlayerCycle';
+import { randomInt } from '@/utils/random';
 import { storageService } from '@/services/storageService';
 import { contentService } from '@/services/contentService';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
@@ -36,7 +37,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const startNewRound = () => {
     const pair = contentService.getWavelengthPair(difficulty);
     setCurrentPair(pair);
-    setTargetValue(Math.floor(Math.random() * 90) + 5);
+    setTargetValue(randomInt(5, 94));
     setGuessValue(50);
     setPhase(WavelengthPhase.Pass);
   };

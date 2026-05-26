@@ -24,7 +24,6 @@ import {
     Shield as ShieldIcon,
     Grid,
     Key,
-    LucideIcon,
     Users,
     Flame,
     LayoutGrid,

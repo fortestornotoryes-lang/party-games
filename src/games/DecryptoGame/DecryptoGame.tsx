@@ -6,7 +6,7 @@ import { PrimaryButton } from '../../components/UI';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { contentService } from '../../services/contentService';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
-import { shuffle } from '../../utils/random';
+import { shuffle, randomInt } from '../../utils/random';
 import { DecryptoPhase, TeamColor, TeamState } from './types';
 import { tLabel, tText, tBg, tBadge } from './helpers';
 import { PassScreen } from './components/PassScreen';
@@ -47,8 +47,8 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     const initGame = () => {
         const shuffled = shuffle([...playerNames]);
         const half = Math.ceil(shuffled.length / 2);
-        setRedState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: shuffled.slice(0, half),  interceptions: 0, fails: 0, history: [], captainIndex: Math.floor(Math.random() * half) });
-        setBlueState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: shuffled.slice(half), interceptions: 0, fails: 0, history: [], captainIndex: Math.floor(Math.random() * (shuffled.length - half)) });
+        setRedState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: shuffled.slice(0, half),  interceptions: 0, fails: 0, history: [], captainIndex: randomInt(0, half - 1) });
+        setBlueState({ words: contentService.getDecryptoWords(difficulty, wordCount), players: shuffled.slice(half), interceptions: 0, fails: 0, history: [], captainIndex: randomInt(0, shuffled.length - half - 1) });
         setRound(1);
         setActiveTeam('red');
         setPhase(DecryptoPhase.Setup);
