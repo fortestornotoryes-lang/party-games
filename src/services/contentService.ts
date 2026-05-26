@@ -260,7 +260,6 @@ export const contentService = {
         const truths = [...TRUTHS_BY_DIFFICULTY[difficulty], ...storageService.getCustomWordsByKey(`tod_truth_${difficulty}`)];
         const dares = [...DARES_BY_DIFFICULTY[difficulty], ...storageService.getCustomWordsByKey(`tod_dare_${difficulty}`)];
         const all = [...truths, ...dares];
-        const used = storageService.getUsedWords(GameKey.TruthOrDare);
         return { total: all.length, remaining: all.filter(q => !used.includes(q)).length };
       }
       case GameKey.TabooReverse: {

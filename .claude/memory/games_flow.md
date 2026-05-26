@@ -31,7 +31,7 @@ App.tsx оборачивает `renderGame()` в `<Suspense fallback={...}>`.
 | alias | `GameStatus.AliasPlaying` | **blue** | `border-premium-blue/50 text-premium-blue` |
 | just_one | `GameStatus.JustOnePlaying` | yellow | `border-premium-yellow/30 text-premium-yellow` |
 | telestrations | `GameStatus.TelestrationsPlaying` | orange | `border-premium-orange/30 text-premium-orange` |
-| truth_or_dare | *(добавить)* | red | `border-premium-red/30 text-premium-red` |
+| truth_or_dare | `GameStatus.TruthOrDarePlaying` | red | `border-premium-red/30 text-premium-red` |
 | wavelength | `GameStatus.WavelengthPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
 | codenames | `GameStatus.CodenamesPlaying` | green | `border-premium-green/30 text-premium-green` |
 | decrypto | `GameStatus.DecryptoPlaying` | purple | `border-premium-purple/30 text-premium-purple` |
@@ -100,3 +100,36 @@ default:                   → <MainMenu> + Settings-кнопка (fixed bottom-
 - `initialRounds={rounds}` из `App.tsx`
 
 Конец игры: `currentRound === shuffledPlayers.length - 1` (одна полная цепочка).
+
+---
+
+## ConnectFour — особенности (2026-05-26)
+
+**GameKey:** `ConnectFour = 'connect_four'`  
+**GameStatus:** `ConnectFourPlaying = 'connect_four_playing'`  
+**minPlayers:** 2, **players:** `'2'` (строго два игрока)  
+**Тема:** `red` (P1 красный, P2 жёлтый)  
+**Иконка:** `LayoutGrid`
+
+Игра не использует `contentService` — вся логика inline в `ConnectFourGame.tsx`.  
+Использует `canvas-confetti` при победе (отдельный npm-пакет).
+
+### Режимы (GameModeOption)
+| id | Поле | Описание |
+|----|------|---------|
+| `classic` | 7×6, WIN=4 | Классика |
+| `large` | 9×7, WIN=4 | Большое поле |
+| `connect_five` | 9×7, WIN=5 | Пять в ряд |
+| `pop_out` | 7×6, WIN=4 | Pop Out — вытащи нижнюю фишку своего цвета |
+
+### Pop Out механика
+- Два действия за ход: `place` (поставить) или `pop` (вытащить снизу свою фишку).
+- Кнопки переключения режима действия показываются только в режиме `pop_out`.
+- `canPopCol(col)` — нижняя фишка в столбце принадлежит текущему игроку.
+- После `pop` действие автоматически сбрасывается в `place`.
+
+### Сброс при смене режима
+`useEffect([mode])` сбрасывает всё состояние (доску, счёт, ход) при изменении `mode` из контекста.
+
+### Очки
+Хранятся в `useState` внутри компонента — не персистятся, живут только в рамках сессии.

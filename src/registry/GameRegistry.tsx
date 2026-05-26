@@ -21,7 +21,6 @@ import {
     Radio,
     Target,
     Zap,
-    Shield as ShieldIcon,
     Grid,
     Key,
     Users,
@@ -65,7 +64,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         modes: [
             {id: 'classic', name: 'Классика', description: '1 шпион, все остальные знают локацию', icon: Target},
             {id: 'double_agent', name: 'Двойной агент', description: '2 шпиона (от 5 игроков)', icon: Zap},
-            {id: 'mole', name: 'Предатель', description: '1 шпион и 1 помощник (от 5 игроков)', icon: ShieldIcon},
+            {id: 'mole', name: 'Предатель', description: '1 шпион и 1 помощник (от 5 игроков)', icon: Shield},
         ],
         backgroundImage: SpyHuntImage,
 
@@ -89,7 +88,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         title: 'ПРАВДА ИЛИ ДЕЙСТВИЕ',
         subtitle: 'Честность или риск',
         icon: Flame,
-        theme: 'cyan',
+        theme: 'red',
         placeholder: 'Игрок',
         players: '2+',
         description: 'Классическая игра: ответь честно на вопрос или выполни задание',
@@ -155,7 +154,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         setupStatus: GameStatus.CodenamesPlaying,
         modes: [
             {id: 'classic', name: 'Классика', description: '9 своих, 8 чужих, 1 убийца', icon: Target},
-            {id: 'deep_cover', name: 'Глубокое прикрытие', description: '8 своих, 8 чужих, 2 убийцы', icon: ShieldIcon},
+            {id: 'deep_cover', name: 'Глубокое прикрытие', description: '8 своих, 8 чужих, 2 убийцы', icon: Shield},
             {
                 id: 'double_agent',
                 name: 'Двойной агент',
