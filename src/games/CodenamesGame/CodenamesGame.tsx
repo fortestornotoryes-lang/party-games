@@ -2,13 +2,14 @@
 import {motion, AnimatePresence} from 'motion/react';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton, Typography} from '@/components/UI';
-import {Grid, Eye, EyeOff, User, Users, AlertTriangle, Zap, ListChecks} from 'lucide-react';
+import {Grid, User, Users, Zap} from 'lucide-react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {contentService} from '../../services/contentService';
 import { shuffle } from '../../utils/random';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 import {CodenamesPhase} from './types';
 import {PassPhoneCard} from "@/components/PassPhoneCard.tsx";
+import {useTranslation} from '../../i18n';
 
 interface CodenamesGameProps {
     playerNames: string[];
@@ -27,6 +28,7 @@ interface Card {
 
 export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack}) => {
     const {difficulty, mode: activeMode} = useGameSettings();
+    const {t} = useTranslation();
     const [phase, setPhase] = useState<CodenamesPhase>(CodenamesPhase.Setup);
     const [cards, setCards] = useState<Card[]>([]);
     const [turn, setTurn] = useState<Team>('red');
@@ -155,14 +157,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
             const left = guessesLeft - 1;
             setGuessesLeft(left);
             if (left <= 0) {
-                setLastActionMsg('ХОД ОКОНЧЕН');
+                setLastActionMsg(t('codenames.turnEnded'));
                 setTimeout(() => {
                     setLastActionMsg(null);
                     endTurn();
                 }, 1500);
             }
         } else {
-            setLastActionMsg(cardColor === 'neutral' ? 'МИРНЫЙ ЖИТЕЛЬ' : 'АГЕНТ ПРОТИВНИКА');
+            setLastActionMsg(cardColor === 'neutral' ? t('codenames.neutralRevealed') : t('codenames.enemyAgent'));
             setTimeout(() => {
                 setLastActionMsg(null);
                 endTurn();
@@ -178,15 +180,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
     };
 
     if (playerNames.length < 4) {
-        return <div className="text-white flex items-center justify-center min-h-screen text-center p-8">Нужно минимум 4
-            игрока.</div>;
+        return <div className="text-white flex items-center justify-center min-h-screen text-center p-8">{t('codenames.minPlayers')}</div>;
     }
 
     return (
         <div className="flex flex-col min-h-screen text-white pb-20">
             <GameHeader
                 title={GAMES_REGISTRY.codenames.title}
-                subtitle="Битва шпионов"
+                subtitle={t('codenames.subtitle')}
                 icon={Grid}
                 theme="green"
                 onBack={onBack}
@@ -203,35 +204,35 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             exit={{opacity: 0, y: -20}}
                             className="space-y-6 flex-1 flex flex-col justify-center"
                         >
-                            <Typography.Title className="text-2xl font-black text-center mb-6 uppercase tracking-widest " color='green'>Команды</Typography.Title>
+                            <Typography.Title className="text-2xl font-black text-center mb-6 uppercase tracking-widest " color='green'>{t('common.teams')}</Typography.Title>
 
                             <div className="flex flex-col justify-center gap-4">
                                 <div className="p-4 bg-premium-red/10 text-center border border-premium-red/30 rounded-2xl">
                                     <Typography.Heading className=" font-bold mb-2 uppercase text-xs flex items-center gap-2">
-                                        <Users className="w-5 h-5 text-premium-red"/> Красные
+                                        <Users className="w-5 h-5 text-premium-red"/> {t('codenames.redTeam')}
                                     </Typography.Heading>
                                     <p className="font-bold border-b border-premium-red/20 pb-2 mb-2"><span
-                                        className="text-xs text-premium-red/50 uppercase block">Капитан</span>{redCaptain}
+                                        className="text-xs text-premium-red/50 uppercase block">{t('codenames.captain')}</span>{redCaptain}
                                     </p>
                                     <p className="text-sm text-premium-red/70 opacity-80">{redTeam.join(', ')}</p>
                                 </div>
 
                                 <div className="text-center font-black text-5xl tracking-wider uppercase drop-shadow-[0_4px_6px_rgba(0,0,0,0.8)] text-transparent bg-clip-text bg-linear-to-b from-amber-300 via-orange-500 to-red-600 animate-pulse">
-                                    VS
+                                    {t('common.vs')}
                                 </div>
                                 <div className="p-4 bg-premium-blue/10 text-center border border-premium-blue/30 rounded-2xl">
                                     <Typography.Heading className=" font-bold mb-2 uppercase text-xs flex items-center gap-2">
-                                        <Users className="w-5 h-5 text-premium-blue"/> Синие
+                                        <Users className="w-5 h-5 text-premium-blue"/> {t('codenames.blueTeam')}
                                     </Typography.Heading>
                                     <p className="font-bold border-b border-premium-blue/20 pb-2 mb-2"><span
-                                        className="text-xs text-premium-blue/50 uppercase block">Капитан</span>{blueCaptain}
+                                        className="text-xs text-premium-blue/50 uppercase block">{t('codenames.captain')}</span>{blueCaptain}
                                     </p>
                                     <p className="text-sm text-premium-blue/70 opacity-80">{blueTeam.join(', ')}</p>
                                 </div>
                             </div>
 
                             <PrimaryButton onClick={() => setPhase(CodenamesPhase.PassCaptain)} variant="emerald"
-                                           className="mt-8">ИГРАТЬ</PrimaryButton>
+                                           className="mt-8">{t('codenames.play')}</PrimaryButton>
                         </motion.div>
                     )}
 
@@ -239,8 +240,8 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                         <PassPhoneCard
                             playerName={currentCaptain}
                             badgeColor={turn}
-                            playerLabel='Капитан'
-                            instruction="Остальные не должны видеть экран!"
+                            playerLabel={t('codenames.captain')}
+                            instruction={t('codenames.othersNoSee')}
                             icon={User}
                             accentColor={turn}
                             onClick={() => setPhase(CodenamesPhase.Captain)}
@@ -256,26 +257,23 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             className="space-y-4 flex flex-col"
                         >
                             <div className="text-center">
-                                <p className={`text-[20px] font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>Ваш
-                                    ход: {currentCaptain}</p>
+                                <p className={`text-[20px] font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>{t('codenames.captainTurn', {name: currentCaptain})}</p>
                                 <div
                                     className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3 mb-2 text-[12px] font-black uppercase tracking-widest">
                                     <div className="flex items-center gap-1"><span
-                                        className="w-4 h-4 rounded-full border border-premium-red bg-black"></span> Красные
+                                        className="w-4 h-4 rounded-full border border-premium-red bg-black"></span> {t('codenames.redTeam')}
                                     </div>
                                     <div className="flex items-center gap-1"><span
-                                        className="w-4 h-4 rounded-full border border-premium-blue bg-black"></span> Синие
+                                        className="w-4 h-4 rounded-full border border-premium-blue bg-black"></span> {t('codenames.blueTeam')}
                                     </div>
                                     <div className="flex items-center gap-1"><span
-                                        className="w-4 h-4 rounded-full border bg-stone-400/50 "></span> Мирные
-                                        (конец хода)
+                                        className="w-4 h-4 rounded-full border bg-stone-400/50 "></span> {t('codenames.neutralEndTurn')}
                                     </div>
                                     <div className="flex items-center gap-1"><span
-                                        className="w-4 h-4 rounded-full bg-red-900 border border-red-900"></span> Убийца
-                                        (смерть)
+                                        className="w-4 h-4 rounded-full bg-red-900 border border-red-900"></span> {t('codenames.assassinDeath')}
                                     </div>
                                 </div>
-                                <p className="text-xs text-white/40 mt-1">Придумайте подсказку (слово и число)</p>
+                                <p className="text-xs text-white/40 mt-1">{t('codenames.makeClueHint')}</p>
 
                             </div>
 
@@ -306,7 +304,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                         type="text"
                                         value={clueWord}
                                         onChange={(e) => setClueWord(e.target.value.replace(/ /g, ''))}
-                                        placeholder="Одно слово"
+                                        placeholder={t('codenames.oneWord')}
                                         className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-center font-bold outline-none focus:border-premium-green/50 transition-colors uppercase"
                                         required
                                     />
@@ -324,17 +322,17 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                     />
                                 </div>
                                 <PrimaryButton type="submit" variant={turn === 'red' ? 'red' : 'blue'}
-                                               disabled={!clueWord || clueCount <= 0}>ПОДТВЕРДИТЬ</PrimaryButton>
+                                               disabled={!clueWord || clueCount <= 0}>{t('codenames.confirm')}</PrimaryButton>
                             </form>
                         </motion.div>
                     )}
 
                     {phase === CodenamesPhase.PassTeam && (
                         <PassPhoneCard
-                            playerName={turn === 'red' ? 'Красных' : 'Синих'}
+                            playerName={turn === 'red' ? t('codenames.teamRed') : t('codenames.teamBlue')}
                             badgeColor={turn}
-                            playerLabel='Команда'
-                            instruction="Остальные не должны видеть экран!"
+                            playerLabel={t('common.team')}
+                            instruction={t('codenames.othersNoSee')}
                             icon={User}
                             accentColor={turn}
                             onClick={() => setPhase(CodenamesPhase.Team)}
@@ -353,13 +351,12 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                 className="flex flex-col items-center justify-center text-center bg-white/5 py-3 rounded-2xl border border-white/10 relative overflow-hidden">
                                 <div
                                     className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-premium-red' : 'bg-premium-blue'}`}/>
-                                <p className="text-[10px] text-white/40 uppercase tracking-widest font-black mb-1">ПОДСКАЗКА</p>
+                                <p className="text-[10px] text-white/40 uppercase tracking-widest font-black mb-1">{t('codenames.clueLabel')}</p>
                                 <div className="flex items-baseline gap-2">
                                     <h3 className="text-2xl font-black uppercase text-white tracking-widest">{clueWord}</h3>
                                     <span className="text-xl font-bold text-white/30">{clueCount}</span>
                                 </div>
-                                <p className="text-xs text-white/30 mt-2">Осталось попыток: <strong
-                                    className="text-white">{guessesLeft}</strong></p>
+                                <p className="text-xs text-white/30 mt-2">{t('codenames.guessesLeft', {n: guessesLeft})}</p>
                             </div>
 
                             <div className="grid grid-cols-5 gap-1.5 flex-1 items-center relative">
@@ -374,8 +371,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                             <div
                                                 className="bg-black/90 backdrop-blur-md border border-white/20 px-6 py-4 rounded-3xl shadow-2xl">
                                                 <p className="text-xl font-black text-center text-white tracking-widest">{lastActionMsg}</p>
-                                                <p className="text-[10px] text-white/30 text-center uppercase font-bold mt-2">Ход
-                                                    переходит...</p>
+                                                <p className="text-[10px] text-white/30 text-center uppercase font-bold mt-2">{t('codenames.turnPassing')}</p>
                                             </div>
                                         </motion.div>
                                     )}
@@ -401,8 +397,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                 ))}
                             </div>
 
-                            <PrimaryButton onClick={endTurn} variant="outline" className="mt-4">ПАС (ПЕРЕДАТЬ
-                                ХОД)</PrimaryButton>
+                            <PrimaryButton onClick={endTurn} variant="outline" className="mt-4">{t('codenames.passTurn')}</PrimaryButton>
                         </motion.div>
                     )}
 
@@ -415,13 +410,12 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             className="flex-1 flex flex-col items-center justify-center text-center space-y-8"
                         >
                             <div className="space-y-4">
-                                <p className="text-sm uppercase tracking-widest text-premium-green font-bold">ИГРА
-                                    ОКОНЧЕНА</p>
+                                <p className="text-sm uppercase tracking-widest text-premium-green font-bold">{t('common.gameOver')}</p>
                                 <h2 className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}>
-                                    ПОБЕДА {winner === 'red' ? 'КРАСНЫХ' : 'СИНИХ'}!
+                                    {winner === 'red' ? t('codenames.redWins') : t('codenames.blueWins')}
                                 </h2>
                             </div>
-                            <PrimaryButton onClick={initBoard} variant="white">СЫГРАТЬ ЕЩЕ</PrimaryButton>
+                            <PrimaryButton onClick={initBoard} variant="white">{t('common.rematch')}</PrimaryButton>
                         </motion.div>
                     )}
 

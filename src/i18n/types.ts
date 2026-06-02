@@ -180,6 +180,33 @@ export interface BunkerTranslations {
   };
 }
 
+export interface CodenamesTranslations {
+  subtitle: string;
+  minPlayers: string;
+  redTeam: string;
+  blueTeam: string;
+  captain: string;
+  othersNoSee: string;
+  captainTurn: string;        // "Ваш ход: {{name}}"
+  neutralEndTurn: string;
+  assassinDeath: string;
+  makeClueHint: string;
+  oneWord: string;
+  confirm: string;
+  teamRed: string;            // genitive: "Красных"
+  teamBlue: string;           // genitive: "Синих"
+  clueLabel: string;
+  guessesLeft: string;        // "Осталось попыток: {{n}}"
+  turnEnded: string;
+  neutralRevealed: string;
+  enemyAgent: string;
+  turnPassing: string;
+  passTurn: string;
+  redWins: string;
+  blueWins: string;
+  play: string;
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -188,6 +215,7 @@ export interface Translations {
   common: CommonTranslations;
   taboo?: TabooTranslations;
   bunker?: BunkerTranslations;
+  codenames?: CodenamesTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
-  [gameKey: string]: Record<string, unknown> | CommonTranslations | TabooTranslations | BunkerTranslations | undefined;
+  [gameKey: string]: Record<string, unknown> | CommonTranslations | TabooTranslations | BunkerTranslations | CodenamesTranslations | undefined;
 }
