@@ -281,7 +281,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                 {cards.map(card => (
                                     <div
                                         key={card.id}
-                                        className={`aspect-[4/3] rounded border flex items-center justify-center p-1 text-center relative
+                                        className={`aspect-4/3 rounded border flex items-center justify-center p-1 text-center relative
                       ${card.revealed ? 'opacity-30' : ''}
                       ${card.color === 'red' ? 'border-premium-red/80' :
                                             card.color === 'blue' ? 'border-premium-blue/80' :
@@ -291,7 +291,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                     `}
                                     >
                                         <span
-                                            className="text-[9px] font-bold leading-tight break-words uppercase">{card.word}</span>
+                                            className="text-[9px] font-bold leading-tight wrap-break-word uppercase">{card.word}</span>
                                         {card.color === 'double_agent' && <div className="absolute top-1 right-1"><Zap
                                             className="w-4 h-4 text-white fill-white"/></div>}
                                     </div>
@@ -381,7 +381,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                                         key={card.id}
                                         onClick={() => handleCardClick(card)}
                                         disabled={card.revealed}
-                                        className={`aspect-[4/3] rounded flex items-center justify-center p-1 text-center transition-all
+                                        className={`aspect-4/3 rounded flex items-center justify-center p-1 text-center transition-all
                       ${!card.revealed ? 'bg-stone-200 hover:bg-stone-300 active:scale-95 cursor-pointer shadow-md border-b-2 border-stone-400 text-stone-800' : ''}
                       ${card.revealed && card.color === 'red' ? 'bg-premium-red text-white border border-red-700 pointer-events-none opacity-80' : ''}
                       ${card.revealed && card.color === 'blue' ? 'bg-premium-blue text-white border border-blue-700 pointer-events-none opacity-80' : ''}
@@ -390,7 +390,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                     `}
                                     >
                     <span
-                        className={`text-[10px] sm:text-xs font-black leading-tight break-words uppercase ${!card.revealed ? 'text-stone-800' : ''}`}>
+                        className={`text-[10px] sm:text-xs font-black leading-tight wrap-break-word uppercase ${!card.revealed ? 'text-stone-800' : ''}`}>
                       {card.word}
                     </span>
                                     </button>

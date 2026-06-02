@@ -63,7 +63,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           className="space-y-2"
         >
           <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-sky/35">Объясни слово</p>
-          <h2 className="text-[58px] font-black italic uppercase tracking-tighter text-white leading-none break-words">
+          <h2 className="text-[58px] font-black italic uppercase tracking-tighter text-white leading-none wrap-break-word">
             {currentWord}
           </h2>
         </motion.div>

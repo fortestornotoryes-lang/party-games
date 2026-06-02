@@ -71,7 +71,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             Загаданное слово
           </p>
           <h2
-            className="font-black italic uppercase tracking-tighter leading-tight text-white break-words"
+            className="font-black italic uppercase tracking-tighter leading-tight text-white wrap-break-word"
             style={{ fontSize: wordFontSize(card.word) }}
           >
             {card.word}
