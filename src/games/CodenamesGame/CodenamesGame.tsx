@@ -4,12 +4,12 @@ import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton, Typography} from '@/components/UI';
 import {Grid, User, Users, Zap} from 'lucide-react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {contentService} from '../../services/contentService';
-import { shuffle } from '../../utils/random';
+import {contentService} from '@/services/contentService.ts';
+import { shuffle } from '@/utils/random.ts';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 import {CodenamesPhase} from './types';
 import {PassPhoneCard} from "@/components/PassPhoneCard.tsx";
-import {useTranslation} from '../../i18n';
+import {useTranslation} from '@/i18n';
 
 interface CodenamesGameProps {
     playerNames: string[];
