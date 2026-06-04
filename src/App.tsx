@@ -11,6 +11,7 @@ import {LanguageProvider} from './i18n';
 import {
   AliasGame,
   BunkerGame,
+  MillionaireGame,
   CodenamesGame,
   ConnectFourGame,
   DecryptoGame,
@@ -76,6 +77,7 @@ function AppContent() {
             case GameStatus.TabooReversePlaying: return <TabooReverseGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.TabooPlaying: return <TabooGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.BunkerPlaying: return <BunkerGame playerNames={playerNames} onBack={reset} />;
+            case GameStatus.MillionairePlaying: return <MillionaireGame playerNames={playerNames} onBack={reset} />;
 
             case GameStatus.SpyHuntPlaying: return <SpyHuntGame playerNames={playerNames} onBack={reset} />;
             case GameStatus.FakeArtistPlaying: return <FakeArtistGame playerNames={playerNames} onBack={reset} />;

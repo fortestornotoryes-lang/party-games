@@ -54,6 +54,7 @@ const ConnectFourGame = lazy(() => import('../games/ConnectFourGame/ConnectFourG
 const TabooReverseGame = lazy(() => import('../games/TabooReverseGame/TabooReverseGame').then(m => ({default: m.TabooReverseGame})));
 const TabooGame = lazy(() => import('../games/TabooGame/TabooGame').then(m => ({default: m.TabooGame})));
 const BunkerGame = lazy(() => import('../games/BunkerGame/BunkerGame').then(m => ({default: m.BunkerGame})));
+const MillionaireGame = lazy(() => import('../games/MillionaireGame/MillionaireGame').then(m => ({default: m.MillionaireGame})));
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
     [GameKey.Spy]: {
@@ -330,4 +331,5 @@ export {
     TabooReverseGame,
     TabooGame,
     BunkerGame,
+    MillionaireGame,
 };
