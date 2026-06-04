@@ -33,6 +33,7 @@ import {
     Siren,
     Crown,
     Scale,
+    Trophy,
 } from 'lucide-react';
 import {GameStatus} from '../types';
 import {GameKey, GamesRegistryMap} from '../types/games';
@@ -297,6 +298,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             { id: 'dictator', name: 'Диктатор',  description: 'Один игрок — директор бункера, его место гарантировано',             icon: Crown  },
             { id: 'tribunal', name: 'Трибунал',  description: 'После голосования один исключённый может раскрыть скрытую черту',     icon: Scale  },
         ],
+    },
+
+    [GameKey.Millionaire]: {
+        id: GameKey.Millionaire,
+        title: 'МИЛЛИОНЕР',
+        subtitle: 'Кто хочет стать миллионером',
+        icon: Trophy,
+        theme: 'yellow',
+        placeholder: 'Игрок',
+        players: '2+',
+        description: 'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
+        minPlayers: 1,
+        setupStatus: GameStatus.MillionairePlaying,
     },
 } as const;
 

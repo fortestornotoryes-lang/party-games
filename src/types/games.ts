@@ -17,6 +17,7 @@ export enum GameKey {
     TabooReverse = 'taboo_reverse',
     Taboo = 'taboo',
     Bunker = 'bunker',
+    Millionaire = 'millionaire',
 }
 
 export interface InstructionItem {

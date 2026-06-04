@@ -49,6 +49,7 @@ export enum GameStatus {
   TabooReversePlaying = 'taboo_reverse_playing',
   TabooPlaying = 'taboo_playing',
   BunkerPlaying = 'bunker_playing',
+  MillionairePlaying = 'millionaire_playing',
 }
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
