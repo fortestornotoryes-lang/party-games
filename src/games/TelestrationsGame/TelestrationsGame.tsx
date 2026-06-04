@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useCountdown } from '../../hooks/useCountdown';
+import { useCountdown } from '@/hooks/useCountdown.ts';
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { storageService } from '../../services/storageService';
-import { feedbackService, VIBRATE } from '../../services/feedbackService';
-import { contentService } from '../../services/contentService';
+import { storageService } from '@/services/storageService.ts';
+import { feedbackService, VIBRATE } from '@/services/feedbackService.ts';
+import { contentService } from '@/services/contentService.ts';
 import { DIFFICULTY_CONFIG, Difficulty } from '@/constants/telestrationsContent';
-import { shuffle } from '../../utils/random';
+import { shuffle } from '@/utils/random.ts';
 import { GameHeader } from '@/components/GameHeader';
 import { DrawingCanvas } from '@/components/DrawingCanvas';
 import { PassPhoneCard } from '@/components/PassPhoneCard';

@@ -6,3 +6,13 @@ export enum CodenamesPhase {
   Team        = 'team',
   GameOver    = 'game_over',
 }
+
+export type Team = 'red' | 'blue';
+export type CardColor = Team | 'neutral' | 'assassin' | 'double_agent';
+
+export interface Card {
+  id: number;
+  word: string;
+  color: CardColor;
+  revealed: boolean;
+}
