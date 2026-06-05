@@ -1,13 +1,13 @@
 export enum AliasPhase {
-  Start = 'start',
-  Playing = 'playing',
-  RoundEnd = 'round_end',
-  GameOver = 'game_over',
+    Start = 'start',
+    Playing = 'playing',
+    RoundEnd = 'round_end',
+    GameOver = 'game_over',
 }
 
 export interface Team {
-  name: string;
-  players: string[];
-  score: number;
-  color: 'red' | 'blue';
+    name: string;
+    players: string[];
+    score: number;
+    color: 'red' | 'blue';
 }

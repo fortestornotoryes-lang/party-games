@@ -1,127 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import { AnimatePresence } from 'motion/react';
-import { Lightbulb } from 'lucide-react';
+import React, {useEffect, useState} from 'react';
+import {AnimatePresence} from 'motion/react';
+import {Lightbulb} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { storageService } from '@/services/storageService';
-import { feedbackService, VIBRATE } from '@/services/feedbackService';
-import { usePlayerCycle } from '@/hooks/usePlayerCycle';
-import { contentService } from '@/services/contentService';
-import { GameHeader } from '@/components/GameHeader';
-import { GAMES_REGISTRY } from '@/registry/GameRegistry';
-import { useGameSettings } from '@/contexts/GameSettingsContext';
-import { JustOnePhase } from './types';
-import { PassPhase } from './phases/PassPhase';
-import { HintingPhase } from './phases/HintingPhase';
-import { GuessingPhase } from './phases/GuessingPhase';
-import { ResultPhase } from './phases/ResultPhase';
+import {storageService} from '@/services/storageService';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {contentService} from '@/services/contentService';
+import {GameHeader} from '@/components/GameHeader';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {JustOnePhase} from './types';
+import {PassPhase} from './phases/PassPhase';
+import {HintingPhase} from './phases/HintingPhase';
+import {GuessingPhase} from './phases/GuessingPhase';
+import {ResultPhase} from './phases/ResultPhase';
 
 interface JustOneGameProps {
-  playerNames: string[];
-  onBack: () => void;
+    playerNames: string[];
+    onBack: () => void;
 }
 
-export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
-  const { difficulty } = useGameSettings();
-  const { current: guesser, idx: guesserIdx, next: nextGuesser } = usePlayerCycle(playerNames);
-  const [word, setWord] = useState('');
-  const [hints, setHints] = useState<Record<string, string>>({});
-  const [phase, setPhase] = useState<JustOnePhase>(JustOnePhase.Pass);
-  const [guess, setGuess] = useState('');
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [visibleHints, setVisibleHints] = useState<string[]>([]);
+export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) => {
+    const {difficulty} = useGameSettings();
+    const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(playerNames);
+    const [word, setWord] = useState('');
+    const [hints, setHints] = useState<Record<string, string>>({});
+    const [phase, setPhase] = useState<JustOnePhase>(JustOnePhase.Pass);
+    const [guess, setGuess] = useState('');
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [visibleHints, setVisibleHints] = useState<string[]>([]);
 
-  useEffect(() => {
-    generateNewWord();
-  }, [guesserIdx]);
+    useEffect(() => {
+        generateNewWord();
+    }, [guesserIdx]);
 
-  const generateNewWord = () => {
-    setWord(contentService.getJustOneWord(difficulty));
-    setHints({});
-    setGuess('');
-    setPhase(JustOnePhase.Pass);
-  };
+    const generateNewWord = () => {
+        setWord(contentService.getJustOneWord(difficulty));
+        setHints({});
+        setGuess('');
+        setPhase(JustOnePhase.Pass);
+    };
 
-  const submitHint = (player: string, hint: string) => {
-    if (!hint.trim()) return;
-    setHints((prev) => ({ ...prev, [player]: hint.trim().toLowerCase() }));
-  };
+    const submitHint = (player: string, hint: string) => {
+        if (!hint.trim()) return;
+        setHints((prev) => ({...prev, [player]: hint.trim().toLowerCase()}));
+    };
 
-  const startGuessing = () => {
-    const counts: Record<string, number> = {};
-    const vals = Object.values(hints) as string[];
-    vals.forEach((h) => {
-      counts[h] = (counts[h] || 0) + 1;
-    });
-    setVisibleHints(vals.filter((h) => counts[h] === 1));
-    setPhase(JustOnePhase.Guessing);
-  };
-
-  const handleGuess = () => {
-    const correct = guess.trim().toLowerCase() === word.toLowerCase();
-    setIsCorrect(correct);
-    const settings = storageService.getSettings();
-    if (correct) {
-      feedbackService.playSound('success');
-      feedbackService.vibrate(VIBRATE.correct);
-      if (settings.visualEffects) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#FFCC1F', '#ffffff'],
+    const startGuessing = () => {
+        const counts: Record<string, number> = {};
+        const vals = Object.values(hints) as string[];
+        vals.forEach((h) => {
+            counts[h] = (counts[h] || 0) + 1;
         });
-      }
-    } else {
-      feedbackService.playSound('error');
-      feedbackService.vibrate(VIBRATE.error);
-    }
-    setPhase(JustOnePhase.Result);
-  };
+        setVisibleHints(vals.filter((h) => counts[h] === 1));
+        setPhase(JustOnePhase.Guessing);
+    };
 
-  const hinters = playerNames.filter((_, i) => i !== guesserIdx);
+    const handleGuess = () => {
+        const correct = guess.trim().toLowerCase() === word.toLowerCase();
+        setIsCorrect(correct);
+        const settings = storageService.getSettings();
+        if (correct) {
+            feedbackService.playSound('success');
+            feedbackService.vibrate(VIBRATE.correct);
+            if (settings.visualEffects) {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: {y: 0.6},
+                    colors: ['#FFCC1F', '#ffffff'],
+                });
+            }
+        } else {
+            feedbackService.playSound('error');
+            feedbackService.vibrate(VIBRATE.error);
+        }
+        setPhase(JustOnePhase.Result);
+    };
 
-  return (
-    <div className="flex flex-col h-screen">
-      <GameHeader
-        title={GAMES_REGISTRY.just_one.title}
-        subtitle="Пойми намёк"
-        icon={Lightbulb}
-        theme="yellow"
-        onBack={onBack}
-      />
+    const hinters = playerNames.filter((_, i) => i !== guesserIdx);
 
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <AnimatePresence mode="wait">
-          {phase === JustOnePhase.Pass && (
-            <PassPhase guesser={guesser} onReady={() => setPhase(JustOnePhase.Hinting)} />
-          )}
-
-          {phase === JustOnePhase.Hinting && (
-            <HintingPhase
-              word={word}
-              guesser={guesser}
-              hinters={hinters}
-              hints={hints}
-              onSubmitHint={submitHint}
-              onStartGuessing={startGuessing}
+    return (
+        <div className="flex flex-col h-screen">
+            <GameHeader
+                title={GAMES_REGISTRY.just_one.title}
+                subtitle="Пойми намёк"
+                icon={Lightbulb}
+                theme="yellow"
+                onBack={onBack}
             />
-          )}
 
-          {phase === JustOnePhase.Guessing && (
-            <GuessingPhase
-              guesser={guesser}
-              visibleHints={visibleHints}
-              guess={guess}
-              onGuessChange={setGuess}
-              onGuess={handleGuess}
-            />
-          )}
+            <div className="flex-1 min-h-0 overflow-y-auto">
+                <AnimatePresence mode="wait">
+                    {phase === JustOnePhase.Pass && (
+                        <PassPhase guesser={guesser} onReady={() => setPhase(JustOnePhase.Hinting)}/>
+                    )}
 
-          {phase === JustOnePhase.Result && (
-            <ResultPhase isCorrect={isCorrect} word={word} guess={guess} onNext={nextGuesser} />
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
+                    {phase === JustOnePhase.Hinting && (
+                        <HintingPhase
+                            word={word}
+                            guesser={guesser}
+                            hinters={hinters}
+                            hints={hints}
+                            onSubmitHint={submitHint}
+                            onStartGuessing={startGuessing}
+                        />
+                    )}
+
+                    {phase === JustOnePhase.Guessing && (
+                        <GuessingPhase
+                            guesser={guesser}
+                            visibleHints={visibleHints}
+                            guess={guess}
+                            onGuessChange={setGuess}
+                            onGuess={handleGuess}
+                        />
+                    )}
+
+                    {phase === JustOnePhase.Result && (
+                        <ResultPhase isCorrect={isCorrect} word={word} guess={guess} onNext={nextGuesser}/>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
 };
