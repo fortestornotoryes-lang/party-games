@@ -8,12 +8,14 @@ import { contentService } from '../../services/contentService';
 import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { shuffle, randomInt } from '../../utils/random';
 import { DecryptoPhase, TeamColor, TeamState } from './types';
-import { tLabel, tText, tBg, tBadge } from './helpers';
+import { tText, tBg, tBadge, teamLabel } from './helpers';
 import { PassScreen } from './components/PassScreen';
 import { ScoreRow } from './components/ScoreRow';
 import { CaptainCluesPhase } from './components/CaptainCluesPhase';
 import { EnemyInterceptPhase } from './components/EnemyInterceptPhase';
 import { TeamGuessPhase } from './components/TeamGuessPhase';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface DecryptoGameProps {
   playerNames: string[];
@@ -21,6 +23,7 @@ interface DecryptoGameProps {
 }
 
 export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack }) => {
+  const { t } = useTranslation();
   const { difficulty, mode } = useGameSettings();
   const wordCount = mode === 'extended_5' ? 5 : mode === 'extended_6' ? 6 : 4;
 
@@ -144,7 +147,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     <div className="flex flex-col min-h-screen text-white pb-20">
       <GameHeader
         title={GAMES_REGISTRY.decrypto.title}
-        subtitle="Коды и перехваты"
+        subtitle={t(`${NS.DECRYPTO}.subtitle`)}
         icon={Key}
         theme="purple"
         onBack={onBack}
@@ -162,9 +165,11 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               className="space-y-6 flex-1 flex flex-col justify-center"
             >
               <h2 className="text-2xl font-black text-center uppercase tracking-widest text-premium-purple">
-                Команды
+                {t(`${NS.DECRYPTO}.teamsTitle`)}
               </h2>
-              <p className="text-sm text-center text-white/30">Распределитесь для игры</p>
+              <p className="text-sm text-center text-white/30">
+                {t(`${NS.DECRYPTO}.teamsSubtitle`)}
+              </p>
               <div className="grid gap-3">
                 {(
                   [
@@ -176,7 +181,8 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     <h3
                       className={`${tText(color)} font-bold uppercase text-xs mb-2 flex items-center gap-2`}
                     >
-                      <Users className="w-4 h-4" /> Команда {tLabel(color)}
+                      <Users className="w-4 h-4" />
+                      {t(`${NS.DECRYPTO}.teamLabelFull`, { name: teamLabel(color, t) })}
                     </h3>
                     <p className={`text-sm ${tText(color)} opacity-70`}>
                       {state.players.join(', ')}
@@ -185,7 +191,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 ))}
               </div>
               <PrimaryButton onClick={startRound} variant="purple" className="mt-8">
-                НАЧАТЬ РАУНД 1
+                {t(`${NS.DECRYPTO}.startRound1`)}
               </PrimaryButton>
             </motion.div>
           )}
@@ -196,15 +202,15 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               key="pass_captain"
               icon={KeyRound}
               team={activeTeam}
-              subtitle="Остальные не должны видеть экран!"
-              buttonLabel="ПОКАЗАТЬ КОД"
+              subtitle={t(`${NS.DECRYPTO}.othersNoSee`)}
+              buttonLabel={t(`${NS.DECRYPTO}.showCode`)}
               onContinue={() => setPhase(DecryptoPhase.CaptainClues)}
               red={redState}
               blue={blueState}
             >
               <div className="space-y-1">
                 <p className="text-sm uppercase tracking-widest text-white/30 font-bold">
-                  Раунд {round} · Шифровальщик
+                  {t(`${NS.DECRYPTO}.roundCaptain`, { n: round })}
                 </p>
                 <h2 className={`text-5xl font-black uppercase tracking-tight ${tText(activeTeam)}`}>
                   {getCaptainName(activeTeam)}
@@ -212,7 +218,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 <span
                   className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${tBadge(activeTeam)}`}
                 >
-                  Команда {tLabel(activeTeam)}
+                  {t(`${NS.DECRYPTO}.teamLabelFull`, { name: teamLabel(activeTeam, t) })}
                 </span>
               </div>
             </PassScreen>
@@ -239,8 +245,8 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               key="pass_enemy"
               icon={AlertOctagon}
               team={enemyColor}
-              subtitle="Передайте телефон команде соперника"
-              buttonLabel="ПЕРЕХВАТИТЬ"
+              subtitle={t(`${NS.DECRYPTO}.passToEnemy`)}
+              buttonLabel={t(`${NS.DECRYPTO}.interceptBtn`)}
               onContinue={() => setPhase(DecryptoPhase.EnemyIntercept)}
               red={redState}
               blue={blueState}
@@ -267,8 +273,8 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               key="pass_team"
               icon={Users}
               team={activeTeam}
-              subtitle="Передайте телефон своей команде"
-              buttonLabel="РАЗГАДАТЬ КОД"
+              subtitle={t(`${NS.DECRYPTO}.passToTeam`)}
+              buttonLabel={t(`${NS.DECRYPTO}.decodeCodeBtn`)}
               onContinue={() => setPhase(DecryptoPhase.TeamGuess)}
               red={redState}
               blue={blueState}
@@ -300,7 +306,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
             >
               <div className="w-full">
                 <h2 className="text-2xl font-black uppercase text-white tracking-[0.2em] border-b border-white/20 pb-3 mb-4">
-                  ИТОГИ РАУНДА
+                  {t(`${NS.DECRYPTO}.roundResults`)}
                 </h2>
               </div>
 
@@ -311,7 +317,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                   >
                     <div className="text-left">
                       <p className="text-xs text-white/40 uppercase font-bold">
-                        Перехват {tLabel(enemyColor)}
+                        {t(`${NS.DECRYPTO}.interceptionLabel`, {
+                          name: teamLabel(enemyColor, t),
+                        })}
                       </p>
                       <p className="text-white text-2xl font-black tracking-[0.2em] mt-1">
                         {(interceptGuess as number[]).join(' - ')}
@@ -320,7 +328,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     <span
                       className={`font-black px-4 py-2 rounded-premium-sm border text-sm ${intercepted ? 'text-premium-red bg-premium-red/15 border-premium-red/30' : 'text-white/30 bg-white/5 border-white/10'}`}
                     >
-                      {intercepted ? 'ПЕРЕХВАТ' : 'МИМО'}
+                      {intercepted
+                        ? t(`${NS.DECRYPTO}.intercepted`)
+                        : t(`${NS.DECRYPTO}.missed`)}
                     </span>
                   </div>
                 )}
@@ -330,7 +340,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 >
                   <div className="text-left">
                     <p className="text-xs text-white/40 uppercase font-bold">
-                      Команда {tLabel(activeTeam)}
+                      {t(`${NS.DECRYPTO}.teamLabelFull`, { name: teamLabel(activeTeam, t) })}
                     </p>
                     <p className="text-white text-2xl font-black tracking-[0.2em] mt-1">
                       {(teamGuess as number[]).join(' - ')}
@@ -339,7 +349,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                   <span
                     className={`font-black px-4 py-2 rounded-premium-sm border text-sm ${guessCorrect ? 'text-premium-green bg-premium-green/15 border-premium-green/30' : 'text-premium-red bg-premium-red/15 border-premium-red/30'}`}
                   >
-                    {guessCorrect ? 'УСПЕХ' : 'ОШИБКА'}
+                    {guessCorrect ? t(`${NS.DECRYPTO}.success`) : t(`${NS.DECRYPTO}.wrong`)}
                   </span>
                 </div>
               </div>
@@ -351,7 +361,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 variant="white"
                 className="w-full h-16 text-lg tracking-widest"
               >
-                ДАЛЬШЕ
+                {t(`${NS.DECRYPTO}.nextBtn`)}
               </PrimaryButton>
             </motion.div>
           )}
@@ -368,10 +378,10 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               <Trophy className={`w-24 h-24 ${winner ? tText(winner) : 'text-white'}`} />
               <div className="space-y-2">
                 <p className="text-sm uppercase tracking-widest text-premium-green font-bold">
-                  ИГРА ОКОНЧЕНА
+                  {t(`${NS.COMMON}.gameOver`)}
                 </p>
                 <h2 className={`text-5xl font-black uppercase ${winner ? tText(winner) : ''}`}>
-                  ПОБЕДА {winner ? tLabel(winner).toUpperCase() : ''}!
+                  {winner ? t(`${NS.DECRYPTO}.victory`, { name: teamLabel(winner, t) }) : ''}
                 </h2>
               </div>
               <div className="flex gap-4">
@@ -386,15 +396,19 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     className={`px-5 py-3 rounded-premium-md border ${tBg(color)} text-center`}
                   >
                     <p className={`text-micro font-black uppercase ${tText(color)} mb-1`}>
-                      {tLabel(color)}
+                      {teamLabel(color, t)}
                     </p>
-                    <p className="text-white/40 text-xs">✗ {state.interceptions} перехватов</p>
-                    <p className="text-white/40 text-xs">✗ {state.fails} ошибок</p>
+                    <p className="text-white/40 text-xs">
+                      {t(`${NS.DECRYPTO}.interceptCount`, { n: state.interceptions })}
+                    </p>
+                    <p className="text-white/40 text-xs">
+                      {t(`${NS.DECRYPTO}.failCount`, { n: state.fails })}
+                    </p>
                   </div>
                 ))}
               </div>
               <PrimaryButton onClick={initGame} variant="white">
-                НОВАЯ ИГРА
+                {t(`${NS.DECRYPTO}.newGame`)}
               </PrimaryButton>
             </motion.div>
           )}

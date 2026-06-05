@@ -12,6 +12,8 @@ import { GameHeader } from '@/components/GameHeader';
 import { useTimer } from '@/hooks/useTimer';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { AliasPhase, Team } from './types';
 import { StartPhase } from './phases/StartPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
@@ -29,6 +31,7 @@ const TEAMS_CONFIG = [
 ] as const;
 
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
+  const { t } = useTranslation();
   const { difficulty } = useGameSettings();
   const [teams, setTeams] = useState<Team[]>([]);
   const [currentTeamIdx, setCurrentTeamIdx] = useState(0);
@@ -130,7 +133,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     <div className="flex flex-col h-screen">
       <GameHeader
         title={GAMES_REGISTRY.alias.title}
-        subtitle="Объясни быстрее"
+        subtitle={t(`${NS.ALIAS}.subtitle`)}
         icon={Brain}
         theme="blue"
         onBack={onBack}

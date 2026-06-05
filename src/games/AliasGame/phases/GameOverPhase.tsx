@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { RotateCcw, Trophy } from 'lucide-react';
 import { PrimaryButton, Typography } from '@/components/UI';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { Team } from '../types';
 
 interface GameOverPhaseProps {
@@ -10,8 +12,10 @@ interface GameOverPhaseProps {
 }
 
 export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBack }) => {
+  const { t } = useTranslation();
   const isRed = currentTeam.color === 'red';
   const teamColor = isRed ? 'text-premium-red' : 'text-premium-blue';
+  const teamName = isRed ? t(`${NS.ALIAS}.teamRed`) : t(`${NS.ALIAS}.teamBlue`);
 
   return (
     <motion.div
@@ -26,7 +30,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBac
         />
         <Trophy className={`w-24 h-24 mx-auto mb-5 relative ${teamColor}`} />
         <Typography.Display size="xl" align="center" className="mb-2 relative">
-          ПОБЕДА!
+          {t(`${NS.ALIAS}.victory`)}
         </Typography.Display>
         <Typography.Label
           size="md"
@@ -34,11 +38,11 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBac
           align="center"
           className="relative"
         >
-          Команда {currentTeam.name}
+          {t(`${NS.ALIAS}.winningTeam`, { name: teamName })}
         </Typography.Label>
       </div>
       <PrimaryButton onClick={onBack} icon={RotateCcw} variant={isRed ? 'red' : 'blue'}>
-        В ГЛАВНОЕ МЕНЮ
+        {t(`${NS.ALIAS}.mainMenu`)}
       </PrimaryButton>
     </motion.div>
   );

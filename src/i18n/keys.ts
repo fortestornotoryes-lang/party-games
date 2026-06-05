@@ -9,4 +9,6 @@ export const NS = {
   BUNKER: 'bunker',
   CODENAMES: 'codenames',
   MILLIONAIRE: 'millionaire',
+  DECRYPTO: 'decrypto',
+  ALIAS: 'alias',
 } as const;

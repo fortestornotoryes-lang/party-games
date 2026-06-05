@@ -1,6 +1,10 @@
 import { TeamColor } from './types';
+import { NS } from '@/i18n/keys';
 
 export const tLabel = (c: TeamColor) => (c === 'red' ? 'Красных' : 'Синих');
+
+export const teamLabel = (c: TeamColor, t: (k: string) => string): string =>
+  t(`${NS.DECRYPTO}.${c === 'red' ? 'teamRed' : 'teamBlue'}`);
 export const tText = (c: TeamColor) => (c === 'red' ? 'text-premium-red' : 'text-premium-blue');
 export const tBg = (c: TeamColor) =>
   c === 'red'

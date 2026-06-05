@@ -236,6 +236,66 @@ export interface MillionaireTranslations {
   nothingEarned: string;      // "Ничего не заработано"
 }
 
+export interface DecryptoTranslations {
+  subtitle: string;             // "Коды и перехваты"
+  teamRed: string;              // "Красных"
+  teamBlue: string;             // "Синих"
+  teamsTitle: string;           // "Команды"
+  teamsSubtitle: string;        // "Распределитесь для игры"
+  teamLabelFull: string;        // "Команда {{name}}"
+  teamToDative: string;         // "Команде {{name}}"
+  startRound1: string;          // "НАЧАТЬ РАУНД 1"
+  othersNoSee: string;          // "Остальные не должны видеть экран!"
+  showCode: string;             // "ПОКАЗАТЬ КОД"
+  roundCaptain: string;         // "Раунд {{n}} · Шифровальщик"
+  passToEnemy: string;          // "Передайте телефон команде соперника"
+  interceptBtn: string;         // "ПЕРЕХВАТИТЬ"
+  passToTeam: string;           // "Передайте телефон своей команде"
+  decodeCodeBtn: string;        // "РАЗГАДАТЬ КОД"
+  roundResults: string;         // "ИТОГИ РАУНДА"
+  interceptionLabel: string;    // "Перехват {{name}}"
+  intercepted: string;          // "ПЕРЕХВАТ"
+  missed: string;               // "МИМО"
+  success: string;              // "УСПЕХ"
+  wrong: string;                // "ОШИБКА"
+  nextBtn: string;              // "ДАЛЬШЕ"
+  victory: string;              // "ПОБЕДА {{name}}!"
+  interceptCount: string;       // "✗ {{n}} перехватов"
+  failCount: string;            // "✗ {{n}} ошибок"
+  newGame: string;              // "НОВАЯ ИГРА"
+  encryptor: string;            // "Шифровальщик"
+  writeAssociations: string;    // "Напишите ассоциации к словам кода"
+  associationFor: string;       // "Ассоциация на \"{{word}}\""
+  encrypt: string;              // "ЗАШИФРОВАТЬ"
+  interceptTime: string;        // "Время перехвата · Команда {{name}}"
+  enemyCurrentClues: string;    // "Текущие подсказки врага"
+  enemyHistory: string;         // "История раундов врага"
+  codeLabel: string;            // "Код {{code}}"
+  enterInterceptedCode: string; // "Введите перехваченный код"
+  confirmIntercept: string;     // "ПОДТВЕРДИТЬ ПЕРЕХВАТ"
+  captainClues: string;         // "Подсказки капитана"
+  enterYourCode: string;        // "Введите ваш код"
+  decode: string;               // "РАЗГАДАТЬ"
+  scoreCompact: string;         // "✗{{inter}} · {{fail}}ош"
+}
+
+export interface AliasTranslations {
+  subtitle: string;        // "Объясни быстрее"
+  teamRed: string;         // "Красные"
+  teamBlue: string;        // "Синие"
+  yourTurn: string;        // "Твой черёд!"
+  startRound: string;      // "НАЧАТЬ РАУНД"
+  explainWord: string;     // "Объясни слово"
+  scoreLabel: string;      // "Очки"
+  guessed: string;         // "Угадано"
+  timeUp: string;          // "Время вышло"
+  pointsPerRound: string;  // "Очков за раунд"
+  continueBtn: string;     // "ПРОДОЛЖИТЬ"
+  victory: string;         // "ПОБЕДА!"
+  winningTeam: string;     // "Команда {{name}}"
+  mainMenu: string;        // "В ГЛАВНОЕ МЕНЮ"
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -246,6 +306,8 @@ export interface Translations {
   bunker?: BunkerTranslations;
   codenames?: CodenamesTranslations;
   millionaire?: MillionaireTranslations;
+  decrypto?: DecryptoTranslations;
+  alias?: AliasTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]:
     | Record<string, unknown>
@@ -254,5 +316,7 @@ export interface Translations {
     | BunkerTranslations
     | CodenamesTranslations
     | MillionaireTranslations
+    | DecryptoTranslations
+    | AliasTranslations
     | undefined;
 }
