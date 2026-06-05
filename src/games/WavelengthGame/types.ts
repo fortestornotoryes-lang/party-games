@@ -1,6 +1,6 @@
 export enum WavelengthPhase {
-  Pass     = 'pass',
-  Clue     = 'clue',
+  Pass = 'pass',
+  Clue = 'clue',
   Guessing = 'guessing',
-  Reveal   = 'reveal',
+  Reveal = 'reveal',
 }

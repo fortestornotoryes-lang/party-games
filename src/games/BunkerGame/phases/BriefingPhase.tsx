@@ -39,7 +39,9 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
       {/* Alarm header */}
       <div className="flex items-center gap-2 justify-center">
         <Siren className="w-5 h-5 text-premium-orange animate-pulse" />
-        <Typography.Label size="sm" color="orange">{t(`${NS.BUNKER}.emergencyAlert`)}</Typography.Label>
+        <Typography.Label size="sm" color="orange">
+          {t(`${NS.BUNKER}.emergencyAlert`)}
+        </Typography.Label>
         <Siren className="w-5 h-5 text-premium-orange animate-pulse" />
       </div>
 
@@ -50,7 +52,8 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 22 }}
         className="relative rounded-2xl overflow-hidden"
         style={{
-          background: 'linear-gradient(160deg, rgba(255,138,31,0.12) 0%, rgba(255,46,77,0.08) 100%)',
+          background:
+            'linear-gradient(160deg, rgba(255,138,31,0.12) 0%, rgba(255,46,77,0.08) 100%)',
           border: '1.5px solid rgba(255,138,31,0.35)',
           boxShadow: '0 0 80px rgba(255,138,31,0.18), 0 24px 64px rgba(0,0,0,0.5)',
         }}
@@ -58,7 +61,10 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         {/* Top glow */}
         <div
           className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(255,138,31,0.22), transparent 70%)' }}
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 0%, rgba(255,138,31,0.22), transparent 70%)',
+          }}
         />
 
         <div className="relative p-7 text-center space-y-4 overflow-y-auto">
@@ -91,20 +97,25 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-white/40" />
-            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.playersInGroup`)}</Typography.Label>
+            <Typography.Label size="xs" color="muted">
+              {t(`${NS.BUNKER}.playersInGroup`)}
+            </Typography.Label>
           </div>
-          <Typography.Heading size="sm" color="white">{playerCount}</Typography.Heading>
+          <Typography.Heading size="sm" color="white">
+            {playerCount}
+          </Typography.Heading>
         </div>
-        <div
-          className="my-3"
-          style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }}
-        />
+        <div className="my-3" style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-base">🏠</span>
-            <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.bunkerSpots`)}</Typography.Label>
+            <Typography.Label size="xs" color="muted">
+              {t(`${NS.BUNKER}.bunkerSpots`)}
+            </Typography.Label>
           </div>
-          <Typography.Heading size="sm" color="orange">{bunkerCapacity}</Typography.Heading>
+          <Typography.Heading size="sm" color="orange">
+            {bunkerCapacity}
+          </Typography.Heading>
         </div>
 
         {/* Slots visual */}
@@ -113,16 +124,18 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
             <div
               key={i}
               className={`h-2 flex-1 rounded-full min-w-[18px] transition-all ${
-                i < bunkerCapacity
-                  ? 'bg-premium-orange/70'
-                  : 'bg-white/10'
+                i < bunkerCapacity ? 'bg-premium-orange/70' : 'bg-white/10'
               }`}
             />
           ))}
         </div>
         <div className="mt-2 flex justify-between">
-          <Typography.Caption color="faint">{t(`${NS.BUNKER}.wontEnter`, { n: playerCount - bunkerCapacity })}</Typography.Caption>
-          <Typography.Caption color="orange">{t(`${NS.BUNKER}.willEnter`, { n: bunkerCapacity })}</Typography.Caption>
+          <Typography.Caption color="faint">
+            {t(`${NS.BUNKER}.wontEnter`, { n: playerCount - bunkerCapacity })}
+          </Typography.Caption>
+          <Typography.Caption color="orange">
+            {t(`${NS.BUNKER}.willEnter`, { n: bunkerCapacity })}
+          </Typography.Caption>
         </div>
       </motion.div>
 
@@ -133,10 +146,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         transition={{ delay: 0.6 }}
         className="mt-auto"
       >
-        <PrimaryButton
-          onClick={handleStart}
-          variant="premium"
-        >
+        <PrimaryButton onClick={handleStart} variant="premium">
           {t(`${NS.BUNKER}.distributeCards`)}
         </PrimaryButton>
       </motion.div>

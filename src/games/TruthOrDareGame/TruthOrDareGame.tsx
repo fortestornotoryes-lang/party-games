@@ -7,7 +7,7 @@ import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { contentService } from '@/services/contentService';
 import { TruthOrDarePhase, ChoiceType } from './types';
-import { PassPhase }   from './phases/PassPhase';
+import { PassPhase } from './phases/PassPhase';
 import { ChoicePhase } from './phases/ChoicePhase';
 import { ActionPhase } from './phases/ActionPhase';
 
@@ -49,7 +49,6 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
 
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
-
           {phase === TruthOrDarePhase.Pass && (
             <PassPhase
               currentPlayer={currentPlayer}
@@ -58,10 +57,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
           )}
 
           {phase === TruthOrDarePhase.Choice && (
-            <ChoicePhase
-              currentPlayer={currentPlayer}
-              onChoice={handleChoice}
-            />
+            <ChoicePhase currentPlayer={currentPlayer} onChoice={handleChoice} />
           )}
 
           {phase === TruthOrDarePhase.Action && choice && (
@@ -72,7 +68,6 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
               onDone={handleDone}
             />
           )}
-
         </AnimatePresence>
       </div>
     </div>

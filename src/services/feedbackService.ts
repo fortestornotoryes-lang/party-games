@@ -26,7 +26,9 @@ let _audioCtx: AudioContext | null = null;
 function getAudioCtx(): AudioContext | null {
   if (_audioCtx && _audioCtx.state !== 'closed') return _audioCtx;
   const Ctor =
-    (typeof window !== 'undefined' && ((window as any).AudioContext || (window as any).webkitAudioContext)) || null;
+    (typeof window !== 'undefined' &&
+      ((window as any).AudioContext || (window as any).webkitAudioContext)) ||
+    null;
   if (!Ctor) return null;
   _audioCtx = new Ctor() as AudioContext;
   return _audioCtx;
@@ -101,7 +103,7 @@ export const feedbackService = {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(261.63, now); // C4
           osc.frequency.setValueAtTime(329.63, now + 0.1); // E4
-          osc.frequency.setValueAtTime(392.00, now + 0.2); // G4
+          osc.frequency.setValueAtTime(392.0, now + 0.2); // G4
           gain.gain.setValueAtTime(0.1, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
           osc.start(now);
@@ -112,7 +114,7 @@ export const feedbackService = {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(261.63, now);
           osc.frequency.setValueAtTime(329.63, now + 0.12);
-          osc.frequency.setValueAtTime(392.00, now + 0.24);
+          osc.frequency.setValueAtTime(392.0, now + 0.24);
           osc.frequency.setValueAtTime(523.25, now + 0.36);
           gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);

@@ -25,7 +25,9 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
     className="p-6 space-y-8"
   >
     <div className="text-center space-y-1 pt-2">
-      <h3 className="text-2xl font-black italic uppercase tracking-tighter text-premium-yellow">{guesser}</h3>
+      <h3 className="text-2xl font-black italic uppercase tracking-tighter text-premium-yellow">
+        {guesser}
+      </h3>
       <p className="text-sm text-white/40 font-medium">Угадай слово по подсказкам команды</p>
     </div>
 
@@ -38,11 +40,15 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
           transition={{ delay: i * 0.07, type: 'spring', stiffness: 320, damping: 22 }}
           className="px-5 py-3 bg-premium-yellow/[0.07] border border-premium-yellow/20 rounded-premium-md"
         >
-          <span className="text-xl font-black italic uppercase tracking-tight text-premium-yellow">{hint}</span>
+          <span className="text-xl font-black italic uppercase tracking-tight text-premium-yellow">
+            {hint}
+          </span>
         </motion.div>
       ))}
       {visibleHints.length === 0 && (
-        <p className="text-white/25 text-sm italic">Все подсказки совпали — ни одной не осталось!</p>
+        <p className="text-white/25 text-sm italic">
+          Все подсказки совпали — ни одной не осталось!
+        </p>
       )}
     </div>
 
@@ -50,9 +56,11 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
       <input
         type="text"
         value={guess}
-        onChange={e => onGuessChange(e.target.value)}
+        onChange={(e) => onGuessChange(e.target.value)}
         placeholder="Твоя догадка..."
-        onKeyDown={e => { if (e.key === 'Enter' && guess.trim()) onGuess(); }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && guess.trim()) onGuess();
+        }}
         className="w-full py-5 bg-white/4 border border-white/8 rounded-[20px] text-center text-3xl font-black italic uppercase outline-none focus:border-premium-yellow/40 transition-all placeholder:text-white/15"
       />
       <PrimaryButton onClick={onGuess} disabled={!guess.trim()}>

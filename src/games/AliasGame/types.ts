@@ -1,6 +1,6 @@
 export enum AliasPhase {
-  Start    = 'start',
-  Playing  = 'playing',
+  Start = 'start',
+  Playing = 'playing',
   RoundEnd = 'round_end',
   GameOver = 'game_over',
 }

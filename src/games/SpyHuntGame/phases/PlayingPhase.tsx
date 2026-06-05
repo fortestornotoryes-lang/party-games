@@ -25,26 +25,31 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
       className="p-6 space-y-6 flex-1 min-h-0 overflow-y-auto max-w-2xl mx-auto w-full"
     >
       <div className="flex justify-center">
-        <div className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${
-          timeLeft < 60
-            ? 'border-premium-red bg-premium-red/10'
-            : 'border-white/10 bg-white/5'
-        }`}>
-          <Timer className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`} />
+        <div
+          className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${
+            timeLeft < 60 ? 'border-premium-red bg-premium-red/10' : 'border-white/10 bg-white/5'
+          }`}
+        >
+          <Timer
+            className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`}
+          />
           <span className="text-3xl font-black italic tracking-tighter">
-            {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}{timeLeft % 60}
+            {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
+            {timeLeft % 60}
           </span>
         </div>
       </div>
 
       <div className="space-y-3">
         <button
-          onClick={() => setShowQuestions(v => !v)}
+          onClick={() => setShowQuestions((v) => !v)}
           className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all"
         >
           <div className="flex items-center space-x-3">
             <MessageSquare className="w-4 h-4 text-premium-red" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Идеи для вопросов</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">
+              Идеи для вопросов
+            </span>
           </div>
           {showQuestions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -56,7 +61,10 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
             className="grid grid-cols-1 gap-2"
           >
             {QUESTION_IDEAS.map((q, i) => (
-              <div key={i} className="p-4 bg-white/5 rounded-2xl text-xs text-gray-400 italic border border-white/5">
+              <div
+                key={i}
+                className="p-4 bg-white/5 rounded-2xl text-xs text-gray-400 italic border border-white/5"
+              >
                 "{q}"
               </div>
             ))}
@@ -64,12 +72,14 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
         )}
 
         <button
-          onClick={() => setShowLocations(v => !v)}
+          onClick={() => setShowLocations((v) => !v)}
           className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all"
         >
           <div className="flex items-center space-x-3">
             <List className="w-4 h-4 text-premium-sky" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Возможные локации</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">
+              Возможные локации
+            </span>
           </div>
           {showLocations ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -97,10 +107,12 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           Агенты под подозрением
         </h4>
         <div className="grid grid-cols-2 gap-3">
-          {players.map(p => (
+          {players.map((p) => (
             <GameCard key={p.id} className="p-4 flex items-center space-x-3 border-white/5">
               <div className="w-2 h-2 rounded-full bg-premium-red/40" />
-              <span className="text-sm font-black italic uppercase tracking-tight truncate">{p.name}</span>
+              <span className="text-sm font-black italic uppercase tracking-tight truncate">
+                {p.name}
+              </span>
             </GameCard>
           ))}
         </div>

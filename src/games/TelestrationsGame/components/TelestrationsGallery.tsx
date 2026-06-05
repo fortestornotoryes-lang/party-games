@@ -10,7 +10,12 @@ interface Props {
   onBack: () => void;
 }
 
-export const TelestrationsGallery: React.FC<Props> = ({ initialWord, steps, onNewGame, onBack }) => (
+export const TelestrationsGallery: React.FC<Props> = ({
+  initialWord,
+  steps,
+  onNewGame,
+  onBack,
+}) => (
   <motion.div
     key="gallery"
     initial={{ opacity: 0 }}
@@ -29,7 +34,9 @@ export const TelestrationsGallery: React.FC<Props> = ({ initialWord, steps, onNe
           START
         </div>
         <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
-          <p className="text-xs text-premium-orange uppercase font-black tracking-widest mb-1">Исходное слово</p>
+          <p className="text-xs text-premium-orange uppercase font-black tracking-widest mb-1">
+            Исходное слово
+          </p>
           <p className="text-xl font-bold italic">{initialWord}</p>
         </div>
       </div>
@@ -43,14 +50,18 @@ export const TelestrationsGallery: React.FC<Props> = ({ initialWord, steps, onNe
           className="flex flex-col gap-2"
         >
           <div className="flex items-center gap-3">
-            <div className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-black border ${
-              step.type === 'draw'
-                ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
-                : 'bg-white/5 border-white/10 text-white/40'
-            }`}>
+            <div
+              className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-black border ${
+                step.type === 'draw'
+                  ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
+                  : 'bg-white/5 border-white/10 text-white/40'
+              }`}
+            >
               {step.type === 'draw' ? '✏️' : '💬'}
             </div>
-            <p className="text-xs font-black uppercase tracking-widest text-white/30">{step.author}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-white/30">
+              {step.author}
+            </p>
           </div>
           <div className="ml-14 bg-white/5 border border-white/5 rounded-[1.5rem] overflow-hidden p-3">
             {step.type === 'draw' ? (

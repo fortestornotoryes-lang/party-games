@@ -19,12 +19,16 @@ export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({ roundScore, onCont
   >
     <div className="space-y-2">
       <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/20">Время вышло</p>
-      <div className={`text-[96px] font-black italic tracking-tighter leading-none ${
-        roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'
-      }`}>
+      <div
+        className={`text-[96px] font-black italic tracking-tighter leading-none ${
+          roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'
+        }`}
+      >
         {fmtScore(roundScore)}
       </div>
-      <h3 className="text-sm font-black uppercase italic tracking-tight text-white/45">Очков за раунд</h3>
+      <h3 className="text-sm font-black uppercase italic tracking-tight text-white/45">
+        Очков за раунд
+      </h3>
     </div>
     <PrimaryButton onClick={onContinue}>ПРОДОЛЖИТЬ</PrimaryButton>
   </motion.div>

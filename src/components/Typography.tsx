@@ -11,23 +11,33 @@ import React from 'react';
  * dimmer — white/15 (декоративные метки)
  */
 export type TypoColor =
-  | 'white' | 'body' | 'muted' | 'faint' | 'dimmer'
-  | 'red' | 'blue' | 'green' | 'sky' | 'orange' | 'yellow' | 'purple';
+  | 'white'
+  | 'body'
+  | 'muted'
+  | 'faint'
+  | 'dimmer'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'sky'
+  | 'orange'
+  | 'yellow'
+  | 'purple';
 
 export type AsElement = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div';
 
 export type TypoAlign = 'left' | 'center' | 'right';
 
 const COLOR: Record<TypoColor, string> = {
-  white:  'text-white',
-  body:   'text-white/80',
-  muted:  'text-white/50',
-  faint:  'text-white/25',
+  white: 'text-white',
+  body: 'text-white/80',
+  muted: 'text-white/50',
+  faint: 'text-white/25',
   dimmer: 'text-white/15',
-  red:    'text-premium-red',
-  blue:   'text-premium-blue',
-  green:  'text-premium-green',
-  sky:    'text-premium-sky',
+  red: 'text-premium-red',
+  blue: 'text-premium-blue',
+  green: 'text-premium-green',
+  sky: 'text-premium-sky',
   orange: 'text-premium-orange',
   yellow: 'text-premium-yellow',
   purple: 'text-premium-purple',
@@ -35,20 +45,20 @@ const COLOR: Record<TypoColor, string> = {
 
 /** textShadow-глоу для цветного текста */
 const GLOW: Partial<Record<TypoColor, string>> = {
-  white:  '0 0 30px rgba(255,255,255,0.40)',
-  red:    '0 0 30px rgba(255,46,77,0.55)',
-  blue:   '0 0 30px rgba(63,123,255,0.55)',
-  green:  '0 0 30px rgba(0,216,138,0.55)',
-  sky:    '0 0 30px rgba(31,182,255,0.55)',
+  white: '0 0 30px rgba(255,255,255,0.40)',
+  red: '0 0 30px rgba(255,46,77,0.55)',
+  blue: '0 0 30px rgba(63,123,255,0.55)',
+  green: '0 0 30px rgba(0,216,138,0.55)',
+  sky: '0 0 30px rgba(31,182,255,0.55)',
   orange: '0 0 30px rgba(255,138,31,0.55)',
   yellow: '0 0 30px rgba(255,204,31,0.55)',
   purple: '0 0 30px rgba(199,123,255,0.55)',
 };
 
 const ALIGN: Record<TypoAlign, string> = {
-  left:   'text-left',
+  left: 'text-left',
   center: 'text-center',
-  right:  'text-right',
+  right: 'text-right',
 };
 
 // ─── Базовые пропсы ──────────────────────────────────────────────────────────
@@ -93,10 +103,10 @@ const Display = ({
   glow?: boolean;
 }) => {
   const SIZES = {
-    sm:  'text-4xl',
-    md:  'text-5xl',
-    lg:  'text-6xl',
-    xl:  'text-[70px]',
+    sm: 'text-4xl',
+    md: 'text-5xl',
+    lg: 'text-6xl',
+    xl: 'text-[70px]',
     '2xl': 'text-[88px]',
   } as const;
 
@@ -289,8 +299,8 @@ const Body = ({
   size?: 'xs' | 'sm' | 'base';
 }) => {
   const SIZES = {
-    xs:   'text-xs',
-    sm:   'text-sm',
+    xs: 'text-xs',
+    sm: 'text-sm',
     base: 'text-base',
   } as const;
 

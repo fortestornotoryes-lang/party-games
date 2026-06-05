@@ -17,9 +17,9 @@ interface ResultsPhaseProps {
 
 const OUTCOME_COLOR_MAP: Record<SurvivalOutcome, 'green' | 'yellow' | 'orange' | 'red'> = {
   full_victory: 'green',
-  partial:      'yellow',
-  pyrrhic:      'orange',
-  defeat:       'red',
+  partial: 'yellow',
+  pyrrhic: 'orange',
+  defeat: 'red',
 };
 
 const OUTCOME_CONFIG: Record<
@@ -68,11 +68,11 @@ const OUTCOME_CONFIG: Record<
 };
 
 const RESOURCE_META: { key: keyof BunkerResources; emoji: string }[] = [
-  { key: 'food',     emoji: '🍎' },
-  { key: 'water',    emoji: '💧' },
+  { key: 'food', emoji: '🍎' },
+  { key: 'water', emoji: '💧' },
   { key: 'medicine', emoji: '💊' },
-  { key: 'energy',   emoji: '⚡' },
-  { key: 'morale',   emoji: '🧠' },
+  { key: 'energy', emoji: '⚡' },
+  { key: 'morale', emoji: '🧠' },
 ];
 
 function barColor(val: number) {
@@ -137,7 +137,9 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         transition={{ delay: 0.25 }}
         className="space-y-2"
       >
-        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.finalResources`)}</Typography.Label>
+        <Typography.Label size="xs" color="muted">
+          {t(`${NS.BUNKER}.finalResources`)}
+        </Typography.Label>
         <div className="space-y-1.5">
           {RESOURCE_META.map(({ key, emoji }) => {
             const val = resources[key];
@@ -160,7 +162,9 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                 >
                   {val}%
                 </span>
-                <span className="text-[10px] text-white/25 w-14 flex-shrink-0">{t(`${NS.BUNKER}.resources.${key}`)}</span>
+                <span className="text-[10px] text-white/25 w-14 flex-shrink-0">
+                  {t(`${NS.BUNKER}.resources.${key}`)}
+                </span>
               </div>
             );
           })}
@@ -174,9 +178,11 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         transition={{ delay: 0.4 }}
         className="space-y-2"
       >
-        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.survivorsLabel`)}</Typography.Label>
+        <Typography.Label size="xs" color="muted">
+          {t(`${NS.BUNKER}.survivorsLabel`)}
+        </Typography.Label>
         <div className="space-y-1.5">
-          {bunkerTeam.map(char => (
+          {bunkerTeam.map((char) => (
             <div
               key={char.playerName}
               className="flex items-center gap-3 p-3 rounded-xl"
@@ -191,11 +197,14 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                 <div className="text-[10px] text-white/40">{char.profession.name}</div>
               </div>
               <div className="flex gap-1 flex-wrap justify-end">
-                {[char.health, char.hobby, char.trait].map((a, i) => (
-                  a.isPositive && (
-                    <span key={i} className="text-sm" title={a.name}>{a.emoji}</span>
-                  )
-                ))}
+                {[char.health, char.hobby, char.trait].map(
+                  (a, i) =>
+                    a.isPositive && (
+                      <span key={i} className="text-sm" title={a.name}>
+                        {a.emoji}
+                      </span>
+                    )
+                )}
               </div>
             </div>
           ))}
@@ -210,9 +219,11 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
           transition={{ delay: 0.5 }}
           className="space-y-2"
         >
-          <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.outsidersLabel`)}</Typography.Label>
+          <Typography.Label size="xs" color="muted">
+            {t(`${NS.BUNKER}.outsidersLabel`)}
+          </Typography.Label>
           <div className="flex flex-wrap gap-1.5">
-            {eliminated.map(char => (
+            {eliminated.map((char) => (
               <div
                 key={char.playerName}
                 className="px-3 py-1.5 rounded-xl text-xs font-bold"

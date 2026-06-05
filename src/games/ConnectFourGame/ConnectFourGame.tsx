@@ -19,7 +19,12 @@ interface WinResult {
 function findWinner(board: Cell[][], winLength: number): WinResult | null {
   const rows = board.length;
   const cols = board[0]?.length ?? 0;
-  const dirs: [number, number][] = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  const dirs: [number, number][] = [
+    [0, 1],
+    [1, 0],
+    [1, 1],
+    [1, -1],
+  ];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const p = board[r][c];
@@ -27,7 +32,8 @@ function findWinner(board: Cell[][], winLength: number): WinResult | null {
       for (const [dr, dc] of dirs) {
         const cells: [number, number][] = [[r, c]];
         for (let i = 1; i < winLength; i++) {
-          const nr = r + dr * i, nc = c + dc * i;
+          const nr = r + dr * i,
+            nc = c + dc * i;
           if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || board[nr][nc] !== p) break;
           cells.push([nr, nc]);
         }
@@ -49,22 +55,22 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const p1 = playerNames[0] ?? 'Игрок 1';
   const p2 = playerNames[1] ?? 'Игрок 2';
 
-  const isLarge   = mode === 'large' || mode === 'connect_five';
-  const ROWS      = isLarge ? 7 : 6;
-  const COLS      = isLarge ? 9 : 7;
-  const WIN_LEN   = mode === 'connect_five' ? 5 : 4;
-  const isPopOut  = mode === 'pop_out';
+  const isLarge = mode === 'large' || mode === 'connect_five';
+  const ROWS = isLarge ? 7 : 6;
+  const COLS = isLarge ? 9 : 7;
+  const WIN_LEN = mode === 'connect_five' ? 5 : 4;
+  const isPopOut = mode === 'pop_out';
   // Literal class strings — needed for Tailwind v4 static scan
-  const colClass  = COLS === 9 ? 'grid-cols-9' : 'grid-cols-7';
+  const colClass = COLS === 9 ? 'grid-cols-9' : 'grid-cols-7';
 
-  const [board, setBoard]       = useState<Cell[][]>(() => emptyBoard(ROWS, COLS));
-  const [current, setCurrent]   = useState<1 | 2>(1);
-  const [win, setWin]           = useState<WinResult | null>(null);
-  const [isDraw, setIsDraw]     = useState(false);
+  const [board, setBoard] = useState<Cell[][]>(() => emptyBoard(ROWS, COLS));
+  const [current, setCurrent] = useState<1 | 2>(1);
+  const [win, setWin] = useState<WinResult | null>(null);
+  const [isDraw, setIsDraw] = useState(false);
   const [lastDrop, setLastDrop] = useState<{ row: number; col: number } | null>(null);
-  const [score, setScore]       = useState({ 1: 0, 2: 0 });
+  const [score, setScore] = useState({ 1: 0, 2: 0 });
   const [hoverCol, setHoverCol] = useState<number | null>(null);
-  const [action, setAction]     = useState<'place' | 'pop'>('place');
+  const [action, setAction] = useState<'place' | 'pop'>('place');
 
   const gameOver = !!(win || isDraw);
 
@@ -77,13 +83,12 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     setLastDrop(null);
     setScore({ 1: 0, 2: 0 });
     setAction('place');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   const fireConfetti = (player: 1 | 2) => {
-    const colors = player === 1
-      ? ['#FF2E4D', '#FF5066', '#ffffff']
-      : ['#FFCC1F', '#FFE066', '#ffffff'];
+    const colors =
+      player === 1 ? ['#FF2E4D', '#FF5066', '#ffffff'] : ['#FFCC1F', '#FFE066', '#ffffff'];
     confetti({ particleCount: 130, spread: 75, origin: { y: 0.45 }, colors });
   };
 
@@ -91,9 +96,9 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     const result = findWinner(next, WIN_LEN);
     if (result) {
       setWin(result);
-      setScore(s => ({ ...s, [result.player]: s[result.player as 1 | 2] + 1 }));
+      setScore((s) => ({ ...s, [result.player]: s[result.player as 1 | 2] + 1 }));
       fireConfetti(result.player);
-    } else if (!isPopOut && next.flat().every(c => c !== 0)) {
+    } else if (!isPopOut && next.flat().every((c) => c !== 0)) {
       setIsDraw(true);
     } else {
       setCurrent(nextCurrent === 1 ? 2 : 1);
@@ -104,11 +109,14 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     if (gameOver || action !== 'place') return;
     let row = -1;
     for (let r = ROWS - 1; r >= 0; r--) {
-      if (!board[r][col]) { row = r; break; }
+      if (!board[r][col]) {
+        row = r;
+        break;
+      }
     }
     if (row === -1) return;
 
-    const next = board.map(r => [...r]) as Cell[][];
+    const next = board.map((r) => [...r]) as Cell[][];
     next[row][col] = current;
     setBoard(next);
     setLastDrop({ row, col });
@@ -120,11 +128,14 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     // Find bottom-most piece of current player in this column
     let bottomRow = -1;
     for (let r = ROWS - 1; r >= 0; r--) {
-      if (board[r][col] === current) { bottomRow = r; break; }
+      if (board[r][col] === current) {
+        bottomRow = r;
+        break;
+      }
     }
     if (bottomRow === -1) return;
 
-    const next = board.map(r => [...r]) as Cell[][];
+    const next = board.map((r) => [...r]) as Cell[][];
     for (let r = bottomRow; r > 0; r--) {
       next[r][col] = next[r - 1][col];
     }
@@ -142,7 +153,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
   const rematch = () => {
     setBoard(emptyBoard(ROWS, COLS));
-    setCurrent(win ? (win.player === 1 ? 2 : 1) : (current === 1 ? 2 : 1));
+    setCurrent(win ? (win.player === 1 ? 2 : 1) : current === 1 ? 2 : 1);
     setWin(null);
     setIsDraw(false);
     setLastDrop(null);
@@ -161,9 +172,12 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     <div className="flex flex-col min-h-screen pb-10">
       <GameHeader
         title="ЧЕТЫРЕ В РЯД"
-        subtitle={gameOver
-          ? (win ? `Победил ${win.player === 1 ? p1 : p2}!` : 'Ничья!')
-          : `Ход: ${current === 1 ? p1 : p2}`
+        subtitle={
+          gameOver
+            ? win
+              ? `Победил ${win.player === 1 ? p1 : p2}!`
+              : 'Ничья!'
+            : `Ход: ${current === 1 ? p1 : p2}`
         }
         icon={LayoutGrid}
         theme="red"
@@ -171,25 +185,36 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
       />
 
       <div className="p-4 flex-1 flex flex-col max-w-sm mx-auto w-full gap-4">
-
         {/* Scoreboard */}
         <div className="flex items-center justify-between px-1">
-          <div className={`transition-all duration-300 ${!gameOver && current === 1 ? 'opacity-100' : 'opacity-35'}`}>
+          <div
+            className={`transition-all duration-300 ${!gameOver && current === 1 ? 'opacity-100' : 'opacity-35'}`}
+          >
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded-full bg-premium-red shadow-[0_0_8px_rgba(255,46,77,0.7)]" />
-              <span className="text-base font-black italic uppercase text-white leading-none">{p1}</span>
+              <span className="text-base font-black italic uppercase text-white leading-none">
+                {p1}
+              </span>
             </div>
-            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pl-6">{score[1]} побед</p>
+            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pl-6">
+              {score[1]} побед
+            </p>
           </div>
 
           <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">vs</span>
 
-          <div className={`text-right transition-all duration-300 ${!gameOver && current === 2 ? 'opacity-100' : 'opacity-35'}`}>
+          <div
+            className={`text-right transition-all duration-300 ${!gameOver && current === 2 ? 'opacity-100' : 'opacity-35'}`}
+          >
             <div className="flex items-center justify-end gap-2">
-              <span className="text-base font-black italic uppercase text-white leading-none">{p2}</span>
+              <span className="text-base font-black italic uppercase text-white leading-none">
+                {p2}
+              </span>
               <div className="w-4 h-4 rounded-full bg-premium-yellow shadow-[0_0_8px_rgba(255,204,31,0.7)]" />
             </div>
-            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pr-6">{score[2]} побед</p>
+            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pr-6">
+              {score[2]} побед
+            </p>
           </div>
         </div>
 
@@ -234,7 +259,8 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
         {/* Ghost indicator row */}
         <div className={`grid ${colClass} gap-1.5 px-[3px]`}>
           {Array.from({ length: COLS }, (_, c) => {
-            const showGhost  = action === 'place' && hoverCol === c && !gameOver && board[0][c] === 0;
+            const showGhost =
+              action === 'place' && hoverCol === c && !gameOver && board[0][c] === 0;
             const showPopDot = isPopOut && action === 'pop' && !gameOver && canPopCol(c);
             return (
               <div key={c} className="aspect-square flex items-center justify-center">
@@ -278,11 +304,11 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
           <div className={`grid ${colClass} gap-1.5`}>
             {Array.from({ length: ROWS }, (_, r) =>
               Array.from({ length: COLS }, (_, c) => {
-                const cell       = board[r][c];
-                const isWinCell  = win?.cells.some(([wr, wc]) => wr === r && wc === c) ?? false;
+                const cell = board[r][c];
+                const isWinCell = win?.cells.some(([wr, wc]) => wr === r && wc === c) ?? false;
                 const isLastDrop = lastDrop?.row === r && lastDrop?.col === c;
-                const dimmed     = !!(win && !isWinCell);
-                const popTarget  = isPopOut && action === 'pop' && canPopCol(c);
+                const dimmed = !!(win && !isWinCell);
+                const popTarget = isPopOut && action === 'pop' && canPopCol(c);
 
                 return (
                   <button
@@ -294,9 +320,11 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                     className="relative aspect-square"
                   >
                     {/* hole */}
-                    <div className={`absolute inset-[3px] rounded-full border transition-colors duration-200 ${
-                      popTarget ? 'bg-black/55 border-white/20' : 'bg-black/80 border-white/6'
-                    }`} />
+                    <div
+                      className={`absolute inset-[3px] rounded-full border transition-colors duration-200 ${
+                        popTarget ? 'bg-black/55 border-white/20' : 'bg-black/80 border-white/6'
+                      }`}
+                    />
 
                     {/* piece */}
                     <AnimatePresence>
@@ -310,14 +338,15 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                             scale: isWinCell ? [1, 1.12, 1] : 1,
                             opacity: dimmed ? 0.1 : 1,
                           }}
-                          transition={isLastDrop
-                            ? { type: 'spring', damping: 17, stiffness: 250, mass: 0.9 }
-                            : {
-                                scale: isWinCell
-                                  ? { delay: 0.1, duration: 0.45, times: [0, 0.5, 1] }
-                                  : { duration: 0 },
-                                opacity: { duration: 0.35 },
-                              }
+                          transition={
+                            isLastDrop
+                              ? { type: 'spring', damping: 17, stiffness: 250, mass: 0.9 }
+                              : {
+                                  scale: isWinCell
+                                    ? { delay: 0.1, duration: 0.45, times: [0, 0.5, 1] }
+                                    : { duration: 0 },
+                                  opacity: { duration: 0.35 },
+                                }
                           }
                           className={`absolute inset-[3px] rounded-full ${
                             cell === 1
@@ -353,22 +382,22 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               <p className="text-[9px] font-black uppercase tracking-[0.45em] text-white/35 mb-2">
                 {win ? 'Победитель' : 'Итог раунда'}
               </p>
-              <h3 className={`text-5xl font-black italic uppercase leading-none ${
-                win
-                  ? win.player === 1 ? 'text-premium-red' : 'text-premium-yellow'
-                  : 'text-white/50'
-              }`}>
+              <h3
+                className={`text-5xl font-black italic uppercase leading-none ${
+                  win
+                    ? win.player === 1
+                      ? 'text-premium-red'
+                      : 'text-premium-yellow'
+                    : 'text-white/50'
+                }`}
+              >
                 {win ? (win.player === 1 ? p1 : p2) : 'НИЧЬЯ'}
               </h3>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <PrimaryButton
-          onClick={rematch}
-          icon={RotateCcw}
-          variant={gameOver ? 'white' : 'outline'}
-        >
+        <PrimaryButton onClick={rematch} icon={RotateCcw} variant={gameOver ? 'white' : 'outline'}>
           {gameOver ? 'РЕВАНШ' : 'НОВАЯ ИГРА'}
         </PrimaryButton>
       </div>

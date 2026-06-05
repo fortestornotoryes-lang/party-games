@@ -79,18 +79,20 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   };
 
   return (
-    <GameSettingsContext.Provider value={{ 
-      difficulty, 
-      mode, 
-      rounds,
-      timerSeconds,
-      setDifficulty, 
-      setMode, 
-      setRounds,
-      setTimerSeconds,
-      currentGameId, 
-      setCurrentGameId 
-    }}>
+    <GameSettingsContext.Provider
+      value={{
+        difficulty,
+        mode,
+        rounds,
+        timerSeconds,
+        setDifficulty,
+        setMode,
+        setRounds,
+        setTimerSeconds,
+        currentGameId,
+        setCurrentGameId,
+      }}
+    >
       {children}
     </GameSettingsContext.Provider>
   );

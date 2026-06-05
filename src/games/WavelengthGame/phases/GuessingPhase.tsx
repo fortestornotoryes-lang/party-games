@@ -54,7 +54,9 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
       </div>
 
       <GameCard className="bg-premium-purple/5 border border-premium-purple/20 w-full text-center py-8">
-        <div className="text-[10px] font-black uppercase tracking-widest text-premium-purple/60 mb-2">Значение</div>
+        <div className="text-[10px] font-black uppercase tracking-widest text-premium-purple/60 mb-2">
+          Значение
+        </div>
         <div className="text-6xl font-black italic tracking-tighter">{guessValue}</div>
       </GameCard>
     </div>

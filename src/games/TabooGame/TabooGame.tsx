@@ -3,21 +3,21 @@ import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { Ban } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { GameHeader }       from '@/components/GameHeader';
-import { GAMES_REGISTRY }  from '../../registry/GameRegistry';
+import { GameHeader } from '@/components/GameHeader';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { useGameSettings } from '../../contexts/GameSettingsContext';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
-import { storageService }  from '@/services/storageService';
+import { storageService } from '@/services/storageService';
 import {
   TabooClassicCard,
   getNextTabooClassicCard,
   TABOO_CLASSIC_CARDS,
 } from '@/constants/tabooContent';
 import { TabooPhase } from './types';
-import { GameKey }    from '@/types/games';
+import { GameKey } from '@/types/games';
 import { useTranslation } from '@/i18n';
 import { NS } from '@/i18n/keys';
-import { PassPhase }    from './phases/PassPhase';
+import { PassPhase } from './phases/PassPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
 import { VerdictPhase } from './phases/VerdictPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
@@ -34,11 +34,11 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
 
   // ── Players & scores ───────────────────────────────────────────────────────
   const [scores, setScores] = useState<Record<string, number>>(() =>
-    Object.fromEntries(playerNames.map(p => [p, 0]))
+    Object.fromEntries(playerNames.map((p) => [p, 0]))
   );
   const [explainerIdx, setExplainerIdx] = useState(0);
   const currentExplainer = playerNames[explainerIdx % playerNames.length];
-  const otherPlayers     = playerNames.filter(p => p !== currentExplainer);
+  const otherPlayers = playerNames.filter((p) => p !== currentExplainer);
 
   // ── Round counter ──────────────────────────────────────────────────────────
   const [roundNum, setRoundNum] = useState(1);
@@ -49,15 +49,15 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     if (usedWords.length === 0) return new Set<number>();
     const usedSet = new Set(usedWords);
     return new Set(
-      TABOO_CLASSIC_CARDS
-        .filter(c => c.difficulty === difficulty && usedSet.has(c.word))
-        .map(c => c.id),
+      TABOO_CLASSIC_CARDS.filter((c) => c.difficulty === difficulty && usedSet.has(c.word)).map(
+        (c) => c.id
+      )
     );
   };
 
   const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(buildUsedIds);
-  const [card, setCard]               = useState<TabooClassicCard>(
-    () => getNextTabooClassicCard(difficulty, buildUsedIds()),
+  const [card, setCard] = useState<TabooClassicCard>(() =>
+    getNextTabooClassicCard(difficulty, buildUsedIds())
   );
 
   // ── Phase ─────────────────────────────────────────────────────────────────
@@ -68,8 +68,8 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
 
   const {
     timeLeft,
-    start:  startTimer,
-    reset:  resetTimer,
+    start: startTimer,
+    reset: resetTimer,
   } = useTimer({
     initialTime: cardTimer,
     onTimeUp: () => {
@@ -103,51 +103,54 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     setPhase(TabooPhase.Verdict);
   }, []);
 
-  const handleVerdict = useCallback((guesser: string | null, penalty = false) => {
-    const newScores = { ...scores };
+  const handleVerdict = useCallback(
+    (guesser: string | null, penalty = false) => {
+      const newScores = { ...scores };
 
-    if (penalty) {
-      newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
-      feedbackService.playSound('error');
-      feedbackService.vibrate(VIBRATE.error);
-    } else if (guesser) {
-      newScores[guesser] = (newScores[guesser] ?? 0) + 1;
-      feedbackService.playSound('success');
-      const settings = storageService.getSettings();
-      if (settings.visualEffects) {
-        confetti({
-          particleCount: 80,
-          spread: 60,
-          origin: { y: 0.6 },
-          colors: ['#ef4444', '#ffffff'],
-        });
+      if (penalty) {
+        newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
+        feedbackService.playSound('error');
+        feedbackService.vibrate(VIBRATE.error);
+      } else if (guesser) {
+        newScores[guesser] = (newScores[guesser] ?? 0) + 1;
+        feedbackService.playSound('success');
+        const settings = storageService.getSettings();
+        if (settings.visualEffects) {
+          confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.6 },
+            colors: ['#ef4444', '#ffffff'],
+          });
+        }
       }
-    }
 
-    // Mark card as used, auto-reset deck when exhausted
-    const afterUsed    = new Set([...usedCardIds, card.id]);
-    const totalForDiff = TABOO_CLASSIC_CARDS.filter(c => c.difficulty === difficulty).length;
-    let effectiveUsed: ReadonlySet<number>;
-    if (afterUsed.size >= totalForDiff) {
-      storageService.resetUsedWords(GameKey.Taboo);
-      effectiveUsed = new Set<number>();
-    } else {
-      storageService.markWordAsUsed(GameKey.Taboo, card.word);
-      effectiveUsed = afterUsed;
-    }
+      // Mark card as used, auto-reset deck when exhausted
+      const afterUsed = new Set([...usedCardIds, card.id]);
+      const totalForDiff = TABOO_CLASSIC_CARDS.filter((c) => c.difficulty === difficulty).length;
+      let effectiveUsed: ReadonlySet<number>;
+      if (afterUsed.size >= totalForDiff) {
+        storageService.resetUsedWords(GameKey.Taboo);
+        effectiveUsed = new Set<number>();
+      } else {
+        storageService.markWordAsUsed(GameKey.Taboo, card.word);
+        effectiveUsed = afterUsed;
+      }
 
-    setUsedCardIds(effectiveUsed);
-    setScores(newScores);
-    setCard(getNextTabooClassicCard(difficulty, effectiveUsed));
-    setRoundNum(r => r + 1);
-    setExplainerIdx(i => i + 1);
-    setPhase(TabooPhase.Pass);
-  }, [card, currentExplainer, difficulty, scores, usedCardIds]);
+      setUsedCardIds(effectiveUsed);
+      setScores(newScores);
+      setCard(getNextTabooClassicCard(difficulty, effectiveUsed));
+      setRoundNum((r) => r + 1);
+      setExplainerIdx((i) => i + 1);
+      setPhase(TabooPhase.Pass);
+    },
+    [card, currentExplainer, difficulty, scores, usedCardIds]
+  );
 
   const handleStopGame = useCallback(() => setPhase(TabooPhase.GameOver), []);
 
   const handleRematch = useCallback(() => {
-    setScores(Object.fromEntries(playerNames.map(p => [p, 0])));
+    setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));
     setExplainerIdx(0);
     setRoundNum(1);
     setCard(getNextTabooClassicCard(difficulty, usedCardIds));
@@ -167,7 +170,6 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <AnimatePresence mode="wait">
-
           {phase === TabooPhase.Pass && (
             <PassPhase
               key="pass"
@@ -210,7 +212,6 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
               onBack={onBack}
             />
           )}
-
         </AnimatePresence>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {motion, useMotionValue, useSpring, useTransform} from 'motion/react';
-import {LucideIcon} from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { LucideIcon } from 'lucide-react';
 import { feedbackService, VIBRATE } from '../services/feedbackService';
 
 export const ParallaxBackground = () => {
@@ -20,8 +20,8 @@ export const ParallaxBackground = () => {
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
-      mouseX.set((clientX / innerWidth) - 0.5);
-      mouseY.set((clientY / innerHeight) - 0.5);
+      mouseX.set(clientX / innerWidth - 0.5);
+      mouseY.set(clientY / innerHeight - 0.5);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -30,11 +30,11 @@ export const ParallaxBackground = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
-      <motion.div 
+      <motion.div
         style={{ x: x1, y: y1 }}
         className="absolute inset-[-30%] bg-[radial-gradient(ellipse_at_30%_30%,rgba(105,60,220,0.12),transparent_60%)]"
       />
-      <motion.div 
+      <motion.div
         style={{ x: x2, y: y2 }}
         className="absolute inset-[-30%] bg-[radial-gradient(ellipse_at_70%_70%,rgba(255,46,77,0.06),transparent_60%)]"
       />
@@ -61,7 +61,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   disabled,
   variant = 'premium',
   className = '',
-  type = 'button'
+  type = 'button',
 }) => {
   const handleClick = () => {
     feedbackService.playSound('click');
@@ -69,15 +69,16 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     if (onClick) onClick();
   };
 
-  const baseStyles = "w-full h-16 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none";
+  const baseStyles =
+    'w-full h-16 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none';
   const variants = {
-    white: "bg-white text-black font-display",
-    premium: "glass-card text-white hover:bg-white/[0.08] font-display border-white/10",
-    red: "bg-premium-red text-white shadow-[0_20px_50px_rgba(255,46,77,0.3)]",
-    blue: "bg-premium-blue text-white shadow-[0_20px_50px_rgba(63,123,255,0.3)]",
-    emerald: "bg-premium-green text-white shadow-[0_20px_50px_rgba(0,216,138,0.3)]",
-    purple: "bg-premium-purple text-white shadow-[0_20px_50px_rgba(199,123,255,0.3)]",
-    outline: "bg-transparent text-white/80 border border-white/5 hover:bg-white/5",
+    white: 'bg-white text-black font-display',
+    premium: 'glass-card text-white hover:bg-white/[0.08] font-display border-white/10',
+    red: 'bg-premium-red text-white shadow-[0_20px_50px_rgba(255,46,77,0.3)]',
+    blue: 'bg-premium-blue text-white shadow-[0_20px_50px_rgba(63,123,255,0.3)]',
+    emerald: 'bg-premium-green text-white shadow-[0_20px_50px_rgba(0,216,138,0.3)]',
+    purple: 'bg-premium-purple text-white shadow-[0_20px_50px_rgba(199,123,255,0.3)]',
+    outline: 'bg-transparent text-white/80 border border-white/5 hover:bg-white/5',
   };
 
   return (
@@ -95,37 +96,38 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 };
 
 export const SectionLabel: React.FC<{ children: React.ReactNode; className?: string }> = ({
-  children, 
-  className = "" 
+  children,
+  className = '',
 }) => (
-  <span className={`text-[11px] font-black uppercase tracking-[0.5em] text-white/80 block mb-3 italic ${className}`}>
+  <span
+    className={`text-[11px] font-black uppercase tracking-[0.5em] text-white/80 block mb-3 italic ${className}`}
+  >
     {children}
   </span>
 );
 
-export const Badge: React.FC<{ children: React.ReactNode; className?: string; variant?: 'default' | 'outline' }> = ({ 
-  children, 
-  className = "",
-  variant = 'default' 
-}) => (
-  <span className={`px-3 py-1 rounded-premium-sm text-[9px] font-black uppercase tracking-wider ${
-    variant === 'default' ? 'bg-white/5 text-white/80 border border-white/5' : 'border border-white/10 text-white/20'
-  } ${className}`}>
+export const Badge: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline';
+}> = ({ children, className = '', variant = 'default' }) => (
+  <span
+    className={`px-3 py-1 rounded-premium-sm text-[9px] font-black uppercase tracking-wider ${
+      variant === 'default'
+        ? 'bg-white/5 text-white/80 border border-white/5'
+        : 'border border-white/10 text-white/20'
+    } ${className}`}
+  >
     {children}
   </span>
 );
 
-export const IconButton: React.FC<{ 
-  onClick: () => void; 
-  icon: LucideIcon; 
+export const IconButton: React.FC<{
+  onClick: () => void;
+  icon: LucideIcon;
   className?: string;
   variant?: 'ghost' | 'filled' | 'danger';
-}> = ({ 
-  onClick, 
-  icon: Icon, 
-  className = "",
-  variant = 'ghost'
-}) => {
+}> = ({ onClick, icon: Icon, className = '', variant = 'ghost' }) => {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     feedbackService.playSound('click');
@@ -134,13 +136,13 @@ export const IconButton: React.FC<{
   };
 
   const variants = {
-    ghost: "glass-card text-white/80 active:scale-95 border-none",
-    filled: "bg-white text-black active:scale-95 border-none",
-    danger: "bg-premium-red/10 text-premium-red border border-premium-red/20 active:scale-95"
+    ghost: 'glass-card text-white/80 active:scale-95 border-none',
+    filled: 'bg-white text-black active:scale-95 border-none',
+    danger: 'bg-premium-red/10 text-premium-red border border-premium-red/20 active:scale-95',
   };
 
   return (
-    <button 
+    <button
       onClick={handleClick}
       className={`p-4 rounded-premium-sm transition-all flex items-center justify-center ${variants[variant]} ${className}`}
     >
@@ -152,23 +154,21 @@ export const IconButton: React.FC<{
 export { Typography } from './Typography';
 export type { TypoColor, AsElement, TypoAlign } from './Typography';
 
-export const PageWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
-  children, 
-  className = "" 
+export const PageWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className = '',
 }) => (
   <div className={`min-h-screen text-white relative overflow-x-hidden ${className}`}>
-    <div className="max-w-md mx-auto h-full flex flex-col p-6 pb-32">
-      {children}
-    </div>
+    <div className="max-w-md mx-auto h-full flex flex-col p-6 pb-32">{children}</div>
   </div>
 );
 
-export const TabButton: React.FC<{ active: boolean; onClick: () => void; children: React.ReactNode }> = ({ 
-  active, 
-  onClick, 
-  children 
-}) => (
-  <button 
+export const TabButton: React.FC<{
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}> = ({ active, onClick, children }) => (
+  <button
     onClick={onClick}
     className={`flex-1 py-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all border-b-2 font-display italic ${
       active ? 'text-white border-premium-red' : 'text-white/20 border-white/5'

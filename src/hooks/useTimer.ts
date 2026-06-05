@@ -13,10 +13,13 @@ export const useTimer = ({ initialTime, onTimeUp, autoStart = false }: UseTimerP
 
   const start = useCallback(() => setIsActive(true), []);
   const pause = useCallback(() => setIsActive(false), []);
-  const reset = useCallback((newTime?: number) => {
-    setIsActive(false);
-    setTimeLeft(newTime ?? initialTime);
-  }, [initialTime]);
+  const reset = useCallback(
+    (newTime?: number) => {
+      setIsActive(false);
+      setTimeLeft(newTime ?? initialTime);
+    },
+    [initialTime]
+  );
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {

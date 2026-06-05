@@ -1,9 +1,9 @@
 export enum TabooReversePhase {
-  Pass         = 'pass',          // Передай телефон объясняющему
-  Playing      = 'playing',       // Таймер + слово + обязательные слова
-  Verdict      = 'verdict',       // Оценить раунд (классика / команды)
+  Pass = 'pass', // Передай телефон объясняющему
+  Playing = 'playing', // Таймер + слово + обязательные слова
+  Verdict = 'verdict', // Оценить раунд (классика / команды)
   BlitzVerdict = 'blitz_verdict', // Итог хода в режиме Блиц
-  GameOver     = 'game_over',
+  GameOver = 'game_over',
 }
 
 export interface BlitzResult {

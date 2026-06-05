@@ -10,9 +10,9 @@ import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface RevealPhaseProps {
   characters: BunkerCharacter[];
-  revealRound: number;        // 1 … TOTAL_REVEAL_ROUNDS
-  revealPlayerIdx: number;    // which player is currently revealing
-  onConfirm: () => void;      // player confirmed they announced their trait
+  revealRound: number; // 1 … TOTAL_REVEAL_ROUNDS
+  revealPlayerIdx: number; // which player is currently revealing
+  onConfirm: () => void; // player confirmed they announced their trait
 }
 
 const ROUND_COLORS = ['', 'orange', 'yellow', 'sky', 'green', 'purple'] as const;
@@ -55,16 +55,17 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       {/* Round indicator */}
       <div className="flex items-center justify-center gap-3">
         <div className="flex gap-1.5">
-          {[1, 2, 3, 4, 5].map(r => (
+          {[1, 2, 3, 4, 5].map((r) => (
             <div
               key={r}
               className="h-1.5 w-8 rounded-full transition-all"
               style={{
-                background: r === revealRound
-                  ? `var(--color-premium-${colorName})`
-                  : r < revealRound
-                  ? 'rgba(255,255,255,0.3)'
-                  : 'rgba(255,255,255,0.08)',
+                background:
+                  r === revealRound
+                    ? `var(--color-premium-${colorName})`
+                    : r < revealRound
+                      ? 'rgba(255,255,255,0.3)'
+                      : 'rgba(255,255,255,0.08)',
               }}
             />
           ))}
@@ -90,7 +91,9 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
         }}
       >
         <Fingerprint className="w-8 h-8 text-white/20 mx-auto" />
-        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.passPhoneTo`)}</Typography.Label>
+        <Typography.Label size="xs" color="muted">
+          {t(`${NS.BUNKER}.passPhoneTo`)}
+        </Typography.Label>
         <Typography.Title size="md" color="white" align="center">
           {char.playerName.toUpperCase()}
         </Typography.Title>

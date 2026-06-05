@@ -8,6 +8,7 @@ At the start of every session, read the memory bank located in `.claude/memory/`
 When saving new memories, write them to `.claude/memory/` (not to `~/.claude/projects/...`).
 
 The memory bank contains:
+
 - `project_overview.md` — stack, startup, folder structure, architecture, GameRegistry
 - `games_flow.md` — all 10 games, GameStatus chains, themes, player initialization
 - `design_system.md` — premium colors, glass-card, typography, border-radius, themeConfigs

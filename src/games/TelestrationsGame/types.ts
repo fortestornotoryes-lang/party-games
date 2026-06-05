@@ -1,9 +1,9 @@
 export enum TelestrationsPhase {
-  Setup      = 'setup',
-  Start      = 'start',
-  Action     = 'action',
+  Setup = 'setup',
+  Start = 'start',
+  Action = 'action',
   Transition = 'transition',
-  Gallery    = 'gallery',
+  Gallery = 'gallery',
 }
 
 export type Step = {

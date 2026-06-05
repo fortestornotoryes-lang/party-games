@@ -52,14 +52,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       const str = resolve(translations, path);
       return interpolate(str, vars);
     },
-    [lang],
+    [lang]
   );
 
-  return React.createElement(
-    LanguageContext.Provider,
-    { value: { lang, setLang, t } },
-    children,
-  );
+  return React.createElement(LanguageContext.Provider, { value: { lang, setLang, t } }, children);
 }
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────

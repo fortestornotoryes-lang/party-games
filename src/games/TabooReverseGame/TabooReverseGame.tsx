@@ -3,19 +3,19 @@ import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { ListChecks } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { GameHeader }        from '@/components/GameHeader';
-import { GAMES_REGISTRY }   from '../../registry/GameRegistry';
-import { useGameSettings }  from '../../contexts/GameSettingsContext';
-import { feedbackService, VIBRATE }  from '@/services/feedbackService';
-import { storageService }   from '@/services/storageService';
+import { GameHeader } from '@/components/GameHeader';
+import { GAMES_REGISTRY } from '../../registry/GameRegistry';
+import { useGameSettings } from '../../contexts/GameSettingsContext';
+import { feedbackService, VIBRATE } from '@/services/feedbackService';
+import { storageService } from '@/services/storageService';
 import { TabooCard, getNextTabooCard, TABOO_REVERSE_CARDS } from '@/constants/tabooReverseContent';
 import { TabooReversePhase, BlitzResult } from './types';
-import { GameKey }           from '@/types/games';
-import { PassPhase }         from './phases/PassPhase';
-import { PlayingPhase }      from './phases/PlayingPhase';
-import { VerdictPhase }      from './phases/VerdictPhase';
+import { GameKey } from '@/types/games';
+import { PassPhase } from './phases/PassPhase';
+import { PlayingPhase } from './phases/PlayingPhase';
+import { VerdictPhase } from './phases/VerdictPhase';
 import { BlitzVerdictPhase } from './phases/BlitzVerdictPhase';
-import { GameOverPhase }     from './phases/GameOverPhase';
+import { GameOverPhase } from './phases/GameOverPhase';
 
 interface TabooReverseGameProps {
   playerNames: string[];
@@ -26,21 +26,18 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   const { difficulty, timerSeconds, mode } = useGameSettings();
   const cardTimer = timerSeconds;
   const isBlitz = mode === 'blitz';
-  const isTeam  = mode === 'team';
+  const isTeam = mode === 'team';
 
   // ── Teams (team mode) ──────────────────────────────────────────────────────
   // Even-index players → team 1 (orange), odd-index → team 2 (sky)
   const teams = useMemo<[string[], string[]]>(() => {
     if (!isTeam) return [[], []];
-    return [
-      playerNames.filter((_, i) => i % 2 === 0),
-      playerNames.filter((_, i) => i % 2 !== 0),
-    ];
+    return [playerNames.filter((_, i) => i % 2 === 0), playerNames.filter((_, i) => i % 2 !== 0)];
   }, [isTeam, playerNames]);
 
   // ── Players & scores ───────────────────────────────────────────────────────
   const [scores, setScores] = useState<Record<string, number>>(() =>
-    Object.fromEntries(playerNames.map(p => [p, 0]))
+    Object.fromEntries(playerNames.map((p) => [p, 0]))
   );
   const [explainerIdx, setExplainerIdx] = useState(0);
   const currentExplainer = playerNames[explainerIdx % playerNames.length];
@@ -49,9 +46,9 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   const otherPlayers = useMemo(() => {
     if (isTeam) {
       const explainerTeam = teams[0].includes(currentExplainer) ? teams[0] : teams[1];
-      return explainerTeam.filter(p => p !== currentExplainer);
+      return explainerTeam.filter((p) => p !== currentExplainer);
     }
-    return playerNames.filter(p => p !== currentExplainer);
+    return playerNames.filter((p) => p !== currentExplainer);
   }, [isTeam, teams, currentExplainer, playerNames]);
 
   // ── Round counter ──────────────────────────────────────────────────────────
@@ -63,14 +60,14 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     if (usedWords.length === 0) return new Set<number>();
     const usedSet = new Set(usedWords);
     return new Set(
-      TABOO_REVERSE_CARDS
-        .filter(c => c.difficulty === difficulty && usedSet.has(c.word))
-        .map(c => c.id),
+      TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty && usedSet.has(c.word)).map(
+        (c) => c.id
+      )
     );
   };
 
   const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(buildUsedIds);
-  const [card, setCard]               = useState<TabooCard>(() => getNextTabooCard(difficulty, buildUsedIds()));
+  const [card, setCard] = useState<TabooCard>(() => getNextTabooCard(difficulty, buildUsedIds()));
 
   // ── Phase ─────────────────────────────────────────────────────────────────
   const [phase, setPhase] = useState<TabooReversePhase>(TabooReversePhase.Pass);
@@ -86,20 +83,23 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // ── Card-cycling helper (blitz) ────────────────────────────────────────────
   // Marks the card as used and loads the next one.
-  const cycleCard = useCallback((prevCard: TabooCard, prevUsed: ReadonlySet<number>) => {
-    const afterUsed    = new Set([...prevUsed, prevCard.id]);
-    const totalForDiff = TABOO_REVERSE_CARDS.filter(c => c.difficulty === difficulty).length;
-    let effectiveUsed: ReadonlySet<number>;
-    if (afterUsed.size >= totalForDiff) {
-      storageService.resetUsedWords(GameKey.TabooReverse);
-      effectiveUsed = new Set<number>();
-    } else {
-      storageService.markWordAsUsed(GameKey.TabooReverse, prevCard.word);
-      effectiveUsed = afterUsed;
-    }
-    setUsedCardIds(effectiveUsed);
-    setCard(getNextTabooCard(difficulty, effectiveUsed));
-  }, [difficulty]);
+  const cycleCard = useCallback(
+    (prevCard: TabooCard, prevUsed: ReadonlySet<number>) => {
+      const afterUsed = new Set([...prevUsed, prevCard.id]);
+      const totalForDiff = TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty).length;
+      let effectiveUsed: ReadonlySet<number>;
+      if (afterUsed.size >= totalForDiff) {
+        storageService.resetUsedWords(GameKey.TabooReverse);
+        effectiveUsed = new Set<number>();
+      } else {
+        storageService.markWordAsUsed(GameKey.TabooReverse, prevCard.word);
+        effectiveUsed = afterUsed;
+      }
+      setUsedCardIds(effectiveUsed);
+      setCard(getNextTabooCard(difficulty, effectiveUsed));
+    },
+    [difficulty]
+  );
 
   // ── Timer ─────────────────────────────────────────────────────────────────
   const handleTimeUp = useCallback(() => {
@@ -110,11 +110,11 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   const {
     timeLeft,
-    start:  startTimer,
-    reset:  resetTimer,
+    start: startTimer,
+    reset: resetTimer,
   } = useTimer({
     initialTime: cardTimer,
-    onTimeUp:    handleTimeUp,
+    onTimeUp: handleTimeUp,
   });
 
   // ── Confetti on game over ──────────────────────────────────────────────────
@@ -143,7 +143,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   // Classic/team → go to Verdict.  Blitz → record and load next card.
   const handleGuessed = useCallback(() => {
     if (isBlitz) {
-      setBlitzResults(prev => [...prev, { card, status: 'guessed' }]);
+      setBlitzResults((prev) => [...prev, { card, status: 'guessed' }]);
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.correct);
       cycleCard(card, usedCardIds);
@@ -154,13 +154,13 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // Blitz only: skip current card (−1 to explainer)
   const handleSkip = useCallback(() => {
-    setBlitzResults(prev => [...prev, { card, status: 'skipped' }]);
+    setBlitzResults((prev) => [...prev, { card, status: 'skipped' }]);
     feedbackService.vibrate(VIBRATE.error);
     cycleCard(card, usedCardIds);
   }, [card, usedCardIds, cycleCard]);
 
   const handleToggleWord = useCallback((i: number) => {
-    setUsedWordIdxs(prev => {
+    setUsedWordIdxs((prev) => {
       const next = new Set(prev);
       next.has(i) ? next.delete(i) : next.add(i);
       return next;
@@ -168,86 +168,97 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   }, []);
 
   // Classic / team mode verdict
-  const handleVerdict = useCallback((guesser: string | null, penalty = false) => {
-    const newScores = { ...scores };
+  const handleVerdict = useCallback(
+    (guesser: string | null, penalty = false) => {
+      const newScores = { ...scores };
 
-    if (penalty) {
-      newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
-      feedbackService.playSound('error');
-      feedbackService.vibrate(VIBRATE.error);
-    } else if (guesser) {
-      const allWordsUsed = usedWordIdxs.size === card.required.length;
-      const points = allWordsUsed ? 2 : 1;
-      newScores[guesser] = (newScores[guesser] ?? 0) + points;
-      feedbackService.playSound('success');
-      const settings = storageService.getSettings();
-      if (settings.visualEffects) {
-        confetti({
-          particleCount: allWordsUsed ? 150 : 70,
-          spread: 60,
-          origin: { y: 0.6 },
-          colors: ['#f97316', '#ffffff'],
-        });
+      if (penalty) {
+        newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
+        feedbackService.playSound('error');
+        feedbackService.vibrate(VIBRATE.error);
+      } else if (guesser) {
+        const allWordsUsed = usedWordIdxs.size === card.required.length;
+        const points = allWordsUsed ? 2 : 1;
+        newScores[guesser] = (newScores[guesser] ?? 0) + points;
+        feedbackService.playSound('success');
+        const settings = storageService.getSettings();
+        if (settings.visualEffects) {
+          confetti({
+            particleCount: allWordsUsed ? 150 : 70,
+            spread: 60,
+            origin: { y: 0.6 },
+            colors: ['#f97316', '#ffffff'],
+          });
+        }
       }
-    }
 
-    const afterUsed    = new Set([...usedCardIds, card.id]);
-    const totalForDiff = TABOO_REVERSE_CARDS.filter(c => c.difficulty === difficulty).length;
-    let effectiveUsed: ReadonlySet<number>;
-    if (afterUsed.size >= totalForDiff) {
-      storageService.resetUsedWords(GameKey.TabooReverse);
-      effectiveUsed = new Set<number>();
-    } else {
-      storageService.markWordAsUsed(GameKey.TabooReverse, card.word);
-      effectiveUsed = afterUsed;
-    }
+      const afterUsed = new Set([...usedCardIds, card.id]);
+      const totalForDiff = TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty).length;
+      let effectiveUsed: ReadonlySet<number>;
+      if (afterUsed.size >= totalForDiff) {
+        storageService.resetUsedWords(GameKey.TabooReverse);
+        effectiveUsed = new Set<number>();
+      } else {
+        storageService.markWordAsUsed(GameKey.TabooReverse, card.word);
+        effectiveUsed = afterUsed;
+      }
 
-    setUsedCardIds(effectiveUsed);
-    setScores(newScores);
-    setCard(getNextTabooCard(difficulty, effectiveUsed));
-    setRoundNum(r => r + 1);
-    setExplainerIdx(i => i + 1);
-    setUsedWordIdxs(new Set());
-    setPhase(TabooReversePhase.Pass);
-  }, [card, currentExplainer, difficulty, scores, usedCardIds, usedWordIdxs]);
+      setUsedCardIds(effectiveUsed);
+      setScores(newScores);
+      setCard(getNextTabooCard(difficulty, effectiveUsed));
+      setRoundNum((r) => r + 1);
+      setExplainerIdx((i) => i + 1);
+      setUsedWordIdxs(new Set());
+      setPhase(TabooReversePhase.Pass);
+    },
+    [card, currentExplainer, difficulty, scores, usedCardIds, usedWordIdxs]
+  );
 
   // Blitz verdict: guessers[i] = player name or null for each blitzResult
-  const handleBlitzVerdict = useCallback((guessers: Array<string | null>) => {
-    const newScores = { ...scores };
-    let anySuccess  = false;
+  const handleBlitzVerdict = useCallback(
+    (guessers: Array<string | null>) => {
+      const newScores = { ...scores };
+      let anySuccess = false;
 
-    blitzResults.forEach((result, i) => {
-      if (result.status === 'guessed') {
-        const guesser = guessers[i] ?? null;
-        if (guesser) {
-          newScores[guesser] = (newScores[guesser] ?? 0) + 1;
-          anySuccess = true;
+      blitzResults.forEach((result, i) => {
+        if (result.status === 'guessed') {
+          const guesser = guessers[i] ?? null;
+          if (guesser) {
+            newScores[guesser] = (newScores[guesser] ?? 0) + 1;
+            anySuccess = true;
+          }
+        } else {
+          // skipped → penalty for explainer
+          newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
         }
-      } else {
-        // skipped → penalty for explainer
-        newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
-      }
-    });
+      });
 
-    if (anySuccess) {
-      feedbackService.playSound('success');
-      const settings = storageService.getSettings();
-      if (settings.visualEffects) {
-        confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 }, colors: ['#f97316', '#ffffff'] });
+      if (anySuccess) {
+        feedbackService.playSound('success');
+        const settings = storageService.getSettings();
+        if (settings.visualEffects) {
+          confetti({
+            particleCount: 100,
+            spread: 60,
+            origin: { y: 0.6 },
+            colors: ['#f97316', '#ffffff'],
+          });
+        }
       }
-    }
 
-    setScores(newScores);
-    setBlitzResults([]);
-    setRoundNum(r => r + 1);
-    setExplainerIdx(i => i + 1);
-    setPhase(TabooReversePhase.Pass);
-  }, [blitzResults, currentExplainer, scores]);
+      setScores(newScores);
+      setBlitzResults([]);
+      setRoundNum((r) => r + 1);
+      setExplainerIdx((i) => i + 1);
+      setPhase(TabooReversePhase.Pass);
+    },
+    [blitzResults, currentExplainer, scores]
+  );
 
   const handleStopGame = useCallback(() => setPhase(TabooReversePhase.GameOver), []);
 
   const handleRematch = useCallback(() => {
-    setScores(Object.fromEntries(playerNames.map(p => [p, 0])));
+    setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));
     setExplainerIdx(0);
     setRoundNum(1);
     setBlitzResults([]);
@@ -257,8 +268,8 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // ── Blitz stats (shown inside PlayingPhase) ────────────────────────────────
   const blitzStats = {
-    guessed: blitzResults.filter(r => r.status === 'guessed').length,
-    skipped: blitzResults.filter(r => r.status === 'skipped').length,
+    guessed: blitzResults.filter((r) => r.status === 'guessed').length,
+    skipped: blitzResults.filter((r) => r.status === 'skipped').length,
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -274,7 +285,6 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <AnimatePresence mode="wait">
-
           {phase === TabooReversePhase.Pass && (
             <PassPhase
               key="pass"
@@ -335,7 +345,6 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
               onBack={onBack}
             />
           )}
-
         </AnimatePresence>
       </div>
     </div>

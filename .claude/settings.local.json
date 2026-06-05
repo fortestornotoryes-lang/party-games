@@ -50,6 +50,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node .claude/hooks/prettier-format.js"
+          },
+          {
+            "type": "command",
             "command": "npx tsc --noEmit 2>&1"
           }
         ]

@@ -19,16 +19,20 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   onRematch,
   onBack,
 }) => {
-  const sorted      = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
-  const topScore    = scores[sorted[0]] ?? 0;
+  const sorted = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
+  const topScore = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
-  const hasWinner   = topScore > 0 && topScore > secondScore;
+  const hasWinner = topScore > 0 && topScore > secondScore;
 
   // ── Team mode calculations ────────────────────────────────────────────────
   const team1Score = teams ? teams[0].reduce((s, p) => s + (scores[p] ?? 0), 0) : 0;
   const team2Score = teams ? teams[1].reduce((s, p) => s + (scores[p] ?? 0), 0) : 0;
   const teamWinner = teams
-    ? team1Score > team2Score ? 0 : team2Score > team1Score ? 1 : -1
+    ? team1Score > team2Score
+      ? 0
+      : team2Score > team1Score
+        ? 1
+        : -1
     : null; // -1 = draw
 
   return (
@@ -51,19 +55,21 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
               Ничья!
             </h2>
           ) : (
-            <h2 className={`text-4xl font-black italic uppercase tracking-tighter ${
-              teamWinner === 0 ? 'text-premium-orange' : 'text-premium-sky'
-            }`}>
+            <h2
+              className={`text-4xl font-black italic uppercase tracking-tighter ${
+                teamWinner === 0 ? 'text-premium-orange' : 'text-premium-sky'
+              }`}
+            >
               Команда {(teamWinner ?? 0) + 1} победила!
             </h2>
           )}
 
           {/* Team score cards */}
           <div className="grid grid-cols-2 gap-3 mt-4">
-            {([0, 1] as const).map(ti => {
+            {([0, 1] as const).map((ti) => {
               const isWinner = teamWinner === ti;
-              const tscore   = ti === 0 ? team1Score : team2Score;
-              const color    = ti === 0 ? 'orange' : 'sky';
+              const tscore = ti === 0 ? team1Score : team2Score;
+              const color = ti === 0 ? 'orange' : 'sky';
               return (
                 <div
                   key={ti}
@@ -75,23 +81,29 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                       : 'border-white/10 bg-white/5'
                   }`}
                 >
-                  <p className={`text-[9px] font-black uppercase tracking-widest ${
-                    ti === 0 ? 'text-premium-orange/70' : 'text-premium-sky/70'
-                  }`}>
+                  <p
+                    className={`text-[9px] font-black uppercase tracking-widest ${
+                      ti === 0 ? 'text-premium-orange/70' : 'text-premium-sky/70'
+                    }`}
+                  >
                     Команда {ti + 1}
                   </p>
-                  <p className={`text-3xl font-black italic tabular-nums ${
-                    isWinner
-                      ? ti === 0 ? 'text-premium-orange' : 'text-premium-sky'
-                      : 'text-white/50'
-                  }`}>
+                  <p
+                    className={`text-3xl font-black italic tabular-nums ${
+                      isWinner
+                        ? ti === 0
+                          ? 'text-premium-orange'
+                          : 'text-premium-sky'
+                        : 'text-white/50'
+                    }`}
+                  >
                     {tscore}
                   </p>
                   {/* Members */}
                   <div className="space-y-1">
                     {[...teams[ti]]
                       .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0))
-                      .map(p => (
+                      .map((p) => (
                         <div key={p} className="flex justify-between items-center">
                           <span className="text-[11px] font-bold text-white/50 truncate">{p}</span>
                           <span className="text-[11px] font-black text-white/40 ml-2 tabular-nums">

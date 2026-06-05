@@ -9,8 +9,8 @@ import { PlayingHeader } from '@/components/PlayingHeader';
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
   const n = word.length;
-  if (n <= 6)  return '3.5rem';
-  if (n <= 8)  return '2.8rem';
+  if (n <= 6) return '3.5rem';
+  if (n <= 8) return '2.8rem';
   if (n <= 10) return '2.3rem';
   if (n <= 13) return '1.9rem';
   return '1.5rem';
@@ -37,10 +37,8 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   onGuessed,
   onSkip,
 }) => {
-  const timerPct   = (timeLeft / cardTimer) * 100;
-  const timerColor =
-    timerPct > 50 ? '#22c55e' :
-    timerPct > 25 ? '#eab308' : '#ef4444';
+  const timerPct = (timeLeft / cardTimer) * 100;
+  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
 
   return (
     <motion.div
@@ -57,12 +55,19 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           explainer={currentExplainer}
           timeLeft={timeLeft}
           timerColor={timerColor}
-          extra={isBlitz && blitzStats && (
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-black tabular-nums text-premium-green">✓{blitzStats.guessed}</span>
-              <span className="text-[11px] font-black tabular-nums text-premium-red">✗{blitzStats.skipped}</span>
-            </div>
-          )}
+          extra={
+            isBlitz &&
+            blitzStats && (
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-black tabular-nums text-premium-green">
+                  ✓{blitzStats.guessed}
+                </span>
+                <span className="text-[11px] font-black tabular-nums text-premium-red">
+                  ✗{blitzStats.skipped}
+                </span>
+              </div>
+            )
+          }
         />
 
         {/* Secret word */}
@@ -125,9 +130,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           )}
 
           <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20">
-            {isBlitz
-              ? 'Пропуск даёт −1 объясняющему'
-              : 'Само слово называть нельзя'}
+            {isBlitz ? 'Пропуск даёт −1 объясняющему' : 'Само слово называть нельзя'}
           </p>
         </div>
       </div>

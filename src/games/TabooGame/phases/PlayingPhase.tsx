@@ -10,8 +10,8 @@ import { NS } from '@/i18n/keys';
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
   const n = word.length;
-  if (n <= 6)  return '3.5rem';
-  if (n <= 8)  return '2.8rem';
+  if (n <= 6) return '3.5rem';
+  if (n <= 8) return '2.8rem';
   if (n <= 10) return '2.3rem';
   if (n <= 13) return '1.9rem';
   return '1.5rem';
@@ -33,10 +33,8 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   onGuessed,
 }) => {
   const { t } = useTranslation();
-  const timerPct   = (timeLeft / cardTimer) * 100;
-  const timerColor =
-    timerPct > 50 ? '#22c55e' :
-    timerPct > 25 ? '#eab308' : '#ef4444';
+  const timerPct = (timeLeft / cardTimer) * 100;
+  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
 
   return (
     <motion.div

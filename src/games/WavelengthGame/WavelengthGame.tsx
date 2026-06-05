@@ -11,10 +11,10 @@ import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { GameHeader } from '@/components/GameHeader';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { WavelengthPhase } from './types';
-import { PassPhase }    from './phases/PassPhase';
-import { CluePhase }    from './phases/CluePhase';
+import { PassPhase } from './phases/PassPhase';
+import { CluePhase } from './phases/CluePhase';
 import { GuessingPhase } from './phases/GuessingPhase';
-import { RevealPhase }  from './phases/RevealPhase';
+import { RevealPhase } from './phases/RevealPhase';
 
 interface WavelengthGameProps {
   playerNames: string[];
@@ -26,12 +26,12 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const [phase, setPhase] = useState<WavelengthPhase>(WavelengthPhase.Pass);
   const [currentPair, setCurrentPair] = useState<string[]>(['', '']);
   const [targetValue, setTargetValue] = useState(50);
-  const [guessValue, setGuessValue]   = useState(50);
+  const [guessValue, setGuessValue] = useState(50);
   const { current: psychic, idx: psychicIdx, next: nextPsychic } = usePlayerCycle(playerNames);
 
   useEffect(() => {
     startNewRound();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [psychicIdx]);
 
   const startNewRound = () => {
@@ -44,8 +44,8 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
   const calculateScore = () => {
     const diff = Math.abs(guessValue - targetValue);
-    if (diff <= 2)  return 4;
-    if (diff <= 7)  return 3;
+    if (diff <= 2) return 4;
+    if (diff <= 7) return 3;
     if (diff <= 12) return 2;
     return 0;
   };
@@ -61,7 +61,12 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
       feedbackService.vibrate(VIBRATE.correct);
       if (settings.visualEffects) {
         const colors = score === 4 ? ['#a855f7', '#ffffff', '#eab308'] : ['#a855f7', '#ffffff'];
-        confetti({ particleCount: score === 4 ? 200 : 100, spread: 80, origin: { y: 0.6 }, colors });
+        confetti({
+          particleCount: score === 4 ? 200 : 100,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors,
+        });
       }
     } else if (score === 0) {
       feedbackService.playSound('error');
@@ -83,12 +88,8 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
       <div className="flex-1 overflow-hidden relative flex flex-col p-6">
         <AnimatePresence mode="wait">
-
           {phase === WavelengthPhase.Pass && (
-            <PassPhase
-              psychic={psychic}
-              onReady={() => setPhase(WavelengthPhase.Clue)}
-            />
+            <PassPhase psychic={psychic} onReady={() => setPhase(WavelengthPhase.Clue)} />
           )}
 
           {phase === WavelengthPhase.Clue && (
@@ -118,7 +119,6 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
               onNext={nextPsychic}
             />
           )}
-
         </AnimatePresence>
       </div>
     </div>

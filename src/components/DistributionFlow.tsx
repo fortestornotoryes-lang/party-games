@@ -37,16 +37,16 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
   activeColor = 'bg-white/40',
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isRevealed, setIsRevealed]     = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
 
   const currentPlayer = players[currentIndex];
-  const isLast        = currentIndex === players.length - 1;
+  const isLast = currentIndex === players.length - 1;
 
   const handleNext = () => {
     if (isLast) {
       onFinish();
     } else {
-      setCurrentIndex(i => i + 1);
+      setCurrentIndex((i) => i + 1);
       setIsRevealed(false);
     }
   };

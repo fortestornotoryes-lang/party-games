@@ -1,6 +1,6 @@
 import React from 'react';
 import { Home, LucideIcon } from 'lucide-react';
-import {PrimaryButton} from "@/components/UI.tsx";
+import { PrimaryButton } from '@/components/UI.tsx';
 import { GameTheme } from '../types';
 import { getTheme } from '../theme/colors';
 
@@ -32,7 +32,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       }}
     >
       <div className="flex items-center gap-3">
-        <div className={`w-8 h-8 rounded-premium-sm flex items-center justify-center border ${t.headerTheme} bg-white/5`}>
+        <div
+          className={`w-8 h-8 rounded-premium-sm flex items-center justify-center border ${t.headerTheme} bg-white/5`}
+        >
           <Icon className="w-4 h-4" />
         </div>
         <div>

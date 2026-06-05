@@ -11,7 +11,7 @@ export interface CommonTranslations {
   rematch: string;
   stopGame: string;
   round: string;
-  roundN: string;       // "Раунд {{n}}"
+  roundN: string; // "Раунд {{n}}"
   score: string;
   winner: string;
   draw: string;
@@ -19,11 +19,11 @@ export interface CommonTranslations {
   players: string;
   team: string;
   teams: string;
-  passPhone: string;    // "Передай телефон"
+  passPhone: string; // "Передай телефон"
   yourTurn: string;
   gameOver: string;
   win: string;
-  wins: string;         // "{{n}} побед"
+  wins: string; // "{{n}} побед"
   vs: string;
   difficulty: {
     easy: string;
@@ -33,28 +33,28 @@ export interface CommonTranslations {
 }
 
 export interface TabooTranslations {
-  passInstruction: string;  // "Только ты должен видеть карточку с запрещёнными словами"
-  explainerBadge: string;   // "Объяснять"
-  forbiddenWords: string;   // "Запрещённые слова"
-  wordToGuess: string;      // "Загаданное слово"
-  wordGuessed: string;      // "СЛОВО УГАДАНО!"
-  forbiddenHint: string;    // "Запрещённые слова произносить нельзя"
-  timeOut: string;          // "Время вышло!"
-  whoGuessed: string;       // "Кто угадал?"
-  noOneGuessed: string;     // "Никто не угадал"
-  saidForbidden: string;    // "{{player}} произнёс запрещённое слово"
-  penaltyHint: string;      // "Штраф объяснявшему"
-  playerWon: string;        // "{{player}} победил!"
-  gameEnded: string;        // "Игра завершена"
-  backToMenu: string;       // "В МЕНЮ"
+  passInstruction: string; // "Только ты должен видеть карточку с запрещёнными словами"
+  explainerBadge: string; // "Объяснять"
+  forbiddenWords: string; // "Запрещённые слова"
+  wordToGuess: string; // "Загаданное слово"
+  wordGuessed: string; // "СЛОВО УГАДАНО!"
+  forbiddenHint: string; // "Запрещённые слова произносить нельзя"
+  timeOut: string; // "Время вышло!"
+  whoGuessed: string; // "Кто угадал?"
+  noOneGuessed: string; // "Никто не угадал"
+  saidForbidden: string; // "{{player}} произнёс запрещённое слово"
+  penaltyHint: string; // "Штраф объяснявшему"
+  playerWon: string; // "{{player}} победил!"
+  gameEnded: string; // "Игра завершена"
+  backToMenu: string; // "В МЕНЮ"
 }
 
 export interface BunkerTranslations {
   // BunkerGame.tsx — subtitles
   subtitleCatastrophe: string;
   subtitleDirector: string;
-  roundOf: string;              // 'Раунд {{current}} из {{total}}'
-  subtitleDiscussion: string;   // 'Обсуждение · Раунд {{n}}'
+  roundOf: string; // 'Раунд {{current}} из {{total}}'
+  subtitleDiscussion: string; // 'Обсуждение · Раунд {{n}}'
   subtitleVoting: string;
   subtitleTribunal: string;
   subtitleSurvival: string;
@@ -64,8 +64,8 @@ export interface BunkerTranslations {
   emergencyAlert: string;
   playersInGroup: string;
   bunkerSpots: string;
-  wontEnter: string;            // 'Не попадут: {{n}}'
-  willEnter: string;            // 'Войдут: {{n}}'
+  wontEnter: string; // 'Не попадут: {{n}}'
+  willEnter: string; // 'Войдут: {{n}}'
   distributeCards: string;
 
   // DictatorRevealPhase
@@ -85,16 +85,16 @@ export interface BunkerTranslations {
     fourth: string;
     fifth: string;
   };
-  playerOf: string;             // '{{current}} из {{total}}'
-  passPhoneTo: string;          // 'Передайте телефон'
+  playerOf: string; // '{{current}} из {{total}}'
+  passPhoneTo: string; // 'Передайте телефон'
   tapToSeeTrait: string;
-  onlyPlayerSees: string;       // 'Только {{player}} должен видеть экран'
+  onlyPlayerSees: string; // 'Только {{player}} должен видеть экран'
   announceAloud: string;
   allAnnouncedBtn: string;
   announcedNextBtn: string;
 
   // DiscussionPhase
-  discussionOf: string;         // 'ОБСУЖДЕНИЕ'
+  discussionOf: string; // 'ОБСУЖДЕНИЕ'
   discussionRoundNames: {
     r1: string;
     r2: string;
@@ -105,13 +105,13 @@ export interface BunkerTranslations {
   revealedThisRound: string;
   revealedBefore: string;
   toVoting: string;
-  nextRoundBtn: string;         // 'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})'
+  nextRoundBtn: string; // 'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})'
 
   // VotingPhase
   votingLabel: string;
   whoWontEnter: string;
-  selectMore: string;           // 'Выберите ещё {{n}} для исключения'
-  selectionDone: string;        // '✓ Выбрано {{n}} — подтвердите решение'
+  selectMore: string; // 'Выберите ещё {{n}} для исключения'
+  selectionDone: string; // '✓ Выбрано {{n}} — подтвердите решение'
   directorProtected: string;
   eliminatedBadge: string;
   confirmVoteBtn: string;
@@ -125,21 +125,21 @@ export interface BunkerTranslations {
   skipToSimBtn: string;
   appealLabel: string;
   revealingHiddenTrait: string; // '{{player}} раскрывает скрытую черту'
-  wasHidden: string;            // '{{label}} — было скрыто'
+  wasHidden: string; // '{{label}} — было скрыто'
   tribunalVoteLabel: string;
-  includeInBunker: string;      // 'Включить {{player}} в бункер?'
+  includeInBunker: string; // 'Включить {{player}} в бункер?'
   majorityDecides: string;
   pardonBtn: string;
   pardonDesc: string;
   excludeBtn: string;
   excludeDesc: string;
-  playerPardonedBadge: string;  // '🕊️ {{player}} помилован'
+  playerPardonedBadge: string; // '🕊️ {{player}} помилован'
   whoFreesSpot: string;
   chooseFromBunker: string;
   excludeSmall: string;
-  playerPardonedTitle: string;  // '{{player}} ПОМИЛОВАН'
-  playerExcludedTitle: string;  // '{{player}} ИСКЛЮЧЁН'
-  spotFreedBy: string;          // 'Место освобождает {{player}}'
+  playerPardonedTitle: string; // '{{player}} ПОМИЛОВАН'
+  playerExcludedTitle: string; // '{{player}} ИСКЛЮЧЁН'
+  spotFreedBy: string; // 'Место освобождает {{player}}'
   toSurvivalBtn: string;
 
   // SurvivalPhase
@@ -187,16 +187,16 @@ export interface CodenamesTranslations {
   blueTeam: string;
   captain: string;
   othersNoSee: string;
-  captainTurn: string;        // "Ваш ход: {{name}}"
+  captainTurn: string; // "Ваш ход: {{name}}"
   neutralEndTurn: string;
   assassinDeath: string;
   makeClueHint: string;
   oneWord: string;
   confirm: string;
-  teamRed: string;            // genitive: "Красных"
-  teamBlue: string;           // genitive: "Синих"
+  teamRed: string; // genitive: "Красных"
+  teamBlue: string; // genitive: "Синих"
   clueLabel: string;
-  guessesLeft: string;        // "Осталось попыток: {{n}}"
+  guessesLeft: string; // "Осталось попыток: {{n}}"
   turnEnded: string;
   neutralRevealed: string;
   enemyAgent: string;
@@ -217,5 +217,11 @@ export interface Translations {
   bunker?: BunkerTranslations;
   codenames?: CodenamesTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
-  [gameKey: string]: Record<string, unknown> | CommonTranslations | TabooTranslations | BunkerTranslations | CodenamesTranslations | undefined;
+  [gameKey: string]:
+    | Record<string, unknown>
+    | CommonTranslations
+    | TabooTranslations
+    | BunkerTranslations
+    | CodenamesTranslations
+    | undefined;
 }

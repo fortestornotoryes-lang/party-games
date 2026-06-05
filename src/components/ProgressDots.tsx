@@ -33,7 +33,7 @@ export const ProgressDots: React.FC<ProgressDotsProps> = ({
       <motion.div
         key={i}
         animate={{
-          width:   i === current ? 24 : 6,
+          width: i === current ? 24 : 6,
           opacity: i < current ? 0.2 : i === current ? 1 : 0.35,
         }}
         transition={{ duration: 0.3 }}

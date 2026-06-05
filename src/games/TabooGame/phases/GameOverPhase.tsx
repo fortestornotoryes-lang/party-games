@@ -20,10 +20,10 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   onBack,
 }) => {
   const { t } = useTranslation();
-  const sorted      = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
-  const topScore    = scores[sorted[0]] ?? 0;
+  const sorted = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
+  const topScore = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
-  const hasWinner   = topScore > 0 && topScore > secondScore;
+  const hasWinner = topScore > 0 && topScore > secondScore;
 
   return (
     <motion.div

@@ -29,7 +29,9 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [open]);
 
   return (
@@ -42,21 +44,21 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
           className="fixed inset-0 z-[100] flex flex-col bg-[#0B0915]/98 overflow-y-auto"
         >
           <div className="w-full max-w-lg mx-auto p-8 flex flex-col min-h-screen">
-            <div className="mb-12 flex justify-start items-center gap-4" >
+            <div className="mb-12 flex justify-start items-center gap-4">
               <button
                 onClick={onClose}
                 className="w-12 h-12 z-50 rounded-full glass-card flex items-center justify-center text-white active:scale-90 transition-all border-none"
               >
                 <ArrowLeft className="w-7 h-7" />
               </button>
-              <Typography.Title>
-                {title}
-              </Typography.Title>
+              <Typography.Title>{title}</Typography.Title>
             </div>
 
             <div className="mb-12">
               <div className="flex items-center gap-4 mb-4">
-                 <div className={`w-8 h-0.5 rounded-full ${themeConfig.text} bg-current opacity-60`} />
+                <div
+                  className={`w-8 h-0.5 rounded-full ${themeConfig.text} bg-current opacity-60`}
+                />
               </div>
 
               <Typography.Body size="base" color="muted">
@@ -66,7 +68,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
 
             <div className="space-y-6 pb-20">
               {instructions.map((item, idx) => (
-                <motion.div 
+                <motion.div
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -74,7 +76,9 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                   className="p-6 glass-card rounded-premium-lg flex gap-6 border-white/5 items-center"
                 >
                   <div className="pt-1">
-                    <Typography.Heading size="sm" className={`mb-2 ${themeConfig.text}`}>{item.title}</Typography.Heading>
+                    <Typography.Heading size="sm" className={`mb-2 ${themeConfig.text}`}>
+                      {item.title}
+                    </Typography.Heading>
                     <Typography.Body>{item.content}</Typography.Body>
                   </div>
                 </motion.div>
@@ -86,7 +90,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                 onClick={onClose}
                 className={`w-full h-18 glass-card border-none hover:bg-white/5 active:scale-[0.98] transition-all text-white flex items-center justify-center rounded-premium-md`}
               >
-                 <span className="text-xl font-black uppercase tracking-tighter italic">СТАРТ</span>
+                <span className="text-xl font-black uppercase tracking-tighter italic">СТАРТ</span>
               </button>
             </div>
           </div>

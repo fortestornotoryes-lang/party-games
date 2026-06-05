@@ -20,16 +20,14 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
   onStopGame,
 }) => {
   // One slot per result: player name if guessed, null if nobody / skipped
-  const [guessers, setGuessers] = useState<Array<string | null>>(
-    () => results.map(() => null),
-  );
+  const [guessers, setGuessers] = useState<Array<string | null>>(() => results.map(() => null));
 
   const setGuesser = (idx: number, player: string | null) => {
-    setGuessers(prev => prev.map((g, i) => (i === idx ? player : g)));
+    setGuessers((prev) => prev.map((g, i) => (i === idx ? player : g)));
   };
 
-  const guessedResults = results.filter(r => r.status === 'guessed');
-  const skippedResults = results.filter(r => r.status === 'skipped');
+  const guessedResults = results.filter((r) => r.status === 'guessed');
+  const skippedResults = results.filter((r) => r.status === 'skipped');
   const skippedPenalty = skippedResults.length;
 
   return (
@@ -42,9 +40,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
     >
       {/* Header */}
       <div className="text-center pt-2 space-y-1">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
-          Итог хода
-        </p>
+        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Итог хода</p>
         <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
           {currentExplainer}
         </h2>
@@ -109,7 +105,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
 
                 {/* Player picker */}
                 <div className="flex flex-wrap gap-2">
-                  {otherPlayers.map(player => {
+                  {otherPlayers.map((player) => {
                     const isActive = selected === player;
                     return (
                       <button

@@ -1,5 +1,5 @@
 export enum FakeArtistPhase {
   Distributing = 'distributing',
-  Playing      = 'playing',
-  Voting       = 'voting',
+  Playing = 'playing',
+  Voting = 'voting',
 }

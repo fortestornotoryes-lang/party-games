@@ -11,7 +11,12 @@ interface CluePhaseProps {
   onDone: () => void;
 }
 
-export const CluePhase: React.FC<CluePhaseProps> = ({ psychic, currentPair, targetValue, onDone }) => (
+export const CluePhase: React.FC<CluePhaseProps> = ({
+  psychic,
+  currentPair,
+  targetValue,
+  onDone,
+}) => (
   <motion.div
     key="clue"
     initial={{ opacity: 0, y: 20 }}
@@ -20,9 +25,15 @@ export const CluePhase: React.FC<CluePhaseProps> = ({ psychic, currentPair, targ
     className="h-full flex flex-col space-y-12"
   >
     <div className="text-center space-y-4">
-      <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">Текущий Телепат</div>
-      <h3 className="text-4xl font-black italic text-premium-purple tracking-tighter uppercase">{psychic}</h3>
-      <p className="text-sm text-gray-500 font-bold max-w-xs mx-auto">Только ты видишь целевую зону на шкале!</p>
+      <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
+        Текущий Телепат
+      </div>
+      <h3 className="text-4xl font-black italic text-premium-purple tracking-tighter uppercase">
+        {psychic}
+      </h3>
+      <p className="text-sm text-gray-500 font-bold max-w-xs mx-auto">
+        Только ты видишь целевую зону на шкале!
+      </p>
     </div>
 
     <div className="flex-1 flex flex-col items-center justify-center space-y-12">

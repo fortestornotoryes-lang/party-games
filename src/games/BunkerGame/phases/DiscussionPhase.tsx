@@ -11,9 +11,9 @@ import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface DiscussionPhaseProps {
   characters: BunkerCharacter[];
-  revealRound: number;       // 1, 2, or 3
+  revealRound: number; // 1, 2, or 3
   totalRounds: number;
-  onNext: () => void;        // go to next reveal round or voting
+  onNext: () => void; // go to next reveal round or voting
 }
 
 const DISCUSSION_SECONDS = 150; // 2.5 minutes
@@ -64,7 +64,8 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
         <div className="flex items-center justify-center gap-2">
           <MessageCircle className="w-4 h-4 text-premium-green" />
           <Typography.Label size="sm" color="green">
-            {t(`${NS.BUNKER}.discussionOf`)} — {t(`${NS.BUNKER}.discussionRoundNames.r${revealRound}`)}
+            {t(`${NS.BUNKER}.discussionOf`)} —{' '}
+            {t(`${NS.BUNKER}.discussionRoundNames.r${revealRound}`)}
           </Typography.Label>
         </div>
         <Typography.Caption color="faint">
@@ -77,10 +78,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
         <TimerBar pct={timerPct} color={timerColor} />
         <div className="flex items-center justify-center gap-2">
           <Clock className="w-3.5 h-3.5 text-white/30" />
-          <span
-            className="text-2xl font-black italic tabular-nums"
-            style={{ color: timerColor }}
-          >
+          <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
             {minutes}:{String(seconds).padStart(2, '0')}
           </span>
         </div>
@@ -88,9 +86,11 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
 
       {/* What was revealed this round */}
       <div className="space-y-2">
-        <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.revealedThisRound`)}</Typography.Label>
+        <Typography.Label size="xs" color="muted">
+          {t(`${NS.BUNKER}.revealedThisRound`)}
+        </Typography.Label>
         <div className="space-y-1.5">
-          {characters.map(char => {
+          {characters.map((char) => {
             const rev = getRevealedTrait(char, revealRound);
             if (!rev) return null;
             return (
@@ -105,13 +105,12 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                 <span className="text-xl w-7 text-center flex-shrink-0">{rev.entry.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-[9px] text-white/30 font-black uppercase tracking-widest">
-                    {char.playerName} · {char.age} л · {char.gender} · {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
+                    {char.playerName} · {char.age} л · {char.gender} ·{' '}
+                    {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                   </div>
                   <div className="text-sm font-bold text-white truncate">{rev.entry.name}</div>
                 </div>
-                {!rev.entry.isPositive && (
-                  <span className="text-xs text-premium-red/70">⚠</span>
-                )}
+                {!rev.entry.isPositive && <span className="text-xs text-premium-red/70">⚠</span>}
               </div>
             );
           })}
@@ -121,9 +120,11 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       {/* Previous rounds summary (compact) */}
       {revealRound > 1 && (
         <div className="space-y-2">
-          <Typography.Label size="xs" color="muted">{t(`${NS.BUNKER}.revealedBefore`)}</Typography.Label>
+          <Typography.Label size="xs" color="muted">
+            {t(`${NS.BUNKER}.revealedBefore`)}
+          </Typography.Label>
           <div className="space-y-1">
-            {characters.map(char => {
+            {characters.map((char) => {
               const prev: string[] = [];
               for (let r = 1; r < revealRound; r++) {
                 const rev = getRevealedTrait(char, r);
@@ -131,7 +132,9 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
               }
               return (
                 <div key={char.playerName} className="flex items-start gap-2 text-[11px]">
-                  <span className="font-black text-white/50 w-20 flex-shrink-0 truncate">{char.playerName}</span>
+                  <span className="font-black text-white/50 w-20 flex-shrink-0 truncate">
+                    {char.playerName}
+                  </span>
                   <span className="text-white/30">{prev.join(' · ')}</span>
                 </div>
               );

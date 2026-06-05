@@ -8,9 +8,9 @@ import { NS } from '@/i18n/keys';
 import { getRevealedTrait, type BunkerCharacter } from '../types';
 
 interface VotingPhaseProps {
-  characters:     BunkerCharacter[];
+  characters: BunkerCharacter[];
   bunkerCapacity: number;
-  directorName?:  string | null;
+  directorName?: string | null;
   onConfirm: (eliminatedNames: string[]) => void;
 }
 
@@ -23,15 +23,15 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
   const { t } = useTranslation();
 
   // Director occupies one guaranteed spot — exclude from voting
-  const votable     = directorName
-    ? characters.filter(c => c.playerName !== directorName)
+  const votable = directorName
+    ? characters.filter((c) => c.playerName !== directorName)
     : characters;
   const toEliminate = Math.max(0, characters.length - bunkerCapacity);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const toggle = (name: string) => {
     feedbackService.vibrate(VIBRATE.tap);
-    setSelected(prev => {
+    setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(name)) {
         next.delete(name);
@@ -62,7 +62,9 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
       <div className="text-center space-y-1">
         <div className="flex items-center justify-center gap-2">
           <Vote className="w-4 h-4 text-premium-red" />
-          <Typography.Label size="sm" color="red">{t(`${NS.BUNKER}.votingLabel`)}</Typography.Label>
+          <Typography.Label size="sm" color="red">
+            {t(`${NS.BUNKER}.votingLabel`)}
+          </Typography.Label>
         </div>
         <Typography.Title size="sm" color="white" align="center">
           {t(`${NS.BUNKER}.whoWontEnter`)}
@@ -121,10 +123,10 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
 
       {/* Player list */}
       <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
-        {votable.map(char => {
+        {votable.map((char) => {
           const isSelected = selected.has(char.playerName);
           const revealed = [1, 2, 3, 4, 5]
-            .map(r => getRevealedTrait(char, r))
+            .map((r) => getRevealedTrait(char, r))
             .filter(Boolean) as { label: string; entry: { emoji: string; name: string } }[];
 
           return (
@@ -134,9 +136,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
               whileTap={{ scale: 0.97 }}
               className="w-full text-left rounded-2xl transition-all"
               style={{
-                background: isSelected
-                  ? 'rgba(255,46,77,0.1)'
-                  : 'rgba(255,255,255,0.04)',
+                background: isSelected ? 'rgba(255,46,77,0.1)' : 'rgba(255,255,255,0.04)',
                 border: isSelected
                   ? '1.5px solid rgba(255,46,77,0.4)'
                   : '1px solid rgba(255,255,255,0.08)',

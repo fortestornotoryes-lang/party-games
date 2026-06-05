@@ -48,7 +48,9 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           transition={{ delay: 0.2 }}
           className="text-center space-y-1"
         >
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-premium-red/70">Неверно!</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-premium-red/70">
+            Неверно!
+          </p>
           <p className="text-[15px] font-bold text-white/70">{currentPlayer}</p>
           <p className="text-[12px] text-white/35">Вопрос {questionIndex + 1} из 15</p>
         </motion.div>
@@ -64,7 +66,9 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-premium-green" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">Правильный ответ</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
+                Правильный ответ
+              </span>
             </div>
             <p className="text-[15px] font-bold text-white text-center">{correctAnswer}</p>
           </motion.div>
@@ -77,7 +81,9 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           transition={{ delay: 0.35 }}
           className="w-full glass-card rounded-premium-lg p-4 text-center"
         >
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30 mb-1">Гарантированная сумма</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30 mb-1">
+            Гарантированная сумма
+          </p>
           <p className="text-[36px] font-black font-display italic tracking-tighter text-white/60 leading-none">
             {guaranteed}
           </p>
@@ -93,20 +99,29 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Счёт</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+                Счёт
+              </span>
             </div>
             <div className="space-y-2">
               {Object.entries(playerScores)
-                .sort((a, b) => parseFloat(b[1].replace(/\D/g, '')) - parseFloat(a[1].replace(/\D/g, '')))
+                .sort(
+                  (a, b) =>
+                    parseFloat(b[1].replace(/\D/g, '')) - parseFloat(a[1].replace(/\D/g, ''))
+                )
                 .map(([name, score], i) => (
                   <div key={name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
-                      <span className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-white' : 'text-white/55'}`}>
+                      <span
+                        className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-white' : 'text-white/55'}`}
+                      >
                         {name}
                       </span>
                     </div>
-                    <span className={`text-[13px] font-black ${name === currentPlayer ? 'text-white/60' : 'text-white/40'}`}>
+                    <span
+                      className={`text-[13px] font-black ${name === currentPlayer ? 'text-white/60' : 'text-white/40'}`}
+                    >
                       {score}
                     </span>
                   </div>
@@ -123,11 +138,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         transition={{ delay: 0.5 }}
         className="w-full pt-4"
       >
-        <PrimaryButton
-          variant="white"
-          icon={ChevronRight}
-          onClick={onNextPlayer}
-        >
+        <PrimaryButton variant="white" icon={ChevronRight} onClick={onNextPlayer}>
           Следующий игрок
         </PrimaryButton>
       </motion.div>

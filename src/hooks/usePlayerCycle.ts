@@ -14,13 +14,13 @@ import { useState, useCallback } from 'react';
  * const psychic = playerNames[psychicIdx];
  * const nextPsychic = () => setPsychicIdx(i => (i + 1) % playerNames.length);
  */
-export const usePlayerCycle = <T,>(items: T[]) => {
+export const usePlayerCycle = <T>(items: T[]) => {
   const [idx, setIdx] = useState(0);
 
   const current = items[idx];
-  const isLast  = idx === items.length - 1;
+  const isLast = idx === items.length - 1;
 
-  const next  = useCallback(() => setIdx(i => (i + 1) % items.length), [items.length]);
+  const next = useCallback(() => setIdx((i) => (i + 1) % items.length), [items.length]);
   const reset = useCallback(() => setIdx(0), []);
 
   return { current, idx, isLast, next, reset };

@@ -12,7 +12,12 @@ interface ActionPhaseProps {
   onDone: () => void;
 }
 
-export const ActionPhase: React.FC<ActionPhaseProps> = ({ currentPlayer, choice, content, onDone }) => {
+export const ActionPhase: React.FC<ActionPhaseProps> = ({
+  currentPlayer,
+  choice,
+  content,
+  onDone,
+}) => {
   const isTruth = choice === 'truth';
 
   return (
@@ -25,11 +30,13 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({ currentPlayer, choice,
       className="h-full flex flex-col p-5 gap-6"
     >
       <div className="flex flex-col items-center gap-2 pt-2">
-        <div className={`px-4 py-1.5 rounded-full border ${
-          isTruth
-            ? 'bg-premium-sky/10 border-premium-sky/25'
-            : 'bg-premium-red/10 border-premium-red/25'
-        }`}>
+        <div
+          className={`px-4 py-1.5 rounded-full border ${
+            isTruth
+              ? 'bg-premium-sky/10 border-premium-sky/25'
+              : 'bg-premium-red/10 border-premium-red/25'
+          }`}
+        >
           <Typography.Label color={isTruth ? 'sky' : 'red'} as="span">
             {isTruth ? 'Правда' : 'Действие'}
           </Typography.Label>
@@ -50,9 +57,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({ currentPlayer, choice,
             border: isTruth
               ? '1.5px solid rgba(31,182,255,0.2)'
               : '1.5px solid rgba(255,46,77,0.2)',
-            boxShadow: isTruth
-              ? '0 0 80px rgba(31,182,255,0.07)'
-              : '0 0 80px rgba(255,46,77,0.07)',
+            boxShadow: isTruth ? '0 0 80px rgba(31,182,255,0.07)' : '0 0 80px rgba(255,46,77,0.07)',
           }}
         >
           <div
@@ -62,17 +67,11 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({ currentPlayer, choice,
                 'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
             }}
           />
-          <p className="text-xl font-black leading-snug relative z-10 text-white">
-            {content}
-          </p>
+          <p className="text-xl font-black leading-snug relative z-10 text-white">{content}</p>
         </motion.div>
       </div>
 
-      <PrimaryButton
-        onClick={onDone}
-        icon={CheckCircle}
-        variant={isTruth ? 'blue' : 'red'}
-      >
+      <PrimaryButton onClick={onDone} icon={CheckCircle} variant={isTruth ? 'blue' : 'red'}>
         ВЫПОЛНЕНО
       </PrimaryButton>
     </motion.div>

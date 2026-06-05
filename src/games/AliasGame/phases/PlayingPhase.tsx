@@ -33,11 +33,21 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
     <div className="flex justify-center pt-5 pb-1">
       <div className="relative w-16 h-16">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.05)" strokeWidth="3" fill="none" />
           <circle
-            cx="32" cy="32" r="28"
+            cx="32"
+            cy="32"
+            r="28"
+            stroke="rgba(255,255,255,0.05)"
+            strokeWidth="3"
+            fill="none"
+          />
+          <circle
+            cx="32"
+            cy="32"
+            r="28"
             stroke={timeLeft <= 10 ? '#FF2E4D' : '#1FB6FF'}
-            strokeWidth="3" fill="none"
+            strokeWidth="3"
+            fill="none"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={CIRCUMFERENCE - (CIRCUMFERENCE * timeLeft) / roundTime}
             strokeLinecap="round"
@@ -45,7 +55,9 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white'}`}>
+          <span
+            className={`text-xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white'}`}
+          >
             {timeLeft}
           </span>
         </div>
@@ -62,7 +74,9 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           transition={{ type: 'spring', stiffness: 380, damping: 26 }}
           className="space-y-2"
         >
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-sky/35">Объясни слово</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-sky/35">
+            Объясни слово
+          </p>
           <h2 className="text-[58px] font-black italic uppercase tracking-tighter text-white leading-none wrap-break-word">
             {currentWord}
           </h2>
@@ -72,7 +86,9 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
     <div className="text-center pb-3">
       <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">Очки: </span>
-      <span className={`text-[9px] font-black uppercase tracking-[0.3em] ${roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'}`}>
+      <span
+        className={`text-[9px] font-black uppercase tracking-[0.3em] ${roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'}`}
+      >
         {fmtScore(roundScore)}
       </span>
     </div>
@@ -83,14 +99,18 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         className="h-[86px] rounded-[22px] bg-premium-red/[0.07] border border-premium-red/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-red/14 transition-all"
       >
         <XCircle className="w-8 h-8 text-premium-red" />
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-premium-red/55">Пропустить</span>
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-premium-red/55">
+          Пропустить
+        </span>
       </button>
       <button
         onClick={onCorrect}
         className="h-[86px] rounded-[22px] bg-premium-green/[0.07] border border-premium-green/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-green/14 transition-all"
       >
         <CheckCircle className="w-8 h-8 text-premium-green" />
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-premium-green/55">Угадано</span>
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-premium-green/55">
+          Угадано
+        </span>
       </button>
     </div>
   </motion.div>

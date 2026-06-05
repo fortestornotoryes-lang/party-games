@@ -23,7 +23,11 @@ interface TelestrationsGameProps {
   initialDifficulty?: Difficulty;
 }
 
-export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerNames, onBack, initialDifficulty }) => {
+export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
+  playerNames,
+  onBack,
+  initialDifficulty,
+}) => {
   const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
@@ -34,7 +38,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
     return { word, difficulty: initialDifficulty };
   });
 
-  const [phase, setPhase] = useState<TelestrationsPhase>(initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup);
+  const [phase, setPhase] = useState<TelestrationsPhase>(
+    initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup
+  );
   const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
   const [initialWord, setInitialWord] = useState(initState?.word ?? '');
   const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
@@ -81,24 +87,31 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.celebrate);
       if (settings.visualEffects) {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#f97316', '#ffffff'] });
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#f97316', '#ffffff'],
+        });
       }
       setPhase(TelestrationsPhase.Gallery);
     } else {
       feedbackService.playSound('click');
-      setCurrentRound(prev => prev + 1);
+      setCurrentRound((prev) => prev + 1);
       setPhase(TelestrationsPhase.Transition);
     }
   };
 
   useEffect(() => {
-    if (phase === TelestrationsPhase.Action && !isDrawingRound && timeLeft === 0) finishAction(guess, 'guess');
+    if (phase === TelestrationsPhase.Action && !isDrawingRound && timeLeft === 0)
+      finishAction(guess, 'guess');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, phase, isDrawingRound]);
 
-  const subtitle = phase === TelestrationsPhase.Setup
-    ? `${playerNames.length} игроков`
-    : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
+  const subtitle =
+    phase === TelestrationsPhase.Setup
+      ? `${playerNames.length} игроков`
+      : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
 
   return (
     <div className="flex flex-col h-screen select-none overflow-hidden">
@@ -112,7 +125,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
 
       <div className="flex-1 relative min-h-0">
         <AnimatePresence mode="wait">
-
           {phase === TelestrationsPhase.Setup && (
             <TelestrationsSetup
               playerCount={playerNames.length}
@@ -144,10 +156,16 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
             >
               <div className="flex items-center gap-1.5">
                 {shuffledPlayers.map((_, i) => (
-                  <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i < currentRound ? 'bg-premium-orange/40 w-3' :
-                    i === currentRound ? 'bg-premium-orange w-6' : 'bg-white/10 w-3'
-                  }`} />
+                  <div
+                    key={i}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i < currentRound
+                        ? 'bg-premium-orange/40 w-3'
+                        : i === currentRound
+                          ? 'bg-premium-orange w-6'
+                          : 'bg-white/10 w-3'
+                    }`}
+                  />
                 ))}
               </div>
               <div className="w-full max-w-sm">
@@ -155,7 +173,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
                   playerName={currentPlayer}
                   badge={isDrawingRound ? 'Рисует' : 'Угадывает'}
                   badgeColor={isDrawingRound ? 'orange' : 'sky'}
-                  instruction={isDrawingRound ? 'Нажми чтобы увидеть слово' : 'Нажми чтобы увидеть рисунок'}
+                  instruction={
+                    isDrawingRound ? 'Нажми чтобы увидеть слово' : 'Нажми чтобы увидеть рисунок'
+                  }
                   onClick={startAction}
                 />
               </div>
@@ -200,10 +220,8 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({ playerName
               onBack={onBack}
             />
           )}
-
         </AnimatePresence>
       </div>
-
     </div>
   );
 };

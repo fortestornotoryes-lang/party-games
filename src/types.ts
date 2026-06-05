@@ -55,7 +55,19 @@ export enum GameStatus {
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type GameMode = 'classic' | 'double_agent' | 'mole' | string;
 
-export type GameTheme = 'red' | 'green' | 'sky' | 'yellow' | 'orange' | 'purple' | 'blue' | 'pink' | 'cyan'| 'lime' | 'teal' | 'indigo';
+export type GameTheme =
+  | 'red'
+  | 'green'
+  | 'sky'
+  | 'yellow'
+  | 'orange'
+  | 'purple'
+  | 'blue'
+  | 'pink'
+  | 'cyan'
+  | 'lime'
+  | 'teal'
+  | 'indigo';
 
 export interface GameModeOption {
   id: string;

@@ -10,16 +10,20 @@ interface LeaderboardListProps {
  * Ranked score list for GameOver screens.
  * Sorts players by score, highlights the winner in yellow.
  */
-export const LeaderboardList: React.FC<LeaderboardListProps> = ({ players, scores, className = '' }) => {
-  const sorted      = [...players].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
-  const topScore    = scores[sorted[0]] ?? 0;
+export const LeaderboardList: React.FC<LeaderboardListProps> = ({
+  players,
+  scores,
+  className = '',
+}) => {
+  const sorted = [...players].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
+  const topScore = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
-  const hasWinner   = topScore > 0 && topScore > secondScore;
+  const hasWinner = topScore > 0 && topScore > secondScore;
 
   return (
     <div className={`w-full space-y-3 ${className}`}>
       {sorted.map((player, idx) => {
-        const sc       = scores[player] ?? 0;
+        const sc = scores[player] ?? 0;
         const isWinner = idx === 0 && hasWinner;
         return (
           <div
@@ -31,14 +35,21 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({ players, score
             }`}
           >
             <div className="flex items-center gap-3 min-w-0">
-              <span className={`shrink-0 text-xl font-black italic w-8 ${isWinner ? 'text-premium-yellow' : 'text-white/20'}`}>
+              <span
+                className={`shrink-0 text-xl font-black italic w-8 ${isWinner ? 'text-premium-yellow' : 'text-white/20'}`}
+              >
                 #{idx + 1}
               </span>
-              <p className={`font-black text-base truncate ${isWinner ? 'text-premium-yellow' : 'text-white/70'}`}>
-                {isWinner ? '🏆 ' : ''}{player}
+              <p
+                className={`font-black text-base truncate ${isWinner ? 'text-premium-yellow' : 'text-white/70'}`}
+              >
+                {isWinner ? '🏆 ' : ''}
+                {player}
               </p>
             </div>
-            <span className={`text-4xl font-black italic ml-3 tabular-nums shrink-0 ${isWinner ? 'text-premium-yellow' : 'text-white/50'}`}>
+            <span
+              className={`text-4xl font-black italic ml-3 tabular-nums shrink-0 ${isWinner ? 'text-premium-yellow' : 'text-white/50'}`}
+            >
               {sc}
             </span>
           </div>

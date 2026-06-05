@@ -15,15 +15,21 @@ import {
   calculateSurvival,
 } from '@/constants/bunkerContent';
 import { BunkerPhase } from './types';
-import type { BunkerCharacter, CatastropheScenario, SurvivalEvent, BunkerResources, SurvivalOutcome } from './types';
-import { BriefingPhase }        from './phases/BriefingPhase';
-import { DictatorRevealPhase }  from './phases/DictatorRevealPhase';
-import { RevealPhase }          from './phases/RevealPhase';
-import { DiscussionPhase }      from './phases/DiscussionPhase';
-import { VotingPhase }          from './phases/VotingPhase';
-import { TribunalPhase }        from './phases/TribunalPhase';
-import { SurvivalPhase }        from './phases/SurvivalPhase';
-import { ResultsPhase }         from './phases/ResultsPhase';
+import type {
+  BunkerCharacter,
+  CatastropheScenario,
+  SurvivalEvent,
+  BunkerResources,
+  SurvivalOutcome,
+} from './types';
+import { BriefingPhase } from './phases/BriefingPhase';
+import { DictatorRevealPhase } from './phases/DictatorRevealPhase';
+import { RevealPhase } from './phases/RevealPhase';
+import { DiscussionPhase } from './phases/DiscussionPhase';
+import { VotingPhase } from './phases/VotingPhase';
+import { TribunalPhase } from './phases/TribunalPhase';
+import { SurvivalPhase } from './phases/SurvivalPhase';
+import { ResultsPhase } from './phases/ResultsPhase';
 
 interface BunkerGameProps {
   playerNames: string[];
@@ -43,53 +49,68 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
 
   const bunkerCapacity = useMemo(
     () => Math.max(2, Math.round(playerNames.length * (CAPACITY_PCT[difficulty] ?? 0.6))),
-    [playerNames.length, difficulty],
+    [playerNames.length, difficulty]
   );
 
-  const [scenario]   = useState<CatastropheScenario>(() => pickRandom(CATASTROPHE_SCENARIOS));
+  const [scenario] = useState<CatastropheScenario>(() => pickRandom(CATASTROPHE_SCENARIOS));
   const [characters] = useState<BunkerCharacter[]>(() =>
-    shuffle(playerNames).map(name => generateCharacter(name)),
+    shuffle(playerNames).map((name) => generateCharacter(name))
   );
-  const [events]     = useState<SurvivalEvent[]>(() => {
+  const [events] = useState<SurvivalEvent[]>(() => {
     const pool = shuffle([...SURVIVAL_EVENTS]);
     return [pool[0], pool[1]]; // pick 2 events
   });
 
   // ── Mode-specific state ────────────────────────────────────────────────────
   const [directorName] = useState<string | null>(() =>
-    isDictator ? pickRandom(characters).playerName : null,
+    isDictator ? pickRandom(characters).playerName : null
   );
 
   // ── Phase state ────────────────────────────────────────────────────────────
-  const [phase,          setPhase]          = useState<BunkerPhase>(BunkerPhase.Briefing);
-  const [revealRound,    setRevealRound]    = useState(1);
+  const [phase, setPhase] = useState<BunkerPhase>(BunkerPhase.Briefing);
+  const [revealRound, setRevealRound] = useState(1);
   const [revealPlayerIdx, setRevealPlayerIdx] = useState(0);
   const [eliminatedNames, setEliminatedNames] = useState<string[]>([]);
 
   // ── Derived ────────────────────────────────────────────────────────────────
-  const bunkerTeam = characters.filter(c => !eliminatedNames.includes(c.playerName));
-  const eliminated = characters.filter(c =>  eliminatedNames.includes(c.playerName));
+  const bunkerTeam = characters.filter((c) => !eliminatedNames.includes(c.playerName));
+  const eliminated = characters.filter((c) => eliminatedNames.includes(c.playerName));
 
-  const { resources, outcome } = useMemo<{ resources: BunkerResources; outcome: SurvivalOutcome }>(() => {
+  const { resources, outcome } = useMemo<{
+    resources: BunkerResources;
+    outcome: SurvivalOutcome;
+  }>(() => {
     if (eliminatedNames.length === 0) {
-      return { resources: { food: 100, water: 100, medicine: 100, energy: 100, morale: 100 }, outcome: 'full_victory' };
+      return {
+        resources: { food: 100, water: 100, medicine: 100, energy: 100, morale: 100 },
+        outcome: 'full_victory',
+      };
     }
-    const team = characters.filter(c => !eliminatedNames.includes(c.playerName));
+    const team = characters.filter((c) => !eliminatedNames.includes(c.playerName));
     return calculateSurvival(team, scenario, events);
   }, [eliminatedNames, characters, scenario, events]);
 
   // ── Subtitle for GameHeader ────────────────────────────────────────────────
   const subtitle = (() => {
     switch (phase) {
-      case BunkerPhase.Briefing:        return t(`${NS.BUNKER}.subtitleCatastrophe`);
-      case BunkerPhase.DictatorReveal:  return t(`${NS.BUNKER}.subtitleDirector`);
-      case BunkerPhase.RevealPass:      return t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: TOTAL_REVEAL_ROUNDS });
-      case BunkerPhase.Discussion:      return t(`${NS.BUNKER}.subtitleDiscussion`, { n: revealRound });
-      case BunkerPhase.Voting:          return t(`${NS.BUNKER}.subtitleVoting`);
-      case BunkerPhase.Tribunal:        return t(`${NS.BUNKER}.subtitleTribunal`);
-      case BunkerPhase.SurvivalSim:     return t(`${NS.BUNKER}.subtitleSurvival`);
-      case BunkerPhase.Results:         return t(`${NS.BUNKER}.subtitleResults`);
-      default:                          return '';
+      case BunkerPhase.Briefing:
+        return t(`${NS.BUNKER}.subtitleCatastrophe`);
+      case BunkerPhase.DictatorReveal:
+        return t(`${NS.BUNKER}.subtitleDirector`);
+      case BunkerPhase.RevealPass:
+        return t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: TOTAL_REVEAL_ROUNDS });
+      case BunkerPhase.Discussion:
+        return t(`${NS.BUNKER}.subtitleDiscussion`, { n: revealRound });
+      case BunkerPhase.Voting:
+        return t(`${NS.BUNKER}.subtitleVoting`);
+      case BunkerPhase.Tribunal:
+        return t(`${NS.BUNKER}.subtitleTribunal`);
+      case BunkerPhase.SurvivalSim:
+        return t(`${NS.BUNKER}.subtitleSurvival`);
+      case BunkerPhase.Results:
+        return t(`${NS.BUNKER}.subtitleResults`);
+      default:
+        return '';
     }
   })();
 
@@ -113,7 +134,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
       setPhase(BunkerPhase.Discussion);
     } else {
       // Next player
-      setRevealPlayerIdx(prev => prev + 1);
+      setRevealPlayerIdx((prev) => prev + 1);
       // Stay in RevealPass (the key change re-mounts the phase component)
       setPhase(BunkerPhase.RevealPass);
     }
@@ -125,7 +146,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) =
     if (isLastRound) {
       setPhase(BunkerPhase.Voting);
     } else {
-      setRevealRound(prev => prev + 1);
+      setRevealRound((prev) => prev + 1);
       setRevealPlayerIdx(0);
       setPhase(BunkerPhase.RevealPass);
     }

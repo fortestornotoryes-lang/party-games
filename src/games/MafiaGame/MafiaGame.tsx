@@ -20,15 +20,19 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
       </motion.div>
 
       <div className="space-y-2">
-        <h2 className="text-3xl font-black italic uppercase tracking-tighter">{GAMES_REGISTRY.mafia.title}</h2>
-        <p className="text-white/30 uppercase tracking-[0.2em] text-[10px] font-bold">Город засыпает...</p>
+        <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+          {GAMES_REGISTRY.mafia.title}
+        </h2>
+        <p className="text-white/30 uppercase tracking-[0.2em] text-[10px] font-bold">
+          Город засыпает...
+        </p>
       </div>
 
       <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-3xl p-8 space-y-6">
         <div className="flex justify-center gap-4">
-           <Sun className="w-6 h-6 text-premium-yellow" />
-           <Moon className="w-6 h-6 text-premium-purple" />
-           <Shield className="w-6 h-6 text-premium-blue" />
+          <Sun className="w-6 h-6 text-premium-yellow" />
+          <Moon className="w-6 h-6 text-premium-purple" />
+          <Shield className="w-6 h-6 text-premium-blue" />
         </div>
         <p className="text-white/40 text-sm leading-relaxed">
           Этот режим игры находится в разработке. <br />

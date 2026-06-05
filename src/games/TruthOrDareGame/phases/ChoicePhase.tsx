@@ -24,8 +24,12 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
       transition={{ delay: 0.05, duration: 0.2 }}
       className="flex flex-col items-center justify-center py-4 px-6"
     >
-      <Typography.Label color="faint" className="mb-1.5">Выбирает</Typography.Label>
-      <Typography.Display size="md" className="text-center">{currentPlayer}</Typography.Display>
+      <Typography.Label color="faint" className="mb-1.5">
+        Выбирает
+      </Typography.Label>
+      <Typography.Display size="md" className="text-center">
+        {currentPlayer}
+      </Typography.Display>
     </motion.div>
 
     <div className="h-40" />
@@ -40,7 +44,8 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
         onClick={() => onChoice('truth')}
         className="flex-1 rounded-4xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
         style={{
-          background: 'linear-gradient(160deg, rgba(31,182,255,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(31,182,255,0.05) 100%)',
+          background:
+            'linear-gradient(160deg, rgba(31,182,255,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(31,182,255,0.05) 100%)',
           border: '1px solid rgba(31,182,255,0.26)',
           boxShadow: '0 30px 90px -15px rgba(31,182,255,0.18), inset 0 1px 0 rgba(31,182,255,0.18)',
         }}
@@ -82,7 +87,8 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
         onClick={() => onChoice('dare')}
         className="flex-1 rounded-4xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
         style={{
-          background: 'linear-gradient(160deg, rgba(255,46,77,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(255,46,77,0.05) 100%)',
+          background:
+            'linear-gradient(160deg, rgba(255,46,77,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(255,46,77,0.05) 100%)',
           border: '1px solid rgba(255,46,77,0.26)',
           boxShadow: '0 30px 90px -15px rgba(255,46,77,0.18), inset 0 1px 0 rgba(255,46,77,0.18)',
         }}

@@ -33,8 +33,10 @@ export const TelestrationsSetup: React.FC<Props> = ({
     </div>
 
     <div className="w-full max-w-sm space-y-3">
-      <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">Сложность</p>
-      {(['easy', 'medium', 'hard'] as Difficulty[]).map(diff => {
+      <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">
+        Сложность
+      </p>
+      {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
         const cfg = DIFFICULTY_CONFIG[diff];
         const isSelected = difficulty === diff;
         return (
@@ -48,12 +50,22 @@ export const TelestrationsSetup: React.FC<Props> = ({
           >
             <span className="text-2xl leading-none">{cfg.emoji}</span>
             <div className="flex-1 min-w-0">
-              <h4 className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-white/40'}`}>{cfg.label}</h4>
+              <h4
+                className={`text-base font-black uppercase italic ${isSelected ? cfg.text : 'text-white/40'}`}
+              >
+                {cfg.label}
+              </h4>
               <p className="text-xs text-white/30 mt-0.5 leading-tight">{cfg.description}</p>
             </div>
             <div className="shrink-0 text-right">
-              <p className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-white/25'}`}>{cfg.drawTime}с</p>
-              <p className="text-[9px] text-white/25 uppercase font-bold tracking-widest">рисунок</p>
+              <p
+                className={`text-base font-black tabular-nums ${isSelected ? cfg.text : 'text-white/25'}`}
+              >
+                {cfg.drawTime}с
+              </p>
+              <p className="text-[9px] text-white/25 uppercase font-bold tracking-widest">
+                рисунок
+              </p>
             </div>
           </motion.button>
         );

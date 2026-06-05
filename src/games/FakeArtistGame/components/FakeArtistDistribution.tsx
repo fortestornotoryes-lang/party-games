@@ -15,7 +15,7 @@ interface Props {
 
 export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) => {
   const { difficulty, rounds, timerSeconds } = useGameSettings();
-  const [word, setWord]         = useState('');
+  const [word, setWord] = useState('');
   const [category, setCategory] = useState('');
 
   useEffect(() => {
@@ -46,11 +46,13 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
       renderCard={(player, isLast, onNext) => (
         <>
           {/* Gradient bg */}
-          <div className={`absolute inset-0 ${
-            player.isSpy
-              ? 'bg-gradient-to-b from-premium-red/[0.22] via-premium-red/[0.06] to-black/70'
-              : 'bg-gradient-to-b from-premium-sky/[0.18] via-premium-sky/[0.05] to-black/70'
-          }`} />
+          <div
+            className={`absolute inset-0 ${
+              player.isSpy
+                ? 'bg-gradient-to-b from-premium-red/[0.22] via-premium-red/[0.06] to-black/70'
+                : 'bg-gradient-to-b from-premium-sky/[0.18] via-premium-sky/[0.05] to-black/70'
+            }`}
+          />
 
           {/* Top glow */}
           <div
@@ -59,7 +61,6 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
           />
 
           <div className="relative z-10 flex flex-col flex-1 p-7 items-center text-center">
-
             {/* ── SPY ── */}
             {player.isSpy && (
               <motion.div
@@ -68,12 +69,17 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">Секретная роль</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">
+                    Секретная роль
+                  </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                 </div>
 
                 <div className="space-y-3">
-                  <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 2.5, repeat: Infinity }}>
+                  <motion.div
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                  >
                     <Ghost
                       className="w-[88px] h-[88px] text-premium-red mx-auto"
                       style={{ filter: `drop-shadow(0 0 20px ${rgba('red', 0.5)})` }}
@@ -86,11 +92,15 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     САМО&shy;ЗВАНЕЦ
                   </h3>
                   <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
-                    <p className="text-[8px] font-black uppercase text-premium-red/55 mb-0.5">Тема</p>
+                    <p className="text-[8px] font-black uppercase text-premium-red/55 mb-0.5">
+                      Тема
+                    </p>
                     <p className="text-sm font-black italic text-white uppercase">{category}</p>
                   </div>
                   <p className="text-white/30 text-[10px] leading-relaxed">
-                    Слово неизвестно — рисуй,<br />чтобы не выдать себя
+                    Слово неизвестно — рисуй,
+                    <br />
+                    чтобы не выдать себя
                   </p>
                 </div>
 
@@ -112,7 +122,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-sky/50">Художник</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-sky/50">
+                    Художник
+                  </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                 </div>
 
@@ -122,7 +134,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     style={{ filter: `drop-shadow(0 0 16px ${rgba('sky', 0.45)})` }}
                   />
                   <div className="space-y-1">
-                    <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-sky/50">Твоё слово</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-sky/50">
+                      Твоё слово
+                    </p>
                     <h3
                       className="text-[46px] font-black italic text-white uppercase tracking-tighter leading-tight"
                       style={{ textShadow: `0 0 32px ${rgba('sky', 0.25)}` }}
@@ -131,10 +145,14 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     </h3>
                   </div>
                   <div className="px-4 py-3 bg-premium-sky/10 border border-premium-sky/20 rounded-2xl">
-                    <p className="text-[8px] font-black uppercase text-premium-sky/50 tracking-widest mb-1">Тема</p>
+                    <p className="text-[8px] font-black uppercase text-premium-sky/50 tracking-widest mb-1">
+                      Тема
+                    </p>
                     <p className="text-base font-black italic text-white uppercase">{category}</p>
                   </div>
-                  <p className="text-white/[0.22] text-[10px]">Рисуй, не раскрывая слово напрямую</p>
+                  <p className="text-white/[0.22] text-[10px]">
+                    Рисуй, не раскрывая слово напрямую
+                  </p>
                 </div>
 
                 <button
@@ -146,7 +164,6 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 </button>
               </motion.div>
             )}
-
           </div>
         </>
       )}

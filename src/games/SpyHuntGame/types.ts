@@ -1,5 +1,5 @@
 export enum SpyHuntPhase {
   Distributing = 'distributing',
-  Playing      = 'playing',
-  Reveal       = 'reveal',
+  Playing = 'playing',
+  Reveal = 'reveal',
 }

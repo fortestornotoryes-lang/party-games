@@ -40,7 +40,9 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
       <div className="text-center space-y-2 mt-2">
         <div className="flex items-center justify-center gap-2">
           <Crown className="w-4 h-4" style={{ color: 'var(--color-premium-yellow)' }} />
-          <Typography.Label size="sm" color="muted">{t(`${NS.BUNKER}.modeDictator`)}</Typography.Label>
+          <Typography.Label size="sm" color="muted">
+            {t(`${NS.BUNKER}.modeDictator`)}
+          </Typography.Label>
         </div>
         <Typography.Heading size="md" color="white" align="center">
           {t(`${NS.BUNKER}.directorElected`)}

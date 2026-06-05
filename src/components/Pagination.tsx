@@ -23,7 +23,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, total, perPage, on
       </button>
 
       <div className="flex items-center gap-1.5">
-        {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
+        {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
           <button
             key={p}
             onClick={() => onChange(p)}

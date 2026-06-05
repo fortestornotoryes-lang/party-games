@@ -37,29 +37,29 @@ export const TabooPassPhase: React.FC<TabooPassPhaseProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-  <motion.div
-    key="pass"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    className="min-h-full flex flex-col items-center justify-center p-6 gap-8"
-  >
-    <PassPhoneCard
-      playerName={currentExplainer}
-      badge={t(`${NS.TABOO}.explainerBadge`)}
-      badgeColor={accentColor}
-      instruction={instruction}
-      icon={icon}
-      accentColor={accentColor}
-      onClick={onStart}
-    />
-    <PlayerScoreList
-      players={playerNames}
-      scores={scores}
-      activePlayer={currentExplainer}
-      accentColor={accentColor}
-      teams={teams}
-    />
-  </motion.div>
+    <motion.div
+      key="pass"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="min-h-full flex flex-col items-center justify-center p-6 gap-8"
+    >
+      <PassPhoneCard
+        playerName={currentExplainer}
+        badge={t(`${NS.TABOO}.explainerBadge`)}
+        badgeColor={accentColor}
+        instruction={instruction}
+        icon={icon}
+        accentColor={accentColor}
+        onClick={onStart}
+      />
+      <PlayerScoreList
+        players={playerNames}
+        scores={scores}
+        activePlayer={currentExplainer}
+        accentColor={accentColor}
+        teams={teams}
+      />
+    </motion.div>
   );
 };

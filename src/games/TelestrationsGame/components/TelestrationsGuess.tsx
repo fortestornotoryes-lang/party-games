@@ -23,8 +23,12 @@ export const TelestrationsGuess: React.FC<Props> = ({
 }) => (
   <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
     <div className="text-center space-y-1">
-      <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">💬 Угадай рисунок</p>
-      <span className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}>
+      <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">
+        💬 Угадай рисунок
+      </p>
+      <span
+        className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}
+      >
         {timeLeft}с
       </span>
       <h3 className="text-xl font-black italic">Что здесь изображено?</h3>
@@ -32,10 +36,16 @@ export const TelestrationsGuess: React.FC<Props> = ({
 
     <div className="flex justify-center gap-1.5">
       {shuffledPlayers.map((_, i) => (
-        <div key={i} className={`h-1 rounded-full transition-all duration-300 ${
-          i < currentRound ? 'w-3 bg-premium-orange/30' :
-          i === currentRound ? 'w-5 bg-premium-orange' : 'w-3 bg-white/10'
-        }`} />
+        <div
+          key={i}
+          className={`h-1 rounded-full transition-all duration-300 ${
+            i < currentRound
+              ? 'w-3 bg-premium-orange/30'
+              : i === currentRound
+                ? 'w-5 bg-premium-orange'
+                : 'w-3 bg-white/10'
+          }`}
+        />
       ))}
     </div>
 
@@ -47,8 +57,8 @@ export const TelestrationsGuess: React.FC<Props> = ({
       <input
         type="text"
         value={guess}
-        onChange={e => onGuessChange(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && guess.trim() && onSubmit()}
+        onChange={(e) => onGuessChange(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && guess.trim() && onSubmit()}
         placeholder="Напиши ответ..."
         className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
       />

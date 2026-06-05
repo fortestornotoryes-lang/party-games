@@ -2,7 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
 
-const BRUSH_COLORS = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#000000'];
+const BRUSH_COLORS = [
+  '#ffffff',
+  '#ef4444',
+  '#f59e0b',
+  '#10b981',
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#000000',
+];
 const BRUSH_SIZES = [1, 2, 4, 8, 14];
 
 interface DrawingCanvasProps {
@@ -53,7 +62,9 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         // Only save content if the canvas was already properly initialized —
         // the HTML default (300×150) is transparent and must not be restored.
         if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
-          try { saved = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch {}
+          try {
+            saved = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          } catch {}
         }
         canvas.width = newW;
         canvas.height = newH;
@@ -63,7 +74,11 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         ctx.imageSmoothingQuality = 'high';
         ctx.fillStyle = '#120a0a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if (saved) { try { ctx.putImageData(saved, 0, 0); } catch {} }
+        if (saved) {
+          try {
+            ctx.putImageData(saved, 0, 0);
+          } catch {}
+        }
         isCanvasReady.current = true;
       }
     };
@@ -77,7 +92,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   const getCoords = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
-    
+
     // For mouse events, native offsetX/Y is more robust against some layout styles
     if ('nativeEvent' in e && (e.nativeEvent as MouseEvent).offsetX !== undefined) {
       const mouseEvent = e.nativeEvent as MouseEvent;
@@ -86,7 +101,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       const scaleY = canvas.height / rect.height;
       return {
         x: mouseEvent.offsetX * scaleX,
-        y: mouseEvent.offsetY * scaleY
+        y: mouseEvent.offsetY * scaleY,
       };
     }
 
@@ -94,10 +109,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    
+
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     return {
       x: (clientX - rect.left) * scaleX,
       y: (clientY - rect.top) * scaleY,
@@ -111,7 +126,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-    
+
     if (canvas.width > 0 && canvas.height > 0) {
       try {
         drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
@@ -120,19 +135,19 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         console.error('History push error:', err);
       }
     }
-    
+
     setIsDrawing(true);
     const { x, y } = getCoords(e);
-    
+
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.strokeStyle = brushColor;
-    
+
     // Using simple ratio for line width consistency
     const rect = canvas.getBoundingClientRect();
     const dprScale = canvas.width / rect.width;
     ctx.lineWidth = brushSize * dprScale;
-    
+
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   };
@@ -140,10 +155,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing || !canvasRef.current) return;
     if ('cancelable' in e && e.cancelable) e.preventDefault();
-    
+
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
-    
+
     const { x, y } = getCoords(e);
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -178,8 +193,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
       <div className="flex-shrink-0 flex items-center justify-between px-1">
         <div>
-          <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">✏️ Рисуешь</p>
-          <motion.p 
+          <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">
+            ✏️ Рисуешь
+          </p>
+          <motion.p
             initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
             animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
             className="text-lg font-black text-orange-400 leading-tight"
@@ -188,16 +205,27 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           </motion.p>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}>
+          <span
+            className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}
+          >
             {timeLeft}с
           </span>
-          <button onClick={undoDrawing} className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all">
+          <button
+            onClick={undoDrawing}
+            className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all"
+          >
             <Undo2 className="w-5 h-5" />
           </button>
-          <button onClick={clearCanvas} className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all">
+          <button
+            onClick={clearCanvas}
+            className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all"
+          >
             <Eraser className="w-5 h-5" />
           </button>
-          <button onClick={handleSubmit} className="p-2.5 bg-white text-black rounded-xl hover:bg-zinc-200 transition-all">
+          <button
+            onClick={handleSubmit}
+            className="p-2.5 bg-white text-black rounded-xl hover:bg-zinc-200 transition-all"
+          >
             <CheckCircle2 className="w-5 h-5" />
           </button>
         </div>
@@ -208,7 +236,11 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           <div
             key={i}
             className={`h-1 rounded-full transition-all duration-300 ${
-              i < currentRound ? 'w-3 bg-orange-500/30' : i === currentRound ? 'w-5 bg-orange-500' : 'w-3 bg-white/10'
+              i < currentRound
+                ? 'w-3 bg-orange-500/30'
+                : i === currentRound
+                  ? 'w-5 bg-orange-500'
+                  : 'w-3 bg-white/10'
             }`}
           />
         ))}
@@ -230,7 +262,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 
       <div className="flex-shrink-0 bg-black/70  border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
         <div className="flex items-center justify-center gap-1.5">
-          {BRUSH_COLORS.map(color => (
+          {BRUSH_COLORS.map((color) => (
             <button
               key={color}
               onClick={() => setBrushColor(color)}
@@ -242,12 +274,12 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           <input
             type="color"
             value={brushColor}
-            onChange={e => setBrushColor(e.target.value)}
+            onChange={(e) => setBrushColor(e.target.value)}
             className="w-7 h-7 rounded-full cursor-pointer border-none bg-transparent p-0 overflow-hidden"
           />
         </div>
         <div className="flex items-center justify-center gap-4">
-          {BRUSH_SIZES.map(size => (
+          {BRUSH_SIZES.map((size) => (
             <button
               key={size}
               onClick={() => setBrushSize(size)}

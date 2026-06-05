@@ -38,10 +38,7 @@ export const PlayingHeader: React.FC<PlayingHeaderProps> = ({
     <div className="flex items-center gap-3">
       {extra}
       {/* timerColor — динамический hex, не токен; используем span напрямую */}
-      <span
-        className="text-2xl font-black italic tabular-nums"
-        style={{ color: timerColor }}
-      >
+      <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
         {timeLeft}с
       </span>
     </div>

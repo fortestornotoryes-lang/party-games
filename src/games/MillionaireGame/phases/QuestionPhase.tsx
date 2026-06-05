@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Phone, Users, Percent, MessageSquare } from 'lucide-react';
-import { MillionaireQuestion, PRIZE_LADDER, SAFE_CHECKPOINTS } from '@/constants/millionaireContent';
+import {
+  MillionaireQuestion,
+  PRIZE_LADDER,
+  SAFE_CHECKPOINTS,
+} from '@/constants/millionaireContent';
 
 const LETTERS = ['A', 'B', 'C', 'D'] as const;
 
@@ -47,7 +51,8 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
   };
 
   const isCheckpoint = SAFE_CHECKPOINTS.includes(questionIndex as 4 | 9);
-  const nextCheckpointPrize = questionIndex < 5 ? PRIZE_LADDER[4] : questionIndex < 10 ? PRIZE_LADDER[9] : null;
+  const nextCheckpointPrize =
+    questionIndex < 5 ? PRIZE_LADDER[4] : questionIndex < 10 ? PRIZE_LADDER[9] : null;
 
   return (
     <motion.div
@@ -64,7 +69,9 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             Вопрос {questionIndex + 1} / 15
           </span>
           <span className="text-[11px] font-black uppercase tracking-[0.15em] text-white/40">
-            {nextCheckpointPrize ? `Гарантия: ${questionIndex >= 5 ? PRIZE_LADDER[4] : '0'}` : `Гарантия: ${PRIZE_LADDER[9]}`}
+            {nextCheckpointPrize
+              ? `Гарантия: ${questionIndex >= 5 ? PRIZE_LADDER[4] : '0'}`
+              : `Гарантия: ${PRIZE_LADDER[9]}`}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -89,10 +96,10 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
                 i < questionIndex
                   ? 'bg-premium-green/60'
                   : i === questionIndex
-                  ? 'bg-premium-yellow'
-                  : SAFE_CHECKPOINTS.includes(i as 4 | 9)
-                  ? 'bg-white/20'
-                  : 'bg-white/8'
+                    ? 'bg-premium-yellow'
+                    : SAFE_CHECKPOINTS.includes(i as 4 | 9)
+                      ? 'bg-white/20'
+                      : 'bg-white/8'
               }`}
             />
           ))}
@@ -123,7 +130,9 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             >
               <div className="flex items-center gap-1.5 mb-2">
                 <Users className="w-3.5 h-3.5 text-premium-blue" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-premium-blue">Помощь зала</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-premium-blue">
+                  Помощь зала
+                </span>
               </div>
               <div className="space-y-1.5">
                 {audienceVotes.map((pct, i) => (
@@ -137,7 +146,9 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
                         className="h-full bg-premium-blue/60 rounded-sm"
                       />
                     </div>
-                    <span className="text-[11px] font-black text-white/60 w-8 text-right">{pct}%</span>
+                    <span className="text-[11px] font-black text-white/60 w-8 text-right">
+                      {pct}%
+                    </span>
                   </div>
                 ))}
               </div>
@@ -157,13 +168,17 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             >
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Phone className="w-3.5 h-3.5 text-premium-green" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">Звонок другу</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
+                  Звонок другу
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <MessageSquare className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
                 <p className="text-[12px] text-white/70 leading-snug">
                   «Я думаю, правильный ответ —{' '}
-                  <span className="font-black text-premium-green">{LETTERS[phoneFriendSuggestion]}</span>
+                  <span className="font-black text-premium-green">
+                    {LETTERS[phoneFriendSuggestion]}
+                  </span>
                   . Но я не могу быть уверен на 100%...»
                 </p>
               </div>
@@ -229,7 +244,8 @@ const stateStyles: Record<AnswerState, string> = {
   normal: 'border-white/10 bg-white/[0.04] text-white active:scale-95',
   eliminated: 'border-white/5 bg-transparent text-white/15 pointer-events-none',
   selected: 'border-premium-yellow/50 bg-premium-yellow/10 text-premium-yellow',
-  correct: 'border-premium-green/60 bg-premium-green/15 text-premium-green shadow-[0_0_20px_rgba(0,216,138,0.25)]',
+  correct:
+    'border-premium-green/60 bg-premium-green/15 text-premium-green shadow-[0_0_20px_rgba(0,216,138,0.25)]',
   wrong: 'border-premium-red/50 bg-premium-red/10 text-premium-red',
 };
 
@@ -249,7 +265,9 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({ letter, text, state, disabl
     disabled={disabled && state !== 'correct' && state !== 'wrong'}
     className={`relative flex items-center gap-2.5 p-3 rounded-premium-md border transition-all duration-300 text-left min-h-[4rem] ${stateStyles[state]}`}
   >
-    <span className={`w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-black shrink-0 transition-all ${letterStyles[state]}`}>
+    <span
+      className={`w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-black shrink-0 transition-all ${letterStyles[state]}`}
+    >
       {letter}
     </span>
     <span className="text-[13px] font-semibold leading-tight flex-1">{text}</span>
@@ -264,7 +282,13 @@ interface LifelineButtonProps {
   disabled: boolean;
 }
 
-const LifelineButton: React.FC<LifelineButtonProps> = ({ icon, label, used, onClick, disabled }) => (
+const LifelineButton: React.FC<LifelineButtonProps> = ({
+  icon,
+  label,
+  used,
+  onClick,
+  disabled,
+}) => (
   <button
     onClick={!used && !disabled ? onClick : undefined}
     disabled={used || disabled}
@@ -276,6 +300,10 @@ const LifelineButton: React.FC<LifelineButtonProps> = ({ icon, label, used, onCl
   >
     <span className={used ? 'opacity-20' : ''}>{icon}</span>
     <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
-    {used && <span className="text-[8px] font-black uppercase tracking-widest text-white/20">Использована</span>}
+    {used && (
+      <span className="text-[8px] font-black uppercase tracking-widest text-white/20">
+        Использована
+      </span>
+    )}
   </button>
 );

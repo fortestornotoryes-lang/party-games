@@ -36,12 +36,16 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
           className="relative"
         >
-          <div className={`w-28 h-28 rounded-full flex items-center justify-center border-2 ${
-            isMillion
-              ? 'bg-premium-yellow/20 border-premium-yellow/50 shadow-[0_0_60px_rgba(255,204,31,0.4)]'
-              : 'bg-premium-green/15 border-premium-green/40 shadow-[0_0_40px_rgba(0,216,138,0.3)]'
-          }`}>
-            <Trophy className={`w-14 h-14 ${isMillion ? 'text-premium-yellow' : 'text-premium-green'}`} />
+          <div
+            className={`w-28 h-28 rounded-full flex items-center justify-center border-2 ${
+              isMillion
+                ? 'bg-premium-yellow/20 border-premium-yellow/50 shadow-[0_0_60px_rgba(255,204,31,0.4)]'
+                : 'bg-premium-green/15 border-premium-green/40 shadow-[0_0_40px_rgba(0,216,138,0.3)]'
+            }`}
+          >
+            <Trophy
+              className={`w-14 h-14 ${isMillion ? 'text-premium-yellow' : 'text-premium-green'}`}
+            />
           </div>
           {isMillion && (
             <>
@@ -69,9 +73,11 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
             {isMillion ? '🏆 Миллионер!' : 'Выиграл'}
           </p>
           <p className="text-[15px] font-bold text-white/70 mb-2">{currentPlayer}</p>
-          <p className={`text-[44px] font-black font-display italic tracking-tighter leading-none ${
-            isMillion ? 'text-premium-yellow' : 'text-premium-green'
-          }`}>
+          <p
+            className={`text-[44px] font-black font-display italic tracking-tighter leading-none ${
+              isMillion ? 'text-premium-yellow' : 'text-premium-green'
+            }`}
+          >
             {prize}
           </p>
         </motion.div>
@@ -86,20 +92,29 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Счёт</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+                Счёт
+              </span>
             </div>
             <div className="space-y-2">
               {Object.entries(playerScores)
-                .sort((a, b) => parseFloat(b[1].replace(/\D/g, '')) - parseFloat(a[1].replace(/\D/g, '')))
+                .sort(
+                  (a, b) =>
+                    parseFloat(b[1].replace(/\D/g, '')) - parseFloat(a[1].replace(/\D/g, ''))
+                )
                 .map(([name, score], i) => (
                   <div key={name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
-                      <span className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/70'}`}>
+                      <span
+                        className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/70'}`}
+                      >
                         {name}
                       </span>
                     </div>
-                    <span className={`text-[13px] font-black ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/50'}`}>
+                    <span
+                      className={`text-[13px] font-black ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/50'}`}
+                    >
                       {score}
                     </span>
                   </div>
@@ -116,11 +131,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
         transition={{ delay: 0.45 }}
         className="w-full pt-4"
       >
-        <PrimaryButton
-          variant="white"
-          icon={ChevronRight}
-          onClick={onNextPlayer}
-        >
+        <PrimaryButton variant="white" icon={ChevronRight} onClick={onNextPlayer}>
           Следующий игрок
         </PrimaryButton>
       </motion.div>

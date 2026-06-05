@@ -40,7 +40,9 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
           <CheckCircle className="w-10 h-10 text-premium-green" />
         </div>
         <div className="text-center">
-          <p className="text-[11px] font-black uppercase tracking-[0.25em] text-premium-green/70 mb-1">Правильно!</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.25em] text-premium-green/70 mb-1">
+            Правильно!
+          </p>
           <p className="text-[13px] text-white/50 font-semibold">{currentPlayer}</p>
         </div>
       </motion.div>
@@ -53,7 +55,9 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
         className="w-full glass-card rounded-premium-lg p-5 text-center"
         style={{ borderColor: 'rgba(255,204,31,0.2)' }}
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Вы заработали</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">
+          Вы заработали
+        </p>
         <p className="text-[42px] font-black font-display italic tracking-tighter text-premium-yellow leading-none">
           {currentPrize}
         </p>

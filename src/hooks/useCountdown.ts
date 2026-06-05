@@ -3,7 +3,7 @@ export function useCountdown(active: boolean, initial = 0): [number, (s: number)
 
   React.useEffect(() => {
     if (!active || timeLeft <= 0) return;
-    const t = setTimeout(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
+    const t = setTimeout(() => setTimeLeft((prev) => Math.max(0, prev - 1)), 1000);
     return () => clearTimeout(t);
   }, [active, timeLeft]);
 

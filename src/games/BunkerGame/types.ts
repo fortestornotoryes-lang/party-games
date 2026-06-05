@@ -1,12 +1,12 @@
 export enum BunkerPhase {
-  Briefing        = 'briefing',
-  DictatorReveal  = 'dictator_reveal',
-  RevealPass      = 'reveal_pass',
-  Discussion      = 'discussion',
-  Voting          = 'voting',
-  Tribunal        = 'tribunal',
-  SurvivalSim     = 'survival_sim',
-  Results         = 'results',
+  Briefing = 'briefing',
+  DictatorReveal = 'dictator_reveal',
+  RevealPass = 'reveal_pass',
+  Discussion = 'discussion',
+  Voting = 'voting',
+  Tribunal = 'tribunal',
+  SurvivalSim = 'survival_sim',
+  Results = 'results',
 }
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
@@ -27,12 +27,12 @@ export interface BunkerCharacter {
   playerName: string;
   age: number;
   gender: 'М' | 'Ж';
-  profession:  AttributeEntry;
-  health:      AttributeEntry;
-  hobby:       AttributeEntry;
-  phobia:      AttributeEntry;
-  trait:       AttributeEntry;
-  item:        AttributeEntry;
+  profession: AttributeEntry;
+  health: AttributeEntry;
+  hobby: AttributeEntry;
+  phobia: AttributeEntry;
+  trait: AttributeEntry;
+  item: AttributeEntry;
   specialFact: AttributeEntry;
   /**
    * Shuffled order of trait keys to reveal in rounds 2, 3, 4, 5…
@@ -43,59 +43,67 @@ export interface BunkerCharacter {
 }
 
 export interface CatastropheScenario {
-  title:           string;
-  emoji:           string;
-  description:     string;
+  title: string;
+  emoji: string;
+  description: string;
   resourcePenalty: ResourceBonus;
 }
 
 export interface SurvivalEvent {
-  title:       string;
+  title: string;
   description: string;
-  emoji:       string;
-  effect:      ResourceBonus;
-  positive:    boolean;
+  emoji: string;
+  effect: ResourceBonus;
+  positive: boolean;
 }
 
 export interface BunkerResources {
-  food:     number;
-  water:    number;
+  food: number;
+  water: number;
   medicine: number;
-  energy:   number;
-  morale:   number;
+  energy: number;
+  morale: number;
 }
 
 export type SurvivalOutcome = 'full_victory' | 'partial' | 'pyrrhic' | 'defeat';
 
 export const TRAIT_LABELS: Record<string, string> = {
-  profession:  'Профессия',
-  health:      'Здоровье',
-  hobby:       'Хобби',
-  phobia:      'Фобия',
-  trait:       'Черта характера',
-  item:        'Предмет',
+  profession: 'Профессия',
+  health: 'Здоровье',
+  hobby: 'Хобби',
+  phobia: 'Фобия',
+  trait: 'Черта характера',
+  item: 'Предмет',
   specialFact: 'Особый факт',
 };
 
 export const ALL_TRAIT_KEYS: readonly TraitKey[] = [
-  'health', 'hobby', 'phobia', 'trait', 'item', 'specialFact',
+  'health',
+  'hobby',
+  'phobia',
+  'trait',
+  'item',
+  'specialFact',
 ];
 
 /** Returns the traits that were NOT revealed during any round (still hidden). */
 export function getHiddenTraits(
-  char: BunkerCharacter,
+  char: BunkerCharacter
 ): Array<{ key: TraitKey; label: string; entry: AttributeEntry }> {
-  return ALL_TRAIT_KEYS
-    .filter(k => !char.revealOrder.includes(k))
-    .map(k => ({ key: k, label: TRAIT_LABELS[k], entry: char[k] }));
+  return ALL_TRAIT_KEYS.filter((k) => !char.revealOrder.includes(k)).map((k) => ({
+    key: k,
+    label: TRAIT_LABELS[k],
+    entry: char[k],
+  }));
 }
 
 // Helper: get the trait revealed in a given round for a character
 export function getRevealedTrait(
   char: BunkerCharacter,
-  round: number,
+  round: number
 ): { traitKey: string; label: string; entry: AttributeEntry } | null {
-  if (round === 1) return { traitKey: 'profession', label: TRAIT_LABELS.profession, entry: char.profession };
+  if (round === 1)
+    return { traitKey: 'profession', label: TRAIT_LABELS.profession, entry: char.profession };
   const key = char.revealOrder[round - 2];
   if (!key) return null;
   return { traitKey: key, label: TRAIT_LABELS[key], entry: char[key] };

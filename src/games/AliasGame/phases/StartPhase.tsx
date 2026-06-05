@@ -13,9 +13,9 @@ interface StartPhaseProps {
 
 export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, onStart }) => {
   const currentTeam = teams[currentTeamIdx];
-  const isRed       = currentTeam.color === 'red';
-  const teamColor   = isRed ? 'text-premium-red' : 'text-premium-blue';
-  const teamBg      = isRed
+  const isRed = currentTeam.color === 'red';
+  const teamColor = isRed ? 'text-premium-red' : 'text-premium-blue';
+  const teamBg = isRed
     ? 'bg-premium-red/[0.07] border-premium-red/20'
     : 'bg-premium-blue/[0.07] border-premium-blue/20';
 
@@ -34,13 +34,17 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 280, damping: 20 }}
           className={`w-full max-w-[220px] py-8 px-6 rounded-[32px] border-2 ${teamBg} flex flex-col items-center`}
-          style={{ boxShadow: isRed ? '0 0 60px rgba(255,46,77,0.12)' : '0 0 60px rgba(63,123,255,0.12)' }}
+          style={{
+            boxShadow: isRed ? '0 0 60px rgba(255,46,77,0.12)' : '0 0 60px rgba(63,123,255,0.12)',
+          }}
         >
           <Zap className={`w-12 h-12 mb-3 ${teamColor}`} />
           <Typography.Heading size="lg" color={isRed ? 'red' : 'blue'}>
             {currentTeam.name}
           </Typography.Heading>
-          <Typography.Caption color="dimmer" className="mt-2">Твой черёд!</Typography.Caption>
+          <Typography.Caption color="dimmer" className="mt-2">
+            Твой черёд!
+          </Typography.Caption>
         </motion.div>
       </div>
 
@@ -58,15 +62,21 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
               <Typography.Label size="md" color={i === 0 ? 'red' : 'blue'} className="opacity-50">
                 {t.name}
               </Typography.Label>
-              <Trophy className={`w-3 h-3 ${t.score >= TROPHY_THRESHOLD ? 'text-premium-yellow' : 'text-white/10'}`} />
+              <Trophy
+                className={`w-3 h-3 ${t.score >= TROPHY_THRESHOLD ? 'text-premium-yellow' : 'text-white/10'}`}
+              />
             </div>
             <Typography.Score color={i === 0 ? 'red' : 'blue'}>{t.score}</Typography.Score>
-            <Typography.Caption color="dimmer" className="mt-0.5">/ {WIN_SCORE}</Typography.Caption>
+            <Typography.Caption color="dimmer" className="mt-0.5">
+              / {WIN_SCORE}
+            </Typography.Caption>
           </div>
         ))}
       </div>
 
-      <PrimaryButton onClick={onStart} icon={Play}>НАЧАТЬ РАУНД</PrimaryButton>
+      <PrimaryButton onClick={onStart} icon={Play}>
+        НАЧАТЬ РАУНД
+      </PrimaryButton>
     </motion.div>
   );
 };

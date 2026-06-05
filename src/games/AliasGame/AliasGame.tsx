@@ -13,16 +13,19 @@ import { useTimer } from '@/hooks/useTimer';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { AliasPhase, Team } from './types';
-import { StartPhase }   from './phases/StartPhase';
+import { StartPhase } from './phases/StartPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
 import { RoundEndPhase } from './phases/RoundEndPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
 
-interface AliasGameProps { playerNames: string[]; onBack: () => void; }
+interface AliasGameProps {
+  playerNames: string[];
+  onBack: () => void;
+}
 
 const TEAMS_CONFIG = [
   { name: 'Красные', color: 'red' as const },
-  { name: 'Синие',   color: 'blue' as const },
+  { name: 'Синие', color: 'blue' as const },
 ] as const;
 
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
@@ -34,7 +37,11 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [roundScore, setRoundScore] = useState(0);
 
   const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
-  const { timeLeft, start: startTimer, reset: resetTimer } = useTimer({
+  const {
+    timeLeft,
+    start: startTimer,
+    reset: resetTimer,
+  } = useTimer({
     initialTime: roundTime,
     onTimeUp: () => setPhase(AliasPhase.RoundEnd),
   });
@@ -43,8 +50,18 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     const shuffled = shuffle(playerNames);
     const mid = Math.ceil(shuffled.length / 2);
     setTeams([
-      { name: TEAMS_CONFIG[0].name, color: TEAMS_CONFIG[0].color, players: shuffled.slice(0, mid), score: 0 },
-      { name: TEAMS_CONFIG[1].name, color: TEAMS_CONFIG[1].color, players: shuffled.slice(mid), score: 0 },
+      {
+        name: TEAMS_CONFIG[0].name,
+        color: TEAMS_CONFIG[0].color,
+        players: shuffled.slice(0, mid),
+        score: 0,
+      },
+      {
+        name: TEAMS_CONFIG[1].name,
+        color: TEAMS_CONFIG[1].color,
+        players: shuffled.slice(mid),
+        score: 0,
+      },
     ]);
   }, [playerNames]);
 
@@ -66,14 +83,14 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const handleCorrect = () => {
     feedbackService.playSound('success');
     feedbackService.vibrate(VIBRATE.correct);
-    setRoundScore(s => s + 1);
+    setRoundScore((s) => s + 1);
     nextWord();
   };
 
   const handleSkip = () => {
     feedbackService.playSound('error');
     feedbackService.vibrate(VIBRATE.error);
-    setRoundScore(s => s - 1);
+    setRoundScore((s) => s - 1);
     nextWord();
   };
 
@@ -85,7 +102,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     if (updatedTeams[currentTeamIdx].score >= WIN_SCORE) {
       setPhase(AliasPhase.GameOver);
     } else {
-      setCurrentTeamIdx(i => (i + 1) % teams.length);
+      setCurrentTeamIdx((i) => (i + 1) % teams.length);
       setPhase(AliasPhase.Start);
     }
   };
@@ -97,7 +114,9 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     feedbackService.vibrate(VIBRATE.win);
     if (settings.visualEffects) {
       confetti({
-        particleCount: 200, spread: 80, origin: { y: 0.6 },
+        particleCount: 200,
+        spread: 80,
+        origin: { y: 0.6 },
         colors: currentTeamIdx === 0 ? ['#FF2E4D', '#ffffff'] : ['#3F7BFF', '#ffffff'],
       });
     }
@@ -119,13 +138,8 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
-
           {phase === AliasPhase.Start && (
-            <StartPhase
-              teams={teams}
-              currentTeamIdx={currentTeamIdx}
-              onStart={startRound}
-            />
+            <StartPhase teams={teams} currentTeamIdx={currentTeamIdx} onStart={startRound} />
           )}
 
           {phase === AliasPhase.Playing && (
@@ -140,19 +154,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
           )}
 
           {phase === AliasPhase.RoundEnd && (
-            <RoundEndPhase
-              roundScore={roundScore}
-              onContinue={finishRound}
-            />
+            <RoundEndPhase roundScore={roundScore} onContinue={finishRound} />
           )}
 
           {phase === AliasPhase.GameOver && (
-            <GameOverPhase
-              currentTeam={currentTeam}
-              onBack={onBack}
-            />
+            <GameOverPhase currentTeam={currentTeam} onBack={onBack} />
           )}
-
         </AnimatePresence>
       </div>
     </div>

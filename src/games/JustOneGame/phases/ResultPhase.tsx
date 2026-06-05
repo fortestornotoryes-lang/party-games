@@ -26,7 +26,9 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
             <div className="absolute -inset-12 blur-[50px] rounded-full bg-premium-green/15" />
             <CheckCircle className="w-20 h-20 text-premium-green mx-auto relative" />
           </div>
-          <Typography.Display size="lg" color="green" glow align="center">ПРАВИЛЬНО!</Typography.Display>
+          <Typography.Display size="lg" color="green" glow align="center">
+            ПРАВИЛЬНО!
+          </Typography.Display>
         </>
       ) : (
         <>
@@ -34,13 +36,17 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
             <div className="absolute -inset-12 blur-[50px] rounded-full bg-premium-red/15" />
             <XCircle className="w-20 h-20 text-premium-red mx-auto relative" />
           </div>
-          <Typography.Display size="lg" color="red" glow align="center">ОШИБКА</Typography.Display>
+          <Typography.Display size="lg" color="red" glow align="center">
+            ОШИБКА
+          </Typography.Display>
         </>
       )}
 
       <div className="space-y-1 text-center">
         <Typography.Caption className="tracking-[0.5em]">Загаданное слово</Typography.Caption>
-        <Typography.Display size="md" align="center">{word}</Typography.Display>
+        <Typography.Display size="md" align="center">
+          {word}
+        </Typography.Display>
         {!isCorrect && (
           <Typography.Body color="faint" align="center" className="mt-1">
             Ответ: <span className="italic">{guess}</span>
@@ -49,6 +55,8 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
       </div>
     </div>
 
-    <PrimaryButton onClick={onNext} icon={RotateCcw}>СЛЕДУЮЩИЙ РАУНД</PrimaryButton>
+    <PrimaryButton onClick={onNext} icon={RotateCcw}>
+      СЛЕДУЮЩИЙ РАУНД
+    </PrimaryButton>
   </motion.div>
 );

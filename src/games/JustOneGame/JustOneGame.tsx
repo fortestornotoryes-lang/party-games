@@ -10,24 +10,29 @@ import { GameHeader } from '@/components/GameHeader';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { JustOnePhase } from './types';
-import { PassPhase }    from './phases/PassPhase';
+import { PassPhase } from './phases/PassPhase';
 import { HintingPhase } from './phases/HintingPhase';
 import { GuessingPhase } from './phases/GuessingPhase';
-import { ResultPhase }  from './phases/ResultPhase';
+import { ResultPhase } from './phases/ResultPhase';
 
-interface JustOneGameProps { playerNames: string[]; onBack: () => void; }
+interface JustOneGameProps {
+  playerNames: string[];
+  onBack: () => void;
+}
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
   const { difficulty } = useGameSettings();
   const { current: guesser, idx: guesserIdx, next: nextGuesser } = usePlayerCycle(playerNames);
-  const [word, setWord]                 = useState('');
-  const [hints, setHints]               = useState<Record<string, string>>({});
-  const [phase, setPhase]               = useState<JustOnePhase>(JustOnePhase.Pass);
-  const [guess, setGuess]               = useState('');
-  const [isCorrect, setIsCorrect]       = useState(false);
+  const [word, setWord] = useState('');
+  const [hints, setHints] = useState<Record<string, string>>({});
+  const [phase, setPhase] = useState<JustOnePhase>(JustOnePhase.Pass);
+  const [guess, setGuess] = useState('');
+  const [isCorrect, setIsCorrect] = useState(false);
   const [visibleHints, setVisibleHints] = useState<string[]>([]);
 
-  useEffect(() => { generateNewWord(); }, [guesserIdx]);
+  useEffect(() => {
+    generateNewWord();
+  }, [guesserIdx]);
 
   const generateNewWord = () => {
     setWord(contentService.getJustOneWord(difficulty));
@@ -38,14 +43,16 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
 
   const submitHint = (player: string, hint: string) => {
     if (!hint.trim()) return;
-    setHints(prev => ({ ...prev, [player]: hint.trim().toLowerCase() }));
+    setHints((prev) => ({ ...prev, [player]: hint.trim().toLowerCase() }));
   };
 
   const startGuessing = () => {
     const counts: Record<string, number> = {};
     const vals = Object.values(hints) as string[];
-    vals.forEach(h => { counts[h] = (counts[h] || 0) + 1; });
-    setVisibleHints(vals.filter(h => counts[h] === 1));
+    vals.forEach((h) => {
+      counts[h] = (counts[h] || 0) + 1;
+    });
+    setVisibleHints(vals.filter((h) => counts[h] === 1));
     setPhase(JustOnePhase.Guessing);
   };
 
@@ -57,7 +64,12 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.correct);
       if (settings.visualEffects) {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#FFCC1F', '#ffffff'] });
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#FFCC1F', '#ffffff'],
+        });
       }
     } else {
       feedbackService.playSound('error');
@@ -80,12 +92,8 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <AnimatePresence mode="wait">
-
           {phase === JustOnePhase.Pass && (
-            <PassPhase
-              guesser={guesser}
-              onReady={() => setPhase(JustOnePhase.Hinting)}
-            />
+            <PassPhase guesser={guesser} onReady={() => setPhase(JustOnePhase.Hinting)} />
           )}
 
           {phase === JustOnePhase.Hinting && (
@@ -110,14 +118,8 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
           )}
 
           {phase === JustOnePhase.Result && (
-            <ResultPhase
-              isCorrect={isCorrect}
-              word={word}
-              guess={guess}
-              onNext={nextGuesser}
-            />
+            <ResultPhase isCorrect={isCorrect} word={word} guess={guess} onNext={nextGuesser} />
           )}
-
         </AnimatePresence>
       </div>
     </div>

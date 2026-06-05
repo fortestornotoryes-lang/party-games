@@ -79,7 +79,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
         Кто угадал?
       </p>
 
-      {otherPlayers.map(player => {
+      {otherPlayers.map((player) => {
         const allWordsUsed = usedWordIdxs.size === card.required.length;
         const points = allWordsUsed ? 2 : 1;
         return (
@@ -98,9 +98,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
                   : `Слов использовано: ${usedWordIdxs.size}/${card.required.length}`}
               </p>
             </div>
-            <span className="text-3xl font-black italic text-premium-green ml-4">
-              +{points}
-            </span>
+            <span className="text-3xl font-black italic text-premium-green ml-4">+{points}</span>
           </button>
         );
       })}

@@ -6,7 +6,7 @@ const STORAGE_KEYS = {
   CUSTOM_WORDS: 'party_app_custom_words',
   CUSTOM_KEYED: 'party_app_custom_keyed',
   SETTINGS: 'party_app_settings',
-  HISTORY: 'party_app_history'
+  HISTORY: 'party_app_history',
 };
 
 type GameDictionary = Record<string, string[]>;
@@ -60,11 +60,17 @@ export const storageService = {
 
   // Custom Words
   getCustomWords: (gameId: GameKey): string[] => {
-    const custom = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS), {});
+    const custom = safeParseJson<GameDictionary>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
+      {}
+    );
     return custom[gameId] || [];
   },
   addCustomWord: (gameId: GameKey, word: string) => {
-    const custom = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS), {});
+    const custom = safeParseJson<GameDictionary>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
+      {}
+    );
     if (!custom[gameId]) custom[gameId] = [];
     if (!custom[gameId].includes(word)) {
       custom[gameId].push(word);
@@ -72,7 +78,10 @@ export const storageService = {
     }
   },
   removeCustomWord: (gameId: GameKey, word: string) => {
-    const custom = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS), {});
+    const custom = safeParseJson<GameDictionary>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
+      {}
+    );
     if (custom[gameId]) {
       custom[gameId] = custom[gameId].filter((w: string) => w !== word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
@@ -81,11 +90,17 @@ export const storageService = {
 
   // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
   getCustomWordsByKey: (key: string): string[] => {
-    const store = safeParseJson<Record<string, string[]>>(localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED), {});
+    const store = safeParseJson<Record<string, string[]>>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
+      {}
+    );
     return store[key] || [];
   },
   addCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<Record<string, string[]>>(localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED), {});
+    const store = safeParseJson<Record<string, string[]>>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
+      {}
+    );
     if (!store[key]) store[key] = [];
     if (!store[key].includes(word)) {
       store[key].push(word);
@@ -93,9 +108,12 @@ export const storageService = {
     }
   },
   removeCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<Record<string, string[]>>(localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED), {});
+    const store = safeParseJson<Record<string, string[]>>(
+      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
+      {}
+    );
     if (store[key]) {
-      store[key] = store[key].filter(w => w !== word);
+      store[key] = store[key].filter((w) => w !== word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
     }
   },
@@ -103,7 +121,10 @@ export const storageService = {
   // Settings
   getSettings: (): GameSettings => {
     const defaults: GameSettings = { visualEffects: true, vibration: true, sounds: true };
-    const saved = safeParseJson<Partial<GameSettings>>(localStorage.getItem(STORAGE_KEYS.SETTINGS), {});
+    const saved = safeParseJson<Partial<GameSettings>>(
+      localStorage.getItem(STORAGE_KEYS.SETTINGS),
+      {}
+    );
     return { ...defaults, ...saved };
   },
   saveSettings: (settings: Partial<GameSettings>) => {
@@ -113,7 +134,10 @@ export const storageService = {
 
   // Game Configs (Difficulty, Modes, etc.)
   getGameConfig: <T>(gameId: string): T | null => {
-    return safeParseJson<T | null>(localStorage.getItem(`${STORAGE_KEYS.SETTINGS}_${gameId}`), null);
+    return safeParseJson<T | null>(
+      localStorage.getItem(`${STORAGE_KEYS.SETTINGS}_${gameId}`),
+      null
+    );
   },
   saveGameConfig: <T>(gameId: string, config: T) => {
     localStorage.setItem(`${STORAGE_KEYS.SETTINGS}_${gameId}`, JSON.stringify(config));

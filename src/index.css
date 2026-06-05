@@ -1,114 +1,171 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-    --color-premium-red: #FF2E4D;
-    --color-premium-green: #00D88A;
-    --color-premium-sky: #1FB6FF;
-    --color-premium-blue: #3F7BFF;
-    --color-premium-orange: #FF8A1F;
-    --color-premium-yellow: #FFCC1F;
-    --color-premium-purple: #C77BFF;
-    --color-premium-pink: #FF2EB4;
-    --color-premium-cyan: #00E5FF;
-    --color-premium-lime: #84CC16;
-    --color-premium-teal: #14B8A6;
-    --color-premium-indigo: #6366F1;
+  --color-premium-red: #ff2e4d;
+  --color-premium-green: #00d88a;
+  --color-premium-sky: #1fb6ff;
+  --color-premium-blue: #3f7bff;
+  --color-premium-orange: #ff8a1f;
+  --color-premium-yellow: #ffcc1f;
+  --color-premium-purple: #c77bff;
+  --color-premium-pink: #ff2eb4;
+  --color-premium-cyan: #00e5ff;
+  --color-premium-lime: #84cc16;
+  --color-premium-teal: #14b8a6;
+  --color-premium-indigo: #6366f1;
 
-    --radius-premium-xl: 28px;
-    --radius-premium-lg: 20px;
-    --radius-premium-md: 16px;
-    --radius-premium-sm: 12px;
+  --radius-premium-xl: 28px;
+  --radius-premium-lg: 20px;
+  --radius-premium-md: 16px;
+  --radius-premium-sm: 12px;
 
-    --animate-cyber-hard-1: cyber-hard-1 1s steps(2, end) infinite;
-    --animate-cyber-hard-2: cyber-hard-2 1s steps(2, end) infinite;
-    --animate-matrix-glitch: matrix-glitch 2s steps(4) infinite;
+  --animate-cyber-hard-1: cyber-hard-1 1s steps(2, end) infinite;
+  --animate-cyber-hard-2: cyber-hard-2 1s steps(2, end) infinite;
+  --animate-matrix-glitch: matrix-glitch 2s steps(4) infinite;
 
-    @keyframes cyber-hard-1 {
-        0%, 100% { clip-path: polygon(0 0, 100% 0, 100% 5%, 0 5%); transform: translate(-6px, -4px); }
-        20% { clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); transform: translate(8px, 4px) skewX(-15deg); }
-        40% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); transform: translate(-8px, 6px); }
-        65% { clip-path: polygon(0 40%, 100% 40%, 100% 85%, 0 85%); transform: translate(10px, -2px) scaleY(1.3); }
-        85% { clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%); transform: translate(-4px, 8px) skewX(20deg); }
+  @keyframes cyber-hard-1 {
+    0%,
+    100% {
+      clip-path: polygon(0 0, 100% 0, 100% 5%, 0 5%);
+      transform: translate(-6px, -4px);
     }
-
-    @keyframes cyber-hard-2 {
-        0%, 100% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); transform: translate(6px, 4px); }
-        15% { clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%); transform: translate(-10px, -4px) skewX(15deg); }
-        35% { clip-path: polygon(0 20%, 100% 20%, 100% 55%, 0 55%); transform: translate(8px, -6px) scaleY(0.8); }
-        55% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); transform: translate(-6px, 2px); }
-        75% { clip-path: polygon(0 80%, 100% 80%, 100% 95%, 0 95%); transform: translate(4px, -8px) skewX(-10deg); }
+    20% {
+      clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%);
+      transform: translate(8px, 4px) skewX(-15deg);
     }
-
-    @keyframes matrix-glitch {
-        0%, 100% { opacity: 0.05; transform: scaleY(1); }
-        5% { opacity: 0.3; transform: scaleY(1.4) skewX(-5deg); background-color: var(--color-premium-red); }
-        10% { opacity: 0.05; transform: scaleY(1); }
-        55% { opacity: 0.4; transform: scaleY(0.7) skewX(10deg); background-color: var(--color-premium-cyan); }
-        60% { opacity: 0.05; transform: scaleY(1); }
+    40% {
+      clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%);
+      transform: translate(-8px, 6px);
     }
-    /* Анимации Tailwind v4 */
-    --animate-glitch: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-    --animate-glitch-layer-1: glitch-clip-1 1.5s linear infinite alternate-reverse, glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-    --animate-glitch-layer-2: glitch-clip-2 1.5s linear infinite alternate-reverse, glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-
-    /* Keyframes объявляются на верхнем уровне темы в v4 */
-    @keyframes glitch {
-        0%, 100% {
-            transform: translate(0);
-        }
-        20% {
-            transform: translate(-2px, 2px);
-        }
-        40% {
-            transform: translate(-2px, -2px);
-        }
-        60% {
-            transform: translate(2px, 2px);
-        }
-        80% {
-            transform: translate(2px, -2px);
-        }
+    65% {
+      clip-path: polygon(0 40%, 100% 40%, 100% 85%, 0 85%);
+      transform: translate(10px, -2px) scaleY(1.3);
     }
-
-    @keyframes glitch-clip-1 {
-        0%, 100% {
-            clip-path: inset(40% 0 61% 0);
-        }
-        20% {
-            clip-path: inset(92% 0 1% 0);
-        }
-        40% {
-            clip-path: inset(15% 0 80% 0);
-        }
-        60% {
-            clip-path: inset(80% 0 5% 0);
-        }
-        80% {
-            clip-path: inset(3% 0 92% 0);
-        }
+    85% {
+      clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);
+      transform: translate(-4px, 8px) skewX(20deg);
     }
+  }
 
-    @keyframes glitch-clip-2 {
-        0%, 100% {
-            clip-path: inset(25% 0 58% 0);
-        }
-        20% {
-            clip-path: inset(14% 0 80% 0);
-        }
-        40% {
-            clip-path: inset(64% 0 10% 0);
-        }
-        60% {
-            clip-path: inset(5% 0 92% 0);
-        }
-        80% {
-            clip-path: inset(85% 0 2% 0);
-        }
+  @keyframes cyber-hard-2 {
+    0%,
+    100% {
+      clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%);
+      transform: translate(6px, 4px);
     }
+    15% {
+      clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%);
+      transform: translate(-10px, -4px) skewX(15deg);
+    }
+    35% {
+      clip-path: polygon(0 20%, 100% 20%, 100% 55%, 0 55%);
+      transform: translate(8px, -6px) scaleY(0.8);
+    }
+    55% {
+      clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%);
+      transform: translate(-6px, 2px);
+    }
+    75% {
+      clip-path: polygon(0 80%, 100% 80%, 100% 95%, 0 95%);
+      transform: translate(4px, -8px) skewX(-10deg);
+    }
+  }
+
+  @keyframes matrix-glitch {
+    0%,
+    100% {
+      opacity: 0.05;
+      transform: scaleY(1);
+    }
+    5% {
+      opacity: 0.3;
+      transform: scaleY(1.4) skewX(-5deg);
+      background-color: var(--color-premium-red);
+    }
+    10% {
+      opacity: 0.05;
+      transform: scaleY(1);
+    }
+    55% {
+      opacity: 0.4;
+      transform: scaleY(0.7) skewX(10deg);
+      background-color: var(--color-premium-cyan);
+    }
+    60% {
+      opacity: 0.05;
+      transform: scaleY(1);
+    }
+  }
+  /* Анимации Tailwind v4 */
+  --animate-glitch: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  --animate-glitch-layer-1:
+    glitch-clip-1 1.5s linear infinite alternate-reverse,
+    glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  --animate-glitch-layer-2:
+    glitch-clip-2 1.5s linear infinite alternate-reverse,
+    glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+
+  /* Keyframes объявляются на верхнем уровне темы в v4 */
+  @keyframes glitch {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+    }
+    60% {
+      transform: translate(2px, 2px);
+    }
+    80% {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  @keyframes glitch-clip-1 {
+    0%,
+    100% {
+      clip-path: inset(40% 0 61% 0);
+    }
+    20% {
+      clip-path: inset(92% 0 1% 0);
+    }
+    40% {
+      clip-path: inset(15% 0 80% 0);
+    }
+    60% {
+      clip-path: inset(80% 0 5% 0);
+    }
+    80% {
+      clip-path: inset(3% 0 92% 0);
+    }
+  }
+
+  @keyframes glitch-clip-2 {
+    0%,
+    100% {
+      clip-path: inset(25% 0 58% 0);
+    }
+    20% {
+      clip-path: inset(14% 0 80% 0);
+    }
+    40% {
+      clip-path: inset(64% 0 10% 0);
+    }
+    60% {
+      clip-path: inset(5% 0 92% 0);
+    }
+    80% {
+      clip-path: inset(85% 0 2% 0);
+    }
+  }
 }
 
 /* ── Safelist for dynamically generated theme tokens (colors.ts makeSimpleTokens) ── */
@@ -122,68 +179,77 @@
 @source inline("hover:border-premium-{red,green,sky,blue,orange,yellow,purple,pink,cyan,lime,teal,indigo}/20");
 
 @layer base {
-    html {
-        -webkit-tap-highlight-color: transparent;
-        scroll-behavior: smooth;
-    }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
 
-    body {
-        @apply text-slate-100 antialiased selection:bg-premium-red/30 selection:text-red-200 overflow-x-hidden;
-        background: radial-gradient(ellipse 140% 55% at 50% -5%, rgba(105, 60, 220, 0.24) 0%, transparent 65%),
-        radial-gradient(ellipse 70% 35% at 78% 92%, rgba(255, 46, 77, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 30% at 18% 88%, rgba(0, 90, 220, 0.06) 0%, transparent 60%),
-        #0B0915;
-        position: relative;
-    }
+  body {
+    @apply text-slate-100 antialiased selection:bg-premium-red/30 selection:text-red-200 overflow-x-hidden;
+    background:
+      radial-gradient(ellipse 140% 55% at 50% -5%, rgba(105, 60, 220, 0.24) 0%, transparent 65%),
+      radial-gradient(ellipse 70% 35% at 78% 92%, rgba(255, 46, 77, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 30% at 18% 88%, rgba(0, 90, 220, 0.06) 0%, transparent 60%),
+      #0b0915;
+    position: relative;
+  }
 
-    body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        opacity: 0.022;
-        mix-blend-mode: overlay;
-        pointer-events: none;
-        z-index: 0;
-    }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.022;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    .glass-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-    }
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.065) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
 
-    .glass-input {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.015) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-    }
+  .glass-input {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0.015) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
 
-    .safe-top {
-        padding-top: env(safe-area-inset-top);
-    }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
 
-    .safe-bottom {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
-    ::-webkit-scrollbar {
-        width: 3px;
-    }
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
 
-    ::-webkit-scrollbar-track {
-        @apply bg-transparent;
-    }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
 
-    ::-webkit-scrollbar-thumb {
-        @apply bg-white/10 rounded-full;
-    }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full;
+  }
 
-    ::-webkit-scrollbar-thumb:hover {
-        @apply bg-white/20;
-    }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
 }
 
 .font-display {
-    font-family: var(--font-display);
+  font-family: var(--font-display);
 }

@@ -41,10 +41,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             style={{ left: `${targetValue - 5}%` }}
             className="absolute h-full w-[10%] bg-premium-purple/40 rounded-sm"
           />
-          <div
-            style={{ left: `${targetValue}%` }}
-            className="absolute h-full w-1 bg-white/80"
-          />
+          <div style={{ left: `${targetValue}%` }} className="absolute h-full w-1 bg-white/80" />
           <motion.div
             initial={{ height: 0 }}
             animate={{ height: '200%' }}
@@ -56,8 +53,12 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
 
       <div className="text-center space-y-6">
         <div className="space-y-1">
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/80">Твои очки</p>
-          <div className={`text-9xl font-black italic transition-colors ${score > 0 ? 'text-premium-green' : 'text-premium-red'}`}>
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/80">
+            Твои очки
+          </p>
+          <div
+            className={`text-9xl font-black italic transition-colors ${score > 0 ? 'text-premium-green' : 'text-premium-red'}`}
+          >
             {score}
           </div>
         </div>
@@ -69,6 +70,8 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       </div>
     </div>
 
-    <PrimaryButton onClick={onNext} icon={RotateCcw}>СЛЕДУЮЩИЙ РАУНД</PrimaryButton>
+    <PrimaryButton onClick={onNext} icon={RotateCcw}>
+      СЛЕДУЮЩИЙ РАУНД
+    </PrimaryButton>
   </motion.div>
 );

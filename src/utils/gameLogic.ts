@@ -6,13 +6,17 @@ import { contentService } from '../services/contentService';
 
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
-export const initSpyHunt = (playerNames: string[], difficulty: string = 'medium', mode: string = 'classic') => {
+export const initSpyHunt = (
+  playerNames: string[],
+  difficulty: string = 'medium',
+  mode: string = 'classic'
+) => {
   const locationObj = contentService.getSpyHuntLocation(difficulty);
 
   // Mode logic
   const indices = Array.from({ length: playerNames.length }, (_, i) => i);
   const shuffled = shuffle(indices);
-  
+
   let spyIndices: number[] = [shuffled[0]];
   let moleIndex: number | null = null;
 
@@ -21,7 +25,7 @@ export const initSpyHunt = (playerNames: string[], difficulty: string = 'medium'
   } else if (mode === 'mole' && playerNames.length >= 5) {
     moleIndex = shuffled[1];
   }
-  
+
   const players: Player[] = playerNames.map((name, index) => {
     let role = 'Игрок';
     let isSpy = false;
@@ -74,9 +78,8 @@ export const initResistance = (playerNames: string[]) => {
     id: generateId(),
     name,
     role: spyIndices.includes(index) ? 'Шпион' : 'Сопротивление',
-    isSpy: spyIndices.includes(index)
+    isSpy: spyIndices.includes(index),
   }));
 
   return { players };
 };
-

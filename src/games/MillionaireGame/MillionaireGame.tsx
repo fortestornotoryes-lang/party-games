@@ -51,7 +51,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
     const timer = setTimeout(() => {
       if (isCorrect) {
         if (questionIndex === 14) {
-          setPlayerScores(prev => ({ ...prev, [currentPlayer]: PRIZE_LADDER[14] }));
+          setPlayerScores((prev) => ({ ...prev, [currentPlayer]: PRIZE_LADDER[14] }));
           feedbackService.vibrate(VIBRATE.celebrate);
           setPhase(MillionairePhase.Win);
         } else {
@@ -60,7 +60,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
         }
       } else {
         const guaranteed = getGuaranteedAmount(questionIndex);
-        setPlayerScores(prev => ({ ...prev, [currentPlayer]: guaranteed }));
+        setPlayerScores((prev) => ({ ...prev, [currentPlayer]: guaranteed }));
         feedbackService.vibrate(VIBRATE.error);
         setPhase(MillionairePhase.GameOver);
       }
@@ -88,13 +88,13 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   };
 
   const handleTakeMoney = () => {
-    setPlayerScores(prev => ({ ...prev, [currentPlayer]: PRIZE_LADDER[questionIndex] }));
+    setPlayerScores((prev) => ({ ...prev, [currentPlayer]: PRIZE_LADDER[questionIndex] }));
     feedbackService.vibrate(VIBRATE.win);
     setPhase(MillionairePhase.Win);
   };
 
   const handleContinue = () => {
-    setQuestionIndex(prev => prev + 1);
+    setQuestionIndex((prev) => prev + 1);
     setSelectedAnswer(null);
     setEliminatedOptions([]);
     setAudienceVotes(null);
@@ -110,24 +110,24 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   const handleFiftyFifty = () => {
     if (usedLifelines.has('50_50') || !currentQuestions.length) return;
     const question = currentQuestions[questionIndex];
-    const wrongIndices = [0, 1, 2, 3].filter(i => i !== question.correctIndex);
+    const wrongIndices = [0, 1, 2, 3].filter((i) => i !== question.correctIndex);
     const toEliminate = shuffle(wrongIndices).slice(0, 2);
     setEliminatedOptions(toEliminate);
-    setUsedLifelines(prev => new Set([...prev, '50_50']));
+    setUsedLifelines((prev) => new Set([...prev, '50_50']));
     feedbackService.vibrate(VIBRATE.tap);
   };
 
   const handlePhoneFriend = () => {
     if (usedLifelines.has('phone') || !currentQuestions.length) return;
     setPhoneFriendSuggestion(currentQuestions[questionIndex].correctIndex);
-    setUsedLifelines(prev => new Set([...prev, 'phone']));
+    setUsedLifelines((prev) => new Set([...prev, 'phone']));
     feedbackService.vibrate(VIBRATE.tap);
   };
 
   const handleAskAudience = () => {
     if (usedLifelines.has('audience') || !currentQuestions.length) return;
     setAudienceVotes(simulateAudienceVote(currentQuestions[questionIndex].correctIndex));
-    setUsedLifelines(prev => new Set([...prev, 'audience']));
+    setUsedLifelines((prev) => new Set([...prev, 'audience']));
     feedbackService.vibrate(VIBRATE.tap);
   };
 
@@ -145,31 +145,28 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
           {phase === MillionairePhase.Pass && (
-            <PassPhase
-              key="pass"
-              currentPlayer={currentPlayer}
-              onPassDone={handlePassDone}
-            />
+            <PassPhase key="pass" currentPlayer={currentPlayer} onPassDone={handlePassDone} />
           )}
 
-          {(phase === MillionairePhase.Question || phase === MillionairePhase.Reveal) && currentQuestion && (
-            <QuestionPhase
-              key="question"
-              question={currentQuestion}
-              questionIndex={questionIndex}
-              selectedAnswer={selectedAnswer}
-              isRevealing={phase === MillionairePhase.Reveal}
-              isCorrect={isCorrect}
-              eliminatedOptions={eliminatedOptions}
-              audienceVotes={audienceVotes}
-              phoneFriendSuggestion={phoneFriendSuggestion}
-              usedLifelines={usedLifelines}
-              onAnswer={handleAnswer}
-              onFiftyFifty={handleFiftyFifty}
-              onPhoneFriend={handlePhoneFriend}
-              onAskAudience={handleAskAudience}
-            />
-          )}
+          {(phase === MillionairePhase.Question || phase === MillionairePhase.Reveal) &&
+            currentQuestion && (
+              <QuestionPhase
+                key="question"
+                question={currentQuestion}
+                questionIndex={questionIndex}
+                selectedAnswer={selectedAnswer}
+                isRevealing={phase === MillionairePhase.Reveal}
+                isCorrect={isCorrect}
+                eliminatedOptions={eliminatedOptions}
+                audienceVotes={audienceVotes}
+                phoneFriendSuggestion={phoneFriendSuggestion}
+                usedLifelines={usedLifelines}
+                onAnswer={handleAnswer}
+                onFiftyFifty={handleFiftyFifty}
+                onPhoneFriend={handlePhoneFriend}
+                onAskAudience={handleAskAudience}
+              />
+            )}
 
           {phase === MillionairePhase.Between && (
             <BetweenPhase
