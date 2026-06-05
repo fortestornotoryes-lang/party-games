@@ -4,8 +4,9 @@ import React, {useEffect} from 'react';
 
 import {type BunkerCharacter, getRevealedTrait} from '../types';
 
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
-import {PrimaryButton, Typography} from '@/components/UI';
+import {Typography} from '@/components/Typography';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

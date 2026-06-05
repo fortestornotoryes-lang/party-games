@@ -263,16 +263,7 @@ style={{ backdropFilter: 'blur(var(--blur-overlay))' }}
 - `animate-glitch-layer-1` — composite glitch + clip-path, слой 1
 - `animate-glitch-layer-2` — composite glitch + clip-path, слой 2
 
-## UI-компоненты (`src/components/UI.tsx`)
 
-| Компонент | Описание |
-|---|---|
-| `<PrimaryButton>` | Основная кнопка. Варианты: `white`, `premium`, `red`, `blue`, `emerald`, `purple`, `outline`. Базовый класс: `w-full h-16 rounded-premium-md font-black italic text-xl` |
-| `<SectionLabel>` | `text-label font-black uppercase tracking-[0.5em] italic` |
-| `<Badge>` | `rounded-premium-sm text-micro font-black uppercase` |
-| `<IconButton>` | `p-4 rounded-premium-sm`. Варианты: `ghost`, `filled`, `danger` |
-| `<TabButton>` | `text-label font-black uppercase tracking-[0.3em] font-display italic` |
-| `<PageWrapper>` | Обёртка страницы с `safe-top`, `overflow-y-auto`, правильным padding |
 
 ## Typography (`src/components/Typography.tsx`)
 

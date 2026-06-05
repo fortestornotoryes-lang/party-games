@@ -1,19 +1,19 @@
 import type {LucideIcon} from 'lucide-react';
-import {ArrowLeft, GripVertical, HelpCircle, Play, Shuffle, UserMinus, UserPlus, Users,} from 'lucide-react';
-import {motion, Reorder, useDragControls} from 'motion/react';
+import {ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users,} from 'lucide-react';
+import {motion, Reorder} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {storageService} from '../services/storageService';
-import type {ThemeTokens} from '../theme/colors';
 import {getTheme} from '../theme/colors';
 import type {GameTheme} from '../types';
 import {shuffle} from '../utils/random';
 
 import {InstructionsModal} from './InstructionsModal';
-import {PrimaryButton, Typography} from './UI';
 
-import {TextInput} from '@/components/TextInput.tsx';
+import {DEFAULT_NAMES, PlayerRow} from "@/components/PlayerRow.tsx";
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import { Typography } from "./Typography";
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;
@@ -31,88 +31,13 @@ interface SetupProps {
     children?: React.ReactNode;
 }
 
-interface PlayerEntry {
+export interface PlayerEntry {
     id: string;
     name: string;
 }
 
 let _idCounter = 0;
 const makeId = () => `p-${++_idCounter}-${Math.random().toString(36).slice(2, 6)}`;
-
-const DEFAULT_NAMES = ['Дуня', 'Валера', 'Булочка', 'Люба', 'Саша'];
-
-type Config = ThemeTokens;
-
-interface PlayerRowProps {
-    player: PlayerEntry;
-    index: number;
-    canRemove: boolean;
-    config: Config;
-    placeholder: string;
-    onRemove: (id: string) => void;
-    onChange: (id: string, name: string) => void;
-}
-
-const PlayerRow: React.FC<PlayerRowProps> = ({
-                                                 player,
-                                                 index,
-                                                 canRemove,
-                                                 config,
-                                                 placeholder,
-                                                 onRemove,
-                                                 onChange,
-                                             }) => {
-    const dragControls = useDragControls();
-
-    return (
-        <Reorder.Item
-            value={player}
-            dragListener={false}
-            dragControls={dragControls}
-            layout="position"
-            className="flex items-center gap-4 list-none group"
-            whileDrag={{scale: 1.02, zIndex: 50, rotate: -1}}
-        >
-            <div
-                onPointerDown={(e) => {
-                    dragControls.start(e);
-                }}
-                className="w-5 h-9 shrink-0 flex items-center justify-center text-white/10 hover:text-white/80 cursor-grab active:cursor-grabbing touch-none select-none"
-            >
-                <GripVertical className="w-5 h-5"/>
-            </div>
-
-            <div
-                className={`w-9 h-9 shrink-0 rounded-premium-sm border flex items-center justify-center text-xs font-black italic select-none shadow-xl ${config.indexBg}`}
-            >
-                {index + 1}
-            </div>
-
-            <div className="flex-1 relative">
-                <TextInput
-                    value={player.name}
-                    onChange={(e) => {
-                        onChange(player.id, e.target.value);
-                    }}
-                    autoComplete="off"
-                    className={`h-9 px-6 glass-card rounded-premium-md w-full text-base font-semibold placeholder:text-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-white/20 ${config.focus}`}
-                    placeholder={`${placeholder} ${index + 1}`}
-                />
-            </div>
-
-            {!!canRemove && (
-                <button
-                    onClick={() => {
-                        onRemove(player.id);
-                    }}
-                    className="w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-sm glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all"
-                >
-                    <UserMinus className="w-5 h-5"/>
-                </button>
-              )}
-        </Reorder.Item>
-    );
-};
 
 export const Setup: React.FC<SetupProps> = ({
                                                 onStart,
@@ -292,7 +217,6 @@ export const Setup: React.FC<SetupProps> = ({
                         disabled={!isReady}
                         iconElement={<Play className="w-6 h-6 fill-current relative z-10"/>}
                         onClick={() => {
-                            console.log('players.map((p) => p.name)', players.map((p) => p.name))
                             onStart(players.map((p) => p.name));
                         }}
                         className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}

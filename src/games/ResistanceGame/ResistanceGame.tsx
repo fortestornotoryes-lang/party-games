@@ -10,7 +10,7 @@ import {ResistancePhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {MISSION_SIZES} from '@/constants/resistanceContent';
 import type {Player} from '@/types.ts';
 import {initResistance} from '@/utils/gameLogic.ts';
@@ -21,7 +21,7 @@ interface ResistanceGameProps {
 }
 
 export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBack}) => {
-    const [players, setPlayers] = useState<Player[]>([]);
+    const [players] = useState<Player[]>(() => initResistance(playerNames).players);
     const [phase, setPhase] = useState<ResistancePhase>(ResistancePhase.Distributing);
     const [missionIndex, setMissionIndex] = useState(0);
     const [resistanceScore, setResistanceScore] = useState(0);
@@ -32,11 +32,6 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
     const [winner, setWinner] = useState<'resistance' | 'spies' | null>(null);
 
     useEffect(() => {
-        const {players: p} = initResistance(playerNames);
-        setPlayers(p);
-    }, [playerNames]);
-
-    useEffect(() => {
         if (phase === ResistancePhase.GameOver && winner) {
             const colors = winner === 'resistance' ? ['#3b82f6', '#ffffff'] : ['#ef4444', '#000000'];
             const duration = 3 * 1000;
@@ -45,7 +40,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
 
             const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-            const interval: any = setInterval(() => {
+            const interval = setInterval(() => {
                 const timeLeft = animationEnd - Date.now();
 
                 if (timeLeft <= 0) {
@@ -54,13 +49,13 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                 }
 
                 const particleCount = 50 * (timeLeft / duration);
-                confetti({
+                void confetti({
                     ...defaults,
                     particleCount,
                     origin: {x: randomInRange(0.1, 0.3), y: Math.random() - 0.2},
                     colors,
                 });
-                confetti({
+                void confetti({
                     ...defaults,
                     particleCount,
                     origin: {x: randomInRange(0.7, 0.9), y: Math.random() - 0.2},
@@ -87,7 +82,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
         );
     }
 
-    const missionSize = (MISSION_SIZES as any)[players.length]?.[missionIndex] || 2;
+    const missionSize = MISSION_SIZES[players.length]?.[missionIndex] ?? 2;
     const currentLeader = players[leaderIndex % players.length];
     const currentVoterId = selectedTeam[missionVotes.length];
     const currentVoter = players.find((p) => p.id === currentVoterId);
@@ -143,7 +138,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                     <div className="text-center group">
                         <p className="text-tag text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
                         <div className="flex items-center gap-2">
-                            {[...Array(3)].map((_, i) => (
+                            {[0, 1, 2].map((_, i) => (
                                 <div
                                     key={i}
                                     className={`w-3 h-3 rounded-full ${i < resistanceScore ? 'bg-premium-blue shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/5 border border-white/10'}`}
@@ -154,7 +149,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                     <div className="text-center group">
                         <p className="text-tag text-premium-red font-black tracking-widest mb-1">ШПИОНЫ</p>
                         <div className="flex items-center gap-2 justify-end">
-                            {[...Array(3)].map((_, i) => (
+                            {[0, 1, 2].map((_, i) => (
                                 <div
                                     key={i}
                                     className={`w-3 h-3 rounded-full ${i < spiesScore ? 'bg-premium-red shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-white/5 border border-white/10'}`}

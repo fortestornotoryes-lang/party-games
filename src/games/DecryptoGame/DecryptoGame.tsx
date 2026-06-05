@@ -17,7 +17,7 @@ import type {TeamColor, TeamState} from './types';
 import {DecryptoPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {DECRYPTO_MODES} from '@/constants/decryptoContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

@@ -3,7 +3,7 @@ import React from 'react';
 
 import type {Team} from '../types';
 
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
 
 

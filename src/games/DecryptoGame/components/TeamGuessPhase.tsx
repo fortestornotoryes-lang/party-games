@@ -7,7 +7,7 @@ import type {TeamColor} from '../types';
 import {CodeInput} from './CodeInput';
 import {WordGrid} from './WordGrid';
 
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

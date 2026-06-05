@@ -2,7 +2,8 @@ import {CheckCircle, Send} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useState} from 'react';
 
-import {PrimaryButton} from '@/components/UI';
+
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 
 interface HintingPhaseProps {
     word: string;

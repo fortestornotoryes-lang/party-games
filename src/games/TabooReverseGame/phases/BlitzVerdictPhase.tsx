@@ -4,7 +4,8 @@ import React, {useState} from 'react';
 
 import type {BlitzResult} from '../types';
 
-import {PrimaryButton} from '@/components/UI';
+
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 
 interface BlitzVerdictPhaseProps {
     results: BlitzResult[];

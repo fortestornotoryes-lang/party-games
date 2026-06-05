@@ -7,7 +7,7 @@ metadata:
   originSessionId: d3ec9307-4021-49f9-822a-9589555ac09e
 ---
 
-## UI.tsx — все экспорты
+
 
 ### PrimaryButton
 ```tsx
@@ -91,7 +91,6 @@ metadata:
 // sm=36px, md=48px(default), lg=60px, xl=72px
 ```
 
-**Импорт:** `import { Typography } from '@/components/UI'` или `import { Typography } from '@/components/Typography'`
 
 ### PageWrapper
 ```tsx

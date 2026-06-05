@@ -40,7 +40,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     // Auto-submit when timer transitions from >0 to 0
     useEffect(() => {
         if (prevTimeLeftRef.current > 0 && timeLeft === 0) {
-            onFinish(canvasRef.current?.toDataURL() || '');
+            onFinish(canvasRef.current?.toDataURL() ?? '');
         }
         prevTimeLeftRef.current = timeLeft;
     }, [timeLeft, onFinish]);

@@ -4,8 +4,9 @@ import React from 'react';
 
 import type {ChoiceType} from '../types';
 
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
-import {PrimaryButton} from '@/components/UI';
+
 
 interface ActionPhaseProps {
     currentPlayer: string;

@@ -3,8 +3,8 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {PlayingHeader} from '@/components/PlayingHeader';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
-import {PrimaryButton} from '@/components/UI';
 import type {TabooCard} from '@/constants/tabooReverseContent';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */

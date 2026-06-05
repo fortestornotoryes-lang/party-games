@@ -157,7 +157,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
                     transition={{duration: 1.2, repeat: Infinity}}
                     className={`mx-auto w-[72px] h-[72px] rounded-full border flex items-center justify-center transition-colors duration-500 ${accent.ring}`}
                 >
-                    {Icon && <Icon className={`w-12 h-12 transition-colors duration-300 ${accent.icon}`}/>}
+                    {!!Icon && <Icon className={`w-12 h-12 transition-colors duration-300 ${accent.icon}`}/>}
                 </motion.div>
 
                 <div className="space-y-3">

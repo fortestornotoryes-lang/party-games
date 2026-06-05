@@ -8,7 +8,7 @@ import type {TeamColor, TeamState} from '../types';
 
 import {ScoreRow} from './ScoreRow';
 
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

@@ -3,7 +3,7 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {LeaderboardList} from '@/components/LeaderboardList';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from "@/i18n";
 import {NS} from "@/i18n/keys.ts";
 

@@ -1,7 +1,8 @@
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {PrimaryButton} from '@/components/UI';
+
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 
 interface PassPhaseProps {
     guesser: string;

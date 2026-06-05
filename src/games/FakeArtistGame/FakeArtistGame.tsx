@@ -15,7 +15,7 @@ import {FakeArtistPhase} from './types';
 
 import {GameCard} from '@/components/GameCard.tsx';
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 
 interface Props {
     playerNames: string[];

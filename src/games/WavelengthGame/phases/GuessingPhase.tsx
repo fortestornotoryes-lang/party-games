@@ -2,7 +2,7 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {GameCard} from '@/components/GameCard';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 
 interface GuessingPhaseProps {
     currentPair: string[];

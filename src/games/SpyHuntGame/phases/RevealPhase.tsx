@@ -3,7 +3,7 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {GameCard} from '@/components/GameCard';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import type {Player} from '@/types';

@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 
 import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent,} from '../types';
 
-import {Typography} from '@/components/UI';
+import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';

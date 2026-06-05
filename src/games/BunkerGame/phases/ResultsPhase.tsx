@@ -4,7 +4,8 @@ import React from 'react';
 
 import type {BunkerCharacter, BunkerResources, SurvivalOutcome} from '../types';
 
-import {PrimaryButton, Typography} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';

@@ -9,8 +9,12 @@ import type {Difficulty} from '../types';
 import {GameKey} from '../types/games';
 
 import {Pagination} from './Pagination';
-import {IconButton, PageWrapper, SectionLabel, TabButton, Typography} from './UI';
+import {Typography} from './Typography.tsx';
 
+import {IconButton} from "@/components/IconButton.tsx";
+import {PageWrapper} from "@/components/PageWrapper.tsx";
+import {SectionLabel} from "@/components/SectionLabel.tsx";
+import {TabButton} from "@/components/TabButton.tsx";
 import {TextInput} from '@/components/TextInput.tsx';
 import {useLanguage} from '@/i18n';
 
@@ -18,7 +22,7 @@ interface SettingsProps {
     onBack: () => void;
 }
 
-const PAGE_SIZE = 1;
+const PAGE_SIZE = 8;
 
 const ALL_WORD_GAMES = [
     {

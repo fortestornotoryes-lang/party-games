@@ -5,7 +5,7 @@ import React, {useEffect} from 'react';
 import {getTheme} from '../theme/colors';
 import type {GameTheme} from '../types';
 
-import {Typography} from '@/components/UI';
+import {Typography} from '@/components/Typography';
 
 type ModalTheme = GameTheme;
 

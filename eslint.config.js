@@ -57,6 +57,7 @@ export default tseslint.config(
             '@typescript-eslint/no-empty-function': 'warn',
             'no-empty': 'warn',
             '@typescript-eslint/no-unnecessary-type-parameters': 'warn',
+            '@typescript-eslint/no-non-null-assertion': 'warn',
 
 
             // Code Organization & Quality

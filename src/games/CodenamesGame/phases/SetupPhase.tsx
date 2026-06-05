@@ -2,7 +2,8 @@ import {Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {PrimaryButton, Typography} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
 
 interface SetupPhaseProps {

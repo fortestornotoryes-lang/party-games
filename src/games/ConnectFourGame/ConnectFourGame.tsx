@@ -6,7 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {CONNECT_FOUR_MODES} from '@/constants/connectFourContent';
 
 

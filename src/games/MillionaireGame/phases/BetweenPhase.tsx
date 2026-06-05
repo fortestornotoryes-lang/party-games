@@ -3,7 +3,7 @@ import {Banknote, CheckCircle, TrendingUp} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
-import {PrimaryButton} from '@/components/UI';
+import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {PRIZE_LADDER} from '@/constants/millionaireContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

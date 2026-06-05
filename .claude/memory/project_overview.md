@@ -50,7 +50,6 @@ src/
     InstructionsModal.tsx          # Модалка с правилами игры
     Settings.tsx                   # Экран настроек приложения
     Result.tsx                     # Экран результата (SPY HUNT)
-    UI.tsx                         # Все базовые UI-компоненты (см. components_ui.md)
     Typography.tsx                 # 7 типографических компонентов (Display/Title/Heading/Label/Body/Caption/Score)
     # ── Атомарные переиспользуемые компоненты ──
     TimerBar.tsx                   # Полоска прогресса таймера (pct, color)
