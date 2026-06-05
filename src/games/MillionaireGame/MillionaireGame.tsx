@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Trophy } from 'lucide-react';
 import { usePlayerCycle } from '@/hooks/usePlayerCycle';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { GameHeader } from '@/components/GameHeader';
 import { feedbackService, VIBRATE } from '@/services/feedbackService';
 import { shuffle } from '@/utils/random';
@@ -27,6 +29,7 @@ interface MillionaireGameProps {
 }
 
 export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, onBack }) => {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<MillionairePhase>(MillionairePhase.Pass);
   const { current: currentPlayer, next: nextPlayer } = usePlayerCycle(playerNames);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -136,8 +139,8 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   return (
     <div className="flex flex-col h-screen">
       <GameHeader
-        title="МИЛЛИОНЕР"
-        subtitle="Кто хочет стать миллионером"
+        title={t(`${NS.MILLIONAIRE}.gameTitle`)}
+        subtitle={t(`${NS.MILLIONAIRE}.subtitle`)}
         icon={Trophy}
         theme="yellow"
         onBack={onBack}

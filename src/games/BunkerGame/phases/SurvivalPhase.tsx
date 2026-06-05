@@ -115,7 +115,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: i * 0.12, type: 'spring' }}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold"
+                className="px-3 py-1.5 rounded-premium-sm text-xs font-bold"
                 style={{
                   background: 'rgba(0,216,138,0.1)',
                   border: '1px solid rgba(0,216,138,0.3)',
@@ -131,7 +131,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 0.35 }}
                 transition={{ delay: (bunkerTeam.length + i) * 0.12 }}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold line-through"
+                className="px-3 py-1.5 rounded-premium-sm text-xs font-bold line-through"
                 style={{
                   background: 'rgba(255,46,77,0.08)',
                   border: '1px solid rgba(255,46,77,0.2)',
@@ -162,7 +162,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.25 }}
-                className="flex items-center gap-3 p-2.5 rounded-xl"
+                className="flex items-center gap-3 p-2.5 rounded-premium-sm"
                 style={{
                   background: ev.positive ? 'rgba(0,216,138,0.07)' : 'rgba(255,138,31,0.07)',
                   border: `1px solid ${ev.positive ? 'rgba(0,216,138,0.2)' : 'rgba(255,138,31,0.2)'}`,

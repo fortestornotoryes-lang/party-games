@@ -33,7 +33,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative group"
+            className="w-full rounded-premium-lg overflow-hidden border border-white/10 shadow-2xl relative group"
           >
             <img
               src={canvasImage}
@@ -42,7 +42,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
             />
             <button
               onClick={() => setFullscreen(true)}
-              className="absolute top-3 right-3 w-9 h-9 bg-black/50 rounded-xl flex items-center justify-center text-white/80 active:scale-90 transition-all"
+              className="absolute top-3 right-3 w-9 h-9 bg-black/50 rounded-premium-sm flex items-center justify-center text-white/80 active:scale-90 transition-all"
             >
               <Maximize2 className="w-4 h-4" />
             </button>
@@ -61,7 +61,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
               <img src={canvasImage} alt="Full" className="w-full h-full object-contain" />
               <button
                 onClick={() => setFullscreen(false)}
-                className="absolute top-5 right-5 w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center text-white active:scale-90 transition-all"
+                className="absolute top-5 right-5 w-10 h-10 bg-white/10 rounded-premium-md flex items-center justify-center text-white active:scale-90 transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -83,7 +83,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
               </div>
               <button
                 onClick={() => setRevealed(true)}
-                className="w-full py-6 bg-white text-black rounded-3xl font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+                className="w-full py-6 bg-white text-black rounded-premium-lg font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
               >
                 Раскрыть самозванца
               </button>
@@ -105,7 +105,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
 
               <button
                 onClick={onReveal}
-                className="w-full py-6 bg-white/10 border border-white/20 text-white rounded-3xl font-black uppercase tracking-widest"
+                className="w-full py-6 bg-white/10 border border-white/20 text-white rounded-premium-lg font-black uppercase tracking-widest"
               >
                 В ГЛАВНОЕ МЕНЮ
               </button>

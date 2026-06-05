@@ -8,4 +8,5 @@ export const NS = {
   TABOO: 'taboo',
   BUNKER: 'bunker',
   CODENAMES: 'codenames',
+  MILLIONAIRE: 'millionaire',
 } as const;

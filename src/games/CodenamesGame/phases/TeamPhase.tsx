@@ -35,7 +35,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
       exit={{ opacity: 0 }}
       className="space-y-4 flex flex-col h-full"
     >
-      <div className="flex flex-col items-center justify-center text-center bg-white/5 py-3 rounded-2xl border border-white/10 relative overflow-hidden">
+      <div className="flex flex-col items-center justify-center text-center bg-white/5 py-3 rounded-premium-md border border-white/10 relative overflow-hidden">
         <div
           className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-premium-red' : 'bg-premium-blue'}`}
         />
@@ -60,7 +60,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
               exit={{ opacity: 0, scale: 1.2 }}
               className="absolute inset-0 z-10 flex items-center justify-center p-4"
             >
-              <div className="bg-black/90 backdrop-blur-md border border-white/20 px-6 py-4 rounded-3xl shadow-2xl">
+              <div className="bg-black/90 backdrop-blur-md border border-white/20 px-6 py-4 rounded-premium-lg shadow-2xl">
                 <p className="text-xl font-black text-center text-white tracking-widest">
                   {lastActionMsg}
                 </p>

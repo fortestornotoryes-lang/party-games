@@ -47,7 +47,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
       </div>
 
       {/* Forbidden words reminder */}
-      <div className="p-4 rounded-2xl border border-premium-red/20 bg-premium-red/5">
+      <div className="p-4 rounded-premium-md border border-premium-red/20 bg-premium-red/5">
         <p className="text-micro font-black uppercase tracking-[0.4em] text-premium-red/50 mb-2 text-center">
           {t(`${NS.TABOO}.forbiddenWords`)}
         </p>
@@ -55,7 +55,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           {card.forbidden.map((w, i) => (
             <span
               key={i}
-              className="px-3 py-1 rounded-xl border border-premium-red/30 bg-premium-red/10 text-label font-black italic uppercase text-premium-red/70"
+              className="px-3 py-1 rounded-premium-sm border border-premium-red/30 bg-premium-red/10 text-label font-black italic uppercase text-premium-red/70"
             >
               {w}
             </span>
@@ -75,7 +75,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           <button
             key={player}
             onClick={() => onVerdict(player)}
-            className="w-full p-4 bg-premium-green/10 border-2 border-premium-green/40 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+            className="w-full p-4 bg-premium-green/10 border-2 border-premium-green/40 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
           >
             <p className="font-black italic text-premium-green text-base">{player}</p>
             <span className="text-3xl font-black italic text-premium-green ml-4">+1</span>
@@ -84,7 +84,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
         <button
           onClick={() => onVerdict(null)}
-          className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+          className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
         >
           <p className="font-black italic text-white/50 text-base">
             {t(`${NS.TABOO}.noOneGuessed`)}
@@ -94,7 +94,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
         <button
           onClick={() => onVerdict(null, true)}
-          className="w-full p-4 bg-premium-red/10 border-2 border-premium-red/30 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+          className="w-full p-4 bg-premium-red/10 border-2 border-premium-red/30 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
         >
           <div className="text-left">
             <p className="font-black italic text-premium-red text-base leading-tight">

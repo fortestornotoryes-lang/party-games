@@ -140,7 +140,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
       />
 
       <div className="p-6 flex-1 flex flex-col max-w-sm mx-auto w-full gap-6">
-        <div className="flex justify-between p-4 bg-white/5 rounded-3xl border border-white/10 shadow-2xl">
+        <div className="flex justify-between p-4 bg-white/5 rounded-premium-lg border border-white/10 shadow-2xl">
           <div className="text-center group">
             <p className="text-tag text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
             <div className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                   <button
                     key={p.id}
                     onClick={() => handleToggle(p.id)}
-                    className={`p-4 rounded-2xl border text-left flex items-center transition-all ${selectedTeam.includes(p.id) ? 'bg-premium-blue/10 border-premium-blue/50 shadow-lg shadow-premium-blue/10' : 'bg-white/5 border-white/5 opacity-60'}`}
+                    className={`p-4 rounded-premium-md border text-left flex items-center transition-all ${selectedTeam.includes(p.id) ? 'bg-premium-blue/10 border-premium-blue/50 shadow-lg shadow-premium-blue/10' : 'bg-white/5 border-white/5 opacity-60'}`}
                   >
                     <div
                       className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-4 transition-all ${selectedTeam.includes(p.id) ? 'bg-premium-blue border-premium-blue' : 'border-white/20'}`}
@@ -345,7 +345,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                     .map((p) => (
                       <div
                         key={p.id}
-                        className="p-3 bg-premium-red/10 border border-premium-red/30 rounded-xl font-bold italic uppercase text-premium-red"
+                        className="p-3 bg-premium-red/10 border border-premium-red/30 rounded-premium-sm font-bold italic uppercase text-premium-red"
                       >
                         {p.name}
                       </div>

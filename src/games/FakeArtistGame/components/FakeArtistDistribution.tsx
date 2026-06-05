@@ -91,7 +91,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                   >
                     САМО&shy;ЗВАНЕЦ
                   </h3>
-                  <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
+                  <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                     <p className="text-micro font-black uppercase text-premium-red/55 mb-0.5">
                       Тема
                     </p>
@@ -144,7 +144,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                       {word}
                     </h3>
                   </div>
-                  <div className="px-4 py-3 bg-premium-sky/10 border border-premium-sky/20 rounded-2xl">
+                  <div className="px-4 py-3 bg-premium-sky/10 border border-premium-sky/20 rounded-premium-md">
                     <p className="text-micro font-black uppercase text-premium-sky/50 tracking-widest mb-1">
                       Тема
                     </p>

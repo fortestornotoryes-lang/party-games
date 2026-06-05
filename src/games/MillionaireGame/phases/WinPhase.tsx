@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Trophy, Star, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PrimaryButton } from '@/components/UI';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface WinPhaseProps {
   currentPlayer: string;
@@ -17,6 +19,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
   playerScores,
   onNextPlayer,
 }) => {
+  const { t } = useTranslation();
   const isMillion = prize === '1 000 000';
 
   useEffect(() => {
@@ -102,7 +105,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           className="text-center"
         >
           <p className="text-tag font-black uppercase tracking-[0.3em] text-white/35 mb-1">
-            {isMillion ? 'МИЛЛИОНЕР!' : 'Выиграл'}
+            {isMillion ? t(`${NS.MILLIONAIRE}.millionaireLabel`) : t(`${NS.MILLIONAIRE}.wonLabel`)}
           </p>
           <p className="text-label font-bold text-white/65 mb-2">{currentPlayer}</p>
           <p
@@ -124,7 +127,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
               transition={{ delay: 0.6 }}
               className="text-label font-black uppercase tracking-[0.3em] text-premium-yellow/50 mt-2"
             >
-              чего то там
+              {t(`${NS.MILLIONAIRE}.congratulations`)}
             </motion.p>
           )}
         </motion.div>
@@ -140,7 +143,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
               <span className="text-tag font-black uppercase tracking-[0.22em] text-white/35">
-                Счёт
+                {t(`${NS.COMMON}.score`)}
               </span>
             </div>
             <div className="space-y-2">
@@ -183,7 +186,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
         className="w-full pt-4"
       >
         <PrimaryButton variant="white" icon={ChevronRight} onClick={onNextPlayer}>
-          Следующий игрок
+          {t(`${NS.MILLIONAIRE}.nextPlayer`)}
         </PrimaryButton>
       </motion.div>
     </motion.div>

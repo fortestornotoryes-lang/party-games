@@ -4,6 +4,8 @@ import { CheckCircle, TrendingUp, Banknote } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PRIZE_LADDER } from '@/constants/millionaireContent';
 import { PrimaryButton } from '@/components/UI';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface BetweenPhaseProps {
   currentPlayer: string;
@@ -18,11 +20,12 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
   onTakeMoney,
   onContinue,
 }) => {
+  const { t } = useTranslation();
   const currentPrize = PRIZE_LADDER[questionIndex];
   const nextPrize = PRIZE_LADDER[questionIndex + 1];
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       confetti({
         particleCount: 55,
         spread: 50,
@@ -31,7 +34,7 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
         gravity: 1.2,
       });
     }, 200);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -58,7 +61,7 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
         </div>
         <div className="text-center">
           <p className="text-tag font-black uppercase tracking-[0.28em] text-premium-green/70 mb-1">
-            Правильно!
+            {t(`${NS.MILLIONAIRE}.correctBadge`)}
           </p>
           <p className="text-label text-white/55 font-semibold">{currentPlayer}</p>
         </div>
@@ -74,7 +77,7 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
       >
         <div className="h-px bg-gradient-to-r from-transparent via-premium-yellow/40 to-transparent mb-4" />
         <p className="text-tag font-black uppercase tracking-[0.22em] text-white/35 mb-1">
-          Вопрос {questionIndex + 1} — Сумма
+          {t(`${NS.MILLIONAIRE}.questionSum`, { n: questionIndex + 1 })}
         </p>
         <motion.p
           initial={{ scale: 0.8 }}
@@ -86,7 +89,7 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
           {currentPrize}
         </motion.p>
         <p className="text-tag text-white/25 mt-2 font-black uppercase tracking-wider">
-          ₽ в кармане
+          {t(`${NS.MILLIONAIRE}.inPocket`)}
         </p>
       </motion.div>
 
@@ -104,12 +107,12 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
           style={{ boxShadow: '0 0 20px rgba(255,204,31,0.08)' }}
         >
           <TrendingUp className="w-5 h-5 shrink-0" />
-          <span>Вперёд за {nextPrize}</span>
+          <span>{t(`${NS.MILLIONAIRE}.goForPrize`, { prize: nextPrize })}</span>
         </button>
 
         {/* Secondary: take money */}
         <PrimaryButton variant="outline" icon={Banknote} onClick={onTakeMoney}>
-          Забрать {currentPrize}
+          {t(`${NS.MILLIONAIRE}.takeMoney`, { prize: currentPrize })}
         </PrimaryButton>
       </motion.div>
     </motion.div>

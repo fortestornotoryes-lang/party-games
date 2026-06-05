@@ -51,7 +51,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
       {currentCode.map((num, i) => (
         <div key={i} className="flex gap-4 items-center">
           <div
-            className={`w-8 h-8 flex items-center justify-center font-black rounded-lg shrink-0 ${tBadge(activeTeam)}`}
+            className={`w-8 h-8 flex items-center justify-center font-black rounded-premium-xs shrink-0 ${tBadge(activeTeam)}`}
           >
             {num}
           </div>
@@ -65,7 +65,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
               onChange(c);
             }}
             placeholder={`Ассоциация на "${words[num - 1]}"`}
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white transition-colors placeholder:text-white/25"
+            className="flex-1 bg-white/5 border border-white/10 rounded-premium-sm px-4 py-3 text-sm outline-none focus:border-white transition-colors placeholder:text-white/25"
           />
         </div>
       ))}

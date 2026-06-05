@@ -37,7 +37,7 @@ export const EnemyInterceptPhase: React.FC<EnemyInterceptPhaseProps> = ({
       ВРЕМЯ ПЕРЕХВАТА · КОМАНДА {tLabel(enemyColor).toUpperCase()}
     </p>
 
-    <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
+    <div className="bg-white/5 border border-white/10 p-4 rounded-premium-sm">
       <p className="text-xs text-white/30 font-bold uppercase mb-2">Текущие подсказки врага</p>
       <ul className="space-y-1">
         {clues.map((c, i) => (
@@ -49,7 +49,7 @@ export const EnemyInterceptPhase: React.FC<EnemyInterceptPhaseProps> = ({
     </div>
 
     {enemyHistory.length > 0 && (
-      <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
+      <div className="bg-white/5 border border-white/10 p-4 rounded-premium-sm">
         <p className="text-xs text-white/30 font-bold uppercase mb-2">История раундов врага</p>
         <div className="space-y-2">
           {enemyHistory.map((h, i) => (

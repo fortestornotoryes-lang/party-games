@@ -50,7 +50,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         <PlayingHeader explainer={currentExplainer} timeLeft={timeLeft} timerColor={timerColor} />
 
         {/* Forbidden words — shown first so explainer sees the constraints */}
-        <div className="p-5 rounded-3xl border-2 border-premium-red/30 bg-premium-red/5">
+        <div className="p-5 rounded-premium-lg border-2 border-premium-red/30 bg-premium-red/5">
           <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-red/60 mb-3 text-center">
             🚫 {t(`${NS.TABOO}.forbiddenWords`)}
           </p>
@@ -58,7 +58,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             {card.forbidden.map((w, i) => (
               <div
                 key={i}
-                className="px-4 py-2 rounded-2xl border border-premium-red/40 bg-premium-red/10 font-black italic uppercase text-sm text-premium-red"
+                className="px-4 py-2 rounded-premium-md border border-premium-red/40 bg-premium-red/10 font-black italic uppercase text-sm text-premium-red"
               >
                 {w}
               </div>
@@ -68,7 +68,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
         {/* Main word */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="p-8 rounded-4xl border-2 border-white/15 bg-white/5 text-center w-full">
+          <div className="p-8 rounded-premium-2xl border-2 border-white/15 bg-white/5 text-center w-full">
             <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30 mb-3">
               {t(`${NS.TABOO}.wordToGuess`)}
             </p>

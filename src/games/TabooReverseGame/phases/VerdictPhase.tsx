@@ -56,7 +56,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           <button
             key={i}
             onClick={() => onToggleWord(i)}
-            className={`px-4 py-2.5 rounded-2xl border font-black italic uppercase text-sm transition-all active:scale-95 ${
+            className={`px-4 py-2.5 rounded-premium-md border font-black italic uppercase text-sm transition-all active:scale-95 ${
               usedWordIdxs.has(i)
                 ? 'bg-premium-green/20 border-premium-green/50 text-premium-green line-through opacity-70'
                 : 'bg-white/5 border-white/15 text-white/50'
@@ -86,7 +86,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           <button
             key={player}
             onClick={() => onVerdict(player)}
-            className="w-full p-4 bg-premium-green/10 border-2 border-premium-green/40 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+            className="w-full p-4 bg-premium-green/10 border-2 border-premium-green/40 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
           >
             <div className="text-left">
               <p className="font-black italic text-premium-green text-base leading-tight">
@@ -105,7 +105,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
       <button
         onClick={() => onVerdict(null)}
-        className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+        className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
       >
         <p className="font-black italic text-white/50 text-base">Никто не угадал</p>
         <span className="text-3xl font-black italic text-white/30 ml-4">0</span>
@@ -113,7 +113,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
       <button
         onClick={() => onVerdict(null, true)}
-        className="w-full p-4 bg-premium-red/10 border-2 border-premium-red/30 rounded-2xl flex items-center justify-between active:scale-95 transition-all"
+        className="w-full p-4 bg-premium-red/10 border-2 border-premium-red/30 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
       >
         <div className="text-left">
           <p className="font-black italic text-premium-red text-base leading-tight">

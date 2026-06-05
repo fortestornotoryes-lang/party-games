@@ -33,7 +33,7 @@ export const PassScreen: React.FC<PassScreenProps> = ({
     exit={{ opacity: 0, scale: 1.1 }}
     className="flex-1 flex flex-col items-center justify-center text-center gap-6"
   >
-    <div className={`p-8 rounded-2xl ${tBg(team)} border shadow-2xl`}>
+    <div className={`p-8 rounded-premium-md ${tBg(team)} border shadow-2xl`}>
       <Icon className={`w-24 h-24 ${tText(team)} ${tGlow(team)}`} />
     </div>
 

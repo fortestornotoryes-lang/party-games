@@ -6,6 +6,8 @@ import {
   PRIZE_LADDER,
   SAFE_CHECKPOINTS,
 } from '@/constants/millionaireContent';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 const LETTERS = ['A', 'B', 'C', 'D'] as const;
 
@@ -42,6 +44,8 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
   onPhoneFriend,
   onAskAudience,
 }) => {
+  const { t } = useTranslation();
+
   const getAnswerState = (index: number): AnswerState => {
     if (eliminatedOptions.includes(index)) return 'eliminated';
     if (!isRevealing || selectedAnswer === null) return 'normal';
@@ -51,7 +55,12 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
   };
 
   const isCheckpoint = SAFE_CHECKPOINTS.includes(questionIndex as 4 | 9);
-  const tier = questionIndex < 5 ? 'Лёгкий' : questionIndex < 10 ? 'Средний' : 'Сложный';
+  const tier =
+    questionIndex < 5
+      ? t(`${NS.MILLIONAIRE}.tierEasy`)
+      : questionIndex < 10
+        ? t(`${NS.MILLIONAIRE}.tierMedium`)
+        : t(`${NS.MILLIONAIRE}.tierHard`);
 
   return (
     <motion.div
@@ -74,7 +83,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             </span>
             {isCheckpoint && (
               <span className="px-1.5 py-0.5 rounded-full text-micro font-black uppercase tracking-widest bg-premium-yellow/15 border border-premium-yellow/30 text-premium-yellow">
-                Рубеж
+                {t(`${NS.MILLIONAIRE}.checkpoint`)}
               </span>
             )}
           </div>
@@ -179,19 +188,19 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
               <div className="flex items-center gap-1.5 mb-2.5">
                 <Users className="w-3.5 h-3.5 text-premium-blue" />
                 <span className="text-tag font-black uppercase tracking-widest text-premium-blue">
-                  Помощь зала
+                  {t(`${NS.MILLIONAIRE}.audienceHelp`)}
                 </span>
               </div>
               <div className="space-y-1.5">
                 {audienceVotes.map((pct, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <span className="text-label font-black text-white/40 w-4">{LETTERS[i]}</span>
-                    <div className="flex-1 h-5 bg-white/5 rounded-sm overflow-hidden relative">
+                    <div className="flex-1 h-5 bg-white/5 rounded-premium-xs overflow-hidden relative">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${pct}%` }}
                         transition={{ duration: 0.7, delay: i * 0.1, ease: 'easeOut' }}
-                        className="h-full rounded-sm"
+                        className="h-full rounded-premium-xs"
                         style={{
                           background:
                             'linear-gradient(90deg, rgba(63,123,255,0.45), rgba(63,123,255,0.75))',
@@ -221,17 +230,15 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Phone className="w-3.5 h-3.5 text-premium-green" />
                 <span className="text-tag font-black uppercase tracking-widest text-premium-green">
-                  Звонок другу
+                  {t(`${NS.MILLIONAIRE}.phoneFriend`)}
                 </span>
               </div>
               <div className="flex items-start gap-2">
                 <MessageSquare className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
                 <p className="text-label text-white/70 leading-snug">
-                  «Я думаю, правильный ответ —{' '}
-                  <span className="font-black text-premium-green">
-                    {LETTERS[phoneFriendSuggestion]}
-                  </span>
-                  . Но я не могу быть уверен на 100%...»
+                  {t(`${NS.MILLIONAIRE}.phoneFriendMessage`, {
+                    letter: LETTERS[phoneFriendSuggestion],
+                  })}
                 </p>
               </div>
             </motion.div>
@@ -266,14 +273,14 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
           />
           <LifelineButton
             icon={<Phone className="w-4 h-4" />}
-            label="Другу"
+            label={t(`${NS.MILLIONAIRE}.lifelineFriend`)}
             used={usedLifelines.has('phone')}
             onClick={onPhoneFriend}
             disabled={isRevealing}
           />
           <LifelineButton
             icon={<Users className="w-4 h-4" />}
-            label="Залу"
+            label={t(`${NS.MILLIONAIRE}.lifelineAudience`)}
             used={usedLifelines.has('audience')}
             onClick={onAskAudience}
             disabled={isRevealing}

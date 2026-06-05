@@ -96,7 +96,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
             return (
               <div
                 key={char.playerName}
-                className="flex items-center gap-3 p-3 rounded-xl"
+                className="flex items-center gap-3 p-3 rounded-premium-sm"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',

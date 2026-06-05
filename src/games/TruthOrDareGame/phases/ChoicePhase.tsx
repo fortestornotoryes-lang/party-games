@@ -42,7 +42,7 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
         transition={{ delay: 0.1, type: 'spring', stiffness: 360, damping: 28 }}
         whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
         onClick={() => onChoice('truth')}
-        className="flex-1 rounded-4xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
+        className="flex-1 rounded-premium-2xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
         style={{
           background:
             'linear-gradient(160deg, rgba(31,182,255,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(31,182,255,0.05) 100%)',
@@ -85,7 +85,7 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
         transition={{ delay: 0.17, type: 'spring', stiffness: 360, damping: 28 }}
         whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
         onClick={() => onChoice('dare')}
-        className="flex-1 rounded-4xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
+        className="flex-1 rounded-premium-2xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
         style={{
           background:
             'linear-gradient(160deg, rgba(255,46,77,0.17) 0%, rgba(11,9,21,0.5) 55%, rgba(255,46,77,0.05) 100%)',

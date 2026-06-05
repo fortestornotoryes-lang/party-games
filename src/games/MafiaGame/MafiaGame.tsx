@@ -14,7 +14,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="w-20 h-20 rounded-3xl bg-premium-orange/20 border border-premium-orange/40 flex items-center justify-center text-premium-orange shadow-2xl"
+        className="w-20 h-20 rounded-premium-lg bg-premium-orange/20 border border-premium-orange/40 flex items-center justify-center text-premium-orange shadow-2xl"
       >
         <Users className="w-10 h-10" />
       </motion.div>
@@ -28,7 +28,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
         </p>
       </div>
 
-      <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-3xl p-8 space-y-6">
+      <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-premium-lg p-8 space-y-6">
         <div className="flex justify-center gap-4">
           <Sun className="w-6 h-6 text-premium-yellow" />
           <Moon className="w-6 h-6 text-premium-purple" />
@@ -42,7 +42,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
 
       <button
         onClick={onBack}
-        className="px-10 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all shadow-xl"
+        className="px-10 py-4 bg-white text-black rounded-premium-md font-black uppercase tracking-widest active:scale-95 transition-all shadow-xl"
       >
         Вернуться
       </button>

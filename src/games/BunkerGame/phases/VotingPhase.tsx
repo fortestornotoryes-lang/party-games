@@ -73,7 +73,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
 
       {/* Counter */}
       <div
-        className="rounded-2xl p-3 text-center"
+        className="rounded-premium-md p-3 text-center"
         style={{
           background: remaining > 0 ? 'rgba(255,46,77,0.08)' : 'rgba(0,216,138,0.08)',
           border: `1px solid ${remaining > 0 ? 'rgba(255,46,77,0.25)' : 'rgba(0,216,138,0.25)'}`,
@@ -102,7 +102,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
       {/* Director safe badge */}
       {directorName && (
         <div
-          className="flex items-center gap-3 px-4 py-3 rounded-2xl"
+          className="flex items-center gap-3 px-4 py-3 rounded-premium-md"
           style={{
             background: 'rgba(255,204,31,0.07)',
             border: '1px solid rgba(255,204,31,0.25)',
@@ -134,7 +134,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
               key={char.playerName}
               onClick={() => toggle(char.playerName)}
               whileTap={{ scale: 0.97 }}
-              className="w-full text-left rounded-2xl transition-all"
+              className="w-full text-left rounded-premium-md transition-all"
               style={{
                 background: isSelected ? 'rgba(255,46,77,0.1)' : 'rgba(255,255,255,0.04)',
                 border: isSelected
@@ -146,7 +146,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div
-                      className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0"
+                      className="w-5 h-5 rounded-premium-xs border-2 flex items-center justify-center transition-all flex-shrink-0"
                       style={{
                         borderColor: isSelected ? 'rgba(255,46,77,0.8)' : 'rgba(255,255,255,0.2)',
                         background: isSelected ? 'rgba(255,46,77,0.8)' : 'transparent',
@@ -176,7 +176,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                   {revealed.map((rev, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-tag font-bold"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-premium-xs text-tag font-bold"
                       style={{
                         background: 'rgba(255,255,255,0.06)',
                         color: isSelected ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.65)',

@@ -172,7 +172,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     ['blue', blueState],
                   ] as [TeamColor, TeamState][]
                 ).map(([color, state]) => (
-                  <div key={color} className={`p-4 ${tBg(color)} border rounded-2xl`}>
+                  <div key={color} className={`p-4 ${tBg(color)} border rounded-premium-md`}>
                     <h3
                       className={`${tText(color)} font-bold uppercase text-xs mb-2 flex items-center gap-2`}
                     >
@@ -307,7 +307,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
               <div className="space-y-3 w-full">
                 {round > 1 && (
                   <div
-                    className={`border rounded-2xl p-5 flex justify-between items-center w-full ${intercepted ? 'bg-premium-red/10 border-premium-red/30' : 'bg-white/5 border-white/10'}`}
+                    className={`border rounded-premium-md p-5 flex justify-between items-center w-full ${intercepted ? 'bg-premium-red/10 border-premium-red/30' : 'bg-white/5 border-white/10'}`}
                   >
                     <div className="text-left">
                       <p className="text-xs text-white/40 uppercase font-bold">
@@ -318,7 +318,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                       </p>
                     </div>
                     <span
-                      className={`font-black px-4 py-2 rounded-xl border text-sm ${intercepted ? 'text-premium-red bg-premium-red/15 border-premium-red/30' : 'text-white/30 bg-white/5 border-white/10'}`}
+                      className={`font-black px-4 py-2 rounded-premium-sm border text-sm ${intercepted ? 'text-premium-red bg-premium-red/15 border-premium-red/30' : 'text-white/30 bg-white/5 border-white/10'}`}
                     >
                       {intercepted ? 'ПЕРЕХВАТ' : 'МИМО'}
                     </span>
@@ -326,7 +326,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 )}
 
                 <div
-                  className={`border rounded-2xl p-5 flex justify-between items-center w-full ${guessCorrect ? 'bg-premium-green/10 border-premium-green/30' : 'bg-premium-red/10 border-premium-red/30'}`}
+                  className={`border rounded-premium-md p-5 flex justify-between items-center w-full ${guessCorrect ? 'bg-premium-green/10 border-premium-green/30' : 'bg-premium-red/10 border-premium-red/30'}`}
                 >
                   <div className="text-left">
                     <p className="text-xs text-white/40 uppercase font-bold">
@@ -337,7 +337,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     </p>
                   </div>
                   <span
-                    className={`font-black px-4 py-2 rounded-xl border text-sm ${guessCorrect ? 'text-premium-green bg-premium-green/15 border-premium-green/30' : 'text-premium-red bg-premium-red/15 border-premium-red/30'}`}
+                    className={`font-black px-4 py-2 rounded-premium-sm border text-sm ${guessCorrect ? 'text-premium-green bg-premium-green/15 border-premium-green/30' : 'text-premium-red bg-premium-red/15 border-premium-red/30'}`}
                   >
                     {guessCorrect ? 'УСПЕХ' : 'ОШИБКА'}
                   </span>
@@ -383,7 +383,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 ).map(([color, state]) => (
                   <div
                     key={color}
-                    className={`px-5 py-3 rounded-2xl border ${tBg(color)} text-center`}
+                    className={`px-5 py-3 rounded-premium-md border ${tBg(color)} text-center`}
                   >
                     <p className={`text-micro font-black uppercase ${tText(color)} mb-1`}>
                       {tLabel(color)}

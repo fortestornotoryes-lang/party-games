@@ -49,7 +49,7 @@ export const TelestrationsGuess: React.FC<Props> = ({
       ))}
     </div>
 
-    <div className="w-full max-w-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-sm rounded-premium-md border border-white/10 overflow-hidden shadow-2xl">
       <img src={lastDrawing} alt="Drawing" className="w-full h-auto block" />
     </div>
 
@@ -60,12 +60,12 @@ export const TelestrationsGuess: React.FC<Props> = ({
         onChange={(e) => onGuessChange(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && guess.trim() && onSubmit()}
         placeholder="Напиши ответ..."
-        className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-white/25 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
+        className="w-full p-5 bg-white/5 border border-white/10 rounded-premium-md text-xl font-bold placeholder:text-white/25 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
       />
       <button
         disabled={!guess.trim()}
         onClick={onSubmit}
-        className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 disabled:opacity-20 transition-all shadow-2xl"
+        className="w-full py-5 bg-white text-black rounded-premium-md font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-2 disabled:opacity-20 transition-all shadow-2xl"
       >
         <MessageSquare className="w-5 h-5" />
         <span>Готово</span>

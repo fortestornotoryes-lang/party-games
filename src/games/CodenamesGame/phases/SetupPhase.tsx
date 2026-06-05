@@ -37,7 +37,7 @@ export const SetupPhase: React.FC<SetupPhaseProps> = ({
       </Typography.Title>
 
       <div className="flex flex-col justify-center gap-4">
-        <div className="p-4 bg-premium-red/10 text-center border border-premium-red/30 rounded-2xl">
+        <div className="p-4 bg-premium-red/10 text-center border border-premium-red/30 rounded-premium-md">
           <Typography.Heading className="font-bold mb-2 uppercase text-xs flex items-center gap-2">
             <Users className="w-5 h-5 text-premium-red" /> {t('codenames.redTeam')}
           </Typography.Heading>
@@ -54,7 +54,7 @@ export const SetupPhase: React.FC<SetupPhaseProps> = ({
           {t('common.vs')}
         </div>
 
-        <div className="p-4 bg-premium-blue/10 text-center border border-premium-blue/30 rounded-2xl">
+        <div className="p-4 bg-premium-blue/10 text-center border border-premium-blue/30 rounded-premium-md">
           <Typography.Heading className="font-bold mb-2 uppercase text-xs flex items-center gap-2">
             <Users className="w-5 h-5 text-premium-blue" /> {t('codenames.blueTeam')}
           </Typography.Heading>

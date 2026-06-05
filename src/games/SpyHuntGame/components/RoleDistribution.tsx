@@ -92,7 +92,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                       Не выдай себя — узнай место.
                     </Typography.Body>
                     {difficulty === 'easy' && (
-                      <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
+                      <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                         <Typography.Caption size="xs" color="red" className="opacity-55 mb-0.5">
                           Подсказка
                         </Typography.Caption>
@@ -137,7 +137,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     <Typography.Display size="md" color="orange" glow align="center">
                       ПРЕДАТЕЛЬ
                     </Typography.Display>
-                    <div className="px-4 py-3 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
+                    <div className="px-4 py-3 bg-premium-orange/10 border border-premium-orange/20 rounded-premium-md">
                       <Typography.Caption size="xs" color="orange" className="opacity-50 mb-1">
                         Твоя локация
                       </Typography.Caption>
@@ -195,7 +195,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                         {location}
                       </h3>
                     </div>
-                    <div className="px-4 py-3 bg-premium-green/10 border border-premium-green/20 rounded-2xl">
+                    <div className="px-4 py-3 bg-premium-green/10 border border-premium-green/20 rounded-premium-md">
                       <Typography.Caption size="xs" color="dimmer" className="mb-1">
                         Твоя роль
                       </Typography.Caption>

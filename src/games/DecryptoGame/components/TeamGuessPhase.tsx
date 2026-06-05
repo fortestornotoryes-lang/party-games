@@ -32,7 +32,7 @@ export const TeamGuessPhase: React.FC<TeamGuessPhaseProps> = ({
   >
     <WordGrid words={words} height="h-16" />
 
-    <div className="bg-white/5 p-4 rounded-xl">
+    <div className="bg-white/5 p-4 rounded-premium-sm">
       <p className="text-xs text-white/30 font-bold uppercase mb-2">Подсказки капитана</p>
       <ul className="space-y-1 text-lg font-black uppercase tracking-wider text-center">
         {clues.map((c, i) => (

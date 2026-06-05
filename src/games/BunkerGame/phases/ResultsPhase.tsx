@@ -113,7 +113,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 240, damping: 22 }}
-        className="rounded-2xl p-7 text-center space-y-3"
+        className="rounded-premium-md p-7 text-center space-y-3"
         style={{
           background: cfg.bgColor,
           border: `2px solid ${cfg.borderColor}`,
@@ -185,7 +185,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
           {bunkerTeam.map((char) => (
             <div
               key={char.playerName}
-              className="flex items-center gap-3 p-3 rounded-xl"
+              className="flex items-center gap-3 p-3 rounded-premium-sm"
               style={{
                 background: 'rgba(0,216,138,0.06)',
                 border: '1px solid rgba(0,216,138,0.2)',
@@ -226,7 +226,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
             {eliminated.map((char) => (
               <div
                 key={char.playerName}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold"
+                className="px-3 py-1.5 rounded-premium-sm text-xs font-bold"
                 style={{
                   background: 'rgba(255,46,77,0.07)',
                   border: '1px solid rgba(255,46,77,0.2)',

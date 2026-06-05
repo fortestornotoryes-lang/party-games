@@ -230,7 +230,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
             >
               <button
                 onClick={() => setAction('place')}
-                className={`flex-1 py-3 rounded-2xl font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-3 rounded-premium-md font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                   action === 'place'
                     ? current === 1
                       ? 'bg-premium-red/15 border-premium-red/50 text-premium-red'
@@ -243,7 +243,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               </button>
               <button
                 onClick={() => setAction('pop')}
-                className={`flex-1 py-3 rounded-2xl font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-3 rounded-premium-md font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                   action === 'pop'
                     ? 'bg-white/10 border-white/35 text-white'
                     : 'bg-white/5 border-white/10 text-white/30'
@@ -293,7 +293,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
         {/* Board */}
         <div
-          className={`rounded-2xl p-[10px] border-2 transition-colors duration-500 ${
+          className={`rounded-premium-md p-[10px] border-2 transition-colors duration-500 ${
             win
               ? win.player === 1
                 ? 'bg-premium-red/5 border-premium-red/25'
@@ -371,7 +371,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               initial={{ opacity: 0, y: 16, scale: 0.94 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-              className={`p-6 rounded-2xl border-2 text-center ${
+              className={`p-6 rounded-premium-md border-2 text-center ${
                 win
                   ? win.player === 1
                     ? 'bg-premium-red/10 border-premium-red/40 shadow-[0_0_40px_rgba(255,46,77,0.18)]'

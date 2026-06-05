@@ -64,7 +64,7 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
             style={{ left: `calc(${guessValue}% - 14px)` }}
             animate={{ left: `calc(${guessValue}% - 14px)` }}
             transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-            className="absolute top-1/2 -translate-y-1/2 w-7 h-12 bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] z-10 pointer-events-none flex items-center justify-center"
+            className="absolute top-1/2 -translate-y-1/2 w-7 h-12 bg-white rounded-premium-sm shadow-[0_4px_24px_rgba(0,0,0,0.5)] z-10 pointer-events-none flex items-center justify-center"
           >
             <div className="w-0.5 h-6 bg-black/15 rounded-full" />
           </motion.div>

@@ -59,12 +59,12 @@ export const CluePhase: React.FC<CluePhaseProps> = ({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.4 }}
               style={{ left: `${Math.max(0, targetValue - 5)}%`, width: '10%' }}
-              className="absolute top-0 h-full bg-premium-purple/70 rounded-sm"
+              className="absolute top-0 h-full bg-premium-purple/70 rounded-premium-xs"
               aria-hidden="true"
             >
               {/* Glow */}
               <div
-                className="absolute inset-0 rounded-sm"
+                className="absolute inset-0 rounded-premium-xs"
                 style={{ boxShadow: '0 0 18px 4px rgba(199,123,255,0.45)' }}
               />
             </motion.div>

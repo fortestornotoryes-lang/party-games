@@ -125,7 +125,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                   key={char.playerName}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleAppeal(char)}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl text-left"
+                  className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                   style={{
                     background: rgba('yellow', 0.05),
                     border: `1px solid ${rgba('yellow', 0.2)}`,
@@ -140,7 +140,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     </div>
                   </div>
                   <div
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl flex-shrink-0"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-premium-sm flex-shrink-0"
                     style={{
                       background: rgba('yellow', 0.12),
                       border: `1px solid ${rgba('yellow', 0.3)}`,
@@ -318,7 +318,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 key={char.playerName}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleSwap(char.playerName)}
-                className="w-full flex items-center justify-between p-4 rounded-2xl text-left"
+                className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                 style={{
                   background: rgba('red', 0.05),
                   border: `1px solid ${rgba('red', 0.2)}`,
@@ -333,7 +333,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                   </div>
                 </div>
                 <div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl flex-shrink-0"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-premium-sm flex-shrink-0"
                   style={{ background: rgba('red', 0.12), border: `1px solid ${rgba('red', 0.3)}` }}
                 >
                   <X className="w-3.5 h-3.5 text-premium-red" />

@@ -50,7 +50,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         initial={{ scale: 0.85, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 22 }}
-        className="relative rounded-2xl overflow-hidden"
+        className="relative rounded-premium-md overflow-hidden"
         style={{
           background:
             'linear-gradient(160deg, rgba(255,138,31,0.12) 0%, rgba(255,46,77,0.08) 100%)',
@@ -88,7 +88,7 @@ export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45 }}
-        className="rounded-2xl p-4"
+        className="rounded-premium-md p-4"
         style={{
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',

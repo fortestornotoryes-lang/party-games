@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { XCircle, CheckCircle, Star, ChevronRight } from 'lucide-react';
 import { PrimaryButton } from '@/components/UI';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface GameOverPhaseProps {
   currentPlayer: string;
@@ -20,6 +22,8 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   playerScores,
   onNextPlayer,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       key="gameover"
@@ -52,10 +56,12 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           className="text-center space-y-1"
         >
           <p className="text-tag font-black uppercase tracking-[0.3em] text-premium-red/70">
-            Неверно!
+            {t(`${NS.MILLIONAIRE}.wrong`)}
           </p>
           <p className="text-label font-bold text-white/65">{currentPlayer}</p>
-          <p className="text-label text-white/30">Вопрос {questionIndex + 1} из 15</p>
+          <p className="text-label text-white/30">
+            {t(`${NS.MILLIONAIRE}.questionOf15`, { n: questionIndex + 1 })}
+          </p>
         </motion.div>
 
         {/* Correct answer */}
@@ -72,7 +78,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle className="w-4 h-4 text-premium-green" />
                 <span className="text-tag font-black uppercase tracking-widest text-premium-green">
-                  Правильный ответ
+                  {t(`${NS.MILLIONAIRE}.correctAnswer`)}
                 </span>
               </div>
               <p className="text-label font-bold text-white text-center">{correctAnswer}</p>
@@ -88,14 +94,14 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           className="w-full glass-card rounded-premium-lg p-4 text-center"
         >
           <p className="text-tag font-black uppercase tracking-[0.22em] text-white/30 mb-1">
-            Гарантированная сумма
+            {t(`${NS.MILLIONAIRE}.guaranteedAmount`)}
           </p>
           <p className="text-4xl font-black font-display italic tracking-tighter text-white/55 leading-none">
             {guaranteed === '0' ? '0' : guaranteed}
           </p>
           {guaranteed === '0' && (
             <p className="text-tag text-white/20 mt-1 font-black uppercase tracking-wider">
-              Ничего не заработано
+              {t(`${NS.MILLIONAIRE}.nothingEarned`)}
             </p>
           )}
         </motion.div>
@@ -111,7 +117,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
               <span className="text-tag font-black uppercase tracking-[0.22em] text-white/35">
-                Счёт
+                {t(`${NS.COMMON}.score`)}
               </span>
             </div>
             <div className="space-y-2">
@@ -154,7 +160,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         className="w-full pt-4"
       >
         <PrimaryButton variant="white" icon={ChevronRight} onClick={onNextPlayer}>
-          Следующий игрок
+          {t(`${NS.MILLIONAIRE}.nextPlayer`)}
         </PrimaryButton>
       </motion.div>
     </motion.div>

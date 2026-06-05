@@ -280,7 +280,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                     setStrokes(strokes.slice(0, -1));
                     setHasDrawn(false);
                   }}
-                  className="w-20 py-6 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center disabled:opacity-0 active:scale-90 transition-all"
+                  className="w-20 py-6 bg-white/5 border border-white/10 text-white rounded-premium-lg flex items-center justify-center disabled:opacity-0 active:scale-90 transition-all"
                 >
                   <Undo2 className="w-6 h-6" />
                 </button>

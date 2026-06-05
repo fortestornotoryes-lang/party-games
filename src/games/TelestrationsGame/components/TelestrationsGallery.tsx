@@ -33,7 +33,7 @@ export const TelestrationsGallery: React.FC<Props> = ({
         <div className="w-11 h-11 flex-shrink-0 rounded-full bg-premium-orange/10 border border-premium-orange/20 flex items-center justify-center text-micro font-black text-premium-orange">
           START
         </div>
-        <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
+        <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-premium-md">
           <p className="text-xs text-premium-orange uppercase font-black tracking-widest mb-1">
             Исходное слово
           </p>
@@ -65,7 +65,7 @@ export const TelestrationsGallery: React.FC<Props> = ({
           </div>
           <div className="ml-14 bg-white/5 border border-white/5 rounded-premium-lg overflow-hidden p-3">
             {step.type === 'draw' ? (
-              <img src={step.content} alt="Drawing" className="w-full rounded-xl" />
+              <img src={step.content} alt="Drawing" className="w-full rounded-premium-sm" />
             ) : (
               <div className="p-3 text-center">
                 <p className="text-xl font-black italic">"{step.content}"</p>
@@ -80,14 +80,14 @@ export const TelestrationsGallery: React.FC<Props> = ({
       <div className="pointer-events-auto flex flex-col gap-3 max-w-sm mx-auto">
         <button
           onClick={onNewGame}
-          className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
+          className="w-full py-5 bg-white text-black rounded-premium-md font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl active:scale-95 transition-transform"
         >
           <Shuffle className="w-5 h-5" />
           <span>Новая игра</span>
         </button>
         <button
           onClick={onBack}
-          className="w-full py-4 bg-white/5 border border-white/10 text-white/40 rounded-2xl font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
+          className="w-full py-4 bg-white/5 border border-white/10 text-white/40 rounded-premium-md font-bold uppercase tracking-widest flex items-center justify-center space-x-2 active:scale-95 transition-transform"
         >
           <Home className="w-4 h-4" />
           <span className="text-xs">В меню</span>

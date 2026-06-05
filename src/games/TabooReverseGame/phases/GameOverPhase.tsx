@@ -73,7 +73,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
               return (
                 <div
                   key={ti}
-                  className={`p-4 rounded-2xl border-2 space-y-2 ${
+                  className={`p-4 rounded-premium-md border-2 space-y-2 ${
                     isWinner
                       ? ti === 0
                         ? 'border-premium-orange/60 bg-premium-orange/10 shadow-[0_0_24px_rgba(249,115,22,0.15)]'

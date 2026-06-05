@@ -71,7 +71,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         />
 
         {/* Secret word */}
-        <div className="p-8 rounded-4xl border-2 border-premium-orange/30 bg-premium-orange/5 text-center">
+        <div className="p-8 rounded-premium-2xl border-2 border-premium-orange/30 bg-premium-orange/5 text-center">
           <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-orange/50 mb-3">
             Загаданное слово
           </p>
@@ -92,7 +92,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             {card.required.map((w, i) => (
               <div
                 key={i}
-                className="px-4 py-2.5 rounded-2xl border border-premium-orange/30 bg-premium-orange/10 font-black italic uppercase text-sm text-premium-orange"
+                className="px-4 py-2.5 rounded-premium-md border border-premium-orange/30 bg-premium-orange/10 font-black italic uppercase text-sm text-premium-orange"
               >
                 {w}
               </div>

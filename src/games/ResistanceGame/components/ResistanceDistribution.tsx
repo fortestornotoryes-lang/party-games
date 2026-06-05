@@ -76,7 +76,7 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                   >
                     ШПИОН
                   </h3>
-                  <div className="px-4 py-3 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
+                  <div className="px-4 py-3 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                     <p className="text-micro font-black uppercase text-premium-red/50 mb-1">
                       Союзники
                     </p>

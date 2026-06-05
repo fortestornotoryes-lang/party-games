@@ -52,7 +52,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
               {/* Purple target zone */}
               <div
                 style={{ left: `${Math.max(0, targetValue - 5)}%`, width: '10%' }}
-                className="absolute top-0 h-full bg-premium-purple/40 rounded-sm"
+                className="absolute top-0 h-full bg-premium-purple/40 rounded-premium-xs"
               />
             </div>
 

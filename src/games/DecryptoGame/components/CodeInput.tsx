@@ -29,7 +29,7 @@ export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, max, team
           }
           onChange(g);
         }}
-        className={`h-16 text-2xl font-black text-center rounded-xl bg-white/5 border border-white/10 outline-none transition-colors ${tFocus(team)}`}
+        className={`h-16 text-2xl font-black text-center rounded-premium-sm bg-white/5 border border-white/10 outline-none transition-colors ${tFocus(team)}`}
       />
     ))}
   </div>

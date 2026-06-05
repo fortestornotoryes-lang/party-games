@@ -25,7 +25,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
     className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-6"
   >
     <div className="text-center space-y-2">
-      <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-premium-orange/10 border border-premium-orange/20 mb-1">
+      <div className="inline-flex items-center justify-center w-14 h-14 rounded-premium-md bg-premium-orange/10 border border-premium-orange/20 mb-1">
         <Pencil className="w-7 h-7 text-premium-orange" />
       </div>
       <h3 className="text-3xl font-black italic uppercase tracking-tighter">Настройки</h3>
@@ -44,7 +44,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
             key={diff}
             whileTap={{ scale: 0.97 }}
             onClick={() => onDifficultyChange(diff)}
-            className={`w-full p-4 rounded-2xl border text-left flex items-center gap-4 transition-all ${
+            className={`w-full p-4 rounded-premium-md border text-left flex items-center gap-4 transition-all ${
               isSelected ? `${cfg.border} ${cfg.bg}` : 'border-white/10 bg-white/5 opacity-50'
             }`}
           >
@@ -75,7 +75,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
     <motion.button
       whileTap={{ scale: 0.97 }}
       onClick={onStart}
-      className="w-full max-w-sm py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
+      className="w-full max-w-sm py-5 bg-white text-black rounded-premium-md font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl"
     >
       <span>Начать</span>
       <ArrowRight className="w-5 h-5" />

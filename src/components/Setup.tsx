@@ -105,7 +105,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
         <button
           onClick={() => onRemove(player.id)}
           disabled={!canRemove}
-          className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-md glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
+          className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-sm glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
         >
           <UserMinus className="w-5 h-5" />
         </button>

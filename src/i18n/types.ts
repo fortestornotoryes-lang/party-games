@@ -207,6 +207,35 @@ export interface CodenamesTranslations {
   play: string;
 }
 
+export interface MillionaireTranslations {
+  gameTitle: string;          // "МИЛЛИОНЕР"
+  subtitle: string;           // "Кто хочет стать миллионером"
+  tapToStart: string;         // "Нажми, чтобы начать"
+  tierEasy: string;           // "Лёгкий"
+  tierMedium: string;         // "Средний"
+  tierHard: string;           // "Сложный"
+  checkpoint: string;         // "Рубеж"
+  audienceHelp: string;       // "Помощь зала"
+  phoneFriend: string;        // "Звонок другу"
+  phoneFriendMessage: string; // "«Я думаю, правильный ответ — {{letter}}...»"
+  lifelineFriend: string;     // "Другу"
+  lifelineAudience: string;   // "Залу"
+  correctBadge: string;       // "Правильно!"
+  questionSum: string;        // "Вопрос {{n}} — Сумма"
+  inPocket: string;           // "бабосиков в кармане"
+  goForPrize: string;         // "Вперёд за {{prize}}"
+  takeMoney: string;          // "Забрать {{prize}}"
+  millionaireLabel: string;   // "МИЛЛИОНЕР!"
+  wonLabel: string;           // "Выиграл"
+  congratulations: string;    // "ПОЗДРАВЛЯЕМ!"
+  nextPlayer: string;         // "Следующий игрок"
+  wrong: string;              // "Неверно!"
+  questionOf15: string;       // "Вопрос {{n}} из 15"
+  correctAnswer: string;      // "Правильный ответ"
+  guaranteedAmount: string;   // "Гарантированная сумма"
+  nothingEarned: string;      // "Ничего не заработано"
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -216,6 +245,7 @@ export interface Translations {
   taboo?: TabooTranslations;
   bunker?: BunkerTranslations;
   codenames?: CodenamesTranslations;
+  millionaire?: MillionaireTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]:
     | Record<string, unknown>
@@ -223,5 +253,6 @@ export interface Translations {
     | TabooTranslations
     | BunkerTranslations
     | CodenamesTranslations
+    | MillionaireTranslations
     | undefined;
 }

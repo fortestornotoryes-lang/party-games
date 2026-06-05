@@ -37,7 +37,7 @@ export const TelestrationsStart: React.FC<Props> = ({
       <p className="text-white/30 text-sm">Запомни слово и нарисуй его так, чтобы другие поняли</p>
     </div>
 
-    <div className="w-full max-w-sm p-4 bg-white/5 border border-white/5 rounded-2xl">
+    <div className="w-full max-w-sm p-4 bg-white/5 border border-white/5 rounded-premium-md">
       <p className="text-micro text-white/25 uppercase font-black tracking-widest mb-3 text-center">
         Порядок этой игры
       </p>
@@ -84,7 +84,7 @@ export const TelestrationsStart: React.FC<Props> = ({
     <button
       onClick={onReady}
       disabled={!wordRevealed}
-      className="w-full max-w-sm py-5 bg-white text-black rounded-2xl font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+      className="w-full max-w-sm py-5 bg-white text-black rounded-premium-md font-black uppercase tracking-[0.2em] flex items-center justify-center space-x-3 shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
     >
       <span>Я готов рисовать</span>
       <ArrowRight className="w-5 h-5" />

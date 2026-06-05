@@ -55,7 +55,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
         </div>
 
         <div className="space-y-4">
-          <div className="p-6 bg-white/5 border border-white/10 rounded-2xl space-y-4">
+          <div className="p-6 bg-white/5 border border-white/10 rounded-premium-md space-y-4">
             <div className="flex items-center justify-between text-tag uppercase font-black tracking-widest text-white/30">
               <span>Шпионы этой игры</span>
               <Award className="w-4 h-4" />
@@ -65,7 +65,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
                 <motion.div
                   key={spy.id}
                   whileHover={{ scale: 1.05 }}
-                  className="px-4 py-2 bg-premium-red/10 border border-premium-red/30 rounded-xl"
+                  className="px-4 py-2 bg-premium-red/10 border border-premium-red/30 rounded-premium-sm"
                 >
                   <span className="text-white font-bold">{spy.name}</span>
                 </motion.div>
@@ -79,7 +79,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           onClick={onRestart}
-          className="w-full py-6 bg-white text-black rounded-2xl font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-zinc-200 transition-all shadow-2xl"
+          className="w-full py-6 bg-white text-black rounded-premium-md font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-zinc-200 transition-all shadow-2xl"
         >
           <RotateCcw className="w-5 h-5" />
           <span className="text-sm">В штаб</span>
