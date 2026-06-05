@@ -16,7 +16,9 @@ export function useCountdown(
             setTimeLeft(next);
             if (next === 0) onExpireRef.current?.();
         }, 1000);
-        return () => { clearTimeout(t); };
+        return () => {
+            clearTimeout(t);
+        };
     }, [active, timeLeft]);
 
     return [timeLeft, setTimeLeft];

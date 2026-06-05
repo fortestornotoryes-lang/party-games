@@ -1,11 +1,11 @@
 import type {
-  AttributeEntry,
-  BunkerCharacter,
-  BunkerResources,
-  CatastropheScenario,
-  ResourceKey,
-  SurvivalEvent,
-  TraitKey,
+    AttributeEntry,
+    BunkerCharacter,
+    BunkerResources,
+    CatastropheScenario,
+    ResourceKey,
+    SurvivalEvent,
+    TraitKey,
 } from '../games/BunkerGame/types';
 import {ALL_TRAIT_KEYS} from '../games/BunkerGame/types';
 import {pickRandom, shuffle} from '../utils/random';

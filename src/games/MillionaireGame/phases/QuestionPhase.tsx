@@ -81,11 +81,11 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
               {tier}
             </span>
                         {!!isCheckpoint && (
-              <span
+                            <span
                                 className="px-1.5 py-0.5 rounded-full text-micro font-black uppercase tracking-widest bg-premium-yellow/15 border border-premium-yellow/30 text-premium-yellow">
                 {t(`${NS.MILLIONAIRE}.checkpoint`)}
               </span>
-            )}
+                        )}
                     </div>
 
                     {/* Right: prize amount */}

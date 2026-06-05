@@ -1,4 +1,4 @@
-import type { GameKey } from '../types/games';
+import type {GameKey} from '../types/games';
 
 const STORAGE_KEYS = {
     PLAYERS: 'party_app_players',
@@ -17,6 +17,7 @@ export interface GameSettings {
     vibration?: boolean;
     sounds?: boolean;
     language?: string;
+
     [key: string]: string | number | boolean | undefined;
 }
 
@@ -120,16 +121,16 @@ export const storageService = {
 
     // Settings
     getSettings: (): GameSettings => {
-        const defaults: GameSettings = { visualEffects: true, vibration: true, sounds: true };
+        const defaults: GameSettings = {visualEffects: true, vibration: true, sounds: true};
         const saved = safeParseJson<Partial<GameSettings>>(
             localStorage.getItem(STORAGE_KEYS.SETTINGS),
             {}
         );
-        return { ...defaults, ...saved };
+        return {...defaults, ...saved};
     },
     saveSettings: (settings: Partial<GameSettings>) => {
         const current = storageService.getSettings();
-        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify({ ...current, ...settings }));
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify({...current, ...settings}));
     },
 
     // Game Configs (Difficulty, Modes, etc.)

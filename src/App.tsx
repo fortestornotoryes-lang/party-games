@@ -30,7 +30,7 @@ import {
 import {storageService} from './services/storageService';
 import type {GameModeOption, Player} from './types';
 import {GameStatus} from './types';
-import type {GameKey, GameMetadata} from './types/games';
+import type {GameKey} from './types/games';
 
 function AppContent() {
     const {
@@ -58,7 +58,7 @@ function AppContent() {
 
     const startGame = useCallback(
         (playerNames: string[]) => {
-            console.log('currentGameId',currentGameId)
+            console.log('currentGameId', currentGameId)
             if (!currentGameId) return;
 
             storageService.savePlayers(playerNames);

@@ -1,30 +1,30 @@
 import confetti from 'canvas-confetti';
-import { Lightbulb } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import {Lightbulb} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import { GuessingPhase } from './phases/GuessingPhase';
-import { HintingPhase } from './phases/HintingPhase';
-import { PassPhase } from './phases/PassPhase';
-import { ResultPhase } from './phases/ResultPhase';
-import { JustOnePhase } from './types';
+import {GuessingPhase} from './phases/GuessingPhase';
+import {HintingPhase} from './phases/HintingPhase';
+import {PassPhase} from './phases/PassPhase';
+import {ResultPhase} from './phases/ResultPhase';
+import {JustOnePhase} from './types';
 
-import { GameHeader } from '@/components/GameHeader';
-import { useGameSettings } from '@/contexts/GameSettingsContext';
-import { usePlayerCycle } from '@/hooks/usePlayerCycle';
-import { GAMES_REGISTRY } from '@/registry/GameRegistry';
-import { contentService } from '@/services/contentService';
-import { feedbackService, VIBRATE } from '@/services/feedbackService';
-import { storageService } from '@/services/storageService';
+import {GameHeader} from '@/components/GameHeader';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {contentService} from '@/services/contentService';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
 
 interface JustOneGameProps {
     playerNames: string[];
     onBack: () => void;
 }
 
-export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
-    const { difficulty } = useGameSettings();
-    const { current: guesser, idx: guesserIdx, next: nextGuesser } = usePlayerCycle(playerNames);
+export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) => {
+    const {difficulty} = useGameSettings();
+    const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(playerNames);
 
     const [word, setWord] = useState('');
     const [hints, setHints] = useState<Record<string, string>>({});
@@ -49,7 +49,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     const submitHint = useCallback((player: string, hint: string) => {
         const trimmed = hint.trim().toLowerCase();
         if (!trimmed) return;
-        setHints((prev) => (prev[player] === trimmed ? prev : { ...prev, [player]: trimmed }));
+        setHints((prev) => (prev[player] === trimmed ? prev : {...prev, [player]: trimmed}));
     }, []);
 
     const startGuessing = useCallback(() => {
@@ -76,7 +76,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                 void confetti({
                     particleCount: 150,
                     spread: 70,
-                    origin: { y: 0.6 },
+                    origin: {y: 0.6},
                     colors: ['#FFCC1F', '#ffffff'],
                 });
             }
@@ -106,7 +106,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
             <div className="flex-1 min-h-0 overflow-y-auto">
                 <AnimatePresence mode="wait">
                     {phase === JustOnePhase.Pass && (
-                        <PassPhase guesser={guesser} onReady={handleReady} />
+                        <PassPhase guesser={guesser} onReady={handleReady}/>
                     )}
 
                     {phase === JustOnePhase.Hinting && (
@@ -131,7 +131,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
                     )}
 
                     {phase === JustOnePhase.Result && (
-                        <ResultPhase isCorrect={isCorrect} word={word} guess={guess} onNext={nextGuesser} />
+                        <ResultPhase isCorrect={isCorrect} word={word} guess={guess} onNext={nextGuesser}/>
                     )}
                 </AnimatePresence>
             </div>

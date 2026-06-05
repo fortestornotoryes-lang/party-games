@@ -2,8 +2,8 @@ import {Home, Shuffle} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {STEP_TYPE} from '../types';
 import type {Step} from '../types';
+import {STEP_TYPE} from '../types';
 
 interface Props {
     initialWord: string;

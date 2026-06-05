@@ -72,7 +72,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     const handleClick = () => {
         feedbackService.playSound('click');
         feedbackService.vibrate(VIBRATE.tap);
-        console.log('onClick',onClick)
+        console.log('onClick', onClick)
         if (onClick) onClick();
     };
 

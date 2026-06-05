@@ -100,7 +100,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
                 />
             </div>
 
-            {canRemove && (
+            {!!canRemove && (
                 <button
                     onClick={() => {
                         onRemove(player.id);
@@ -123,7 +123,7 @@ export const Setup: React.FC<SetupProps> = ({
                                                 playerPlaceholder,
                                                 instructions,
                                                 description,
-                                                minPlayers = 2,
+                                                minPlayers,
                                                 maxPlayers = 12,
                                                 children,
                                             }) => {
@@ -292,7 +292,7 @@ export const Setup: React.FC<SetupProps> = ({
                         disabled={!isReady}
                         iconElement={<Play className="w-6 h-6 fill-current relative z-10"/>}
                         onClick={() => {
-                            console.log('players.map((p) => p.name)',players.map((p) => p.name))
+                            console.log('players.map((p) => p.name)', players.map((p) => p.name))
                             onStart(players.map((p) => p.name));
                         }}
                         className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}
