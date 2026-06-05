@@ -5,6 +5,8 @@ import { PrimaryButton } from '@/components/UI';
 import { GameCard } from '@/components/GameCard';
 import { Player } from '@/types';
 import { LOCATIONS, QUESTION_IDEAS } from '@/constants/spyHuntContent';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 
 interface PlayingPhaseProps {
   players: Player[];
@@ -13,6 +15,7 @@ interface PlayingPhaseProps {
 }
 
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, onReveal }) => {
+  const { t } = useTranslation();
   const [showQuestions, setShowQuestions] = useState(false);
   const [showLocations, setShowLocations] = useState(false);
 
@@ -48,7 +51,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           <div className="flex items-center space-x-3">
             <MessageSquare className="w-4 h-4 text-premium-red" />
             <span className="text-tag font-black uppercase tracking-widest text-white/60">
-              Идеи для вопросов
+              {t(`${NS.SPY_HUNT}.questionIdeas`)}
             </span>
           </div>
           {showQuestions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -78,7 +81,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           <div className="flex items-center space-x-3">
             <List className="w-4 h-4 text-premium-sky" />
             <span className="text-tag font-black uppercase tracking-widest text-white/60">
-              Возможные локации
+              {t(`${NS.SPY_HUNT}.possibleLocations`)}
             </span>
           </div>
           {showLocations ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -104,7 +107,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
 
       <div className="pt-6">
         <h4 className="text-tag font-black text-white/20 uppercase tracking-[0.3em] mb-4 text-center">
-          Агенты под подозрением
+          {t(`${NS.SPY_HUNT}.agentsSuspected`)}
         </h4>
         <div className="grid grid-cols-2 gap-3">
           {players.map((p) => (
@@ -124,7 +127,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           icon={Skull}
           className="bg-premium-red text-white! shadow-premium-red/30"
         >
-          РАЗОБЛАЧИТЬ
+          {t(`${NS.SPY_HUNT}.reveal`)}
         </PrimaryButton>
       </div>
     </motion.div>

@@ -9,6 +9,8 @@ import { GAME_DURATION_BY_DIFFICULTY } from '@/constants/spyHuntContent';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { GameHeader } from '@/components/GameHeader';
 import { GAMES_REGISTRY } from '@/registry/GameRegistry';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
 import { RoleDistribution } from './components/RoleDistribution';
 import { useTimer } from '@/hooks/useTimer';
 import { initSpyHunt } from '@/utils/gameLogic';
@@ -22,6 +24,7 @@ interface GameProps {
 }
 
 export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
+  const { t } = useTranslation();
   const { difficulty, mode } = useGameSettings();
   const [players, setPlayers] = useState<Player[]>([]);
   const [location, setLocation] = useState('');
@@ -57,10 +60,10 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   const spy = players.find((p) => p.isSpy);
   const subtitle =
     phase === SpyHuntPhase.Distributing
-      ? 'Раздача ролей'
+      ? t(`${NS.SPY_HUNT}.subtitleDistributing`)
       : phase === SpyHuntPhase.Playing
-        ? 'Идет поиск...'
-        : 'Результаты';
+        ? t(`${NS.SPY_HUNT}.subtitlePlaying`)
+        : t(`${NS.SPY_HUNT}.subtitleReveal`);
 
   if (players.length === 0) return null;
 

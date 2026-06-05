@@ -1,4 +1,10 @@
 import { pickRandom, shuffle } from '../utils/random';
+
+export const BUNKER_MODES = {
+  CLASSIC: 'classic',
+  DICTATOR: 'dictator',
+  TRIBUNAL: 'tribunal',
+} as const;
 import type {
   CatastropheScenario,
   SurvivalEvent,

@@ -1,8 +1,9 @@
 import { Player } from '../types';
-import { GameKey } from '../types/games';
 import { shuffle } from './random';
-import { storageService } from '../services/storageService';
 import { contentService } from '../services/contentService';
+import { SPY_HUNT_ROLE_IDS, SPY_HUNT_MODES } from '../constants/spyHuntContent';
+import { FAKE_ARTIST_ROLE_IDS } from '../constants/fakeArtistContent';
+import { RESISTANCE_ROLE_IDS } from '../constants/resistanceContent';
 
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -20,21 +21,21 @@ export const initSpyHunt = (
   let spyIndices: number[] = [shuffled[0]];
   let moleIndex: number | null = null;
 
-  if (mode === 'double_agent' && playerNames.length >= 5) {
+  if (mode === SPY_HUNT_MODES.DOUBLE_AGENT && playerNames.length >= 5) {
     spyIndices = [shuffled[0], shuffled[1]];
-  } else if (mode === 'mole' && playerNames.length >= 5) {
+  } else if (mode === SPY_HUNT_MODES.MOLE && playerNames.length >= 5) {
     moleIndex = shuffled[1];
   }
 
   const players: Player[] = playerNames.map((name, index) => {
-    let role = 'Игрок';
+    let role: string = SPY_HUNT_ROLE_IDS.PLAYER;
     let isSpy = false;
 
     if (spyIndices.includes(index)) {
-      role = 'Шпион';
+      role = SPY_HUNT_ROLE_IDS.SPY;
       isSpy = true;
     } else if (index === moleIndex) {
-      role = 'Предатель';
+      role = SPY_HUNT_ROLE_IDS.TRAITOR;
       isSpy = false; // He knows the location, but is not "the" spy
     } else {
       role = locationObj.roles[index % locationObj.roles.length];
@@ -57,7 +58,7 @@ export const initFakeArtist = (playerNames: string[]) => {
   const players: Player[] = playerNames.map((name, index) => ({
     id: generateId(),
     name,
-    role: index === spyIndex ? 'Самозванец' : 'Художник',
+    role: index === spyIndex ? FAKE_ARTIST_ROLE_IDS.IMPOSTER : FAKE_ARTIST_ROLE_IDS.ARTIST,
     isSpy: index === spyIndex,
   }));
 
@@ -77,7 +78,7 @@ export const initResistance = (playerNames: string[]) => {
   const players: Player[] = playerNames.map((name, index) => ({
     id: generateId(),
     name,
-    role: spyIndices.includes(index) ? 'Шпион' : 'Сопротивление',
+    role: spyIndices.includes(index) ? RESISTANCE_ROLE_IDS.SPY : RESISTANCE_ROLE_IDS.RESISTANCE,
     isSpy: spyIndices.includes(index),
   }));
 

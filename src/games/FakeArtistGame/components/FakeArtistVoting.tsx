@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Ghost, Users, Maximize2, X } from 'lucide-react';
-import { Player } from '../../../types';
+import { Player } from '@/types.ts';
 
 interface FakeArtistVotingProps {
   players: Player[];

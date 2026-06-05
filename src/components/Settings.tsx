@@ -6,7 +6,7 @@ import { feedbackService, VIBRATE } from '../services/feedbackService';
 import { GameKey } from '../types/games';
 import { Difficulty } from '../types';
 import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
-import { useLanguage } from '../i18n';
+import { useLanguage } from '@/i18n';
 import { Pagination } from './Pagination';
 import { TextInput } from '@/components/TextInput.tsx';
 
@@ -14,9 +14,7 @@ interface SettingsProps {
   onBack: () => void;
 }
 
-// ─── constants ────────────────────────────────────────────────────────────────
-
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 1;
 
 const ALL_WORD_GAMES = [
   {
@@ -71,21 +69,6 @@ const DIFFICULTIES: { id: Difficulty; label: string }[] = [
   { id: 'medium', label: 'Норма' },
   { id: 'hard', label: 'Профи' },
 ];
-
-function getPlaceholder(gameId: GameKey): string {
-  switch (gameId) {
-    case GameKey.TruthOrDare:
-      return 'Вопрос или задание...';
-    case GameKey.Spy:
-      return 'Название локации...';
-    case GameKey.FakeArtist:
-      return 'Тема для рисунка...';
-    case GameKey.Wavelength:
-      return 'Горячее — Холодное';
-    default:
-      return 'Своё слово...';
-  }
-}
 
 function todKey(type: 'truth' | 'dare', diff: Difficulty) {
   return `tod_${type}_${diff}`;
@@ -475,7 +458,6 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       setValidationError(null);
                     }}
                     onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-                    placeholder={getPlaceholder(selectedGame)}
                     className="flex-1"
                   />
                   <button

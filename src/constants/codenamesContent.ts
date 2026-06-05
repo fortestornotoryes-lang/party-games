@@ -1,3 +1,9 @@
+export const CODENAMES_MODES = {
+  CLASSIC: 'classic',
+  DEEP_COVER: 'deep_cover',
+  DOUBLE_AGENT: 'double_agent',
+} as const;
+
 export interface CodenamesInstruction {
   readonly title: string;
   readonly content: string;
@@ -9,6 +15,7 @@ export interface CodenamesInstruction {
  */
 export const WORDS_BY_DIFFICULTY = {
   easy: [
+
     'Яблоко',
     'Книга',
     'Стул',

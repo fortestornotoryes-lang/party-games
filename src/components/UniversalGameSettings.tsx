@@ -56,11 +56,11 @@ const SettingRow: React.FC<SettingRowProps> = ({
             className={`flex flex-col items-center justify-center rounded-premium-md transition-all border h-14 ${
               isActive
                 ? getTheme(opt.color ?? color).activeOption
-                : 'glass-card border-white/5 text-white/20 opacity-60'
+                : 'glass-card border-white/5 text-white/75'
             }`}
           >
             <span
-              className={`text-card font-black italic uppercase tracking-tighter ${isActive ? '' : 'text-white/80'}`}
+              className={`text-card font-black italic uppercase tracking-tighter ${isActive ? '' : 'text-white/90'}`}
             >
               {opt.label}
             </span>
@@ -120,7 +120,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
 
     switch (currentGameId) {
       case GameKey.Telestrations: {
-        const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d as 'easy' | 'medium' | 'hard'];
+        const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d as Difficulty];
         const timeStr = `${cfg.drawTime}с / ${cfg.guessTime}с`;
         return remaining !== undefined ? `${timeStr} · ${remaining}` : timeStr;
       }

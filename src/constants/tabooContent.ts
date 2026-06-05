@@ -4,7 +4,7 @@ export interface TabooClassicCard {
   id: number;
   word: string;
   forbidden: string[];
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: Difficulty;
 }
 
 // ─── Easy ──────────────────────────────────────────────────────────────────────

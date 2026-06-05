@@ -1,11 +1,18 @@
+import {Difficulty} from "@/types.ts";
+
+export type FakeArtistDifficulty = Difficulty;
+
 export interface FakeArtistCategory {
   category: string;
   word: string;
 }
 
-export type FakeArtistDifficulty = 'easy' | 'medium' | 'hard';
+export const FAKE_ARTIST_ROLE_IDS = {
+  IMPOSTER: 'Самозванец',
+  ARTIST: 'Художник',
+} as const;
 
-export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<FakeArtistDifficulty, FakeArtistCategory[]> = {
+export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCategory[]> = {
   easy: [
     // Животные
     { category: 'Животные', word: 'Кот' },

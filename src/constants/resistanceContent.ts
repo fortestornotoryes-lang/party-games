@@ -1,3 +1,8 @@
+export const RESISTANCE_ROLE_IDS = {
+  SPY: 'Шпион',
+  RESISTANCE: 'Сопротивление',
+} as const;
+
 export const MISSION_SIZES: Record<number, number[]> = {
   5: [2, 3, 2, 3, 3],
   6: [2, 3, 4, 3, 4],

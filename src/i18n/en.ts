@@ -287,6 +287,39 @@ export const en: Translations = {
     winningTeam: 'Team {{name}}',
     mainMenu: 'MAIN MENU',
   },
+  spy_hunt: {
+    subtitleDistributing: 'Role Distribution',
+    subtitlePlaying: 'Search in progress...',
+    subtitleReveal: 'Results',
+
+    secretRole: 'Secret Role',
+    startGame: 'START GAME',
+    gotIt: 'GOT IT',
+
+    spy: 'SPY',
+    locationUnknown: 'Location unknown.',
+    dontRevealFindLocation: "Don't give yourself away — find the location.",
+    hintLabel: 'Hint',
+    lettersInName: 'Letters in name: {{n}}',
+
+    traitor: 'TRAITOR',
+    yourLocation: 'Your location',
+    helpSpyConfuseOthers: 'Help the spy, confuse the others',
+
+    agentLabel: 'Agent',
+    secretLocation: 'Secret Location',
+    yourRole: 'Your role',
+    findSpy: 'Find the spy without revealing the location',
+
+    questionIdeas: 'Question Ideas',
+    possibleLocations: 'Possible Locations',
+    agentsSuspected: 'Agents Under Suspicion',
+    reveal: 'EXPOSE',
+
+    spyRevealed: 'Spy Revealed',
+    agent00: 'Agent 00',
+    backToMenu: 'BACK TO MENU',
+  },
   taboo: {
     passInstruction: 'Only you should see the card with forbidden words',
     explainerBadge: 'Explain',

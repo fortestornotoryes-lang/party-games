@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CONNECT_FOUR_MODES } from '@/constants/connectFourContent';
 import { motion, AnimatePresence } from 'motion/react';
 import { LayoutGrid, RotateCcw, ArrowDown, ArrowUp } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -55,11 +56,11 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const p1 = playerNames[0] ?? 'Игрок 1';
   const p2 = playerNames[1] ?? 'Игрок 2';
 
-  const isLarge = mode === 'large' || mode === 'connect_five';
+  const isLarge = mode === CONNECT_FOUR_MODES.LARGE || mode === CONNECT_FOUR_MODES.CONNECT_FIVE;
   const ROWS = isLarge ? 7 : 6;
   const COLS = isLarge ? 9 : 7;
-  const WIN_LEN = mode === 'connect_five' ? 5 : 4;
-  const isPopOut = mode === 'pop_out';
+  const WIN_LEN = mode === CONNECT_FOUR_MODES.CONNECT_FIVE ? 5 : 4;
+  const isPopOut = mode === CONNECT_FOUR_MODES.POP_OUT;
   // Literal class strings — needed for Tailwind v4 static scan
   const colClass = COLS === 9 ? 'grid-cols-9' : 'grid-cols-7';
 

@@ -6,6 +6,9 @@ import { useGameSettings } from '../../../contexts/GameSettingsContext';
 import { ROLE_TOKENS } from '../../../theme/colors';
 import { Typography } from '@/components/Typography';
 import { DistributionFlow } from '@/components/DistributionFlow';
+import { useTranslation } from '@/i18n';
+import { NS } from '@/i18n/keys';
+import { SPY_HUNT_ROLE_IDS } from '@/constants/spyHuntContent';
 
 interface RoleDistributionProps {
   players: Player[];
@@ -18,6 +21,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
   location,
   onFinish,
 }) => {
+  const { t } = useTranslation();
   const { difficulty } = useGameSettings();
 
   return (
@@ -26,7 +30,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
       onFinish={onFinish}
       activeColor="bg-premium-red"
       getCardStyle={(player) => {
-        const roleType = player.isSpy ? 'spy' : player.role === 'Предатель' ? 'traitor' : 'agent';
+        const roleType = player.isSpy ? 'spy' : player.role === SPY_HUNT_ROLE_IDS.TRAITOR ? 'traitor' : 'agent';
         return {
           className: 'min-h-[28rem]',
           style: {
@@ -36,7 +40,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
         };
       }}
       renderCard={(player, isLast, onNext) => {
-        const roleType = player.isSpy ? 'spy' : player.role === 'Предатель' ? 'traitor' : 'agent';
+        const roleType = player.isSpy ? 'spy' : player.role === SPY_HUNT_ROLE_IDS.TRAITOR ? 'traitor' : 'agent';
         return (
           <>
             {/* Gradient bg */}
@@ -66,7 +70,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                 >
                   <div className="text-center">
                     <Typography.Caption color="red" className="opacity-50 tracking-[0.45em]">
-                      Секретная роль
+                      {t(`${NS.SPY_HUNT}.secretRole`)}
                     </Typography.Caption>
                     <Typography.Title color="muted" className="mt-0.5">
                       {player.name}
@@ -84,20 +88,20 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                       />
                     </motion.div>
                     <Typography.Display size="lg" color="red" glow align="center">
-                      ШПИОН
+                      {t(`${NS.SPY_HUNT}.spy`)}
                     </Typography.Display>
                     <Typography.Body size="xs" color="faint" align="center">
-                      Локация неизвестна.
+                      {t(`${NS.SPY_HUNT}.locationUnknown`)}
                       <br />
-                      Не выдай себя — узнай место.
+                      {t(`${NS.SPY_HUNT}.dontRevealFindLocation`)}
                     </Typography.Body>
                     {difficulty === 'easy' && (
                       <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                         <Typography.Caption size="xs" color="red" className="opacity-55 mb-0.5">
-                          Подсказка
+                          {t(`${NS.SPY_HUNT}.hintLabel`)}
                         </Typography.Caption>
                         <p className="text-xs text-premium-red font-black">
-                          Букв в названии: {location.length}
+                          {t(`${NS.SPY_HUNT}.lettersInName`, { n: location.length })}
                         </p>
                       </div>
                     )}
@@ -108,7 +112,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     className="w-full py-4 bg-premium-red rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                     style={{ boxShadow: ROLE_TOKENS.spy.btnShadow }}
                   >
-                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
                   </button>
                 </motion.div>
               )}
@@ -122,7 +126,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                 >
                   <div className="text-center">
                     <Typography.Caption color="orange" className="opacity-50 tracking-[0.45em]">
-                      Секретная роль
+                      {t(`${NS.SPY_HUNT}.secretRole`)}
                     </Typography.Caption>
                     <Typography.Title color="muted" className="mt-0.5">
                       {player.name}
@@ -135,18 +139,18 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                       style={{ filter: ROLE_TOKENS.traitor.iconFilter }}
                     />
                     <Typography.Display size="md" color="orange" glow align="center">
-                      ПРЕДАТЕЛЬ
+                      {t(`${NS.SPY_HUNT}.traitor`)}
                     </Typography.Display>
                     <div className="px-4 py-3 bg-premium-orange/10 border border-premium-orange/20 rounded-premium-md">
                       <Typography.Caption size="xs" color="orange" className="opacity-50 mb-1">
-                        Твоя локация
+                        {t(`${NS.SPY_HUNT}.yourLocation`)}
                       </Typography.Caption>
                       <Typography.Heading size="sm" align="center">
                         {location}
                       </Typography.Heading>
                     </div>
                     <Typography.Caption color="faint">
-                      Помогай шпиону, запутывай остальных
+                      {t(`${NS.SPY_HUNT}.helpSpyConfuseOthers`)}
                     </Typography.Caption>
                   </div>
 
@@ -155,7 +159,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     className="w-full py-4 bg-premium-orange rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                     style={{ boxShadow: ROLE_TOKENS.traitor.btnShadow }}
                   >
-                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
                   </button>
                 </motion.div>
               )}
@@ -169,7 +173,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                 >
                   <div className="text-center">
                     <Typography.Caption color="green" className="opacity-50 tracking-[0.45em]">
-                      Агент
+                      {t(`${NS.SPY_HUNT}.agentLabel`)}
                     </Typography.Caption>
                     <Typography.Title color="muted" className="mt-0.5">
                       {player.name}
@@ -183,7 +187,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     />
                     <div className="space-y-1">
                       <Typography.Caption color="green" className="opacity-50 tracking-[0.35em]">
-                        Секретная локация
+                        {t(`${NS.SPY_HUNT}.secretLocation`)}
                       </Typography.Caption>
                       <h3
                         className="font-black italic text-white uppercase tracking-tighter leading-tight wrap-break-word"
@@ -197,14 +201,14 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     </div>
                     <div className="px-4 py-3 bg-premium-green/10 border border-premium-green/20 rounded-premium-md">
                       <Typography.Caption size="xs" color="dimmer" className="mb-1">
-                        Твоя роль
+                        {t(`${NS.SPY_HUNT}.yourRole`)}
                       </Typography.Caption>
                       <Typography.Heading size="sm" color="green">
                         {player.role}
                       </Typography.Heading>
                     </div>
                     <Typography.Caption color="dimmer">
-                      Вычисли шпиона, не раскрывая локацию
+                      {t(`${NS.SPY_HUNT}.findSpy`)}
                     </Typography.Caption>
                   </div>
 
@@ -213,7 +217,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     className="w-full py-4 bg-premium-green rounded-premium-md font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
                     style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
                   >
-                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
                   </button>
                 </motion.div>
               )}

@@ -102,7 +102,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       <div className="grid grid-cols-2 gap-3 px-5 pb-8">
         <button
           onClick={onSkip}
-          className="h-[86px] rounded-premium-lg bg-premium-red/[0.07] border border-premium-red/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-red/14 transition-all"
+          className="h-21.5 rounded-premium-lg bg-premium-red/[0.07] border border-premium-red/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-red/14 transition-all"
         >
           <XCircle className="w-8 h-8 text-premium-red" />
           <span className="text-micro font-black uppercase tracking-[0.2em] text-premium-red/55">
@@ -111,7 +111,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         </button>
         <button
           onClick={onCorrect}
-          className="h-[86px] rounded-premium-lg bg-premium-green/[0.07] border border-premium-green/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-green/14 transition-all"
+          className="h-21.5 rounded-premium-lg bg-premium-green/[0.07] border border-premium-green/20 flex flex-col items-center justify-center gap-2 active:scale-95 active:bg-premium-green/14 transition-all"
         >
           <CheckCircle className="w-8 h-8 text-premium-green" />
           <span className="text-micro font-black uppercase tracking-[0.2em] text-premium-green/55">

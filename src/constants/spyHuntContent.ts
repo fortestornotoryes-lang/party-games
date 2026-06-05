@@ -1,9 +1,23 @@
-export type SpyDifficulty = 'easy' | 'medium' | 'hard';
+import {Difficulty} from "@/types.ts";
+
+export type SpyDifficulty = Difficulty;
+
+export const SPY_HUNT_ROLE_IDS = {
+  SPY: 'Шпион',
+  TRAITOR: 'Предатель',
+  PLAYER: 'Игрок',
+} as const;
+
+export const SPY_HUNT_MODES = {
+  CLASSIC: 'classic',
+  DOUBLE_AGENT: 'double_agent',
+  MOLE: 'mole',
+} as const;
 
 export interface LocationInfo {
   readonly name: string;
   readonly roles: readonly string[];
-  readonly difficulty: SpyDifficulty;
+  readonly difficulty: Difficulty;
 }
 
 /**
@@ -3527,13 +3541,13 @@ export const LOCATIONS_DATA: readonly LocationInfo[] = [
 
 export const LOCATIONS: readonly string[] = LOCATIONS_DATA.map((l) => l.name);
 
-export const LOCATIONS_BY_DIFFICULTY: Record<SpyDifficulty, readonly LocationInfo[]> = {
+export const LOCATIONS_BY_DIFFICULTY: Record<Difficulty, readonly LocationInfo[]> = {
   easy: LOCATIONS_DATA.filter((l) => l.difficulty === 'easy'),
   medium: LOCATIONS_DATA.filter((l) => l.difficulty === 'medium'),
   hard: LOCATIONS_DATA.filter((l) => l.difficulty === 'hard'),
 } as const;
 
-export const GAME_DURATION_BY_DIFFICULTY: Record<SpyDifficulty, number> = {
+export const GAME_DURATION_BY_DIFFICULTY: Record<Difficulty, number> = {
   easy: 600,
   medium: 480,
   hard: 300,

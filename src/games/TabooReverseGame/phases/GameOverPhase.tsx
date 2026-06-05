@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { RotateCcw, Trophy } from 'lucide-react';
 import { PrimaryButton } from '@/components/UI';
 import { LeaderboardList } from '@/components/LeaderboardList';
+import {NS} from "@/i18n/keys.ts";
+import {useTranslation} from "@/i18n";
 
 interface GameOverPhaseProps {
   playerNames: string[];
@@ -19,6 +21,8 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   onRematch,
   onBack,
 }) => {
+  const { t } = useTranslation();
+
   const sorted = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
   const topScore = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
@@ -48,7 +52,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         <div className="text-center space-y-2 pt-4 w-full">
           <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
           <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
-            Игра завершена
+            {t(`${NS.TABOO}.gameEnded`)}
           </p>
           {teamWinner === -1 ? (
             <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
@@ -141,10 +145,10 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
 
       <div className="w-full space-y-3">
         <PrimaryButton onClick={onRematch} icon={RotateCcw} variant="outline">
-          СЫГРАТЬ СНОВА
+          {t(`${NS.COMMON}.rematch`).toUpperCase()}
         </PrimaryButton>
         <PrimaryButton onClick={onBack} variant="outline">
-          В МЕНЮ
+          {t(`${NS.TABOO}.backToMenu`)}
         </PrimaryButton>
       </div>
     </motion.div>

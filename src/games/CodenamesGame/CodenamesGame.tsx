@@ -9,6 +9,7 @@ import { GAMES_REGISTRY } from '../../registry/GameRegistry';
 import { CodenamesPhase, Team, CardColor, Card } from './types';
 import { PassPhoneCard } from '@/components/PassPhoneCard.tsx';
 import { useTranslation } from '@/i18n';
+import { CODENAMES_MODES } from '@/constants/codenamesContent';
 import { SetupPhase } from './phases/SetupPhase';
 import { CaptainPhase } from './phases/CaptainPhase';
 import { TeamPhase } from './phases/TeamPhase';
@@ -54,14 +55,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     const shuffledWords = contentService.getCodenamesWords(difficulty);
     let colorAssignment: CardColor[];
 
-    if (activeMode === 'deep_cover') {
+    if (activeMode === CODENAMES_MODES.DEEP_COVER) {
       colorAssignment = [
         ...Array(8).fill('red'),
         ...Array(8).fill('blue'),
         ...Array(7).fill('neutral'),
         ...Array(2).fill('assassin'),
       ];
-    } else if (activeMode === 'double_agent') {
+    } else if (activeMode === CODENAMES_MODES.DOUBLE_AGENT) {
       colorAssignment = [
         ...Array(8).fill('red'),
         ...Array(8).fill('blue'),
@@ -82,7 +83,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     setCards(
       shuffledWords.map((word, i) => ({ id: i, word, color: colorAssignment[i], revealed: false }))
     );
-    setTurn(activeMode === 'classic' ? 'red' : Math.random() > 0.5 ? 'red' : 'blue');
+    setTurn(activeMode === CODENAMES_MODES.CLASSIC ? 'red' : Math.random() > 0.5 ? 'red' : 'blue');
     setPhase(CodenamesPhase.Setup);
     setWinner(null);
   };

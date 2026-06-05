@@ -8,6 +8,7 @@ import { pickRandom, shuffle } from '@/utils/random';
 import { useGameSettings } from '@/contexts/GameSettingsContext';
 import { useTranslation } from '@/i18n';
 import { NS } from '@/i18n/keys';
+import { BUNKER_MODES } from '@/constants/bunkerContent';
 import {
   CATASTROPHE_SCENARIOS,
   SURVIVAL_EVENTS,
@@ -42,8 +43,8 @@ const CAPACITY_PCT: Record<string, number> = { easy: 0.8, medium: 0.6, hard: 0.4
 export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
   const { mode, difficulty } = useGameSettings();
-  const isDictator = mode === 'dictator';
-  const isTribunal = mode === 'tribunal';
+  const isDictator = mode === BUNKER_MODES.DICTATOR;
+  const isTribunal = mode === BUNKER_MODES.TRIBUNAL;
 
   // ── Initial setup (stable for the lifetime of this game instance) ──────────
 

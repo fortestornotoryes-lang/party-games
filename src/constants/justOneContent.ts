@@ -1,15 +1,3 @@
-export const JUST_ONE_INSTRUCTIONS = [
-  {
-    title: 'Суть игры',
-    content:
-      'Кооперативная игра, где все вместе пытаются угадать как можно больше слов. Один игрок угадывает, остальные помогают подсказками.',
-  },
-  {
-    title: 'Правила',
-    content:
-      'Игроки пишут по одной подсказке. Одинаковые подсказки аннулируются и не показываются угадывающему!',
-  },
-];
 
 export const JUST_ONE_DATA_BY_DIFFICULTY = {
   easy: [
@@ -367,9 +355,3 @@ export const JUST_ONE_DATA_BY_DIFFICULTY = {
     'Энергия',
   ],
 };
-
-export const JUST_ONE_WORDS = [
-  ...JUST_ONE_DATA_BY_DIFFICULTY.easy,
-  ...JUST_ONE_DATA_BY_DIFFICULTY.medium,
-  ...JUST_ONE_DATA_BY_DIFFICULTY.hard,
-];

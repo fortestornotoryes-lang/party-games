@@ -296,6 +296,47 @@ export interface AliasTranslations {
   mainMenu: string;        // "В ГЛАВНОЕ МЕНЮ"
 }
 
+export interface SpyHuntTranslations {
+  // SpyHuntGame.tsx subtitles
+  subtitleDistributing: string; // 'Раздача ролей'
+  subtitlePlaying: string;      // 'Идет поиск...'
+  subtitleReveal: string;       // 'Результаты'
+
+  // RoleDistribution.tsx — shared
+  secretRole: string;           // 'Секретная роль'
+  startGame: string;            // 'НАЧАТЬ ИГРУ'
+  gotIt: string;                // 'ЛАДУШКИ'
+
+  // Spy card
+  spy: string;                  // 'ШПИОН'
+  locationUnknown: string;      // 'Локация неизвестна.'
+  dontRevealFindLocation: string; // 'Не выдай себя — узнай место.'
+  hintLabel: string;            // 'Подсказка'
+  lettersInName: string;        // 'Букв в названии: {{n}}'
+
+  // Traitor card
+  traitor: string;              // 'ПРЕДАТЕЛЬ'
+  yourLocation: string;         // 'Твоя локация'
+  helpSpyConfuseOthers: string; // 'Помогай шпиону, запутывай остальных'
+
+  // Agent card
+  agentLabel: string;           // 'Агент'
+  secretLocation: string;       // 'Секретная локация'
+  yourRole: string;             // 'Твоя роль'
+  findSpy: string;              // 'Вычисли шпиона, не раскрывая локацию'
+
+  // PlayingPhase.tsx
+  questionIdeas: string;        // 'Идеи для вопросов'
+  possibleLocations: string;    // 'Возможные локации'
+  agentsSuspected: string;      // 'Агенты под подозрением'
+  reveal: string;               // 'РАЗОБЛАЧИТЬ'
+
+  // RevealPhase.tsx
+  spyRevealed: string;          // 'Шпион раскрыт'
+  agent00: string;              // 'Агент 00'
+  backToMenu: string;           // 'ВЕРНУТЬСЯ В МЕНЮ'
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -308,6 +349,7 @@ export interface Translations {
   millionaire?: MillionaireTranslations;
   decrypto?: DecryptoTranslations;
   alias?: AliasTranslations;
+  spy_hunt?: SpyHuntTranslations;
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]:
     | Record<string, unknown>
@@ -318,5 +360,6 @@ export interface Translations {
     | MillionaireTranslations
     | DecryptoTranslations
     | AliasTranslations
+    | SpyHuntTranslations
     | undefined;
 }

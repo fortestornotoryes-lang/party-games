@@ -11,4 +11,5 @@ export const NS = {
   MILLIONAIRE: 'millionaire',
   DECRYPTO: 'decrypto',
   ALIAS: 'alias',
+  SPY_HUNT: 'spy_hunt',
 } as const;

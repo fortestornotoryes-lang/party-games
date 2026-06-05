@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { TABOO_REVERSE_MODES } from '@/constants/tabooReverseContent';
 import { useTimer } from '@/hooks/useTimer';
 import { AnimatePresence } from 'motion/react';
 import { ListChecks } from 'lucide-react';
@@ -25,8 +26,8 @@ interface TabooReverseGameProps {
 export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames, onBack }) => {
   const { difficulty, timerSeconds, mode } = useGameSettings();
   const cardTimer = timerSeconds;
-  const isBlitz = mode === 'blitz';
-  const isTeam = mode === 'team';
+  const isBlitz = mode === TABOO_REVERSE_MODES.BLITZ;
+  const isTeam = mode === TABOO_REVERSE_MODES.TEAM;
 
   // ── Teams (team mode) ──────────────────────────────────────────────────────
   // Even-index players → team 1 (orange), odd-index → team 2 (sky)

@@ -1,4 +1,6 @@
-export type Difficulty = 'easy' | 'medium' | 'hard';
+import {Difficulty} from "@/types.ts";
+
+export type { Difficulty };
 
 export interface TelestrationsInstruction {
   readonly title: string;

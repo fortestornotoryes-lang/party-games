@@ -1,8 +1,16 @@
+import {Difficulty} from "@/types.ts";
+
+export const TABOO_REVERSE_MODES = {
+  CLASSIC: 'classic',
+  BLITZ: 'blitz',
+  TEAM: 'team',
+} as const;
+
 export interface TabooCard {
   id: number;
   word: string;
   required: string[];
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: Difficulty;
 }
 
 export const TABOO_REVERSE_CARDS: readonly TabooCard[] = [
@@ -2397,7 +2405,7 @@ export const TABOO_REVERSE_CARDS: readonly TabooCard[] = [
 ];
 
 export function getNextTabooCard(
-  difficulty: 'easy' | 'medium' | 'hard',
+  difficulty: Difficulty,
   usedIds: ReadonlySet<number>
 ): TabooCard {
   const pool = TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty && !usedIds.has(c.id));

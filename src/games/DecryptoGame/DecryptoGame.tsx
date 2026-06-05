@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { DECRYPTO_MODES } from '@/constants/decryptoContent';
 import { motion, AnimatePresence } from 'motion/react';
 import { Users, KeyRound, AlertOctagon, Key, Trophy } from 'lucide-react';
 import { GameHeader } from '@/components/GameHeader';
@@ -25,7 +26,7 @@ interface DecryptoGameProps {
 export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
   const { difficulty, mode } = useGameSettings();
-  const wordCount = mode === 'extended_5' ? 5 : mode === 'extended_6' ? 6 : 4;
+  const wordCount = mode === DECRYPTO_MODES.EXTENDED_5 ? 5 : mode === DECRYPTO_MODES.EXTENDED_6 ? 6 : 4;
 
   const [phase, setPhase] = useState<DecryptoPhase>(DecryptoPhase.Setup);
   const [round, setRound] = useState(1);

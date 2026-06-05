@@ -287,6 +287,39 @@ export const ru: Translations = {
     winningTeam: 'Команда {{name}}',
     mainMenu: 'В ГЛАВНОЕ МЕНЮ',
   },
+  spy_hunt: {
+    subtitleDistributing: 'Раздача ролей',
+    subtitlePlaying: 'Идет поиск...',
+    subtitleReveal: 'Результаты',
+
+    secretRole: 'Секретная роль',
+    startGame: 'НАЧАТЬ ИГРУ',
+    gotIt: 'ЛАДУШКИ',
+
+    spy: 'ШПИОН',
+    locationUnknown: 'Локация неизвестна.',
+    dontRevealFindLocation: 'Не выдай себя — узнай место.',
+    hintLabel: 'Подсказка',
+    lettersInName: 'Букв в названии: {{n}}',
+
+    traitor: 'ПРЕДАТЕЛЬ',
+    yourLocation: 'Твоя локация',
+    helpSpyConfuseOthers: 'Помогай шпиону, запутывай остальных',
+
+    agentLabel: 'Агент',
+    secretLocation: 'Секретная локация',
+    yourRole: 'Твоя роль',
+    findSpy: 'Вычисли шпиона, не раскрывая локацию',
+
+    questionIdeas: 'Идеи для вопросов',
+    possibleLocations: 'Возможные локации',
+    agentsSuspected: 'Агенты под подозрением',
+    reveal: 'РАЗОБЛАЧИТЬ',
+
+    spyRevealed: 'Шпион раскрыт',
+    agent00: 'Агент 00',
+    backToMenu: 'ВЕРНУТЬСЯ В МЕНЮ',
+  },
   taboo: {
     passInstruction: 'Только ты должен видеть карточку с запрещёнными словами',
     explainerBadge: 'Объяснять',

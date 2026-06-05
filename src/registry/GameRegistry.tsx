@@ -37,6 +37,12 @@ import {
 } from 'lucide-react';
 import { GameStatus } from '../types';
 import { GameKey, GamesRegistryMap } from '../types/games';
+import { SPY_HUNT_MODES } from '../constants/spyHuntContent';
+import { BUNKER_MODES } from '../constants/bunkerContent';
+import { CODENAMES_MODES } from '../constants/codenamesContent';
+import { DECRYPTO_MODES } from '../constants/decryptoContent';
+import { TABOO_REVERSE_MODES } from '../constants/tabooReverseContent';
+import { CONNECT_FOUR_MODES } from '../constants/connectFourContent';
 
 // Lazy load game components
 const SpyHuntGame = lazy(() =>
@@ -105,19 +111,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     setupStatus: GameStatus.SpyHuntPlaying,
     modes: [
       {
-        id: 'classic',
+        id: SPY_HUNT_MODES.CLASSIC,
         name: 'Классика',
         description: '1 шпион, все остальные знают локацию',
         icon: Target,
       },
       {
-        id: 'double_agent',
+        id: SPY_HUNT_MODES.DOUBLE_AGENT,
         name: 'Двойной агент',
         description: '2 шпиона (от 5 игроков)',
         icon: Zap,
       },
       {
-        id: 'mole',
+        id: SPY_HUNT_MODES.MOLE,
         name: 'Предатель',
         description: '1 шпион и 1 помощник (от 5 игроков)',
         icon: Shield,
@@ -182,19 +188,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     backgroundImage: TabyImage,
     modes: [
       {
-        id: 'classic',
+        id: TABOO_REVERSE_MODES.CLASSIC,
         name: 'Классика',
         description: 'Одна карточка за ход, объясняй — кто угадал, получает очки',
         icon: Target,
       },
       {
-        id: 'blitz',
+        id: TABOO_REVERSE_MODES.BLITZ,
         name: 'Блиц',
         description: 'Несколько карточек за ход — угадали, берёте следующую',
         icon: Zap,
       },
       {
-        id: 'team',
+        id: TABOO_REVERSE_MODES.TEAM,
         name: 'Командный',
         description: 'Две команды — угадывает только своя команда',
         icon: Users,
@@ -227,15 +233,15 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 4,
     setupStatus: GameStatus.CodenamesPlaying,
     modes: [
-      { id: 'classic', name: 'Классика', description: '9 своих, 8 чужих, 1 убийца', icon: Target },
+      { id: CODENAMES_MODES.CLASSIC, name: 'Классика', description: '9 своих, 8 чужих, 1 убийца', icon: Target },
       {
-        id: 'deep_cover',
+        id: CODENAMES_MODES.DEEP_COVER,
         name: 'Глубокое прикрытие',
         description: '8 своих, 8 чужих, 2 убийцы',
         icon: Shield,
       },
       {
-        id: 'double_agent',
+        id: CODENAMES_MODES.DOUBLE_AGENT,
         name: 'Двойной агент',
         description: '8 своих, 8 чужих, 1 общий агент (кто первый нашел)',
         icon: Zap,
@@ -256,10 +262,10 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 4,
     setupStatus: GameStatus.DecryptoPlaying,
     modes: [
-      { id: 'classic', name: 'Классика', description: '4 слова, код из 3 цифр', icon: Key },
-      { id: 'extended_5', name: 'Широкий код', description: '5 слов, код из 3 цифр', icon: Target },
+      { id: DECRYPTO_MODES.CLASSIC, name: 'Классика', description: '4 слова, код из 3 цифр', icon: Key },
+      { id: DECRYPTO_MODES.EXTENDED_5, name: 'Широкий код', description: '5 слов, код из 3 цифр', icon: Target },
       {
-        id: 'extended_6',
+        id: DECRYPTO_MODES.EXTENDED_6,
         name: 'Супер-шифровка',
         description: '6 слов, код из 3 цифр',
         icon: Brain,
@@ -348,21 +354,21 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     setupStatus: GameStatus.ConnectFourPlaying,
     backgroundImage: ConnectFourImage,
     modes: [
-      { id: 'classic', name: 'Классика', description: '7×6 — собери 4 фишки в ряд', icon: Grid },
+      { id: CONNECT_FOUR_MODES.CLASSIC, name: 'Классика', description: '7×6 — собери 4 фишки в ряд', icon: Grid },
       {
-        id: 'large',
+        id: CONNECT_FOUR_MODES.LARGE,
         name: 'Большое поле',
         description: '9×7 — больше пространства для тактики',
         icon: LayoutGrid,
       },
       {
-        id: 'connect_five',
+        id: CONNECT_FOUR_MODES.CONNECT_FIVE,
         name: 'Пять в ряд',
         description: '9×7 — нужно собрать 5 фишек подряд',
         icon: Target,
       },
       {
-        id: 'pop_out',
+        id: CONNECT_FOUR_MODES.POP_OUT,
         name: 'Pop Out',
         description: '7×6 — вытащи нижнюю фишку из столбца',
         icon: ArrowDown,
@@ -385,19 +391,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     backgroundImage: hopperImage,
     modes: [
       {
-        id: 'classic',
+        id: BUNKER_MODES.CLASSIC,
         name: 'Классика',
         description: '5 раундов раскрытия, честное голосование',
         icon: Target,
       },
       {
-        id: 'dictator',
+        id: BUNKER_MODES.DICTATOR,
         name: 'Диктатор',
         description: 'Один игрок — директор бункера, его место гарантировано',
         icon: Crown,
       },
       {
-        id: 'tribunal',
+        id: BUNKER_MODES.TRIBUNAL,
         name: 'Трибунал',
         description: 'После голосования один исключённый может раскрыть скрытую черту',
         icon: Scale,

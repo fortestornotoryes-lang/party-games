@@ -60,8 +60,8 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
             key={i}
             className={`p-4 rounded-premium-lg border ${
               i === 0
-                ? 'bg-premium-red/[0.05] border-premium-red/15'
-                : 'bg-premium-blue/[0.05] border-premium-blue/15'
+                ? 'bg-premium-red/5 border-premium-red/15'
+                : 'bg-premium-blue/5 border-premium-blue/15'
             } ${i === currentTeamIdx ? 'ring-1 ring-white/10' : ''}`}
           >
             <div className="flex items-center justify-between mb-1.5">
