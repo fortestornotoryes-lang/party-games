@@ -1,6 +1,8 @@
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
+import { Fingerprint } from 'lucide-react';
 import { motion } from 'motion/react';
-import { Fingerprint, LucideIcon } from 'lucide-react';
+import React from 'react';
+
 import { Typography } from '@/components/Typography.tsx';
 
 type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';
@@ -106,12 +108,12 @@ const accentStyles: Record<
 };
 export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
   playerName,
-  playerLabel = 'Игрок',
+  playerLabel,
   badge,
-  badgeColor = 'default',
-  instruction = 'Нажми чтобы продолжить',
-  icon: Icon = Fingerprint,
-  accentColor = 'default',
+  badgeColor,
+  instruction,
+  icon: Icon,
+  accentColor,
   onClick,
 }) => {
   const accent = accentStyles[accentColor];
@@ -160,7 +162,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
         </motion.div>
 
         <div className="space-y-3">
-          {badge && (
+          {!!badge && (
             <div
               className={`inline-block px-3 py-1 rounded-full border text-micro font-black uppercase tracking-widest transition-colors duration-300 ${badgeStyles[badgeColor]}`}
             >

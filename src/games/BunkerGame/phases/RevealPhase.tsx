@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {ChevronRight, Eye, Fingerprint, Megaphone} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useState} from 'react';
+
+import {type BunkerCharacter, getRevealedTrait} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {rgba} from '@/theme/colors';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {rgba} from '@/theme/colors';
 
 interface RevealPhaseProps {
     characters: BunkerCharacter[];
@@ -194,7 +196,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
 
             {/* Confirm button — only shown after reveal */}
             <AnimatePresence mode="wait">
-                {isRevealed && (
+                {!!isRevealed && (
                     <motion.div
                         key="confirm-btn"
                         initial={{opacity: 0, y: 10}}

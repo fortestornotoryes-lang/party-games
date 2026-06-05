@@ -1,6 +1,7 @@
-import React from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {CheckCircle, XCircle} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React from 'react';
+
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

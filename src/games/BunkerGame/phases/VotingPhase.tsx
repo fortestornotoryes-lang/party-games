@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {Check, UserX, Vote} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useState} from 'react';
+
+import {type BunkerCharacter, getRevealedTrait} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
 
 interface VotingPhaseProps {
     characters: BunkerCharacter[];
@@ -17,7 +19,7 @@ interface VotingPhaseProps {
 export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                                             characters,
                                                             bunkerCapacity,
-                                                            directorName = null,
+                                                            directorName,
                                                             onConfirm,
                                                         }) => {
     const {t} = useTranslation();
@@ -100,7 +102,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
             </div>
 
             {/* Director safe badge */}
-            {directorName && (
+            {!!directorName && (
                 <div
                     className="flex items-center gap-3 px-4 py-3 rounded-premium-md"
                     style={{
@@ -132,7 +134,9 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                     return (
                         <motion.button
                             key={char.playerName}
-                            onClick={() => toggle(char.playerName)}
+                            onClick={() => {
+                                toggle(char.playerName);
+                            }}
                             whileTap={{scale: 0.97}}
                             className="w-full text-left rounded-premium-md transition-all"
                             style={{
@@ -152,12 +156,12 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                                 background: isSelected ? 'rgba(255,46,77,0.8)' : 'transparent',
                                             }}
                                         >
-                                            {isSelected && <Check className="w-3 h-3 text-white"/>}
+                                            {!!isSelected && <Check className="w-3 h-3 text-white"/>}
                                         </div>
                                         <span className="font-black italic uppercase text-lg text-white leading-none">
                       {char.playerName}
                     </span>
-                                        {isSelected && (
+                                        {!!isSelected && (
                                             <div className="flex items-center gap-1">
                                                 <UserX className="w-3.5 h-3.5 text-premium-red"/>
                                                 <span

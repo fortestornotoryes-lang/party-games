@@ -1,5 +1,6 @@
-import React from 'react';
 import {Ban} from 'lucide-react';
+import React from 'react';
+
 import {TabooPassPhase} from '@/components/TabooPassPhase';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

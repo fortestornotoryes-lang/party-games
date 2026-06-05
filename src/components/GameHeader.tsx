@@ -1,8 +1,12 @@
+import type { LucideIcon } from 'lucide-react';
+import { Home } from 'lucide-react';
 import React from 'react';
-import { Home, LucideIcon } from 'lucide-react';
-import { PrimaryButton } from '@/components/UI.tsx';
-import { GameTheme } from '../types';
+
 import { getTheme } from '../theme/colors';
+import type { GameTheme } from '../types';
+
+import { PrimaryButton } from '@/components/UI.tsx';
+
 
 interface GameHeaderProps {
   title: string;

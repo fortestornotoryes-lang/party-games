@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
-import {motion} from 'motion/react';
 import {ChevronDown, ChevronUp, List, MessageSquare, Skull, Timer} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
+import {motion} from 'motion/react';
+import React, {useState} from 'react';
+
 import {GameCard} from '@/components/GameCard';
-import {Player} from '@/types';
+import {PrimaryButton} from '@/components/UI';
 import {LOCATIONS, QUESTION_IDEAS} from '@/constants/spyHuntContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
+import type {Player} from '@/types';
 
 interface PlayingPhaseProps {
     players: Player[];
@@ -45,7 +46,9 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({players, timeLeft, on
 
             <div className="space-y-3">
                 <button
-                    onClick={() => setShowQuestions((v) => !v)}
+                    onClick={() => {
+                        setShowQuestions((v) => !v);
+                    }}
                     className="w-full flex items-center justify-between p-4 bg-white/4 border border-white/8 rounded-premium-md active:bg-white/8 transition-all"
                 >
                     <div className="flex items-center space-x-3">
@@ -57,7 +60,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({players, timeLeft, on
                     {showQuestions ? <ChevronUp className="w-4 h-4"/> : <ChevronDown className="w-4 h-4"/>}
                 </button>
 
-                {showQuestions && (
+                {!!showQuestions && (
                     <motion.div
                         initial={{height: 0, opacity: 0}}
                         animate={{height: 'auto', opacity: 1}}
@@ -75,7 +78,9 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({players, timeLeft, on
                 )}
 
                 <button
-                    onClick={() => setShowLocations((v) => !v)}
+                    onClick={() => {
+                        setShowLocations((v) => !v);
+                    }}
                     className="w-full flex items-center justify-between p-4 bg-white/4 border border-white/8 rounded-premium-md active:bg-white/8 transition-all"
                 >
                     <div className="flex items-center space-x-3">
@@ -87,7 +92,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({players, timeLeft, on
                     {showLocations ? <ChevronUp className="w-4 h-4"/> : <ChevronDown className="w-4 h-4"/>}
                 </button>
 
-                {showLocations && (
+                {!!showLocations && (
                     <motion.div
                         initial={{height: 0, opacity: 0}}
                         animate={{height: 'auto', opacity: 1}}

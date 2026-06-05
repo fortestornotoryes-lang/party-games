@@ -1,8 +1,11 @@
-import React from 'react';
 import {AnimatePresence, motion} from 'motion/react';
+import React from 'react';
+
+import type {Card, Team} from '../types';
+
 import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
-import {Card, Team} from '../types';
+
 
 interface TeamPhaseProps {
     cards: Card[];
@@ -54,7 +57,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
 
             <div className="grid grid-cols-5 gap-1.5 flex-1 items-center relative">
                 <AnimatePresence>
-                    {lastActionMsg && (
+                    {!!lastActionMsg && (
                         <motion.div
                             initial={{opacity: 0, scale: 0.5}}
                             animate={{opacity: 1, scale: 1}}
@@ -76,7 +79,9 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
                 {cards.map((card) => (
                     <button
                         key={card.id}
-                        onClick={() => onCardClick(card)}
+                        onClick={() => {
+                            onCardClick(card);
+                        }}
                         disabled={card.revealed}
                         className={`aspect-4/3 rounded flex items-center justify-center p-1 text-center transition-all
                             ${!card.revealed ? 'bg-stone-200 hover:bg-stone-300 active:scale-95 cursor-pointer shadow-md border-b-2 border-stone-400 text-stone-800' : ''}

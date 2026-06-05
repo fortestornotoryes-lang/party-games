@@ -1,14 +1,16 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Ghost, MapPin, Shield} from 'lucide-react';
-import {Player} from '../../../types';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {useGameSettings} from '../../../contexts/GameSettingsContext';
 import {ROLE_TOKENS} from '../../../theme/colors';
-import {Typography} from '@/components/Typography';
+import type {Player} from '../../../types';
+
 import {DistributionFlow} from '@/components/DistributionFlow';
+import {Typography} from '@/components/Typography';
+import {SPY_HUNT_ROLE_IDS} from '@/constants/spyHuntContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {SPY_HUNT_ROLE_IDS} from '@/constants/spyHuntContent';
 
 interface RoleDistributionProps {
     players: Player[];

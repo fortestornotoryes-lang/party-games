@@ -1,7 +1,8 @@
-import React from 'react';
 import {motion} from 'motion/react';
-import {TabooClassicCard} from '@/constants/tabooContent';
+import React from 'react';
+
 import {StopGameButton} from '@/components/StopGameButton';
+import type {TabooClassicCard} from '@/constants/tabooContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 
@@ -33,7 +34,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
         >
             {/* Word reveal */}
             <div className="text-center space-y-2 pt-2">
-                {timedOut && (
+                {!!timedOut && (
                     <p className="text-micro font-black uppercase tracking-widest text-premium-red/70">
                         {t(`${NS.TABOO}.timeOut`)}
                     </p>
@@ -74,7 +75,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
                 {otherPlayers.map((player) => (
                     <button
                         key={player}
-                        onClick={() => onVerdict(player)}
+                        onClick={() => {
+                            onVerdict(player);
+                        }}
                         className="w-full p-4 bg-premium-green/10 border-2 border-premium-green/40 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
                     >
                         <p className="font-black italic text-premium-green text-base">{player}</p>
@@ -83,7 +86,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
                 ))}
 
                 <button
-                    onClick={() => onVerdict(null)}
+                    onClick={() => {
+                        onVerdict(null);
+                    }}
                     className="w-full p-4 bg-white/5 border-2 border-white/10 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
                 >
                     <p className="font-black italic text-white/50 text-base">
@@ -93,7 +98,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
                 </button>
 
                 <button
-                    onClick={() => onVerdict(null, true)}
+                    onClick={() => {
+                        onVerdict(null, true);
+                    }}
                     className="w-full p-4 bg-premium-red/10 border-2 border-premium-red/30 rounded-premium-md flex items-center justify-between active:scale-95 transition-all"
                 >
                     <div className="text-left">

@@ -1,7 +1,9 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {ArrowRight, Pencil} from 'lucide-react';
-import {Difficulty, DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {Difficulty} from '@/constants/telestrationsContent';
+import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 
 interface Props {
     playerCount: number;
@@ -44,7 +46,9 @@ export const TelestrationsSetup: React.FC<Props> = ({
                     <motion.button
                         key={diff}
                         whileTap={{scale: 0.97}}
-                        onClick={() => onDifficultyChange(diff)}
+                        onClick={() => {
+                            onDifficultyChange(diff);
+                        }}
                         className={`w-full p-4 rounded-premium-md border text-left flex items-center gap-4 transition-all ${
                             isSelected ? `${cfg.border} ${cfg.bg}` : 'border-white/10 bg-white/5 opacity-50'
                         }`}

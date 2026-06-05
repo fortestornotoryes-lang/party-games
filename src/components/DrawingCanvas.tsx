@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
 import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const BRUSH_COLORS = [
   '#ffffff',
@@ -86,7 +86,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     const ro = new ResizeObserver(updateCanvasSize);
     if (canvas.parentElement) ro.observe(canvas.parentElement);
     updateCanvasSize();
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); };
   }, []);
 
   const getCoords = (e: React.MouseEvent | React.TouchEvent) => {
@@ -107,8 +107,8 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 
     // Fallback for touch events
     const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e).clientY;
 
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -166,7 +166,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     ctx.moveTo(x, y);
   };
 
-  const stopDrawing = () => setIsDrawing(false);
+  const stopDrawing = () => { setIsDrawing(false); };
 
   const clearCanvas = () => {
     drawHistory.current = [];
@@ -182,7 +182,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     if (drawHistory.current.length === 0 || !canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
-    ctx.putImageData(drawHistory.current.pop()!, 0, 0);
+    ctx.putImageData(drawHistory.current.pop(), 0, 0);
   };
 
   const handleSubmit = () => {
@@ -265,7 +265,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           {BRUSH_COLORS.map((color) => (
             <button
               key={color}
-              onClick={() => setBrushColor(color)}
+              onClick={() => { setBrushColor(color); }}
               className={`w-7 h-7 rounded-full border-2 transition-all active:scale-90 ${brushColor === color ? 'border-white scale-110' : 'border-transparent'}`}
               style={{ backgroundColor: color }}
             />
@@ -274,7 +274,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           <input
             type="color"
             value={brushColor}
-            onChange={(e) => setBrushColor(e.target.value)}
+            onChange={(e) => { setBrushColor(e.target.value); }}
             className="w-7 h-7 rounded-full cursor-pointer border-none bg-transparent p-0 overflow-hidden"
           />
         </div>
@@ -282,7 +282,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           {BRUSH_SIZES.map((size) => (
             <button
               key={size}
-              onClick={() => setBrushSize(size)}
+              onClick={() => { setBrushSize(size); }}
               className="flex items-center justify-center w-8 h-8"
             >
               <div

@@ -1,21 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {useCountdown} from '@/hooks/useCountdown.ts';
-import {AnimatePresence, motion} from 'motion/react';
-import {Pencil} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {storageService} from '@/services/storageService.ts';
-import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
-import {contentService} from '@/services/contentService.ts';
-import {Difficulty, DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
-import {shuffle} from '@/utils/random.ts';
-import {GameHeader} from '@/components/GameHeader';
-import {DrawingCanvas} from '@/components/DrawingCanvas';
-import {PassPhoneCard} from '@/components/PassPhoneCard';
-import {Step, TelestrationsPhase} from './types';
+import {Pencil} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
+import {TelestrationsGallery} from './components/TelestrationsGallery';
+import {TelestrationsGuess} from './components/TelestrationsGuess';
 import {TelestrationsSetup} from './components/TelestrationsSetup';
 import {TelestrationsStart} from './components/TelestrationsStart';
-import {TelestrationsGuess} from './components/TelestrationsGuess';
-import {TelestrationsGallery} from './components/TelestrationsGallery';
+import type {Step} from './types';
+import {TelestrationsPhase} from './types';
+
+import {DrawingCanvas} from '@/components/DrawingCanvas';
+import {GameHeader} from '@/components/GameHeader';
+import {PassPhoneCard} from '@/components/PassPhoneCard';
+import type {Difficulty} from '@/constants/telestrationsContent';
+import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {useCountdown} from '@/hooks/useCountdown.ts';
+import {contentService} from '@/services/contentService.ts';
+import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
+import {storageService} from '@/services/storageService.ts';
+import {shuffle} from '@/utils/random.ts';
 
 interface TelestrationsGameProps {
     playerNames: string[];
@@ -140,7 +144,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                             shuffledPlayers={shuffledPlayers}
                             currentWord={currentWord}
                             wordRevealed={wordRevealed}
-                            onReveal={() => setWordRevealed(true)}
+                            onReveal={() => {
+                                setWordRevealed(true);
+                            }}
                             onReady={startAction}
                         />
                     )}
@@ -196,7 +202,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                     timeLeft={timeLeft}
                                     playerCount={shuffledPlayers.length}
                                     currentRound={currentRound}
-                                    onFinish={(dataUrl) => finishAction(dataUrl, 'draw')}
+                                    onFinish={(dataUrl) => {
+                                        finishAction(dataUrl, 'draw');
+                                    }}
                                 />
                             ) : (
                                 <TelestrationsGuess
@@ -206,7 +214,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                     shuffledPlayers={shuffledPlayers}
                                     guess={guess}
                                     onGuessChange={setGuess}
-                                    onSubmit={() => finishAction(guess, 'guess')}
+                                    onSubmit={() => {
+                                        finishAction(guess, 'guess');
+                                    }}
                                 />
                             )}
                         </motion.div>

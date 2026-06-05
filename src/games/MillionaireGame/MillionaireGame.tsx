@@ -1,12 +1,15 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
 import {Trophy} from 'lucide-react';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {AnimatePresence} from 'motion/react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {BetweenPhase} from './phases/BetweenPhase';
+import {GameOverPhase} from './phases/GameOverPhase';
+import {PassPhase} from './phases/PassPhase';
+import {QuestionPhase} from './phases/QuestionPhase';
+import {WinPhase} from './phases/WinPhase';
+import {MillionairePhase} from './types';
+
 import {GameHeader} from '@/components/GameHeader';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {shuffle} from '@/utils/random';
 import {
     EASY_QUESTIONS,
     getGuaranteedAmount,
@@ -16,12 +19,12 @@ import {
     PRIZE_LADDER,
     simulateAudienceVote,
 } from '@/constants/millionaireContent';
-import {MillionairePhase} from './types';
-import {PassPhase} from './phases/PassPhase';
-import {QuestionPhase} from './phases/QuestionPhase';
-import {BetweenPhase} from './phases/BetweenPhase';
-import {WinPhase} from './phases/WinPhase';
-import {GameOverPhase} from './phases/GameOverPhase';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {shuffle} from '@/utils/random';
+
 
 interface MillionaireGameProps {
     playerNames: string[];
@@ -68,7 +71,9 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({playerNames, on
                 setPhase(MillionairePhase.GameOver);
             }
         }, 2500);
-        return () => clearTimeout(timer);
+        return () => {
+            clearTimeout(timer);
+        };
     }, [phase, isCorrect, questionIndex, currentPlayer]);
 
     const handlePassDone = () => {
@@ -151,25 +156,24 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({playerNames, on
                         <PassPhase key="pass" currentPlayer={currentPlayer} onPassDone={handlePassDone}/>
                     )}
 
-                    {(phase === MillionairePhase.Question || phase === MillionairePhase.Reveal) &&
-                        currentQuestion && (
-                            <QuestionPhase
-                                key="question"
-                                question={currentQuestion}
-                                questionIndex={questionIndex}
-                                selectedAnswer={selectedAnswer}
-                                isRevealing={phase === MillionairePhase.Reveal}
-                                isCorrect={isCorrect}
-                                eliminatedOptions={eliminatedOptions}
-                                audienceVotes={audienceVotes}
-                                phoneFriendSuggestion={phoneFriendSuggestion}
-                                usedLifelines={usedLifelines}
-                                onAnswer={handleAnswer}
-                                onFiftyFifty={handleFiftyFifty}
-                                onPhoneFriend={handlePhoneFriend}
-                                onAskAudience={handleAskAudience}
-                            />
-                        )}
+                    {(phase === MillionairePhase.Question || phase === MillionairePhase.Reveal) && !!currentQuestion && (
+                        <QuestionPhase
+                            key="question"
+                            question={currentQuestion}
+                            questionIndex={questionIndex}
+                            selectedAnswer={selectedAnswer}
+                            isRevealing={phase === MillionairePhase.Reveal}
+                            isCorrect={isCorrect}
+                            eliminatedOptions={eliminatedOptions}
+                            audienceVotes={audienceVotes}
+                            phoneFriendSuggestion={phoneFriendSuggestion}
+                            usedLifelines={usedLifelines}
+                            onAnswer={handleAnswer}
+                            onFiftyFifty={handleFiftyFifty}
+                            onPhoneFriend={handlePhoneFriend}
+                            onAskAudience={handleAskAudience}
+                        />
+                    )}
 
                     {phase === MillionairePhase.Between && (
                         <BetweenPhase

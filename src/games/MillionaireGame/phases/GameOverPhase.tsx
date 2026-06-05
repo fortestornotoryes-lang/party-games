@@ -1,6 +1,7 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {CheckCircle, ChevronRight, Star, XCircle} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -65,7 +66,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                 </motion.div>
 
                 {/* Correct answer */}
-                {correctAnswer && (
+                {!!correctAnswer && (
                     <motion.div
                         initial={{opacity: 0, y: 20}}
                         animate={{opacity: 1, y: 0}}

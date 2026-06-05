@@ -1,7 +1,8 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Home, Shuffle} from 'lucide-react';
-import {Step} from '../types';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {Step} from '../types';
 
 interface Props {
     initialWord: string;

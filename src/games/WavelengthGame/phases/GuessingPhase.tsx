@@ -1,7 +1,8 @@
-import React from 'react';
 import {motion} from 'motion/react';
-import {PrimaryButton} from '@/components/UI';
+import React from 'react';
+
 import {GameCard} from '@/components/GameCard';
+import {PrimaryButton} from '@/components/UI';
 
 interface GuessingPhaseProps {
     currentPair: string[];
@@ -76,7 +77,9 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
                         min="0"
                         max="100"
                         value={guessValue}
-                        onChange={(e) => onGuessChange(parseInt(e.target.value))}
+                        onChange={(e) => {
+                            onGuessChange(parseInt(e.target.value));
+                        }}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                         style={{touchAction: 'none'}}
                     />

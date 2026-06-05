@@ -13,7 +13,7 @@ interface LeaderboardListProps {
 export const LeaderboardList: React.FC<LeaderboardListProps> = ({
   players,
   scores,
-  className = '',
+  className,
 }) => {
   const sorted = [...players].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
   const topScore = scores[sorted[0]] ?? 0;

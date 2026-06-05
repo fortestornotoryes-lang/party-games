@@ -1,8 +1,10 @@
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
-import { LucideIcon } from 'lucide-react';
+import React from 'react';
+
 import { PassPhoneCard } from './PassPhoneCard';
 import { PlayerScoreList } from './PlayerScoreList';
+
 import { useTranslation } from '@/i18n';
 import { NS } from '@/i18n/keys';
 

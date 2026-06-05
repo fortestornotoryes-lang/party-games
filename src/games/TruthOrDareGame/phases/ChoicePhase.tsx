@@ -1,8 +1,10 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Flame, Snowflake} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {ChoiceType} from '../types';
+
 import {Typography} from '@/components/Typography';
-import {ChoiceType} from '../types';
 
 interface ChoicePhaseProps {
     currentPlayer: string;
@@ -41,7 +43,9 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({currentPlayer, onChoice
                 animate={{opacity: 1, y: 0}}
                 transition={{delay: 0.1, type: 'spring', stiffness: 360, damping: 28}}
                 whileTap={{scale: 0.975, transition: {duration: 0.08}}}
-                onClick={() => onChoice('truth')}
+                onClick={() => {
+                    onChoice('truth');
+                }}
                 className="flex-1 rounded-premium-2xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
                 style={{
                     background:
@@ -86,7 +90,9 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({currentPlayer, onChoice
                 animate={{opacity: 1, y: 0}}
                 transition={{delay: 0.17, type: 'spring', stiffness: 360, damping: 28}}
                 whileTap={{scale: 0.975, transition: {duration: 0.08}}}
-                onClick={() => onChoice('dare')}
+                onClick={() => {
+                    onChoice('dare');
+                }}
                 className="flex-1 rounded-premium-2xl relative overflow-hidden flex flex-col items-center justify-center gap-4"
                 style={{
                     background:

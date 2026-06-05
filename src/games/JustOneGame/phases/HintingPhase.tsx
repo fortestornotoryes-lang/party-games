@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
-import {motion} from 'motion/react';
 import {CheckCircle, Send} from 'lucide-react';
+import {motion} from 'motion/react';
+import React, {useState} from 'react';
+
 import {PrimaryButton} from '@/components/UI';
 
 interface HintingPhaseProps {
@@ -80,8 +81,9 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                                     <input
                                         type="text"
                                         value={localHints[player] || ''}
-                                        onChange={(e) =>
-                                            setLocalHints((prev) => ({...prev, [player]: e.target.value}))
+                                        onChange={(e) => {
+                                            setLocalHints((prev) => ({...prev, [player]: e.target.value}));
+                                        }
                                         }
                                         placeholder="Подсказка..."
                                         className="flex-1 h-9 bg-white/4 border border-white/8 rounded-premium-sm px-3 text-sm focus:border-premium-yellow/40 outline-none transition-colors"
@@ -90,7 +92,9 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                                         }}
                                     />
                                     <button
-                                        onClick={() => onSubmitHint(player, localHints[player] || '')}
+                                        onClick={() => {
+                                            onSubmitHint(player, localHints[player] || '');
+                                        }}
                                         className="w-9 h-9 shrink-0 bg-premium-yellow text-black rounded-premium-sm flex items-center justify-center active:scale-95 transition-transform"
                                     >
                                         <Send className="w-4 h-4"/>
@@ -102,7 +106,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                 </div>
             </div>
 
-            {allHinted && (
+            {!!allHinted && (
                 <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}}>
                     <PrimaryButton onClick={onStartGuessing}>
                         ГОТОВО! ПОКАЗАТЬ {guesser.toUpperCase()}

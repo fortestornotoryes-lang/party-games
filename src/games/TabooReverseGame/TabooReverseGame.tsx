@@ -1,21 +1,27 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {getNextTabooCard, TABOO_REVERSE_CARDS, TABOO_REVERSE_MODES, TabooCard} from '@/constants/tabooReverseContent';
-import {useTimer} from '@/hooks/useTimer';
-import {AnimatePresence} from 'motion/react';
-import {ListChecks} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {ListChecks} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
 import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
-import {BlitzResult, TabooReversePhase} from './types';
-import {GameKey} from '@/types/games';
+import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+
+import {BlitzVerdictPhase} from './phases/BlitzVerdictPhase';
+import {GameOverPhase} from './phases/GameOverPhase';
 import {PassPhase} from './phases/PassPhase';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {VerdictPhase} from './phases/VerdictPhase';
-import {BlitzVerdictPhase} from './phases/BlitzVerdictPhase';
-import {GameOverPhase} from './phases/GameOverPhase';
+import type {BlitzResult} from './types';
+import {TabooReversePhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import type {TabooCard} from '@/constants/tabooReverseContent';
+import {getNextTabooCard, TABOO_REVERSE_CARDS, TABOO_REVERSE_MODES} from '@/constants/tabooReverseContent';
+import {useTimer} from '@/hooks/useTimer';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
+import {GameKey} from '@/types/games';
+
 
 interface TabooReverseGameProps {
     playerNames: string[];
@@ -216,7 +222,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
 
     // Blitz verdict: guessers[i] = player name or null for each blitzResult
     const handleBlitzVerdict = useCallback(
-        (guessers: Array<string | null>) => {
+        (guessers: (string | null)[]) => {
             const newScores = {...scores};
             let anySuccess = false;
 
@@ -255,7 +261,9 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
         [blitzResults, currentExplainer, scores]
     );
 
-    const handleStopGame = useCallback(() => setPhase(TabooReversePhase.GameOver), []);
+    const handleStopGame = useCallback(() => {
+        setPhase(TabooReversePhase.GameOver);
+    }, []);
 
     const handleRematch = useCallback(() => {
         setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));

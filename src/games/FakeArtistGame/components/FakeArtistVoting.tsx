@@ -1,7 +1,8 @@
-﻿import React, {useEffect, useState} from 'react';
+﻿import {Ghost, Maximize2, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
-import {Ghost, Maximize2, X} from 'lucide-react';
-import {Player} from '@/types.ts';
+import React, {useEffect, useState} from 'react';
+
+import type {Player} from '@/types.ts';
 
 interface FakeArtistVotingProps {
     players: Player[];
@@ -29,7 +30,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden">
             <div className="w-full max-w-md flex flex-col gap-8">
-                {canvasImage && (
+                {!!canvasImage && (
                     <motion.div
                         initial={{scale: 0.9, opacity: 0}}
                         animate={{scale: 1, opacity: 1}}
@@ -41,7 +42,9 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                             className="w-full h-auto max-h-[40vh] object-contain bg-white"
                         />
                         <button
-                            onClick={() => setFullscreen(true)}
+                            onClick={() => {
+                                setFullscreen(true);
+                            }}
                             className="absolute top-3 right-3 w-9 h-9 bg-black/50 rounded-premium-sm flex items-center justify-center text-white/80 active:scale-90 transition-all"
                         >
                             <Maximize2 className="w-4 h-4"/>
@@ -50,17 +53,21 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                 )}
 
                 <AnimatePresence>
-                    {fullscreen && (
+                    {!!fullscreen && (
                         <motion.div
                             initial={{opacity: 0}}
                             animate={{opacity: 1}}
                             exit={{opacity: 0}}
                             className="fixed inset-0 z-50 bg-black flex items-center justify-center"
-                            onClick={() => setFullscreen(false)}
+                            onClick={() => {
+                                setFullscreen(false);
+                            }}
                         >
                             <img src={canvasImage} alt="Full" className="w-full h-full object-contain"/>
                             <button
-                                onClick={() => setFullscreen(false)}
+                                onClick={() => {
+                                    setFullscreen(false);
+                                }}
                                 className="absolute top-5 right-5 w-10 h-10 bg-white/10 rounded-premium-md flex items-center justify-center text-white active:scale-90 transition-all"
                             >
                                 <X className="w-5 h-5"/>
@@ -82,7 +89,9 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                                 Голосуйте одновременно
                             </div>
                             <button
-                                onClick={() => setRevealed(true)}
+                                onClick={() => {
+                                    setRevealed(true);
+                                }}
                                 className="w-full py-6 bg-white text-black rounded-premium-lg font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
                             >
                                 Раскрыть самозванца

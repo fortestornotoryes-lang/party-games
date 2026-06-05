@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {motion} from 'motion/react';
 import {EyeOff, Ghost, Palette} from 'lucide-react';
-import {Player} from '../../../types';
-import {contentService} from '../../../services/contentService';
+import {motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {useGameSettings} from '../../../contexts/GameSettingsContext';
-import {FakeArtistDifficulty} from '@/constants/fakeArtistContent';
+import {contentService} from '../../../services/contentService';
 import {rgba} from '../../../theme/colors';
+import type {Player} from '../../../types';
+
 import {DistributionFlow} from '@/components/DistributionFlow';
 
 interface Props {
@@ -19,7 +20,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
     const [category, setCategory] = useState('');
 
     useEffect(() => {
-        const diff = (difficulty as FakeArtistDifficulty) ?? 'easy';
+        const diff = (difficulty) ?? 'easy';
         const item = contentService.getFakeArtistWord(diff);
         setWord(item.word);
         setCategory(item.category);
@@ -28,7 +29,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
     return (
         <DistributionFlow
             players={players}
-            onFinish={() => onFinish(word, category, rounds ?? 2, timerSeconds ?? 0)}
+            onFinish={() => {
+                onFinish(word, category, rounds ?? 2, timerSeconds ?? 0);
+            }}
             activeColor="bg-premium-sky"
             passIcon={EyeOff}
             passAccentColor="sky"
@@ -62,7 +65,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
 
                     <div className="relative z-10 flex flex-col flex-1 p-7 items-center text-center">
                         {/* ── SPY ── */}
-                        {player.isSpy && (
+                        {!!player.isSpy && (
                             <motion.div
                                 initial={{opacity: 0}}
                                 animate={{opacity: 1}}

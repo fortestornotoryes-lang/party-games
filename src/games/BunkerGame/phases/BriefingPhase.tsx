@@ -1,11 +1,13 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Siren, Users} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {CatastropheScenario} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import type {CatastropheScenario} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
 
 interface BriefingPhaseProps {
     scenario: CatastropheScenario;

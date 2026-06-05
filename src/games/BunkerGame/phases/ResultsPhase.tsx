@@ -1,11 +1,13 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {AlertTriangle, RotateCcw, Skull, Trophy, Zap} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {BunkerCharacter, BunkerResources, SurvivalOutcome} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import type {BunkerCharacter, BunkerResources, SurvivalOutcome} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
 
 interface ResultsPhaseProps {
     bunkerTeam: BunkerCharacter[];

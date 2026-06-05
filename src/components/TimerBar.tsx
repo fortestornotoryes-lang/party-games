@@ -18,7 +18,7 @@ interface TimerBarProps {
  * const color = pct > 50 ? '#22c55e' : pct > 25 ? '#eab308' : '#ef4444';
  * <TimerBar pct={pct} color={color} />
  */
-export const TimerBar: React.FC<TimerBarProps> = ({ pct, color, className = '' }) => (
+export const TimerBar: React.FC<TimerBarProps> = ({ pct, color, className }) => (
   <div className={`h-1.5 w-full bg-white/10 ${className}`}>
     <div
       className="h-full transition-all duration-1000 ease-linear"

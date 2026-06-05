@@ -1,4 +1,3 @@
-import {pickRandom, shuffle} from '../utils/random';
 import type {
   AttributeEntry,
   BunkerCharacter,
@@ -9,6 +8,7 @@ import type {
   TraitKey,
 } from '../games/BunkerGame/types';
 import {ALL_TRAIT_KEYS} from '../games/BunkerGame/types';
+import {pickRandom, shuffle} from '../utils/random';
 
 export const BUNKER_MODES = {
     CLASSIC: 'classic',

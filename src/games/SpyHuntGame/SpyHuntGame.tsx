@@ -1,22 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
-import {Skull} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {Player} from '@/types';
-import {storageService} from '@/services/storageService';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {GAME_DURATION_BY_DIFFICULTY} from '@/constants/spyHuntContent';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {Skull} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {RoleDistribution} from './components/RoleDistribution';
-import {useTimer} from '@/hooks/useTimer';
-import {initSpyHunt} from '@/utils/gameLogic';
-import {SpyHuntPhase} from './types';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {RevealPhase} from './phases/RevealPhase';
+import {SpyHuntPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {GAME_DURATION_BY_DIFFICULTY} from '@/constants/spyHuntContent';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useTimer} from '@/hooks/useTimer';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
+import type {Player} from '@/types';
+import {initSpyHunt} from '@/utils/gameLogic';
 
 interface GameProps {
     playerNames: string[];
@@ -32,7 +34,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({playerNames, onBack}) => {
 
     const gameDuration =
         GAME_DURATION_BY_DIFFICULTY[
-        (difficulty as keyof typeof GAME_DURATION_BY_DIFFICULTY) ?? 'medium'
+        (difficulty) ?? 'medium'
             ] ?? 480;
     const {timeLeft, start: startTimer} = useTimer({initialTime: gameDuration});
 
@@ -101,7 +103,9 @@ export const SpyHuntGame: React.FC<GameProps> = ({playerNames, onBack}) => {
                     <PlayingPhase
                         players={players}
                         timeLeft={timeLeft}
-                        onReveal={() => setPhase(SpyHuntPhase.Reveal)}
+                        onReveal={() => {
+                            setPhase(SpyHuntPhase.Reveal);
+                        }}
                     />
                 )}
 

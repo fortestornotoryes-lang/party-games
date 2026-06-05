@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
-import { PrimaryButton, Typography } from '@/components/UI';
-import { GameTheme } from '../types';
+import { motion, AnimatePresence } from 'motion/react';
+import React, { useEffect } from 'react';
+
 import { getTheme } from '../theme/colors';
+import type { GameTheme } from '../types';
+
+import { PrimaryButton, Typography } from '@/components/UI';
 
 type ModalTheme = GameTheme;
 
@@ -20,9 +22,9 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
   open,
   instructions,
   onClose,
-  title = 'Инструкции',
+  title,
   theme,
-  description = 'Брифинг по игровому процессу и правилам участия в секретной операции.',
+  description,
 }) => {
   const themeConfig = getTheme(theme);
 
@@ -36,7 +38,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
 
   return (
     <AnimatePresence>
-      {open && (
+      {!!open && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

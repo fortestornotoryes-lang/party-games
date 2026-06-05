@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {ChevronRight, Scale, X} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useState} from 'react';
+
+import {type AttributeEntry, type BunkerCharacter, getHiddenTraits, type TraitKey,} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {rgba} from '@/theme/colors';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {type AttributeEntry, type BunkerCharacter, getHiddenTraits, type TraitKey,} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {rgba} from '@/theme/colors';
 import {pickRandom} from '@/utils/random';
 
 interface TribunalPhaseProps {
@@ -119,7 +121,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 <motion.button
                                     key={char.playerName}
                                     whileTap={{scale: 0.97}}
-                                    onClick={() => handleAppeal(char)}
+                                    onClick={() => {
+                                        handleAppeal(char);
+                                    }}
                                     className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                     style={{
                                         background: rgba('yellow', 0.05),
@@ -248,7 +252,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     <div className="flex-1 flex flex-col justify-center gap-4">
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => handleVote('pardoned')}
+                            onClick={() => {
+                                handleVote('pardoned');
+                            }}
                             className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
                             style={{
                                 background: rgba('green', 0.08),
@@ -266,7 +272,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => handleVote('rejected')}
+                            onClick={() => {
+                                handleVote('rejected');
+                            }}
                             className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
                             style={{
                                 background: rgba('red', 0.06),
@@ -313,7 +321,9 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                             <motion.button
                                 key={char.playerName}
                                 whileTap={{scale: 0.97}}
-                                onClick={() => handleSwap(char.playerName)}
+                                onClick={() => {
+                                    handleSwap(char.playerName);
+                                }}
                                 className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                 style={{
                                     background: rgba('red', 0.05),
@@ -369,7 +379,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 ? t(`${NS.BUNKER}.playerPardonedTitle`, {player: appellant?.playerName ?? ''})
                                 : t(`${NS.BUNKER}.playerExcludedTitle`, {player: appellant?.playerName ?? ''})}
                         </Typography.Display>
-                        {pardoned && swapTarget && (
+                        {!!pardoned && !!swapTarget && (
                             <Typography.Body size="sm" color="muted" align="center">
                                 {t(`${NS.BUNKER}.spotFreedBy`, {player: swapTarget})}
                             </Typography.Body>

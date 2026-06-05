@@ -1,7 +1,8 @@
-﻿import React from 'react';
+﻿import {Award, RotateCcw, Shield, Skull} from 'lucide-react';
 import {motion} from 'motion/react';
-import {Award, RotateCcw, Shield, Skull} from 'lucide-react';
-import {Player} from '../../../types';
+import React from 'react';
+
+import type {Player} from '../../../types';
 
 interface ResistanceResultProps {
     players: Player[];

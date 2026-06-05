@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { LucideIcon } from 'lucide-react';
-import { Player } from '@/types';
+import React, { useState } from 'react';
+
+
 import { PassPhoneCard } from './PassPhoneCard';
 import { ProgressDots } from './ProgressDots';
+
+import type { Player } from '@/types';
 
 type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
 
@@ -31,10 +34,10 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
   onFinish,
   renderCard,
   getCardStyle,
-  passInstruction = 'Нажми чтобы увидеть роль',
+  passInstruction,
   passIcon,
-  passAccentColor = 'default',
-  activeColor = 'bg-white/40',
+  passAccentColor,
+  activeColor,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -85,7 +88,7 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
                   instruction={passInstruction}
                   icon={passIcon}
                   accentColor={passAccentColor}
-                  onClick={() => setIsRevealed(true)}
+                  onClick={() => { setIsRevealed(true); }}
                 />
               </motion.div>
             ) : (

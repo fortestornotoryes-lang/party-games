@@ -1,6 +1,7 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Users} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {PrimaryButton, Typography} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 

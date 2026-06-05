@@ -1,22 +1,27 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTimer} from '@/hooks/useTimer';
-import {AnimatePresence} from 'motion/react';
-import {Ban} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {Ban} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useCallback, useEffect, useState} from 'react';
+
 import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
-import {getNextTabooClassicCard, TABOO_CLASSIC_CARDS, TabooClassicCard,} from '@/constants/tabooContent';
-import {TabooPhase} from './types';
-import {GameKey} from '@/types/games';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+
+import {GameOverPhase} from './phases/GameOverPhase';
 import {PassPhase} from './phases/PassPhase';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {VerdictPhase} from './phases/VerdictPhase';
-import {GameOverPhase} from './phases/GameOverPhase';
+import {TabooPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import type {TabooClassicCard} from '@/constants/tabooContent';
+import {getNextTabooClassicCard, TABOO_CLASSIC_CARDS} from '@/constants/tabooContent';
+import {useTimer} from '@/hooks/useTimer';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
+import {GameKey} from '@/types/games';
+
 
 interface TabooGameProps {
     playerNames: string[];
@@ -143,7 +148,9 @@ export const TabooGame: React.FC<TabooGameProps> = ({playerNames, onBack}) => {
         [card, currentExplainer, difficulty, scores, usedCardIds]
     );
 
-    const handleStopGame = useCallback(() => setPhase(TabooPhase.GameOver), []);
+    const handleStopGame = useCallback(() => {
+        setPhase(TabooPhase.GameOver);
+    }, []);
 
     const handleRematch = useCallback(() => {
         setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));

@@ -52,10 +52,10 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
   players,
   scores,
   activePlayer,
-  activeLabel = 'объясняет',
-  accentColor = 'red',
+  activeLabel,
+  accentColor,
   teams,
-  className = '',
+  className,
 }) => {
   const ac = AC[accentColor];
 
@@ -96,7 +96,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
               <span className={`font-black truncate ${isActive ? ac.text : 'text-white/70'}`}>
                 {player}
               </span>
-              {isActive && (
+              {!!isActive && (
                 <span
                   className={`shrink-0 text-micro font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${ac.badge}`}
                 >

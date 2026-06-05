@@ -1,18 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
-import {Brush, Palette, Undo2} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {Player} from '../../types';
-import {storageService} from '../../services/storageService';
-import {feedbackService, VIBRATE} from '../../services/feedbackService';
-import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
+import {Brush, Palette, Undo2} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {feedbackService, VIBRATE} from '../../services/feedbackService';
+import {storageService} from '../../services/storageService';
+import type {Player} from '../../types';
+import {initFakeArtist} from '../../utils/gameLogic';
+
 import {FakeArtistDistribution} from './components/FakeArtistDistribution';
 import {FakeArtistVoting} from './components/FakeArtistVoting';
-import {initFakeArtist} from '../../utils/gameLogic';
 import {FakeArtistPhase} from './types';
+
 import {GameCard} from '@/components/GameCard.tsx';
+import {GameHeader} from '@/components/GameHeader';
+import {PrimaryButton} from '@/components/UI';
 
 interface Props {
     playerNames: string[];
@@ -61,7 +64,9 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                     return prev - 1;
                 });
             }, 1000);
-            return () => clearInterval(timer);
+            return () => {
+                clearInterval(timer);
+            };
         }
     }, [turnIndex, isTransitioning, gameState.timerSeconds, phase]);
 
@@ -88,7 +93,9 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
         const ro = new ResizeObserver(initCanvas);
         ro.observe(canvas);
         initCanvas();
-        return () => ro.disconnect();
+        return () => {
+            ro.disconnect();
+        };
     }, [phase]);
 
     const drawAll = useCallback(() => {
@@ -101,14 +108,18 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
             ctx.beginPath();
             ctx.strokeStyle = s.color;
             ctx.moveTo(s.points[0].x, s.points[0].y);
-            s.points.forEach((p: any) => ctx.lineTo(p.x, p.y));
+            s.points.forEach((p: any) => {
+                ctx.lineTo(p.x, p.y);
+            });
             ctx.stroke();
         });
         if (currentStroke) {
             ctx.beginPath();
             ctx.strokeStyle = playerColor;
             ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-            currentStroke.forEach((p: any) => ctx.lineTo(p.x, p.y));
+            currentStroke.forEach((p: any) => {
+                ctx.lineTo(p.x, p.y);
+            });
             ctx.stroke();
         }
     }, [strokes, currentStroke, playerColor]);
@@ -118,7 +129,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
     }, [drawAll, phase]);
 
     const getPos = (e: any) => {
-        const canvas = canvasRef.current!;
+        const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -138,7 +149,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                     colors: ['#10b981', '#ffffff'],
                 });
             }
-            setGameState((prev) => ({...prev, canvasImage: canvasRef.current!.toDataURL()}));
+            setGameState((prev) => ({...prev, canvasImage: canvasRef.current.toDataURL()}));
             setPhase(FakeArtistPhase.Voting);
         } else {
             feedbackService.playSound('click');
@@ -297,7 +308,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
 
                         {/* Transition overlay — rendered on top, canvas stays mounted underneath */}
                         <AnimatePresence>
-                            {isTransitioning && (
+                            {!!isTransitioning && (
                                 <motion.div
                                     key="transition"
                                     initial={{opacity: 0}}
@@ -322,7 +333,9 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                     </GameCard>
 
                                     <PrimaryButton
-                                        onClick={() => setIsTransitioning(false)}
+                                        onClick={() => {
+                                            setIsTransitioning(false);
+                                        }}
                                         className="bg-white !text-black"
                                     >
                                         Я ГОТОВ РИСОВАТЬ

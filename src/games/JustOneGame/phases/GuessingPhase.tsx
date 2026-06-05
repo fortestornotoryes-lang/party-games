@@ -1,5 +1,6 @@
-import React from 'react';
 import {motion} from 'motion/react';
+import React from 'react';
+
 import {PrimaryButton} from '@/components/UI';
 
 interface GuessingPhaseProps {
@@ -56,7 +57,9 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
             <input
                 type="text"
                 value={guess}
-                onChange={(e) => onGuessChange(e.target.value)}
+                onChange={(e) => {
+                    onGuessChange(e.target.value);
+                }}
                 placeholder="Твоя догадка..."
                 onKeyDown={(e) => {
                     if (e.key === 'Enter' && guess.trim()) onGuess();

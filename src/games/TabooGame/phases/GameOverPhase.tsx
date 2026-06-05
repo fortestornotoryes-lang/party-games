@@ -1,8 +1,9 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {RotateCcw, Trophy} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI.tsx';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {LeaderboardList} from '@/components/LeaderboardList.tsx';
+import {PrimaryButton} from '@/components/UI.tsx';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

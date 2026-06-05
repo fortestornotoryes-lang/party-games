@@ -1,9 +1,13 @@
-import React from 'react';
 import {motion} from 'motion/react';
-import {PrimaryButton} from '@/components/UI';
-import {TeamColor} from '../types';
+import React from 'react';
+
+
 import {tBadge, tText} from '../helpers';
+import type {TeamColor} from '../types';
+
 import {WordGrid} from './WordGrid';
+
+import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

@@ -1,4 +1,4 @@
-import {Difficulty} from '../types';
+import type {Difficulty} from '../types';
 
 export const TRUTHS_BY_DIFFICULTY: Record<Difficulty, string[]> = {
     easy: [

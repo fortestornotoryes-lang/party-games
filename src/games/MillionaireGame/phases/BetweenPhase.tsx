@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
-import {motion} from 'motion/react';
-import {Banknote, CheckCircle, TrendingUp} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {PRIZE_LADDER} from '@/constants/millionaireContent';
+import {Banknote, CheckCircle, TrendingUp} from 'lucide-react';
+import {motion} from 'motion/react';
+import React, {useEffect} from 'react';
+
 import {PrimaryButton} from '@/components/UI';
+import {PRIZE_LADDER} from '@/constants/millionaireContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 
@@ -34,7 +35,9 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
                 gravity: 1.2,
             });
         }, 200);
-        return () => clearTimeout(timer);
+        return () => {
+            clearTimeout(timer);
+        };
     }, []);
 
     return (

@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {Cpu} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
+import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent,} from '../types';
+
 import {Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent,} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
 
 interface SurvivalPhaseProps {
     bunkerTeam: BunkerCharacter[];
@@ -55,8 +57,12 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
 
     // Step progression
     useEffect(() => {
-        const t1 = setTimeout(() => setStep('events'), 1800);
-        const t2 = setTimeout(() => setStep('resources'), 3500);
+        const t1 = setTimeout(() => {
+            setStep('events');
+        }, 1800);
+        const t2 = setTimeout(() => {
+            setStep('resources');
+        }, 3500);
         const t3 = setTimeout(() => {
             setDisplayedResources(finalResources);
             feedbackService.vibrate(VIBRATE.celebrate);

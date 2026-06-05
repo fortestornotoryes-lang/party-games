@@ -1,5 +1,5 @@
-import React from 'react';
 import {MessageSquare} from 'lucide-react';
+import React from 'react';
 
 interface Props {
     lastDrawing: string;
@@ -56,8 +56,12 @@ export const TelestrationsGuess: React.FC<Props> = ({
             <input
                 type="text"
                 value={guess}
-                onChange={(e) => onGuessChange(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && guess.trim() && onSubmit()}
+                onChange={(e) => {
+                    onGuessChange(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                    e.key === 'Enter' && guess.trim() && onSubmit();
+                }}
                 placeholder="Напиши ответ..."
                 className="w-full p-5 bg-white/5 border border-white/10 rounded-premium-md text-xl font-bold placeholder:text-white/25 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
             />

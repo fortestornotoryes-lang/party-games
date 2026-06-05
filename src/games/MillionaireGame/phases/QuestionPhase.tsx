@@ -1,7 +1,9 @@
-import React from 'react';
-import {AnimatePresence, motion} from 'motion/react';
 import {MessageSquare, Percent, Phone, Users} from 'lucide-react';
-import {MillionaireQuestion, PRIZE_LADDER, SAFE_CHECKPOINTS,} from '@/constants/millionaireContent';
+import {AnimatePresence, motion} from 'motion/react';
+import React from 'react';
+
+import type {MillionaireQuestion} from '@/constants/millionaireContent';
+import {PRIZE_LADDER, SAFE_CHECKPOINTS,} from '@/constants/millionaireContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 
@@ -78,7 +80,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
                             className="text-micro font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 text-white/25">
               {tier}
             </span>
-                        {isCheckpoint && (
+                        {!!isCheckpoint && (
                             <span
                                 className="px-1.5 py-0.5 rounded-full text-micro font-black uppercase tracking-widest bg-premium-yellow/15 border border-premium-yellow/30 text-premium-yellow">
                 {t(`${NS.MILLIONAIRE}.checkpoint`)}
@@ -146,7 +148,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
 
                 {/* Burning-fuse countdown during reveal */}
                 <AnimatePresence>
-                    {isRevealing && (
+                    {!!isRevealing && (
                         <motion.div
                             key="fuse"
                             initial={{scaleX: 1}}
@@ -175,7 +177,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
 
                 {/* Audience chart */}
                 <AnimatePresence>
-                    {audienceVotes && (
+                    {!!audienceVotes && (
                         <motion.div
                             initial={{opacity: 0, height: 0}}
                             animate={{opacity: 1, height: 'auto'}}
@@ -255,7 +257,9 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
                                 text={option}
                                 state={state}
                                 disabled={isRevealing || state === 'eliminated'}
-                                onClick={() => onAnswer(i)}
+                                onClick={() => {
+                                    onAnswer(i);
+                                }}
                             />
                         );
                     })}
@@ -300,12 +304,12 @@ interface AnswerButtonProps {
     onClick: () => void;
 }
 
-type StateStyle = {
+interface StateStyle {
     wrapper: string;
     badge: string;
     divider: string;
     text: string;
-};
+}
 
 const stateStyles: Record<AnswerState, StateStyle> = {
     normal: {
@@ -354,7 +358,7 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({letter, text, state, disable
             }
             transition={{duration: 0.4}}
             onClick={!disabled ? onClick : undefined}
-            disabled={disabled && state !== 'correct' && state !== 'wrong'}
+            disabled={!!disabled && state !== 'correct' && state !== 'wrong'}
             className={`relative flex items-stretch rounded-premium-md border transition-all duration-300 overflow-hidden min-h-[4.5rem] text-left ${s.wrapper}`}
         >
             {/* Letter column */}

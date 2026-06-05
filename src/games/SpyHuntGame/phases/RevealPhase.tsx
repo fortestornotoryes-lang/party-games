@@ -1,11 +1,12 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {RotateCcw, Skull} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {GameCard} from '@/components/GameCard';
-import {Player} from '@/types';
+import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
+import type {Player} from '@/types';
 
 interface RevealPhaseProps {
     spy: Player | undefined;

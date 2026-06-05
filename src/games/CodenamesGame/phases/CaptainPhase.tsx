@@ -1,9 +1,11 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Zap} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {Card, Team} from '../types';
+
 import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
-import {Card, Team} from '../types';
 
 interface CaptainPhaseProps {
     cards: Card[];
@@ -100,7 +102,9 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                     <input
                         type="text"
                         value={clueWord}
-                        onChange={(e) => onClueWordChange(e.target.value.replace(/ /g, ''))}
+                        onChange={(e) => {
+                            onClueWordChange(e.target.value.replace(/ /g, ''));
+                        }}
                         placeholder={t('codenames.oneWord')}
                         className="flex-1 bg-white/5 border border-white/10 rounded-premium-sm px-4 py-3 text-center font-bold outline-none focus:border-premium-green/50 transition-colors uppercase"
                         required
@@ -112,7 +116,9 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                         max="9"
                         pattern="[0-9]*"
                         value={clueCount === 0 ? '' : clueCount}
-                        onChange={(e) => onClueCountChange(parseInt(e.target.value) || 0)}
+                        onChange={(e) => {
+                            onClueCountChange(parseInt(e.target.value) || 0);
+                        }}
                         placeholder="0"
                         className="w-20 bg-white/5 border border-white/10 rounded-premium-sm px-4 py-3 text-center text-xl font-bold outline-none focus:border-premium-green/50 transition-colors"
                         required

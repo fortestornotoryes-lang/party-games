@@ -1,13 +1,19 @@
-import React, {useMemo, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
 import {Siren} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useMemo, useState} from 'react';
+
+import {BriefingPhase} from './phases/BriefingPhase';
+import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
+import {DiscussionPhase} from './phases/DiscussionPhase';
+import {ResultsPhase} from './phases/ResultsPhase';
+import {RevealPhase} from './phases/RevealPhase';
+import {SurvivalPhase} from './phases/SurvivalPhase';
+import {TribunalPhase} from './phases/TribunalPhase';
+import {VotingPhase} from './phases/VotingPhase';
+import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome,} from './types';
+import {BunkerPhase} from './types';
+
 import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {GameKey} from '@/types/games';
-import {pickRandom, shuffle} from '@/utils/random';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
 import {
   BUNKER_MODES,
   calculateSurvival,
@@ -15,16 +21,12 @@ import {
   generateCharacter,
   SURVIVAL_EVENTS
 } from '@/constants/bunkerContent';
-import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome,} from './types';
-import {BunkerPhase} from './types';
-import {BriefingPhase} from './phases/BriefingPhase';
-import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
-import {RevealPhase} from './phases/RevealPhase';
-import {DiscussionPhase} from './phases/DiscussionPhase';
-import {VotingPhase} from './phases/VotingPhase';
-import {TribunalPhase} from './phases/TribunalPhase';
-import {SurvivalPhase} from './phases/SurvivalPhase';
-import {ResultsPhase} from './phases/ResultsPhase';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {GameKey} from '@/types/games';
+import {pickRandom, shuffle} from '@/utils/random';
 
 interface BunkerGameProps {
     playerNames: string[];
@@ -160,10 +162,14 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
     };
 
     // Survival → Results
-    const handleRevealResults = () => setPhase(BunkerPhase.Results);
+    const handleRevealResults = () => {
+        setPhase(BunkerPhase.Results);
+    };
 
     // Restart
-    const handleRestart = () => onBack();
+    const handleRestart = () => {
+        onBack();
+    };
 
     // ── Render ─────────────────────────────────────────────────────────────────
     return (
@@ -188,7 +194,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
                         />
                     )}
 
-                    {phase === BunkerPhase.DictatorReveal && directorName && (
+                    {phase === BunkerPhase.DictatorReveal && !!directorName && (
                         <DictatorRevealPhase
                             key="dictator-reveal"
                             directorName={directorName}

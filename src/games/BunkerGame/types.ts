@@ -89,7 +89,7 @@ export const ALL_TRAIT_KEYS: readonly TraitKey[] = [
 /** Returns the traits that were NOT revealed during any round (still hidden). */
 export function getHiddenTraits(
     char: BunkerCharacter
-): Array<{ key: TraitKey; label: string; entry: AttributeEntry }> {
+): { key: TraitKey; label: string; entry: AttributeEntry }[] {
     return ALL_TRAIT_KEYS.filter((k) => !char.revealOrder.includes(k)).map((k) => ({
         key: k,
         label: TRAIT_LABELS[k],

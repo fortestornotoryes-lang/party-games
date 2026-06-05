@@ -1,5 +1,6 @@
-import React from 'react';
 import {ListChecks} from 'lucide-react';
+import React from 'react';
+
 import {TabooPassPhase} from '@/components/TabooPassPhase';
 
 interface PassPhaseProps {

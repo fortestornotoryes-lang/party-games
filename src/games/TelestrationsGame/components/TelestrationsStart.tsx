@@ -1,6 +1,6 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {ArrowRight, Eye} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
 
 interface Props {
     currentPlayer: string;

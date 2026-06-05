@@ -1,24 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
-import {Brain} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {storageService} from '@/services/storageService';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {contentService} from '@/services/contentService';
-import {pickRandom, shuffle} from '@/utils/random';
-import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from '@/constants/aliasContent';
-import {GameKey} from '@/types/games';
-import {GameHeader} from '@/components/GameHeader';
-import {useTimer} from '@/hooks/useTimer';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {AliasPhase, Team} from './types';
-import {StartPhase} from './phases/StartPhase';
+import {Brain} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
+import {GameOverPhase} from './phases/GameOverPhase';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {RoundEndPhase} from './phases/RoundEndPhase';
-import {GameOverPhase} from './phases/GameOverPhase';
+import {StartPhase} from './phases/StartPhase';
+import type {Team} from './types';
+import {AliasPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from '@/constants/aliasContent';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useTimer} from '@/hooks/useTimer';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {contentService} from '@/services/contentService';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
+import {GameKey} from '@/types/games';
+import {pickRandom, shuffle} from '@/utils/random';
+
 
 interface AliasGameProps {
     playerNames: string[];
@@ -46,7 +50,9 @@ export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
         reset: resetTimer,
     } = useTimer({
         initialTime: roundTime,
-        onTimeUp: () => setPhase(AliasPhase.RoundEnd),
+        onTimeUp: () => {
+            setPhase(AliasPhase.RoundEnd);
+        },
     });
 
     useEffect(() => {

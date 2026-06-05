@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Plus, Trash2, RefreshCw, Database, Search } from 'lucide-react';
-import { storageService, GameSettings } from '../services/storageService';
+import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback } from 'react';
+
 import { feedbackService, VIBRATE } from '../services/feedbackService';
+import type { GameSettings } from '../services/storageService';
+import { storageService } from '../services/storageService';
+import type { Difficulty } from '../types';
 import { GameKey } from '../types/games';
-import { Difficulty } from '../types';
-import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
-import { useLanguage } from '@/i18n';
+
 import { Pagination } from './Pagination';
+import { SectionLabel, IconButton, PageWrapper, Typography, TabButton } from './UI';
+
 import { TextInput } from '@/components/TextInput.tsx';
+import { useLanguage } from '@/i18n';
 
 interface SettingsProps {
   onBack: () => void;
@@ -214,7 +218,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     if (isTod) {
       storageService.addCustomWordByKey(todKey(todType, todDiff), word);
     } else {
-      alsoAdd.forEach((id) => storageService.addCustomWordByKey(`${id}_${wordDiff}`, word));
+      alsoAdd.forEach((id) => { storageService.addCustomWordByKey(`${id}_${wordDiff}`, word); });
     }
 
     setNewWord('');
@@ -254,10 +258,10 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
 
       {/* Tabs */}
       <div className="flex bg-white/5 p-1 rounded-premium-md mb-8">
-        <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')}>
+        <TabButton active={activeTab === 'general'} onClick={() => { setActiveTab('general'); }}>
           Общие
         </TabButton>
-        <TabButton active={activeTab === 'words'} onClick={() => setActiveTab('words')}>
+        <TabButton active={activeTab === 'words'} onClick={() => { setActiveTab('words'); }}>
           Слова
         </TabButton>
       </div>
@@ -279,19 +283,19 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   label="Визуальные эффекты"
                   description="Конфетти и анимации"
                   value={!!settings.visualEffects}
-                  onToggle={() => toggleSetting('visualEffects')}
+                  onToggle={() => { toggleSetting('visualEffects'); }}
                 />
                 <SettingToggle
                   label="Вибрация"
                   description="Тактильный отклик"
                   value={!!settings.vibration}
-                  onToggle={() => toggleSetting('vibration')}
+                  onToggle={() => { toggleSetting('vibration'); }}
                 />
                 <SettingToggle
                   label="Звуки"
                   description="Звуковые эффекты"
                   value={!!settings.sounds}
-                  onToggle={() => toggleSetting('sounds')}
+                  onToggle={() => { toggleSetting('sounds'); }}
                 />
               </div>
             </div>
@@ -302,7 +306,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                 {(['ru', 'en'] as const).map((l) => (
                   <button
                     key={l}
-                    onClick={() => setLang(l)}
+                    onClick={() => { setLang(l); }}
                     className={`flex-1 py-3 rounded-premium-md text-xs font-black uppercase tracking-wider border transition-all ${
                       lang === l
                         ? 'bg-white/15 text-white border-white/25'
@@ -353,7 +357,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
           >
             {/* 1. TruthOrDare — type + difficulty selectors */}
             <AnimatePresence>
-              {isTod && (
+              {!!isTod && (
                 <motion.div
                   key="tod-selectors"
                   initial={{ opacity: 0, height: 0 }}
@@ -365,7 +369,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                     {(['truth', 'dare'] as const).map((t) => (
                       <button
                         key={t}
-                        onClick={() => setTodType(t)}
+                        onClick={() => { setTodType(t); }}
                         className={`py-3 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                           todType === t
                             ? t === 'truth'
@@ -382,7 +386,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                     {DIFFICULTIES.map((d) => (
                       <button
                         key={d.id}
-                        onClick={() => setTodDiff(d.id)}
+                        onClick={() => { setTodDiff(d.id); }}
                         className={`py-3 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                           todDiff === d.id
                             ? d.id === 'easy'
@@ -432,7 +436,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   {DIFFICULTIES.map((d) => (
                     <button
                       key={d.id}
-                      onClick={() => setWordDiff(d.id)}
+                      onClick={() => { setWordDiff(d.id); }}
                       className={`py-2.5 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                         wordDiff === d.id
                           ? d.id === 'easy'
@@ -457,7 +461,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       setNewWord(e.target.value);
                       setValidationError(null);
                     }}
-                    onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+                    onKeyDown={(e) => { e.key === 'Enter' && handleAdd(); }}
                     className="flex-1"
                   />
                   <button
@@ -471,7 +475,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
 
                 {/* Validation error */}
                 <AnimatePresence>
-                  {validationError && (
+                  {!!validationError && (
                     <motion.p
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -493,7 +497,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   {ALL_WORD_GAMES.map((game) => (
                     <button
                       key={game.id}
-                      onClick={() => toggleAlsoAdd(game.id)}
+                      onClick={() => { toggleAlsoAdd(game.id); }}
                       className={`px-3 py-1.5 rounded-full text-micro font-black uppercase tracking-widest border transition-all ${
                         alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
                       }`}
@@ -549,7 +553,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                             {word}
                           </span>
                           <button
-                            onClick={() => handleRemove(word)}
+                            onClick={() => { handleRemove(word); }}
                             className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-premium-xs"
                           >
                             <Trash2 className="w-4 h-4" />

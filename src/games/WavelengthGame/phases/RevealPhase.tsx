@@ -1,8 +1,9 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {ChevronRight, RotateCcw} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {GameCard} from '@/components/GameCard';
+import {PrimaryButton} from '@/components/UI';
 
 interface RevealPhaseProps {
     currentPair: string[];

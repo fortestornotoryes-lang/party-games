@@ -1,20 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {DECRYPTO_MODES} from '@/constants/decryptoContent';
-import {AnimatePresence, motion} from 'motion/react';
 import {AlertOctagon, Key, KeyRound, Trophy, Users} from 'lucide-react';
-import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {contentService} from '../../services/contentService';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {contentService} from '../../services/contentService';
 import {randomInt, shuffle} from '../../utils/random';
-import {DecryptoPhase, TeamColor, TeamState} from './types';
-import {tBadge, tBg, teamLabel, tText} from './helpers';
-import {PassScreen} from './components/PassScreen';
-import {ScoreRow} from './components/ScoreRow';
+
 import {CaptainCluesPhase} from './components/CaptainCluesPhase';
 import {EnemyInterceptPhase} from './components/EnemyInterceptPhase';
+import {PassScreen} from './components/PassScreen';
+import {ScoreRow} from './components/ScoreRow';
 import {TeamGuessPhase} from './components/TeamGuessPhase';
+import {tBadge, tBg, teamLabel, tText} from './helpers';
+import type {TeamColor, TeamState} from './types';
+import {DecryptoPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {PrimaryButton} from '@/components/UI';
+import {DECRYPTO_MODES} from '@/constants/decryptoContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 
@@ -90,10 +94,10 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
 
     const continueAfterReveal = () => {
         const cur: TeamState = {
-            ...(activeTeam === 'red' ? redState! : blueState!),
-            history: [...(activeTeam === 'red' ? redState! : blueState!).history],
+            ...(activeTeam === 'red' ? redState : blueState),
+            history: [...(activeTeam === 'red' ? redState : blueState).history],
         };
-        const env: TeamState = {...(activeTeam === 'red' ? blueState! : redState!)};
+        const env: TeamState = {...(activeTeam === 'red' ? blueState : redState)};
 
         const intercepted = round > 1 && (interceptGuess as number[]).join('') === currentCode.join('');
         const failed = (teamGuess as number[]).join('') !== currentCode.join('');
@@ -140,7 +144,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     if (!redState || !blueState) return null;
 
     const curState = activeTeam === 'red' ? redState : blueState;
-    const enemyColor = (activeTeam === 'red' ? 'blue' : 'red') as TeamColor;
+    const enemyColor = (activeTeam === 'red' ? 'blue' : 'red');
     const intercepted = round > 1 && (interceptGuess as number[]).join('') === currentCode.join('');
     const guessCorrect = (teamGuess as number[]).join('') === currentCode.join('');
 
@@ -205,7 +209,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             team={activeTeam}
                             subtitle={t(`${NS.DECRYPTO}.othersNoSee`)}
                             buttonLabel={t(`${NS.DECRYPTO}.showCode`)}
-                            onContinue={() => setPhase(DecryptoPhase.CaptainClues)}
+                            onContinue={() => {
+                                setPhase(DecryptoPhase.CaptainClues);
+                            }}
                             red={redState}
                             blue={blueState}
                         >
@@ -234,8 +240,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             clues={clues}
                             activeTeam={activeTeam}
                             onChange={setClues}
-                            onSubmit={() =>
-                                setPhase(round > 1 ? DecryptoPhase.PassEnemy : DecryptoPhase.PassTeam)
+                            onSubmit={() => {
+                                setPhase(round > 1 ? DecryptoPhase.PassEnemy : DecryptoPhase.PassTeam);
+                            }
                             }
                         />
                     )}
@@ -248,7 +255,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             team={enemyColor}
                             subtitle={t(`${NS.DECRYPTO}.passToEnemy`)}
                             buttonLabel={t(`${NS.DECRYPTO}.interceptBtn`)}
-                            onContinue={() => setPhase(DecryptoPhase.EnemyIntercept)}
+                            onContinue={() => {
+                                setPhase(DecryptoPhase.EnemyIntercept);
+                            }}
                             red={redState}
                             blue={blueState}
                         />
@@ -264,7 +273,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             wordCount={wordCount}
                             enemyColor={enemyColor}
                             onChange={setInterceptGuess}
-                            onSubmit={() => setPhase(DecryptoPhase.PassTeam)}
+                            onSubmit={() => {
+                                setPhase(DecryptoPhase.PassTeam);
+                            }}
                         />
                     )}
 
@@ -276,7 +287,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             team={activeTeam}
                             subtitle={t(`${NS.DECRYPTO}.passToTeam`)}
                             buttonLabel={t(`${NS.DECRYPTO}.decodeCodeBtn`)}
-                            onContinue={() => setPhase(DecryptoPhase.TeamGuess)}
+                            onContinue={() => {
+                                setPhase(DecryptoPhase.TeamGuess);
+                            }}
                             red={redState}
                             blue={blueState}
                         />
@@ -292,7 +305,9 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
                             wordCount={wordCount}
                             activeTeam={activeTeam}
                             onChange={setTeamGuess}
-                            onSubmit={() => setPhase(DecryptoPhase.Reveal)}
+                            onSubmit={() => {
+                                setPhase(DecryptoPhase.Reveal);
+                            }}
                         />
                     )}
 

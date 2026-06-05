@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { Users, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import React, { useEffect, useState } from 'react';
 
 import { useGameSettings } from '../contexts/GameSettingsContext';
-import { contentService } from '../services/contentService';
-import { GameKey } from '../types/games';
 import { GAMES_REGISTRY } from '../registry/GameRegistry';
+import { contentService } from '../services/contentService';
 import { getTheme } from '../theme/colors';
+import type { GameKey } from '../types/games';
+
 import { GameMenuCard } from './GameMenuCard';
 
 interface MainMenuProps {
@@ -66,8 +67,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                 game={game}
                 index={index}
                 countDisplay={countDisplay}
-                onSelect={() => onSelectGame(game.id)}
-                onDescriptionClick={() => setDescriptionGameId(game.id)}
+                onSelect={() => { onSelectGame(game.id); }}
+                onDescriptionClick={() => { setDescriptionGameId(game.id); }}
               />
             );
           })}
@@ -76,8 +77,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
       {/* Description bottom sheet */}
       <AnimatePresence>
-        {descriptionGame &&
-          (() => {
+        {!!descriptionGame && (() => {
             const Icon = descriptionGame.icon;
             const t = getTheme(descriptionGame.theme);
             return (
@@ -89,7 +89,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  onClick={() => setDescriptionGameId(null)}
+                  onClick={() => { setDescriptionGameId(null); }}
                   className="fixed inset-0 z-40 bg-black/60"
                   style={{ backdropFilter: 'blur(var(--blur-backdrop))' }}
                 />
@@ -137,7 +137,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           </p>
                         </div>
                         <button
-                          onClick={() => setDescriptionGameId(null)}
+                          onClick={() => { setDescriptionGameId(null); }}
                           className="w-8 h-8 rounded-full bg-white/6 border border-white/10 flex items-center justify-center text-white/30 hover:text-white/60 transition-colors active:scale-90"
                         >
                           <X className="w-4 h-4" />

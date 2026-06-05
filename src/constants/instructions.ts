@@ -1,4 +1,5 @@
-import {GameInstructionsMap, GameKey} from '../types/games';
+import type {GameInstructionsMap} from '../types/games';
+import { GameKey} from '../types/games';
 
 /**
  * Single source of truth for all game instructions and text rules.

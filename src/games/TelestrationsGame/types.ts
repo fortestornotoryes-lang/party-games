@@ -6,8 +6,8 @@ export enum TelestrationsPhase {
     Gallery = 'gallery',
 }
 
-export type Step = {
+export interface Step {
     type: 'draw' | 'guess';
     content: string;
     author: string;
-};
+}

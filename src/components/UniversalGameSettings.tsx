@@ -1,13 +1,19 @@
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
+import { Shield, Zap, Target, Clock } from 'lucide-react';
 import { motion } from 'motion/react';
-import { SectionLabel } from './UI';
-import { Difficulty, GameMode, GameModeOption } from '../types';
-import { Shield, Zap, Target, Clock, LucideIcon } from 'lucide-react';
-import { getTheme } from '../theme/colors';
+import React from 'react';
+
 import { contentService } from '../services/contentService';
+import { getTheme } from '../theme/colors';
+import type { Difficulty, GameMode, GameModeOption } from '../types';
 import { GameKey } from '../types/games';
-import { GAME_DURATION_BY_DIFFICULTY, SpyDifficulty } from '@/constants/spyHuntContent';
-import { ALIAS_DIFFICULTY_CONFIG, AliasDifficulty } from '@/constants/aliasContent';
+
+import { SectionLabel } from './UI';
+
+import type { AliasDifficulty } from '@/constants/aliasContent';
+import { ALIAS_DIFFICULTY_CONFIG } from '@/constants/aliasContent';
+import { GAME_DURATION_BY_DIFFICULTY } from '@/constants/spyHuntContent';
+import type { SpyDifficulty } from '@/constants/spyHuntContent';
 import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG } from '@/constants/telestrationsContent';
 
 // ─── universal setting row ────────────────────────────────────────────────────
@@ -36,7 +42,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
   options,
   value,
   onChange,
-  color = 'green',
+  color,
 }) => (
   <div>
     <div className="flex items-center gap-3 mb-6 px-1">
@@ -52,7 +58,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
           <motion.button
             key={opt.value}
             whileTap={{ scale: 0.95 }}
-            onClick={() => onChange(opt.value)}
+            onClick={() => { onChange(opt.value); }}
             className={`flex flex-col items-center justify-center rounded-premium-md transition-all border h-14 ${
               isActive
                 ? getTheme(opt.color ?? color).activeOption
@@ -64,7 +70,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
             >
               {opt.label}
             </span>
-            {opt.sublabel && (
+            {!!opt.sublabel && (
               <span
                 className={`text-micro font-bold uppercase tracking-widest mt-0.5 ${isActive ? 'opacity-80' : 'text-white/20'}`}
               >
@@ -105,9 +111,9 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
   setRounds,
   timerSeconds,
   setTimerSeconds,
-  modes = [],
-  difficultyLabel = 'Сложность',
-  modeLabel = 'Режим игры',
+  modes,
+  difficultyLabel,
+  modeLabel,
 }) => {
   const getRemainingWords = (d: Difficulty): number | undefined => {
     if (!currentGameId) return undefined;
@@ -120,16 +126,16 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
 
     switch (currentGameId) {
       case GameKey.Telestrations: {
-        const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d as Difficulty];
+        const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d];
         const timeStr = `${cfg.drawTime}с / ${cfg.guessTime}с`;
         return remaining !== undefined ? `${timeStr} · ${remaining}` : timeStr;
       }
       case GameKey.Spy: {
-        const mins = Math.floor(GAME_DURATION_BY_DIFFICULTY[d as SpyDifficulty] / 60);
+        const mins = Math.floor(GAME_DURATION_BY_DIFFICULTY[d] / 60);
         return remaining !== undefined ? `${mins} мин · ${remaining}` : `${mins} мин`;
       }
       case GameKey.Alias: {
-        const { roundTime } = ALIAS_DIFFICULTY_CONFIG[d as AliasDifficulty];
+        const { roundTime } = ALIAS_DIFFICULTY_CONFIG[d];
         return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
       }
       case GameKey.TruthOrDare:
@@ -167,7 +173,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         />
       )}
 
-      {modes.length > 0 && setMode && (
+      {modes.length > 0 && !!setMode && (
         <div>
           <div className="flex items-center gap-3 mb-6 px-1">
             <Zap className="w-4 h-4 text-white/20" />
@@ -182,7 +188,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                 <motion.button
                   key={m.id}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setMode(m.id)}
+                  onClick={() => { setMode(m.id); }}
                   className={`p-6 rounded-premium-lg border transition-all text-left flex items-center gap-6 relative overflow-hidden ${
                     isActive
                       ? `${getTheme('red').bg10} ${getTheme('red').border40} text-white shadow-[0_0_30px_rgba(255,46,77,0.15)]`
@@ -213,7 +219,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         </div>
       )}
 
-      {currentGameId === GameKey.FakeArtist && setRounds && (
+      {currentGameId === GameKey.FakeArtist && !!setRounds && (
         <SettingRow
           label="Раунды"
           icon={Shield}
@@ -227,7 +233,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         />
       )}
 
-      {currentGameId === 'fake_artist' && setTimerSeconds && (
+      {currentGameId === 'fake_artist' && !!setTimerSeconds && (
         <SettingRow
           label="Таймер хода"
           icon={Zap}
@@ -242,8 +248,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         />
       )}
 
-      {(currentGameId === GameKey.TabooReverse || currentGameId === GameKey.Taboo) &&
-        setTimerSeconds && (
+      {(currentGameId === GameKey.TabooReverse || currentGameId === GameKey.Taboo) && !!setTimerSeconds && (
           <SettingRow
             label="Время раунда"
             icon={Clock}

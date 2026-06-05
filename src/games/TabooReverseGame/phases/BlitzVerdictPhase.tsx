@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
-import {motion} from 'motion/react';
 import {CheckCircle2, StopCircle, XCircle} from 'lucide-react';
+import {motion} from 'motion/react';
+import React, {useState} from 'react';
+
+import type {BlitzResult} from '../types';
+
 import {PrimaryButton} from '@/components/UI';
-import {BlitzResult} from '../types';
 
 interface BlitzVerdictPhaseProps {
     results: BlitzResult[];
     currentExplainer: string;
     otherPlayers: string[];
-    onConfirm: (guessers: Array<string | null>) => void;
+    onConfirm: (guessers: (string | null)[]) => void;
     onStopGame: () => void;
 }
 
@@ -20,7 +22,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                                                         onStopGame,
                                                                     }) => {
     // One slot per result: player name if guessed, null if nobody / skipped
-    const [guessers, setGuessers] = useState<Array<string | null>>(() => results.map(() => null));
+    const [guessers, setGuessers] = useState<(string | null)[]>(() => results.map(() => null));
 
     const setGuesser = (idx: number, player: string | null) => {
         setGuessers((prev) => prev.map((g, i) => (i === idx ? player : g)));
@@ -110,7 +112,9 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                         return (
                                             <button
                                                 key={player}
-                                                onClick={() => setGuesser(idx, isActive ? null : player)}
+                                                onClick={() => {
+                                                    setGuesser(idx, isActive ? null : player);
+                                                }}
                                                 className={`px-3 py-1.5 rounded-premium-sm border text-label font-black italic uppercase tracking-tight transition-all active:scale-95 ${
                                                     isActive
                                                         ? 'bg-premium-green/20 border-premium-green/60 text-premium-green'
@@ -122,7 +126,9 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                         );
                                     })}
                                     <button
-                                        onClick={() => setGuesser(idx, null)}
+                                        onClick={() => {
+                                            setGuesser(idx, null);
+                                        }}
                                         className={`px-3 py-1.5 rounded-premium-sm border text-label font-black italic uppercase tracking-tight transition-all active:scale-95 ${
                                             selected === null
                                                 ? 'bg-white/10 border-white/30 text-white/60'
@@ -141,7 +147,9 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
             <div className="border-t border-white/10"/>
 
             <PrimaryButton
-                onClick={() => onConfirm(guessers)}
+                onClick={() => {
+                    onConfirm(guessers);
+                }}
                 className="bg-premium-orange text-white! shadow-premium-orange/30"
             >
                 ПОДТВЕРДИТЬ

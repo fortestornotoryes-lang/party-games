@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence, motion} from 'motion/react';
-import {Activity, ArrowRight, CheckCircle2, Fingerprint, RotateCcw, Shield, Skull, XCircle,} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {Player} from '@/types.ts';
-import {MISSION_SIZES} from '@/constants/resistanceContent';
-import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from '@/components/UI';
-import {PassPhoneCard} from '@/components/PassPhoneCard';
+import {Activity, ArrowRight, CheckCircle2, Fingerprint, RotateCcw, Shield, Skull, XCircle,} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+
 import {ResistanceDistribution} from './components/ResistanceDistribution';
-import {initResistance} from '@/utils/gameLogic.ts';
 import {ResistancePhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {PassPhoneCard} from '@/components/PassPhoneCard';
+import {PrimaryButton} from '@/components/UI';
+import {MISSION_SIZES} from '@/constants/resistanceContent';
+import type {Player} from '@/types.ts';
+import {initResistance} from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {
     playerNames: string[];
@@ -46,7 +49,8 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                 const timeLeft = animationEnd - Date.now();
 
                 if (timeLeft <= 0) {
-                    return clearInterval(interval);
+                    clearInterval(interval);
+                    return;
                 }
 
                 const particleCount = 50 * (timeLeft / duration);
@@ -64,7 +68,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                 });
             }, 250);
 
-            return () => clearInterval(interval);
+            return () => {
+                clearInterval(interval);
+            };
         }
     }, [phase, winner]);
 
@@ -74,7 +80,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
         return (
             <ResistanceDistribution
                 players={players}
-                onFinish={() => setPhase(ResistancePhase.Proposing)}
+                onFinish={() => {
+                    setPhase(ResistancePhase.Proposing);
+                }}
             />
         );
     }
@@ -181,7 +189,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                 {players.map((p) => (
                                     <button
                                         key={p.id}
-                                        onClick={() => handleToggle(p.id)}
+                                        onClick={() => {
+                                            handleToggle(p.id);
+                                        }}
                                         className={`p-4 rounded-premium-md border text-left flex items-center transition-all ${selectedTeam.includes(p.id) ? 'bg-premium-blue/10 border-premium-blue/50 shadow-lg shadow-premium-blue/10' : 'bg-white/5 border-white/5 opacity-60'}`}
                                     >
                                         <div
@@ -202,7 +212,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
 
                             <PrimaryButton
                                 disabled={selectedTeam.length !== missionSize}
-                                onClick={() => setPhase(ResistancePhase.PassingPhone)}
+                                onClick={() => {
+                                    setPhase(ResistancePhase.PassingPhone);
+                                }}
                                 className="bg-white !text-black"
                                 icon={ArrowRight}
                             >
@@ -226,7 +238,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                 instruction="Нажми чтобы проголосовать"
                                 icon={Fingerprint}
                                 accentColor="sky"
-                                onClick={() => setPhase(ResistancePhase.MissionVoting)}
+                                onClick={() => {
+                                    setPhase(ResistancePhase.MissionVoting);
+                                }}
                             />
                         </motion.div>
                     )}
@@ -250,7 +264,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
 
                             <div className="grid grid-cols-1 gap-4 w-full">
                                 <button
-                                    onClick={() => handleMissionVote(true)}
+                                    onClick={() => {
+                                        handleMissionVote(true);
+                                    }}
                                     className="group p-8 bg-premium-green/10 border-2 border-premium-green/30 rounded-premium-3xl flex flex-col items-center gap-4 active:scale-95 transition-all"
                                 >
                                     <CheckCircle2 className="w-12 h-12 text-premium-green"/>
@@ -260,7 +276,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                   </span>
                                 </button>
                                 <button
-                                    onClick={() => handleMissionVote(false)}
+                                    onClick={() => {
+                                        handleMissionVote(false);
+                                    }}
                                     className="group p-8 bg-premium-red/10 border-2 border-premium-red/30 rounded-premium-3xl flex flex-col items-center gap-4 active:scale-95 transition-all"
                                 >
                                     <XCircle className="w-12 h-12 text-premium-red"/>

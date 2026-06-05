@@ -1,4 +1,4 @@
-import {Difficulty} from "@/types.ts";
+import type {Difficulty} from "@/types.ts";
 
 export type FakeArtistDifficulty = Difficulty;
 

@@ -1,5 +1,6 @@
-import React from 'react';
 import {motion} from 'motion/react';
+import React from 'react';
+
 import {PrimaryButton, Typography} from '@/components/UI';
 
 interface PassPhaseProps {

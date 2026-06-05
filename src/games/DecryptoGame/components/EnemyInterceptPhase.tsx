@@ -1,9 +1,13 @@
-import React from 'react';
 import {motion} from 'motion/react';
-import {PrimaryButton} from '@/components/UI';
-import {RoundData, TeamColor} from '../types';
+import React from 'react';
+
+
 import {teamLabel, tText} from '../helpers';
+import type {RoundData, TeamColor} from '../types';
+
 import {CodeInput} from './CodeInput';
+
+import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

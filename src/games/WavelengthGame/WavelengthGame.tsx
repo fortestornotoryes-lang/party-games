@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
-import {Radio} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {randomInt} from '@/utils/random';
-import {storageService} from '@/services/storageService';
-import {contentService} from '@/services/contentService';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {WavelengthPhase} from './types';
-import {PassPhase} from './phases/PassPhase';
+import {Radio} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {CluePhase} from './phases/CluePhase';
 import {GuessingPhase} from './phases/GuessingPhase';
+import {PassPhase} from './phases/PassPhase';
 import {RevealPhase} from './phases/RevealPhase';
+import {WavelengthPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {contentService} from '@/services/contentService';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
+import {randomInt} from '@/utils/random';
 
 interface WavelengthGameProps {
     playerNames: string[];
@@ -24,24 +26,18 @@ interface WavelengthGameProps {
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBack}) => {
     const {difficulty} = useGameSettings();
     const [phase, setPhase] = useState<WavelengthPhase>(WavelengthPhase.Pass);
-    const [currentPair, setCurrentPair] = useState<string[]>(['', '']);
-    const [targetValue, setTargetValue] = useState(50);
+    const [currentPair, setCurrentPair] = useState<string[]>(() => contentService.getWavelengthPair(difficulty));
+    const [targetValue, setTargetValue] = useState(() => randomInt(5, 94));
     const [guessValue, setGuessValue] = useState(50);
-    const {current: psychic, idx: psychicIdx, next: nextPsychic} = usePlayerCycle(playerNames);
+    const {current: psychic, next: nextPsychic} = usePlayerCycle(playerNames);
 
-    useEffect(() => {
-        startNewRound();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [psychicIdx]);
-
-    const startNewRound = () => {
-        const pair = contentService.getWavelengthPair(difficulty);
-        setCurrentPair(pair);
+    const handleNextRound = () => {
+        nextPsychic();
+        setCurrentPair(contentService.getWavelengthPair(difficulty));
         setTargetValue(randomInt(5, 94));
         setGuessValue(50);
         setPhase(WavelengthPhase.Pass);
     };
-
     const calculateScore = () => {
         const diff = Math.abs(guessValue - targetValue);
         if (diff <= 2) return 4;
@@ -89,7 +85,9 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBa
             <div className="flex-1 overflow-hidden relative flex flex-col p-6">
                 <AnimatePresence mode="wait">
                     {phase === WavelengthPhase.Pass && (
-                        <PassPhase psychic={psychic} onReady={() => setPhase(WavelengthPhase.Clue)}/>
+                        <PassPhase psychic={psychic} onReady={() => {
+                            setPhase(WavelengthPhase.Clue);
+                        }}/>
                     )}
 
                     {phase === WavelengthPhase.Clue && (
@@ -97,7 +95,9 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBa
                             psychic={psychic}
                             currentPair={currentPair}
                             targetValue={targetValue}
-                            onDone={() => setPhase(WavelengthPhase.Guessing)}
+                            onDone={() => {
+                                setPhase(WavelengthPhase.Guessing);
+                            }}
                         />
                     )}
 
@@ -106,7 +106,9 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBa
                             currentPair={currentPair}
                             guessValue={guessValue}
                             onGuessChange={setGuessValue}
-                            onConfirm={() => setPhase(WavelengthPhase.Reveal)}
+                            onConfirm={() => {
+                                setPhase(WavelengthPhase.Reveal);
+                            }}
                         />
                     )}
 
@@ -116,7 +118,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBa
                             targetValue={targetValue}
                             guessValue={guessValue}
                             score={score}
-                            onNext={nextPsychic}
+                            onNext={handleNextRound}
                         />
                     )}
                 </AnimatePresence>

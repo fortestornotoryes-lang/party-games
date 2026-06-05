@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { motion, Reorder, useDragControls } from 'motion/react';
+import type {
+  LucideIcon} from 'lucide-react';
 import {
   UserPlus,
   UserMinus,
   Play,
   HelpCircle,
   ArrowLeft,
-  LucideIcon,
   GripVertical,
   Shuffle,
   Users,
 } from 'lucide-react';
-import { PrimaryButton, Typography } from './UI';
-import { InstructionsModal } from './InstructionsModal';
-import { storageService } from '../services/storageService';
-import { shuffle } from '../utils/random';
+import { motion, Reorder, useDragControls } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+
 import { useGameSettings } from '../contexts/GameSettingsContext';
-import { GameTheme } from '../types';
-import { getTheme, ThemeTokens } from '../theme/colors';
+import { storageService } from '../services/storageService';
+import type { ThemeTokens } from '../theme/colors';
+import { getTheme } from '../theme/colors';
+import type { GameTheme } from '../types';
+import { shuffle } from '../utils/random';
+
+import { InstructionsModal } from './InstructionsModal';
+import { PrimaryButton, Typography } from './UI';
+
 import { TextInput } from '@/components/TextInput.tsx';
 
 interface SetupProps {
@@ -79,7 +84,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
       whileDrag={{ scale: 1.02, zIndex: 50, rotate: -1 }}
     >
       <div
-        onPointerDown={(e) => dragControls.start(e)}
+        onPointerDown={(e) => { dragControls.start(e); }}
         className="w-5 h-9 shrink-0 flex items-center justify-center text-white/10 hover:text-white/80 cursor-grab active:cursor-grabbing touch-none select-none"
       >
         <GripVertical className="w-5 h-5" />
@@ -94,16 +99,16 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
       <div className="flex-1 relative">
         <TextInput
           value={player.name}
-          onChange={(e) => onChange(player.id, e.target.value)}
+          onChange={(e) => { onChange(player.id, e.target.value); }}
           autoComplete="off"
           className={`h-9 px-6 glass-card rounded-premium-md w-full text-base font-semibold placeholder:text-white/10 transition-all focus:outline-none focus:ring-1 focus:ring-white/20 ${config.focus}`}
           placeholder={`${placeholder} ${index + 1}`}
         />
       </div>
 
-      {canRemove && (
+      {!!canRemove && (
         <button
-          onClick={() => onRemove(player.id)}
+          onClick={() => { onRemove(player.id); }}
           disabled={!canRemove}
           className={`w-9 h-9 shrink-0 flex items-center justify-center rounded-premium-sm glass-card text-white/20 hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 active:scale-90 transition-all ${!canRemove ? 'opacity-0 pointer-events-none' : ''}`}
         >
@@ -125,8 +130,8 @@ export const Setup: React.FC<SetupProps> = ({
   addPlayerLabel,
   instructions,
   description,
-  minPlayers = 3,
-  maxPlayers = 15,
+  minPlayers,
+  maxPlayers,
   children,
 }) => {
   const { difficulty } = useGameSettings();
@@ -274,14 +279,14 @@ export const Setup: React.FC<SetupProps> = ({
           )}
         </div>
 
-        {children && <div className="mt-12">{children}</div>}
+        {!!children && <div className="mt-12">{children}</div>}
       </motion.div>
 
       {/* Footer Buttons */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-6  bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent">
         <div className="grid grid-cols-[1fr_2fr] gap-5 max-w-md mx-auto">
           <button
-            onClick={() => setShowInstructions(true)}
+            onClick={() => { setShowInstructions(true); }}
             className="h-16 glass-card rounded-premium-md flex items-center justify-center gap-3 text-white/80 active:scale-95 transition-all group border-white/5"
           >
             <HelpCircle className="w-7 h-7 transition-colors group-hover:text-white/60" />
@@ -290,7 +295,7 @@ export const Setup: React.FC<SetupProps> = ({
           <PrimaryButton
             disabled={!isReady}
             iconElement={<Play className="w-6 h-6 fill-current relative z-10" />}
-            onClick={() => onStart(players.map((p) => p.name))}
+            onClick={() => { onStart(players.map((p) => p.name)); }}
             className={`h-16 ${config.button} text-white rounded-premium-md flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-30 relative overflow-hidden group border-none`}
           >
             <span className="text-2xl font-black uppercase tracking-tighter italic relative z-10 leading-none">
@@ -302,7 +307,7 @@ export const Setup: React.FC<SetupProps> = ({
 
       <InstructionsModal
         open={showInstructions}
-        onClose={() => setShowInstructions(false)}
+        onClose={() => { setShowInstructions(false); }}
         title={title}
         instructions={instructions}
         description={description}

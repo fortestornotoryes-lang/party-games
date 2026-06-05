@@ -1,6 +1,7 @@
-﻿import React from 'react';
+﻿import {Moon, Shield, Sun, Users} from 'lucide-react';
 import {motion} from 'motion/react';
-import {Moon, Shield, Sun, Users} from 'lucide-react';
+import React from 'react';
+
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 
 interface Props {

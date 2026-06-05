@@ -91,13 +91,13 @@ interface BaseProps {
  * @prop glow — добавляет textShadow-свечение цветом color
  */
 const Display = ({
-  size = 'md',
-  color = 'white',
+  size,
+  color,
   align,
-  glow = false,
-  as: Tag = 'h2' as AsElement,
+  glow,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   glow?: boolean;
@@ -145,12 +145,12 @@ const Display = ({
  * | xl   | 36px  |
  */
 const Title = ({
-  size = 'md',
-  color = 'white',
+  size,
+  color,
   align,
-  as: Tag = 'h1' as AsElement,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }) => {
@@ -193,12 +193,12 @@ const Title = ({
  * | lg   | text-3xl  |
  */
 const Heading = ({
-  size = 'md',
-  color = 'white',
+  size,
+  color,
   align,
-  as: Tag = 'h2' as AsElement,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'xs' | 'sm' | 'md' | 'lg';
 }) => {
@@ -243,12 +243,12 @@ const Heading = ({
  * Для акцентных меток через opacity: `className="opacity-50"`
  */
 const Label = ({
-  size = 'xs',
-  color = 'muted',
+  size,
+  color,
   align,
-  as: Tag = 'p' as AsElement,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'xs' | 'sm' | 'md';
 }) => {
@@ -289,12 +289,12 @@ const Label = ({
  * Цвет по умолчанию: body (white/80)
  */
 const Body = ({
-  size = 'sm',
-  color = 'body',
+  size,
+  color,
   align,
-  as: Tag = 'p' as AsElement,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'xs' | 'sm' | 'base';
 }) => {
@@ -335,12 +335,12 @@ const Body = ({
  * Для цветных меток с opacity: `color="red" className="opacity-50"`
  */
 const Caption = ({
-  size = 'sm',
-  color = 'faint',
+  size,
+  color,
   align,
-  as: Tag = 'p' as AsElement,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'xs' | 'sm';
 }) => {
@@ -383,13 +383,13 @@ const Caption = ({
  * @prop glow — добавляет textShadow-свечение
  */
 const Score = ({
-  size = 'md',
-  color = 'white',
+  size,
+  color,
   align,
-  glow = false,
-  as: Tag = 'div' as AsElement,
+  glow,
+  as: Tag,
   children,
-  className = '',
+  className,
 }: BaseProps & {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   glow?: boolean;

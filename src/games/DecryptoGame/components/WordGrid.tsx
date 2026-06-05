@@ -5,7 +5,7 @@ interface WordGridProps {
     height?: string;
 }
 
-export const WordGrid: React.FC<WordGridProps> = ({words, height = 'h-20'}) => (
+export const WordGrid: React.FC<WordGridProps> = ({words, height}) => (
     <div className="grid grid-cols-2 gap-2">
         {words.map((w, i) => (
             <div

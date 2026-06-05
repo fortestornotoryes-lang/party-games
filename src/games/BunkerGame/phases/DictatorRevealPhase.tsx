@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
-import {motion} from 'motion/react';
 import {ChevronRight, Crown, Shield} from 'lucide-react';
+import {motion} from 'motion/react';
+import React, {useState} from 'react';
+
 import {PrimaryButton, Typography} from '@/components/UI';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {rgba} from '@/theme/colors';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {rgba} from '@/theme/colors';
 
 interface DictatorRevealPhaseProps {
     directorName: string;
@@ -136,7 +137,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
                 )}
             </div>
 
-            {isRevealed && (
+            {!!isRevealed && (
                 <motion.div
                     initial={{opacity: 0, y: 10}}
                     animate={{opacity: 1, y: 0}}

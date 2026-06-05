@@ -1,9 +1,10 @@
-import React from 'react';
 import {motion} from 'motion/react';
-import {PrimaryButton} from '@/components/UI.tsx';
-import {TabooClassicCard} from '@/constants/tabooContent.ts';
-import {TimerBar} from '@/components/TimerBar.tsx';
+import React from 'react';
+
 import {PlayingHeader} from '@/components/PlayingHeader.tsx';
+import {TimerBar} from '@/components/TimerBar.tsx';
+import {PrimaryButton} from '@/components/UI.tsx';
+import type {TabooClassicCard} from '@/constants/tabooContent.ts';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

@@ -1,9 +1,11 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {CheckCircle} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {ChoiceType} from '../types';
+
 import {Typography} from '@/components/Typography';
-import {ChoiceType} from '../types';
+import {PrimaryButton} from '@/components/UI';
 
 interface ActionPhaseProps {
     currentPlayer: string;

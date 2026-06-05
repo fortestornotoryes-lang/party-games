@@ -1,6 +1,7 @@
 import React from 'react';
-import {TeamColor} from '../types';
+
 import {tFocus} from '../helpers';
+import type {TeamColor} from '../types';
 
 interface CodeInputProps {
     value: (number | '')[];

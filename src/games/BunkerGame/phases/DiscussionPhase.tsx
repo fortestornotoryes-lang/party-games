@@ -1,13 +1,16 @@
-import React, {useEffect} from 'react';
-import {motion} from 'motion/react';
 import {ChevronRight, Clock, MessageCircle} from 'lucide-react';
-import {PrimaryButton, Typography} from '@/components/UI';
+import {motion} from 'motion/react';
+import React, {useEffect} from 'react';
+
+import {type BunkerCharacter, getRevealedTrait} from '../types';
+
 import {TimerBar} from '@/components/TimerBar';
+import {PrimaryButton, Typography} from '@/components/UI';
 import {useTimer} from '@/hooks/useTimer';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+
 
 interface DiscussionPhaseProps {
     characters: BunkerCharacter[];

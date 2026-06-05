@@ -1,8 +1,9 @@
-import React from 'react';
-import { motion } from 'motion/react';
 import { Users, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
+import React from 'react';
+
 import { getTheme } from '../theme/colors';
-import { GameMetadata } from '../types/games';
+import type { GameMetadata } from '../types/games';
 
 interface GameMenuCardProps {
   game: GameMetadata;
@@ -40,7 +41,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
                 hover:bg-white/6 hover:border-white/12"
     >
       {/* Background image (optional, per-game) — right-anchored with left fade */}
-      {game.backgroundImage && (
+      {!!game.backgroundImage && (
         <img
           src={game.backgroundImage}
           alt=""
@@ -79,7 +80,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
             <Users className="w-2.5 h-2.5" />
             {game.players}
           </span>
-          {countDisplay && (
+          {!!countDisplay && (
             <span className="inline-flex items-center px-2.5 py-1.25 rounded-premium-sm bg-white/4 text-white/25 border border-white/6 text-micro font-black uppercase tracking-[0.12em]">
               {countDisplay}
             </span>
@@ -89,7 +90,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
 
       {/* Right side: ? button */}
       <div className="flex flex-col items-center gap-2 shrink-0 relative z-10">
-        {game.description && (
+        {!!game.description && (
           <button
             onClick={(e) => {
               e.stopPropagation();

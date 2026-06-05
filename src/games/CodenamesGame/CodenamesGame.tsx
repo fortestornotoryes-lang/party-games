@@ -1,19 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
-import {GameHeader} from '@/components/GameHeader';
 import {Grid, User} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {useGameSettings} from '../../contexts/GameSettingsContext';
+import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+
+import {CaptainPhase} from './phases/CaptainPhase';
+import {GameOverPhase} from './phases/GameOverPhase';
+import {SetupPhase} from './phases/SetupPhase';
+import {TeamPhase} from './phases/TeamPhase';
+import type {Card, CardColor, Team} from './types';
+import {CodenamesPhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
+import {CODENAMES_MODES} from '@/constants/codenamesContent';
+import {useTranslation} from '@/i18n';
 import {contentService} from '@/services/contentService.ts';
 import {shuffle} from '@/utils/random.ts';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-import {Card, CardColor, CodenamesPhase, Team} from './types';
-import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
-import {useTranslation} from '@/i18n';
-import {CODENAMES_MODES} from '@/constants/codenamesContent';
-import {SetupPhase} from './phases/SetupPhase';
-import {CaptainPhase} from './phases/CaptainPhase';
-import {TeamPhase} from './phases/TeamPhase';
-import {GameOverPhase} from './phases/GameOverPhase';
 
 interface CodenamesGameProps {
     playerNames: string[];
@@ -182,7 +186,9 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             blueCaptain={blueCaptain}
                             redTeam={redTeam}
                             blueTeam={blueTeam}
-                            onPlay={() => setPhase(CodenamesPhase.PassCaptain)}
+                            onPlay={() => {
+                                setPhase(CodenamesPhase.PassCaptain);
+                            }}
                         />
                     )}
 
@@ -194,7 +200,9 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             instruction={t('codenames.othersNoSee')}
                             icon={User}
                             accentColor={turn}
-                            onClick={() => setPhase(CodenamesPhase.Captain)}
+                            onClick={() => {
+                                setPhase(CodenamesPhase.Captain);
+                            }}
                         />
                     )}
 
@@ -219,7 +227,9 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                             instruction={t('codenames.othersNoSee')}
                             icon={User}
                             accentColor={turn}
-                            onClick={() => setPhase(CodenamesPhase.Team)}
+                            onClick={() => {
+                                setPhase(CodenamesPhase.Team);
+                            }}
                         />
                     )}
 
@@ -236,9 +246,8 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                         />
                     )}
 
-                    {phase === CodenamesPhase.GameOver && winner && (
-                        <GameOverPhase winner={winner} onRematch={initBoard}/>
-                    )}
+                    {phase === CodenamesPhase.GameOver && !!winner &&
+                        <GameOverPhase winner={winner} onRematch={initBoard}/>}
                 </AnimatePresence>
             </div>
         </div>

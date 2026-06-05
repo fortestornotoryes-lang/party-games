@@ -1,10 +1,11 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {SkipForward} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
-import {TabooCard} from '@/constants/tabooReverseContent';
-import {TimerBar} from '@/components/TimerBar';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {PlayingHeader} from '@/components/PlayingHeader';
+import {TimerBar} from '@/components/TimerBar';
+import {PrimaryButton} from '@/components/UI';
+import type {TabooCard} from '@/constants/tabooReverseContent';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
@@ -56,8 +57,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                     timeLeft={timeLeft}
                     timerColor={timerColor}
                     extra={
-                        isBlitz &&
-                        blitzStats && (
+                        !!isBlitz && !!blitzStats && (
                             <div className="flex items-center gap-2">
                 <span className="text-label font-black tabular-nums text-premium-green">
                   ✓{blitzStats.guessed}

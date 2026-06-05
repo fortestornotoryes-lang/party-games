@@ -1,6 +1,7 @@
-import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { LucideIcon } from 'lucide-react';
+import React from 'react';
+
 import { feedbackService, VIBRATE } from '../services/feedbackService';
 
 export const ParallaxBackground = () => {
@@ -25,7 +26,7 @@ export const ParallaxBackground = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => { window.removeEventListener('mousemove', handleMouseMove); };
   }, [mouseX, mouseY]);
 
   return (
@@ -59,9 +60,9 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   icon: Icon,
   iconElement,
   disabled,
-  variant = 'premium',
-  className = '',
-  type = 'button',
+  variant,
+  className,
+  type,
 }) => {
   const handleClick = () => {
     feedbackService.playSound('click');
@@ -97,7 +98,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 
 export const SectionLabel: React.FC<{ children: React.ReactNode; className?: string }> = ({
   children,
-  className = '',
+  className,
 }) => (
   <span
     className={`text-label font-black uppercase tracking-[0.5em] text-white/80 block mb-3 italic ${className}`}
@@ -110,7 +111,7 @@ export const Badge: React.FC<{
   children: React.ReactNode;
   className?: string;
   variant?: 'default' | 'outline';
-}> = ({ children, className = '', variant = 'default' }) => (
+}> = ({ children, className, variant }) => (
   <span
     className={`px-3 py-1 rounded-premium-sm text-micro font-black uppercase tracking-wider ${
       variant === 'default'
@@ -127,7 +128,7 @@ export const IconButton: React.FC<{
   icon: LucideIcon;
   className?: string;
   variant?: 'ghost' | 'filled' | 'danger';
-}> = ({ onClick, icon: Icon, className = '', variant = 'ghost' }) => {
+}> = ({ onClick, icon: Icon, className, variant }) => {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     feedbackService.playSound('click');
@@ -156,7 +157,7 @@ export type { TypoColor, AsElement, TypoAlign } from './Typography';
 
 export const PageWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({
   children,
-  className = '',
+  className,
 }) => (
   <div className={`min-h-screen text-white relative overflow-x-hidden ${className}`}>
     <div className="max-w-md mx-auto h-full flex flex-col p-6 pb-32">{children}</div>

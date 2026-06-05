@@ -1,11 +1,13 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Play, Trophy, Zap} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
+import type {Team} from '../types';
+
 import {PrimaryButton, Typography} from '@/components/UI';
 import {TROPHY_THRESHOLD, WIN_SCORE} from '@/constants/aliasContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import {Team} from '../types';
 
 interface StartPhaseProps {
     teams: Team[];

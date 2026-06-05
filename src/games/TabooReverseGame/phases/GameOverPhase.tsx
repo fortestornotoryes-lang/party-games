@@ -1,10 +1,11 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {RotateCcw, Trophy} from 'lucide-react';
-import {PrimaryButton} from '@/components/UI';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {LeaderboardList} from '@/components/LeaderboardList';
-import {NS} from "@/i18n/keys.ts";
+import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from "@/i18n";
+import {NS} from "@/i18n/keys.ts";
 
 interface GameOverPhaseProps {
     playerNames: string[];

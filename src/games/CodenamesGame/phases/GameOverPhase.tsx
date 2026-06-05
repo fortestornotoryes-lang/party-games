@@ -1,8 +1,11 @@
-import React from 'react';
 import {motion} from 'motion/react';
+import React from 'react';
+
+import type {Team} from '../types';
+
 import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
-import {Team} from '../types';
+
 
 interface GameOverPhaseProps {
     winner: Team;

@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'motion/react';
+import React from 'react';
 
 interface ProgressDotsProps {
   /** Общее количество шагов */
@@ -25,8 +25,8 @@ interface ProgressDotsProps {
 export const ProgressDots: React.FC<ProgressDotsProps> = ({
   count,
   current,
-  activeColor = 'bg-premium-red',
-  className = '',
+  activeColor,
+  className,
 }) => (
   <div className={`flex gap-2 ${className}`}>
     {Array.from({ length: count }).map((_, i) => (

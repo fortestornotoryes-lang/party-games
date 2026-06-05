@@ -1,19 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {AnimatePresence} from 'motion/react';
-import {Lightbulb} from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {storageService} from '@/services/storageService';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {contentService} from '@/services/contentService';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {JustOnePhase} from './types';
-import {PassPhase} from './phases/PassPhase';
-import {HintingPhase} from './phases/HintingPhase';
+import {Lightbulb} from 'lucide-react';
+import {AnimatePresence} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
 import {GuessingPhase} from './phases/GuessingPhase';
+import {HintingPhase} from './phases/HintingPhase';
+import {PassPhase} from './phases/PassPhase';
 import {ResultPhase} from './phases/ResultPhase';
+import {JustOnePhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {contentService} from '@/services/contentService';
+import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {storageService} from '@/services/storageService';
 
 interface JustOneGameProps {
     playerNames: string[];
@@ -48,7 +50,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) =
 
     const startGuessing = () => {
         const counts: Record<string, number> = {};
-        const vals = Object.values(hints) as string[];
+        const vals = Object.values(hints);
         vals.forEach((h) => {
             counts[h] = (counts[h] || 0) + 1;
         });
@@ -93,7 +95,9 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) =
             <div className="flex-1 min-h-0 overflow-y-auto">
                 <AnimatePresence mode="wait">
                     {phase === JustOnePhase.Pass && (
-                        <PassPhase guesser={guesser} onReady={() => setPhase(JustOnePhase.Hinting)}/>
+                        <PassPhase guesser={guesser} onReady={() => {
+                            setPhase(JustOnePhase.Hinting);
+                        }}/>
                     )}
 
                     {phase === JustOnePhase.Hinting && (

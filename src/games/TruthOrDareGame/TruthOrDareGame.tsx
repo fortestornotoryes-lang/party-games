@@ -1,15 +1,19 @@
-import React, {useState} from 'react';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {AnimatePresence} from 'motion/react';
 import {Flame} from 'lucide-react';
-import {GameHeader} from '@/components/GameHeader';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {contentService} from '@/services/contentService';
-import {ChoiceType, TruthOrDarePhase} from './types';
-import {PassPhase} from './phases/PassPhase';
-import {ChoicePhase} from './phases/ChoicePhase';
+import {AnimatePresence} from 'motion/react';
+import React, {useState} from 'react';
+
 import {ActionPhase} from './phases/ActionPhase';
+import {ChoicePhase} from './phases/ChoicePhase';
+import {PassPhase} from './phases/PassPhase';
+import type {ChoiceType} from './types';
+import {TruthOrDarePhase} from './types';
+
+import {GameHeader} from '@/components/GameHeader';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {contentService} from '@/services/contentService';
+
 
 interface TruthOrDareGameProps {
     playerNames: string[];
@@ -52,7 +56,9 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({playerNames, on
                     {phase === TruthOrDarePhase.Pass && (
                         <PassPhase
                             currentPlayer={currentPlayer}
-                            onPassDone={() => setPhase(TruthOrDarePhase.Choice)}
+                            onPassDone={() => {
+                                setPhase(TruthOrDarePhase.Choice);
+                            }}
                         />
                     )}
 
@@ -60,7 +66,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({playerNames, on
                         <ChoicePhase currentPlayer={currentPlayer} onChoice={handleChoice}/>
                     )}
 
-                    {phase === TruthOrDarePhase.Action && choice && (
+                    {phase === TruthOrDarePhase.Action && !!choice && (
                         <ActionPhase
                             currentPlayer={currentPlayer}
                             choice={choice}

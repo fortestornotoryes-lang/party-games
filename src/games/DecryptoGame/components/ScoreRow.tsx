@@ -1,6 +1,8 @@
 import React from 'react';
-import {TeamColor, TeamState} from '../types';
+
 import {tBadge, tBg, teamLabel, tText} from '../helpers';
+import type {TeamColor, TeamState} from '../types';
+
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

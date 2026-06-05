@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
-import {motion} from 'motion/react';
-import {ChevronRight, Star, Trophy} from 'lucide-react';
 import confetti from 'canvas-confetti';
+import {ChevronRight, Star, Trophy} from 'lucide-react';
+import {motion} from 'motion/react';
+import React, {useEffect} from 'react';
+
 import {PrimaryButton} from '@/components/UI';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -85,16 +86,15 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
                     </div>
 
                     {/* Expanding rings for million */}
-                    {isMillion &&
-                        [...Array(4)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{scale: 1, opacity: 0.5}}
-                                animate={{scale: 2.8, opacity: 0}}
-                                transition={{duration: 1.4, delay: i * 0.3, repeat: Infinity}}
-                                className="absolute inset-0 rounded-full border border-premium-yellow/25"
-                            />
-                        ))}
+                    {!!isMillion && [...Array(4)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{scale: 1, opacity: 0.5}}
+                            animate={{scale: 2.8, opacity: 0}}
+                            transition={{duration: 1.4, delay: i * 0.3, repeat: Infinity}}
+                            className="absolute inset-0 rounded-full border border-premium-yellow/25"
+                        />
+                    ))}
                 </motion.div>
 
                 {/* Prize display */}
@@ -120,7 +120,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
                     >
                         {prize}
                     </p>
-                    {isMillion && (
+                    {!!isMillion && (
                         <motion.p
                             initial={{opacity: 0}}
                             animate={{opacity: 1}}

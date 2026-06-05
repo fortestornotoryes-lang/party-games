@@ -1,6 +1,7 @@
-import React from 'react';
-import {motion} from 'motion/react';
 import {Trophy} from 'lucide-react';
+import {motion} from 'motion/react';
+import React from 'react';
+
 import {PassPhoneCard} from '@/components/PassPhoneCard';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

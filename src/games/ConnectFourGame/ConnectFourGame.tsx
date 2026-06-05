@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {CONNECT_FOUR_MODES} from '@/constants/connectFourContent';
-import {AnimatePresence, motion} from 'motion/react';
-import {ArrowDown, ArrowUp, LayoutGrid, RotateCcw} from 'lucide-react';
 import confetti from 'canvas-confetti';
+import {ArrowDown, ArrowUp, LayoutGrid, RotateCcw} from 'lucide-react';
+import {AnimatePresence, motion} from 'motion/react';
+import React, {useEffect, useState} from 'react';
+
+import {useGameSettings} from '../../contexts/GameSettingsContext';
+
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from '@/components/UI';
-import {useGameSettings} from '../../contexts/GameSettingsContext';
+import {CONNECT_FOUR_MODES} from '@/constants/connectFourContent';
+
 
 type Cell = 0 | 1 | 2;
 
@@ -38,7 +41,7 @@ function findWinner(board: Cell[][], winLength: number): WinResult | null {
                     if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || board[nr][nc] !== p) break;
                     cells.push([nr, nc]);
                 }
-                if (cells.length === winLength) return {player: p as 1 | 2, cells};
+                if (cells.length === winLength) return {player: p, cells};
             }
         }
     }
@@ -97,7 +100,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
         const result = findWinner(next, WIN_LEN);
         if (result) {
             setWin(result);
-            setScore((s) => ({...s, [result.player]: s[result.player as 1 | 2] + 1}));
+            setScore((s) => ({...s, [result.player]: s[result.player] + 1}));
             fireConfetti(result.player);
         } else if (!isPopOut && next.flat().every((c) => c !== 0)) {
             setIsDraw(true);
@@ -117,7 +120,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
         }
         if (row === -1) return;
 
-        const next = board.map((r) => [...r]) as Cell[][];
+        const next = board.map((r) => [...r]);
         next[row][col] = current;
         setBoard(next);
         setLastDrop({row, col});
@@ -136,7 +139,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
         }
         if (bottomRow === -1) return;
 
-        const next = board.map((r) => [...r]) as Cell[][];
+        const next = board.map((r) => [...r]);
         for (let r = bottomRow; r > 0; r--) {
             next[r][col] = next[r - 1][col];
         }
@@ -222,7 +225,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
 
                 {/* Pop Out action toggle */}
                 <AnimatePresence>
-                    {isPopOut && !gameOver && (
+                    {!!isPopOut && !gameOver && (
                         <motion.div
                             key="pop-toggle"
                             initial={{opacity: 0, y: -8}}
@@ -231,7 +234,9 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                             className="flex gap-2"
                         >
                             <button
-                                onClick={() => setAction('place')}
+                                onClick={() => {
+                                    setAction('place');
+                                }}
                                 className={`flex-1 py-3 rounded-premium-md font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                                     action === 'place'
                                         ? current === 1
@@ -244,7 +249,9 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 ПОСТАВИТЬ
                             </button>
                             <button
-                                onClick={() => setAction('pop')}
+                                onClick={() => {
+                                    setAction('pop');
+                                }}
                                 className={`flex-1 py-3 rounded-premium-md font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                                     action === 'pop'
                                         ? 'bg-white/10 border-white/35 text-white'
@@ -267,7 +274,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                         return (
                             <div key={c} className="aspect-square flex items-center justify-center">
                                 <AnimatePresence>
-                                    {showGhost && (
+                                    {!!showGhost && (
                                         <motion.div
                                             key="ghost"
                                             initial={{opacity: 0, scale: 0.4}}
@@ -277,7 +284,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                                             className={`w-[68%] aspect-square rounded-full ${current === 1 ? 'bg-premium-red' : 'bg-premium-yellow'}`}
                                         />
                                     )}
-                                    {showPopDot && (
+                                    {!!showPopDot && (
                                         <motion.div
                                             key="pop-dot"
                                             initial={{opacity: 0, scale: 0.4}}
@@ -315,9 +322,15 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 return (
                                     <button
                                         key={`${r}-${c}`}
-                                        onClick={() => handleCellClick(c)}
-                                        onMouseEnter={() => setHoverCol(c)}
-                                        onMouseLeave={() => setHoverCol(null)}
+                                        onClick={() => {
+                                            handleCellClick(c);
+                                        }}
+                                        onMouseEnter={() => {
+                                            setHoverCol(c);
+                                        }}
+                                        onMouseLeave={() => {
+                                            setHoverCol(null);
+                                        }}
                                         disabled={gameOver}
                                         className="relative aspect-square"
                                     >
@@ -367,7 +380,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
 
                 {/* Game over banner */}
                 <AnimatePresence>
-                    {gameOver && (
+                    {!!gameOver && (
                         <motion.div
                             key="game-over"
                             initial={{opacity: 0, y: 16, scale: 0.94}}
