@@ -1,14 +1,14 @@
 import confetti from 'canvas-confetti';
 import {Pencil} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import {TelestrationsGallery} from './components/TelestrationsGallery';
 import {TelestrationsGuess} from './components/TelestrationsGuess';
 import {TelestrationsSetup} from './components/TelestrationsSetup';
 import {TelestrationsStart} from './components/TelestrationsStart';
-import type {Step} from './types';
-import {TelestrationsPhase} from './types';
+import type {Step, StepType} from './types';
+import {STEP_TYPE, TelestrationsPhase} from './types';
 
 import {DrawingCanvas} from '@/components/DrawingCanvas';
 import {GameHeader} from '@/components/GameHeader';
@@ -50,10 +50,43 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
     const [wordRevealed, setWordRevealed] = useState(false);
     const [guess, setGuess] = useState('');
-    const [timeLeft, setTimeLeft] = useCountdown(phase === TelestrationsPhase.Action);
 
     const currentPlayer = shuffledPlayers[currentRound % shuffledPlayers.length];
     const isDrawingRound = currentRound % 2 === 0;
+
+    const finishAction = (content: string, type: StepType) => {
+        const settings = storageService.getSettings();
+        if (type === STEP_TYPE.Guess) setCurrentWord(content);
+        const newSteps: Step[] = [...steps, {type, content, author: currentPlayer}];
+        setSteps(newSteps);
+        if (currentRound === shuffledPlayers.length - 1) {
+            feedbackService.playSound('success');
+            feedbackService.vibrate(VIBRATE.celebrate);
+            if (settings.visualEffects) {
+                void confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: {y: 0.6},
+                    colors: ['#f97316', '#ffffff'],
+                });
+            }
+            setPhase(TelestrationsPhase.Gallery);
+        } else {
+            feedbackService.playSound('click');
+            setCurrentRound((prev) => prev + 1);
+            setPhase(TelestrationsPhase.Transition);
+        }
+    };
+
+    const [timeLeft, setTimeLeft] = useCountdown(
+        phase === TelestrationsPhase.Action,
+        0,
+        () => {
+            if (phase === TelestrationsPhase.Action && !isDrawingRound) {
+                finishAction(guess, STEP_TYPE.Guess);
+            }
+        },
+    );
 
     const handleStartGame = () => {
         const word = contentService.getTelestrationsWord(difficulty);
@@ -81,36 +114,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
         const cfg = DIFFICULTY_CONFIG[difficulty];
         setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
     };
-
-    const finishAction = (content: string, type: 'draw' | 'guess') => {
-        const settings = storageService.getSettings();
-        if (type === 'guess') setCurrentWord(content);
-        const newSteps: Step[] = [...steps, {type, content, author: currentPlayer}];
-        setSteps(newSteps);
-        if (currentRound === shuffledPlayers.length - 1) {
-            feedbackService.playSound('success');
-            feedbackService.vibrate(VIBRATE.celebrate);
-            if (settings.visualEffects) {
-                confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: {y: 0.6},
-                    colors: ['#f97316', '#ffffff'],
-                });
-            }
-            setPhase(TelestrationsPhase.Gallery);
-        } else {
-            feedbackService.playSound('click');
-            setCurrentRound((prev) => prev + 1);
-            setPhase(TelestrationsPhase.Transition);
-        }
-    };
-
-    useEffect(() => {
-        if (phase === TelestrationsPhase.Action && !isDrawingRound && timeLeft === 0)
-            finishAction(guess, 'guess');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeLeft, phase, isDrawingRound]);
 
     const subtitle =
         phase === TelestrationsPhase.Setup
@@ -203,7 +206,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                     playerCount={shuffledPlayers.length}
                                     currentRound={currentRound}
                                     onFinish={(dataUrl) => {
-                                        finishAction(dataUrl, 'draw');
+                                        finishAction(dataUrl, STEP_TYPE.Draw);
                                     }}
                                 />
                             ) : (
@@ -215,7 +218,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                     guess={guess}
                                     onGuessChange={setGuess}
                                     onSubmit={() => {
-                                        finishAction(guess, 'guess');
+                                        finishAction(guess, STEP_TYPE.Guess);
                                     }}
                                 />
                             )}

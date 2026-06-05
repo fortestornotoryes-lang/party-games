@@ -2,6 +2,7 @@ import {Home, Shuffle} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
+import {STEP_TYPE} from '../types';
 import type {Step} from '../types';
 
 interface Props {
@@ -54,23 +55,23 @@ export const TelestrationsGallery: React.FC<Props> = ({
                     <div className="flex items-center gap-3">
                         <div
                             className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-black border ${
-                                step.type === 'draw'
+                                step.type === STEP_TYPE.Draw
                                     ? 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange'
                                     : 'bg-white/5 border-white/10 text-white/40'
                             }`}
                         >
-                            {step.type === 'draw' ? '✏️' : '💬'}
+                            {step.type === STEP_TYPE.Draw ? '✏️' : '💬'}
                         </div>
                         <p className="text-xs font-black uppercase tracking-widest text-white/30">
                             {step.author}
                         </p>
                     </div>
                     <div className="ml-14 bg-white/5 border border-white/5 rounded-premium-lg overflow-hidden p-3">
-                        {step.type === 'draw' ? (
+                        {step.type === STEP_TYPE.Draw ? (
                             <img src={step.content} alt="Drawing" className="w-full rounded-premium-sm"/>
                         ) : (
                             <div className="p-3 text-center">
-                                <p className="text-xl font-black italic">"{step.content}"</p>
+                                <p className="text-xl font-black italic">{step.content}</p>
                             </div>
                         )}
                     </div>

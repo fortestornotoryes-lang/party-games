@@ -9,28 +9,28 @@ import {GAME_INSTRUCTIONS} from './constants/instructions';
 import {GameSettingsProvider, useGameSettings} from './contexts/GameSettingsContext';
 import {LanguageProvider} from './i18n';
 import {
-  AliasGame,
-  BunkerGame,
-  CodenamesGame,
-  ConnectFourGame,
-  DecryptoGame,
-  FakeArtistGame,
-  GAMES_REGISTRY,
-  JustOneGame,
-  MafiaGame,
-  MillionaireGame,
-  ResistanceGame,
-  SpyHuntGame,
-  TabooGame,
-  TabooReverseGame,
-  TelestrationsGame,
-  TruthOrDareGame,
-  WavelengthGame,
+    AliasGame,
+    BunkerGame,
+    CodenamesGame,
+    ConnectFourGame,
+    DecryptoGame,
+    FakeArtistGame,
+    GAMES_REGISTRY,
+    JustOneGame,
+    MafiaGame,
+    MillionaireGame,
+    ResistanceGame,
+    SpyHuntGame,
+    TabooGame,
+    TabooReverseGame,
+    TelestrationsGame,
+    TruthOrDareGame,
+    WavelengthGame,
 } from './registry/GameRegistry';
 import {storageService} from './services/storageService';
 import type {GameModeOption, Player} from './types';
 import {GameStatus} from './types';
-import type {GameKey} from './types/games';
+import type {GameKey, GameMetadata} from './types/games';
 
 function AppContent() {
     const {
@@ -58,6 +58,7 @@ function AppContent() {
 
     const startGame = useCallback(
         (playerNames: string[]) => {
+            console.log('currentGameId',currentGameId)
             if (!currentGameId) return;
 
             storageService.savePlayers(playerNames);
@@ -136,6 +137,7 @@ function AppContent() {
                             return <ResistanceGame playerNames={playerNames} onBack={reset}/>;
 
                         case GameStatus.Setup: {
+                            if (!currentGameId) return null;
                             const config = GAMES_REGISTRY[currentGameId];
                             return (
                                 <Setup
@@ -143,7 +145,7 @@ function AppContent() {
                                     onBack={reset}
                                     title={config.title}
                                     subtitle={config.subtitle}
-                                    icon={config.icon as any}
+                                    icon={config.icon}
                                     themeColor={config.theme}
                                     playerPlaceholder={config.placeholder}
                                     addPlayerLabel="Добавить"

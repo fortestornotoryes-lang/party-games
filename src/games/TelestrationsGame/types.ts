@@ -6,8 +6,15 @@ export enum TelestrationsPhase {
     Gallery = 'gallery',
 }
 
+export const STEP_TYPE = {
+    Draw: 'draw',
+    Guess: 'guess',
+} as const;
+
+export type StepType = typeof STEP_TYPE[keyof typeof STEP_TYPE];
+
 export interface Step {
-    type: 'draw' | 'guess';
+    type: StepType;
     content: string;
     author: string;
 }

@@ -1,15 +1,15 @@
-import { motion } from 'motion/react';
+import {motion} from 'motion/react';
 import React from 'react';
 
 interface ProgressDotsProps {
-  /** Общее количество шагов */
-  count: number;
-  /** Индекс текущего шага (0-based) */
-  current: number;
-  /** Tailwind-класс цвета активной точки (default: bg-premium-red) */
-  activeColor?: string;
-  /** Дополнительные классы обёртки */
-  className?: string;
+    /** Общее количество шагов */
+    count: number;
+    /** Индекс текущего шага (0-based) */
+    current: number;
+    /** Tailwind-класс цвета активной точки (default: bg-premium-red) */
+    activeColor?: string;
+    /** Дополнительные классы обёртки */
+    className?: string;
 }
 
 /**
@@ -23,22 +23,22 @@ interface ProgressDotsProps {
  * <ProgressDots count={players.length} current={currentIndex} activeColor="bg-premium-sky" />
  */
 export const ProgressDots: React.FC<ProgressDotsProps> = ({
-  count,
-  current,
-  activeColor,
-  className,
-}) => (
-  <div className={`flex gap-2 ${className}`}>
-    {Array.from({ length: count }).map((_, i) => (
-      <motion.div
-        key={i}
-        animate={{
-          width: i === current ? 24 : 6,
-          opacity: i < current ? 0.2 : i === current ? 1 : 0.35,
-        }}
-        transition={{ duration: 0.3 }}
-        className={`h-1.5 rounded-full ${i === current ? activeColor : 'bg-white/20'}`}
-      />
-    ))}
-  </div>
+                                                              count,
+                                                              current,
+                                                              activeColor,
+                                                              className,
+                                                          }) => (
+    <div className={`flex gap-2 ${className}`}>
+        {Array.from({length: count}).map((_, i) => (
+            <motion.div
+                key={i}
+                animate={{
+                    width: i === current ? 24 : 6,
+                    opacity: i < current ? 0.2 : i === current ? 1 : 0.35,
+                }}
+                transition={{duration: 0.3}}
+                className={`h-1.5 rounded-full ${i === current ? activeColor : 'bg-white/20'}`}
+            />
+        ))}
+    </div>
 );

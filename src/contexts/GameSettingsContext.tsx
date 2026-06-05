@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useState} from 'react';
 
 import {storageService} from '../services/storageService';
 import type {Difficulty, GameMode} from '../types';
@@ -32,25 +32,24 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
     const [mode, setModeState] = useState<GameMode>('classic');
     const [rounds, setRoundsState] = useState<number>(2);
     const [timerSeconds, setTimerSecondsState] = useState<number>(30);
-    const [currentGameId, setCurrentGameId] = useState<GameKey | null>(null);
+    const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
 
-    // Load config when game changes
-    useEffect(() => {
-        if (currentGameId) {
-            const savedConfig = storageService.getGameConfig<SavedConfig>(currentGameId);
-            if (savedConfig) {
-                if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
-                if (savedConfig.mode) setModeState(savedConfig.mode);
-                if (savedConfig.rounds) setRoundsState(savedConfig.rounds);
-                if (savedConfig.timerSeconds !== undefined) setTimerSecondsState(savedConfig.timerSeconds);
-            } else {
-                setDifficultyState('medium');
-                setModeState('classic');
-                setRoundsState(2);
-                setTimerSecondsState(30);
-            }
+    const setCurrentGameId = (id: GameKey | null) => {
+        setCurrentGameIdState(id);
+        if (!id) return;
+        const savedConfig = storageService.getGameConfig<SavedConfig>(id);
+        if (savedConfig) {
+            if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
+            if (savedConfig.mode) setModeState(savedConfig.mode);
+            if (savedConfig.rounds) setRoundsState(savedConfig.rounds);
+            if (savedConfig.timerSeconds !== undefined) setTimerSecondsState(savedConfig.timerSeconds);
+        } else {
+            setDifficultyState('medium');
+            setModeState('classic');
+            setRoundsState(2);
+            setTimerSecondsState(30);
         }
-    }, [currentGameId]);
+    };
 
     const setDifficulty = (d: Difficulty) => {
         setDifficultyState(d);
@@ -100,6 +99,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGameSettings = () => {
     const context = useContext(GameSettingsContext);
     if (context === undefined) {

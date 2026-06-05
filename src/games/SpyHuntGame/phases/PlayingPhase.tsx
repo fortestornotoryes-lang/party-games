@@ -71,7 +71,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({players, timeLeft, on
                                 key={i}
                                 className="p-4 bg-white/4 rounded-premium-md text-label text-white/55 italic border border-white/6"
                             >
-                                "{q}"
+                                {q}
                             </div>
                         ))}
                     </motion.div>

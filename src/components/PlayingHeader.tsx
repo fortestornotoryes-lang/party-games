@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { Typography } from './Typography';
+import {Typography} from './Typography';
 
 interface PlayingHeaderProps {
-  /** Имя объясняющего игрока */
-  explainer: string;
-  /** Оставшееся время в секундах */
-  timeLeft: number;
-  /** CSS-цвет таймера (hex/rgba — динамический, поэтому не токен Typography) */
-  timerColor: string;
-  /** Слот для дополнительного контента рядом с таймером (счётчики блиц-режима и т.п.) */
-  extra?: React.ReactNode;
+    /** Имя объясняющего игрока */
+    explainer: string;
+    /** Оставшееся время в секундах */
+    timeLeft: number;
+    /** CSS-цвет таймера (hex/rgba — динамический, поэтому не токен Typography) */
+    timerColor: string;
+    /** Слот для дополнительного контента рядом с таймером (счётчики блиц-режима и т.п.) */
+    extra?: React.ReactNode;
 }
 
 /**
@@ -26,22 +26,22 @@ interface PlayingHeaderProps {
  * />
  */
 export const PlayingHeader: React.FC<PlayingHeaderProps> = ({
-  explainer,
-  timeLeft,
-  timerColor,
-  extra,
-}) => (
-  <div className="flex items-center justify-between">
-    <Typography.Caption color="faint" className="tracking-widest">
-      {explainer} объясняет
-    </Typography.Caption>
+                                                                explainer,
+                                                                timeLeft,
+                                                                timerColor,
+                                                                extra,
+                                                            }) => (
+    <div className="flex items-center justify-between">
+        <Typography.Caption color="faint" className="tracking-widest">
+            {explainer} объясняет
+        </Typography.Caption>
 
-    <div className="flex items-center gap-3">
-      {extra}
-      {/* timerColor — динамический hex, не токен; используем span напрямую */}
-      <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
+        <div className="flex items-center gap-3">
+            {extra}
+            {/* timerColor — динамический hex, не токен; используем span напрямую */}
+            <span className="text-2xl font-black italic tabular-nums" style={{color: timerColor}}>
         {timeLeft}с
       </span>
+        </div>
     </div>
-  </div>
 );

@@ -1,4 +1,4 @@
-import type {ComponentType} from 'react';
+import type {LucideIcon} from 'lucide-react';
 
 import type {GameStatus, GameTheme} from '../types';
 
@@ -30,17 +30,17 @@ export interface GameMode {
     readonly id: string;
     readonly name: string;
     readonly description: string;
-    readonly icon: ComponentType<any>;
+    readonly icon: LucideIcon;
 }
 
 export interface GameMetadata {
     readonly id: GameKey;
     readonly title: string;
     readonly subtitle: string;
-    readonly icon: ComponentType<any>;
+    readonly icon: LucideIcon;
     readonly theme: GameTheme;
     readonly placeholder: string;
-    readonly description?: string;
+    readonly description: string;
     readonly players: string;
     readonly minPlayers: number;
     readonly setupStatus: GameStatus;

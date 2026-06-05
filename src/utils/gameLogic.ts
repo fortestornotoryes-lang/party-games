@@ -6,7 +6,7 @@ import type {Player} from '../types';
 
 import {shuffle} from './random';
 
-export const generateId = () => Math.random().toString(36).substr(2, 9);
+export const generateId = () => Math.random().toString(36).slice(2, 11);
 
 export const initSpyHunt = (
     playerNames: string[],

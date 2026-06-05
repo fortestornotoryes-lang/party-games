@@ -147,7 +147,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
                         {t(`${NS.BUNKER}.toRevealTraits`)}
                     </PrimaryButton>
                 </motion.div>
-            )}
+              )}
         </motion.div>
     );
 };

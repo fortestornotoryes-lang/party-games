@@ -40,7 +40,8 @@
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\.claude\\\\skills\\\\i18n-game\")",
       "Bash(Out-Null)",
       "Bash(git add *)",
-      "Bash(git commit -m 'feat: add i18n-game skill *)"
+      "Bash(git commit -m 'feat: add i18n-game skill *)",
+      "Bash(npx eslint *)"
     ]
   },
   "hooks": {

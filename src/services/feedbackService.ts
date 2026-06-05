@@ -26,9 +26,9 @@ let _audioCtx: AudioContext | null = null;
 function getAudioCtx(): AudioContext | null {
   if (_audioCtx && _audioCtx.state !== 'closed') return _audioCtx;
   const Ctor =
-    (typeof window !== 'undefined' &&
-      ((window as any).AudioContext || (window as any).webkitAudioContext)) ||
-    null;
+      (typeof window !== 'undefined'
+          ? ((window as any)?.AudioContext ?? (window as any)?.webkitAudioContext)
+          : null) ?? null;
   if (!Ctor) return null;
   _audioCtx = new Ctor() as AudioContext;
   return _audioCtx;
