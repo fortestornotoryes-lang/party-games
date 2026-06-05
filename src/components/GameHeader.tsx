@@ -53,7 +53,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           onClick={onBack}
           className="w-12 h-12 rounded-premium-sm bg-white/6 border border-white/8 text-white/50 flex items-center justify-center active:scale-90 transition-all hover:bg-white/[0.10] hover:text-white/80"
         >
-          <Home className="w-8 h-8" />
+          <Home className="w-5 h-5" />
         </button>
       </div>
     </div>

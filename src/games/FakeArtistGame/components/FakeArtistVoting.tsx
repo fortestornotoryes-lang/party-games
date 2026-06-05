@@ -27,7 +27,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
   }, [fullscreen]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6  text-gray-200 overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden">
       <div className="w-full max-w-md flex flex-col gap-8">
         {canvasImage && (
           <motion.div

@@ -32,7 +32,7 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ psychic, onReady }) => (
         смотрят.
       </Typography.Body>
     </div>
-    <PrimaryButton onClick={onReady} className="bg-premium-purple">
+    <PrimaryButton onClick={onReady} variant="purple">
       Я ГОТОВ
     </PrimaryButton>
   </motion.div>

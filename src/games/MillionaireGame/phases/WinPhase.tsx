@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Trophy, Star, ChevronRight } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { PrimaryButton } from '@/components/UI';
 
 interface WinPhaseProps {
@@ -18,6 +19,34 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
 }) => {
   const isMillion = prize === '1 000 000';
 
+  useEffect(() => {
+    if (isMillion) {
+      const shoot = () =>
+        confetti({
+          particleCount: 120,
+          spread: 110,
+          origin: { y: 0.2 },
+          colors: ['#FFCC1F', '#FFD700', '#fff', '#FFA500'],
+          gravity: 0.9,
+        });
+      shoot();
+      const t1 = setTimeout(shoot, 400);
+      const t2 = setTimeout(shoot, 800);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    } else {
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.25 },
+        colors: ['#00D88A', '#FFCC1F', '#fff'],
+        gravity: 1.1,
+      });
+    }
+  }, [isMillion]);
+
   return (
     <motion.div
       key="win"
@@ -27,7 +56,6 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
       transition={{ duration: 0.3 }}
       className="h-full flex flex-col items-center justify-between p-6 overflow-y-auto"
     >
-      {/* Top section */}
       <div className="flex-1 flex flex-col items-center justify-center gap-5 w-full">
         {/* Trophy */}
         <motion.div
@@ -39,27 +67,31 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           <div
             className={`w-28 h-28 rounded-full flex items-center justify-center border-2 ${
               isMillion
-                ? 'bg-premium-yellow/20 border-premium-yellow/50 shadow-[0_0_60px_rgba(255,204,31,0.4)]'
-                : 'bg-premium-green/15 border-premium-green/40 shadow-[0_0_40px_rgba(0,216,138,0.3)]'
+                ? 'bg-premium-yellow/20 border-premium-yellow/50'
+                : 'bg-premium-green/12 border-premium-green/40'
             }`}
+            style={{
+              boxShadow: isMillion
+                ? '0 0 60px rgba(255,204,31,0.4)'
+                : '0 0 40px rgba(0,216,138,0.3)',
+            }}
           >
             <Trophy
               className={`w-14 h-14 ${isMillion ? 'text-premium-yellow' : 'text-premium-green'}`}
             />
           </div>
-          {isMillion && (
-            <>
-              {[...Array(6)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ scale: 0, opacity: 1 }}
-                  animate={{ scale: 2.5, opacity: 0 }}
-                  transition={{ duration: 1.2, delay: i * 0.2, repeat: Infinity }}
-                  className="absolute inset-0 rounded-full border border-premium-yellow/30"
-                />
-              ))}
-            </>
-          )}
+
+          {/* Expanding rings for million */}
+          {isMillion &&
+            [...Array(4)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ scale: 1, opacity: 0.5 }}
+                animate={{ scale: 2.8, opacity: 0 }}
+                transition={{ duration: 1.4, delay: i * 0.3, repeat: Infinity }}
+                className="absolute inset-0 rounded-full border border-premium-yellow/25"
+              />
+            ))}
         </motion.div>
 
         {/* Prize display */}
@@ -69,17 +101,32 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           transition={{ delay: 0.25 }}
           className="text-center"
         >
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">
-            {isMillion ? '🏆 Миллионер!' : 'Выиграл'}
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/35 mb-1">
+            {isMillion ? 'МИЛЛИОНЕР!' : 'Выиграл'}
           </p>
-          <p className="text-[15px] font-bold text-white/70 mb-2">{currentPlayer}</p>
+          <p className="text-[15px] font-bold text-white/65 mb-2">{currentPlayer}</p>
           <p
-            className={`text-[44px] font-black font-display italic tracking-tighter leading-none ${
-              isMillion ? 'text-premium-yellow' : 'text-premium-green'
+            className={`font-black font-display italic tracking-tighter leading-none ${
+              isMillion ? 'text-[48px] text-premium-yellow' : 'text-[42px] text-premium-green'
             }`}
+            style={{
+              textShadow: isMillion
+                ? '0 0 50px rgba(255,204,31,0.55)'
+                : '0 0 30px rgba(0,216,138,0.4)',
+            }}
           >
             {prize}
           </p>
+          {isMillion && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-[11px] font-black uppercase tracking-[0.3em] text-premium-yellow/50 mt-2"
+            >
+              ₽ рублей
+            </motion.p>
+          )}
         </motion.div>
 
         {/* Scoreboard */}
@@ -92,7 +139,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
                 Счёт
               </span>
             </div>
@@ -107,13 +154,17 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
                       <span
-                        className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/70'}`}
+                        className={`text-[13px] font-semibold ${
+                          name === currentPlayer ? 'text-premium-yellow' : 'text-white/60'
+                        }`}
                       >
                         {name}
                       </span>
                     </div>
                     <span
-                      className={`text-[13px] font-black ${name === currentPlayer ? 'text-premium-yellow' : 'text-white/50'}`}
+                      className={`text-[13px] font-black ${
+                        name === currentPlayer ? 'text-premium-yellow' : 'text-white/40'
+                      }`}
                     >
                       {score}
                     </span>
@@ -124,7 +175,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
         )}
       </div>
 
-      {/* Next player button */}
+      {/* Next player */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

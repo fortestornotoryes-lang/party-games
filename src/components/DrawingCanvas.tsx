@@ -193,32 +193,32 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
       <div className="flex-shrink-0 flex items-center justify-between px-1">
         <div>
-          <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest">
+          <p className="text-[8px] text-white/30 uppercase font-black tracking-widest">
             ✏️ Рисуешь
           </p>
           <motion.p
             initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
             animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
-            className="text-lg font-black text-orange-400 leading-tight"
+            className="text-lg font-black text-premium-orange leading-tight"
           >
             {word}
           </motion.p>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`}
+            className={`text-sm font-black tabular-nums min-w-[2rem] text-right ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/35'}`}
           >
             {timeLeft}с
           </span>
           <button
             onClick={undoDrawing}
-            className="p-2.5 bg-white/5 rounded-xl hover:bg-orange-500/20 text-gray-500 hover:text-orange-500 transition-all"
+            className="p-2.5 bg-white/5 rounded-xl hover:bg-premium-orange/20 text-white/35 hover:text-premium-orange transition-all"
           >
             <Undo2 className="w-5 h-5" />
           </button>
           <button
             onClick={clearCanvas}
-            className="p-2.5 bg-white/5 rounded-xl hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-all"
+            className="p-2.5 bg-white/5 rounded-xl hover:bg-premium-red/20 text-white/35 hover:text-premium-red transition-all"
           >
             <Eraser className="w-5 h-5" />
           </button>

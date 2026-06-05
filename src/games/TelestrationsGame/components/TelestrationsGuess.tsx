@@ -60,7 +60,7 @@ export const TelestrationsGuess: React.FC<Props> = ({
         onChange={(e) => onGuessChange(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && guess.trim() && onSubmit()}
         placeholder="Напиши ответ..."
-        className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-gray-700 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
+        className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-xl font-bold placeholder:text-white/25 focus:border-premium-orange focus:bg-premium-orange/5 transition-all outline-none"
       />
       <button
         disabled={!guess.trim()}

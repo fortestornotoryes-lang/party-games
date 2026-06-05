@@ -26,16 +26,16 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
     >
       <div className="flex justify-center">
         <div
-          className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 ${
-            timeLeft < 60 ? 'border-premium-red bg-premium-red/10' : 'border-white/10 bg-white/5'
+          className={`w-28 h-28 rounded-full flex flex-col items-center justify-center border-2 ${
+            timeLeft < 60 ? 'border-premium-red/60 bg-premium-red/8' : 'border-white/10 bg-white/5'
           }`}
+          style={timeLeft < 60 ? { boxShadow: '0 0 30px rgba(255,46,77,0.2)' } : undefined}
         >
           <Timer
             className={`w-6 h-6 mb-1 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`}
           />
           <span className="text-3xl font-black italic tracking-tighter">
-            {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
-            {timeLeft % 60}
+            {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
           </span>
         </div>
       </div>
@@ -43,7 +43,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
       <div className="space-y-3">
         <button
           onClick={() => setShowQuestions((v) => !v)}
-          className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all"
+          className="w-full flex items-center justify-between p-4 bg-white/4 border border-white/8 rounded-premium-md active:bg-white/8 transition-all"
         >
           <div className="flex items-center space-x-3">
             <MessageSquare className="w-4 h-4 text-premium-red" />
@@ -63,7 +63,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
             {QUESTION_IDEAS.map((q, i) => (
               <div
                 key={i}
-                className="p-4 bg-white/5 rounded-2xl text-xs text-gray-400 italic border border-white/5"
+                className="p-4 bg-white/4 rounded-premium-md text-[13px] text-white/55 italic border border-white/6"
               >
                 "{q}"
               </div>
@@ -73,7 +73,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
 
         <button
           onClick={() => setShowLocations((v) => !v)}
-          className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl active:bg-white/10 transition-all"
+          className="w-full flex items-center justify-between p-4 bg-white/4 border border-white/8 rounded-premium-md active:bg-white/8 transition-all"
         >
           <div className="flex items-center space-x-3">
             <List className="w-4 h-4 text-premium-sky" />
@@ -93,7 +93,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
             {LOCATIONS.map((loc, i) => (
               <div
                 key={i}
-                className="p-3 rounded-xl text-[10px] font-bold text-center border bg-white/5 border-white/10 text-gray-500"
+                className="p-3 rounded-premium-sm text-[10px] font-bold text-center bg-white/4 border border-white/6 text-white/45"
               >
                 {loc}
               </div>
@@ -109,7 +109,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
         <div className="grid grid-cols-2 gap-3">
           {players.map((p) => (
             <GameCard key={p.id} className="p-4 flex items-center space-x-3 border-white/5">
-              <div className="w-2 h-2 rounded-full bg-premium-red/40" />
+              <div className="w-2 h-2 rounded-full bg-premium-red/50" />
               <span className="text-sm font-black italic uppercase tracking-tight truncate">
                 {p.name}
               </span>

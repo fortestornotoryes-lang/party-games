@@ -30,13 +30,16 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
       className="h-full flex flex-col items-center justify-between p-6 overflow-y-auto"
     >
       <div className="flex-1 flex flex-col items-center justify-center gap-5 w-full">
-        {/* Error icon */}
+        {/* Error icon with shake */}
         <motion.div
           initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
+          animate={{ scale: [0, 1.15, 1], x: [0, -8, 8, -8, 8, 0] }}
+          transition={{ duration: 0.55, delay: 0.1 }}
         >
-          <div className="w-24 h-24 rounded-full bg-premium-red/15 border-2 border-premium-red/40 flex items-center justify-center shadow-[0_0_40px_rgba(255,46,77,0.2)]">
+          <div
+            className="w-24 h-24 rounded-full bg-premium-red/12 border-2 border-premium-red/40 flex items-center justify-center"
+            style={{ boxShadow: '0 0 40px rgba(255,46,77,0.2)' }}
+          >
             <XCircle className="w-12 h-12 text-premium-red" />
           </div>
         </motion.div>
@@ -45,14 +48,14 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.22 }}
           className="text-center space-y-1"
         >
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-premium-red/70">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-premium-red/70">
             Неверно!
           </p>
-          <p className="text-[15px] font-bold text-white/70">{currentPlayer}</p>
-          <p className="text-[12px] text-white/35">Вопрос {questionIndex + 1} из 15</p>
+          <p className="text-[15px] font-bold text-white/65">{currentPlayer}</p>
+          <p className="text-[11px] text-white/30">Вопрос {questionIndex + 1} из 15</p>
         </motion.div>
 
         {/* Correct answer */}
@@ -60,17 +63,20 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="w-full glass-card rounded-premium-lg p-4"
+            transition={{ delay: 0.32 }}
+            className="w-full glass-card rounded-premium-lg overflow-hidden"
             style={{ borderColor: 'rgba(0,216,138,0.25)' }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-premium-green" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
-                Правильный ответ
-              </span>
+            <div className="h-px bg-gradient-to-r from-transparent via-premium-green/40 to-transparent" />
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle className="w-4 h-4 text-premium-green" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
+                  Правильный ответ
+                </span>
+              </div>
+              <p className="text-[15px] font-bold text-white text-center">{correctAnswer}</p>
             </div>
-            <p className="text-[15px] font-bold text-white text-center">{correctAnswer}</p>
           </motion.div>
         )}
 
@@ -78,15 +84,20 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: 0.38 }}
           className="w-full glass-card rounded-premium-lg p-4 text-center"
         >
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30 mb-1">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/30 mb-1">
             Гарантированная сумма
           </p>
-          <p className="text-[36px] font-black font-display italic tracking-tighter text-white/60 leading-none">
-            {guaranteed}
+          <p className="text-[38px] font-black font-display italic tracking-tighter text-white/55 leading-none">
+            {guaranteed === '0' ? '0' : guaranteed}
           </p>
+          {guaranteed === '0' && (
+            <p className="text-[10px] text-white/20 mt-1 font-black uppercase tracking-wider">
+              Ничего не заработано
+            </p>
+          )}
         </motion.div>
 
         {/* Scoreboard */}
@@ -94,12 +105,12 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.44 }}
             className="w-full glass-card rounded-premium-lg p-4"
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
                 Счёт
               </span>
             </div>
@@ -114,13 +125,17 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
                       <span
-                        className={`text-[13px] font-semibold ${name === currentPlayer ? 'text-white' : 'text-white/55'}`}
+                        className={`text-[13px] font-semibold ${
+                          name === currentPlayer ? 'text-white' : 'text-white/50'
+                        }`}
                       >
                         {name}
                       </span>
                     </div>
                     <span
-                      className={`text-[13px] font-black ${name === currentPlayer ? 'text-white/60' : 'text-white/40'}`}
+                      className={`text-[13px] font-black ${
+                        name === currentPlayer ? 'text-white/55' : 'text-white/35'
+                      }`}
                     >
                       {score}
                     </span>
@@ -131,11 +146,11 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         )}
       </div>
 
-      {/* Next player button */}
+      {/* Next player */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.52 }}
         className="w-full pt-4"
       >
         <PrimaryButton variant="white" icon={ChevronRight} onClick={onNextPlayer}>
