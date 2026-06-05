@@ -38,11 +38,11 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
     >
       <div className="text-center">
         <p
-          className={`text-[20px] font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}
+          className={`text-sub-heading font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}
         >
           {t('codenames.captainTurn', { name: currentCaptain })}
         </p>
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3 mb-2 text-[12px] font-black uppercase tracking-widest">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3 mb-2 text-label font-black uppercase tracking-widest">
           <div className="flex items-center gap-1">
             <span className="w-4 h-4 rounded-full border border-premium-red bg-black"></span>
             {t('codenames.redTeam')}
@@ -82,7 +82,7 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                             }
                         `}
           >
-            <span className="text-[9px] font-bold leading-tight wrap-break-word uppercase">
+            <span className="text-micro font-bold leading-tight wrap-break-word uppercase">
               {card.word}
             </span>
             {card.color === 'double_agent' && (

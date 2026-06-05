@@ -28,7 +28,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({ spy, location, onBack 
 
     <GameCard className="w-full p-10 text-center border-premium-red/40 bg-premium-red/5 space-y-6">
       <div className="space-y-2">
-        <p className="text-[10px] font-black text-premium-red/60 uppercase tracking-widest">
+        <p className="text-tag font-black text-premium-red/60 uppercase tracking-widest">
           Агент 00
         </p>
         <h3 className="text-5xl font-black italic text-white uppercase wrap-break-word px-4">
@@ -36,7 +36,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({ spy, location, onBack 
         </h3>
       </div>
       <div className="pt-6 border-t border-premium-red/20">
-        <p className="text-[10px] font-black text-premium-green/60 uppercase tracking-widest">
+        <p className="text-tag font-black text-premium-green/60 uppercase tracking-widest">
           Секретная локация
         </p>
         <p className="text-2xl font-black italic text-white uppercase">{location}</p>

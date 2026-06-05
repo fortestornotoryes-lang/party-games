@@ -171,12 +171,12 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                 <span className="text-lg flex-shrink-0">{ev.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-bold text-white/80 leading-tight">{ev.title}</div>
-                  <div className="text-[10px] text-white/40 leading-tight mt-0.5">
+                  <div className="text-tag text-white/40 leading-tight mt-0.5">
                     {ev.description}
                   </div>
                 </div>
                 <div
-                  className="text-[10px] font-black flex-shrink-0"
+                  className="text-tag font-black flex-shrink-0"
                   style={{ color: ev.positive ? '#00D88A' : '#FF8A1F' }}
                 >
                   {ev.positive ? '+' : ''}
@@ -209,7 +209,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm">{emoji}</span>
-                      <span className="text-[10px] text-white/50 font-black uppercase tracking-wider">
+                      <span className="text-tag text-white/50 font-black uppercase tracking-wider">
                         {t(`${NS.BUNKER}.resources.${key}`)}
                       </span>
                     </div>

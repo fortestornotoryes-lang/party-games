@@ -19,10 +19,10 @@ export const ScoreRow: React.FC<ScoreRowProps> = ({ red, blue }) => (
       return (
         <div key={color} className={`flex-1 p-3 rounded-xl border ${tBg(color)} space-y-2`}>
           <div className="flex items-center justify-between">
-            <span className={`text-[9px] font-black uppercase tracking-wider ${tText(color)}`}>
+            <span className={`text-micro font-black uppercase tracking-wider ${tText(color)}`}>
               {tLabel(color)}
             </span>
-            <span className="text-[10px] text-white/40 font-bold">
+            <span className="text-tag text-white/40 font-bold">
               ✗{state.interceptions} · {state.fails}ош
             </span>
           </div>
@@ -30,7 +30,7 @@ export const ScoreRow: React.FC<ScoreRowProps> = ({ red, blue }) => (
             {state.players.map((p) => (
               <span
                 key={p}
-                className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold ${
+                className={`text-micro px-1.5 py-0.5 rounded-md font-bold ${
                   p === captain
                     ? `${tBadge(color)} border border-current/30`
                     : 'bg-white/5 text-white/35'

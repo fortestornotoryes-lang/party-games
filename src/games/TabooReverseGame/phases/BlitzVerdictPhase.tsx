@@ -40,7 +40,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
     >
       {/* Header */}
       <div className="text-center pt-2 space-y-1">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Итог хода</p>
+        <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">Итог хода</p>
         <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
           {currentExplainer}
         </h2>
@@ -78,7 +78,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                     <p className="font-black italic uppercase tracking-tight text-white/50 truncate">
                       {result.card.word}
                     </p>
-                    <p className="text-[10px] text-premium-red/60 mt-0.5">
+                    <p className="text-tag text-premium-red/60 mt-0.5">
                       Пропуск — −1 для {currentExplainer}
                     </p>
                   </div>
@@ -111,7 +111,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                       <button
                         key={player}
                         onClick={() => setGuesser(idx, isActive ? null : player)}
-                        className={`px-3 py-1.5 rounded-xl border text-[12px] font-black italic uppercase tracking-tight transition-all active:scale-95 ${
+                        className={`px-3 py-1.5 rounded-xl border text-label font-black italic uppercase tracking-tight transition-all active:scale-95 ${
                           isActive
                             ? 'bg-premium-green/20 border-premium-green/60 text-premium-green'
                             : 'glass-card border-white/10 text-white/40'
@@ -123,7 +123,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                   })}
                   <button
                     onClick={() => setGuesser(idx, null)}
-                    className={`px-3 py-1.5 rounded-xl border text-[12px] font-black italic uppercase tracking-tight transition-all active:scale-95 ${
+                    className={`px-3 py-1.5 rounded-xl border text-label font-black italic uppercase tracking-tight transition-all active:scale-95 ${
                       selected === null
                         ? 'bg-white/10 border-white/30 text-white/60'
                         : 'glass-card border-white/5 text-white/20'

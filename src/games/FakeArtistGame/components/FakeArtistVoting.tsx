@@ -95,7 +95,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
               animate={{ scale: 1, opacity: 1 }}
               className="space-y-8 text-center"
             >
-              <div className="p-10 bg-premium-red/10 border border-premium-red/20 rounded-[40px] space-y-4">
+              <div className="p-10 bg-premium-red/10 border border-premium-red/20 rounded-premium-3xl space-y-4">
                 <Ghost className="w-16 h-16 text-premium-red mx-auto animate-bounce" />
                 <h4 className="text-3xl font-black text-premium-red italic uppercase">
                   САМОЗВАНЕЦ

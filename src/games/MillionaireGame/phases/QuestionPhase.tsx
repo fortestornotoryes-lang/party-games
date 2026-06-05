@@ -66,14 +66,14 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
         <div className="flex items-center justify-between mb-2">
           {/* Left: question meta */}
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35">
+            <span className="text-tag font-black uppercase tracking-[0.18em] text-white/35">
               {questionIndex + 1} / 15
             </span>
-            <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 text-white/25">
+            <span className="text-micro font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/5 text-white/25">
               {tier}
             </span>
             {isCheckpoint && (
-              <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-premium-yellow/15 border border-premium-yellow/30 text-premium-yellow">
+              <span className="px-1.5 py-0.5 rounded-full text-micro font-black uppercase tracking-widest bg-premium-yellow/15 border border-premium-yellow/30 text-premium-yellow">
                 Рубеж
               </span>
             )}
@@ -85,7 +85,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             initial={{ scale: 0.75, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-            className="text-[26px] font-black font-display italic tracking-tighter text-premium-yellow leading-none"
+            className="text-heading font-black font-display italic tracking-tighter text-premium-yellow leading-none"
             style={{ textShadow: '0 0 28px rgba(255,204,31,0.45)' }}
           >
             {PRIZE_LADDER[questionIndex]}
@@ -161,7 +161,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
           style={{ borderColor: 'rgba(255,204,31,0.18)' }}
         >
           <div className="h-px bg-gradient-to-r from-transparent via-premium-yellow/50 to-transparent" />
-          <p className="text-white text-[15px] font-semibold text-center leading-snug p-5">
+          <p className="text-white text-label font-semibold text-center leading-snug p-5">
             {question.text}
           </p>
         </div>
@@ -178,14 +178,14 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             >
               <div className="flex items-center gap-1.5 mb-2.5">
                 <Users className="w-3.5 h-3.5 text-premium-blue" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-premium-blue">
+                <span className="text-tag font-black uppercase tracking-widest text-premium-blue">
                   Помощь зала
                 </span>
               </div>
               <div className="space-y-1.5">
                 {audienceVotes.map((pct, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <span className="text-[11px] font-black text-white/40 w-4">{LETTERS[i]}</span>
+                    <span className="text-label font-black text-white/40 w-4">{LETTERS[i]}</span>
                     <div className="flex-1 h-5 bg-white/5 rounded-sm overflow-hidden relative">
                       <motion.div
                         initial={{ width: 0 }}
@@ -198,7 +198,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
                         }}
                       />
                     </div>
-                    <span className="text-[11px] font-black text-white/55 w-8 text-right">
+                    <span className="text-label font-black text-white/55 w-8 text-right">
                       {pct}%
                     </span>
                   </div>
@@ -220,13 +220,13 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             >
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Phone className="w-3.5 h-3.5 text-premium-green" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
+                <span className="text-tag font-black uppercase tracking-widest text-premium-green">
                   Звонок другу
                 </span>
               </div>
               <div className="flex items-start gap-2">
                 <MessageSquare className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
-                <p className="text-[12px] text-white/70 leading-snug">
+                <p className="text-label text-white/70 leading-snug">
                   «Я думаю, правильный ответ —{' '}
                   <span className="font-black text-premium-green">
                     {LETTERS[phoneFriendSuggestion]}
@@ -353,13 +353,13 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({ letter, text, state, disabl
     >
       {/* Letter column */}
       <div className={`w-10 flex items-center justify-center shrink-0 transition-all ${s.badge}`}>
-        <span className="text-[12px] font-black">{letter}</span>
+        <span className="text-label font-black">{letter}</span>
       </div>
       {/* Divider */}
       <div className={`w-px self-stretch my-2 transition-all ${s.divider}`} />
       {/* Text column */}
       <div className="flex-1 flex items-center px-2.5 py-2">
-        <span className={`text-[12px] font-semibold leading-tight transition-all ${s.text}`}>
+        <span className={`text-label font-semibold leading-tight transition-all ${s.text}`}>
           {text}
         </span>
       </div>
@@ -411,7 +411,7 @@ const LifelineButton: React.FC<LifelineButtonProps> = ({
       {icon}
     </motion.div>
     <span
-      className={`text-[9px] font-black uppercase tracking-widest ${
+      className={`text-micro font-black uppercase tracking-widest ${
         used ? 'text-white/20 line-through' : 'text-white/40'
       }`}
     >

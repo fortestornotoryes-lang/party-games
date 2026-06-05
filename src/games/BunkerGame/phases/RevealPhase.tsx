@@ -145,7 +145,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
           >
             {/* Label */}
             <div
-              className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.3em]"
+              className="inline-block px-3 py-1 rounded-full text-tag font-black uppercase tracking-[0.3em]"
               style={{
                 background: rgba(colorName as any, 0.15),
                 border: `1px solid ${rgba(colorName as any, 0.3)}`,

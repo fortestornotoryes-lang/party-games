@@ -35,7 +35,7 @@ metadata:
 ```tsx
 <SectionLabel>Метка секции</SectionLabel>
 ```
-`text-[11px] font-black uppercase tracking-[0.5em] text-white/80 italic`
+`text-label font-black uppercase tracking-[0.5em] text-white/80 italic`
 
 ### Badge
 ```tsx

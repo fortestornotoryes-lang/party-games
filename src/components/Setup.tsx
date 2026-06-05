@@ -211,12 +211,12 @@ export const Setup: React.FC<SetupProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`w-1 h-3 rounded-full ${config.text} bg-current`} />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 italic">
+                <span className="text-tag font-black uppercase tracking-[0.4em] text-white/80 italic">
                   {subtitle}
                 </span>
               </div>
               <div
-                className={`px-4 py-1.5 rounded-premium-sm glass-card border-none text-[10px] font-black italic uppercase tracking-[0.2em] font-display ${difficulty === 'easy' ? 'text-premium-green' : difficulty === 'medium' ? 'text-premium-sky' : 'text-premium-red'}`}
+                className={`px-4 py-1.5 rounded-premium-sm glass-card border-none text-tag font-black italic uppercase tracking-[0.2em] font-display ${difficulty === 'easy' ? 'text-premium-green' : difficulty === 'medium' ? 'text-premium-sky' : 'text-premium-red'}`}
               >
                 {difficulty === 'easy' ? 'ЛЕГКО' : difficulty === 'medium' ? 'НОРМА' : 'ПРОФИ'}
               </div>
@@ -229,7 +229,7 @@ export const Setup: React.FC<SetupProps> = ({
           <div className="flex items-center justify-between mb-6 px-1">
             <div className="flex items-center gap-3">
               <Users className={`w-4 h-4 ${config.text}`} />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">
+              <span className="text-tag font-black uppercase tracking-[0.4em] text-white/80">
                 УЧАСТНИКИ
               </span>
             </div>
@@ -241,7 +241,7 @@ export const Setup: React.FC<SetupProps> = ({
                 <Shuffle className="w-5 h-5" />
               </button>
               <div
-                className={`px-4 py-1 rounded-premium-sm border border-white/5 bg-white/3 text-[11px] font-black italic text-white/80 tracking-tighter`}
+                className={`px-4 py-1 rounded-premium-sm border border-white/5 bg-white/3 text-label font-black italic text-white/80 tracking-tighter`}
               >
                 {players.length} / {maxPlayers}
               </div>
@@ -266,7 +266,7 @@ export const Setup: React.FC<SetupProps> = ({
           {players.length < maxPlayers && (
             <button
               onClick={addPlayer}
-              className={`w-full mt-4 h-12 border-2 border-dashed border-white/25 rounded-premium-lg flex items-center justify-center gap-4 text-[11px] font-black uppercase tracking-[0.4em] text-white/50 transition-all ${config.addHover} hover:border-dashed`}
+              className={`w-full mt-4 h-12 border-2 border-dashed border-white/25 rounded-premium-lg flex items-center justify-center gap-4 text-label font-black uppercase tracking-[0.4em] text-white/50 transition-all ${config.addHover} hover:border-dashed`}
             >
               <UserPlus className="w-5 h-5" />
               <span>Добавить</span>

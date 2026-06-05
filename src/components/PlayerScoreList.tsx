@@ -65,7 +65,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
     if (idx === null) return null;
     return (
       <span
-        className={`shrink-0 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+        className={`shrink-0 text-micro font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
           idx === 0
             ? 'text-premium-orange/80 bg-premium-orange/10'
             : 'text-premium-sky/80 bg-premium-sky/10'
@@ -80,7 +80,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
 
   return (
     <div className={`w-full max-w-sm space-y-2 ${className}`}>
-      <p className="text-[9px] font-black uppercase tracking-widest text-white/30 text-center mb-3">
+      <p className="text-micro font-black uppercase tracking-widest text-white/30 text-center mb-3">
         Счёт
       </p>
       {sorted.map((player) => {
@@ -88,7 +88,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
         return (
           <div
             key={player}
-            className={`flex items-center justify-between px-4 py-3 rounded-2xl border transition-all ${
+            className={`flex items-center justify-between px-4 py-3 rounded-premium-md border transition-all ${
               isActive ? ac.row : 'border-white/10 bg-white/5'
             }`}
           >
@@ -98,7 +98,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
               </span>
               {isActive && (
                 <span
-                  className={`shrink-0 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${ac.badge}`}
+                  className={`shrink-0 text-micro font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${ac.badge}`}
                 >
                   {activeLabel}
                 </span>

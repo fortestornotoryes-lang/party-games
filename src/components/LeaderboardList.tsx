@@ -28,7 +28,7 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({
         return (
           <div
             key={player}
-            className={`p-5 rounded-2xl border-2 flex items-center justify-between ${
+            className={`p-5 rounded-premium-md border-2 flex items-center justify-between ${
               isWinner
                 ? 'border-premium-yellow/60 bg-premium-yellow/10 shadow-[0_0_30px_rgba(234,179,8,0.15)]'
                 : 'border-white/10 bg-white/5'

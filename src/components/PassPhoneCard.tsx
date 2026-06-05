@@ -120,17 +120,17 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
     <motion.div
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className="w-full aspect-3/4 rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden cursor-pointer transition-colors duration-300"
+      className="w-full aspect-3/4 rounded-premium-2xl flex flex-col items-center justify-center relative overflow-hidden cursor-pointer transition-colors duration-300"
       style={{
         background:
           'linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.018) 100%)',
         border: `1.5px solid ${accent.border}`,
-        boxShadow: `0 32px 64px rgba(0,0,0,0.55), 0 0 40px ${accent.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        boxShadow: `var(--shadow-card), 0 0 40px ${accent.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`,
       }}
     >
       {/* Grid texture */}
       <div
-        className="absolute inset-0 opacity-[0.022]"
+        className="absolute inset-0 opacity-noise"
         style={{
           backgroundImage:
             'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
@@ -138,16 +138,16 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
       />
 
       <div
-        className={`absolute top-5 left-5 w-10 h-10 border-t border-l  rounded-tl-md ${accent.border}`}
+        className={`absolute top-5 left-5 w-10 h-10 border-t border-l  rounded-tl-premium-xs ${accent.border}`}
       />
       <div
-        className={`absolute top-5 right-5 w-10 h-10 border-t border-r ${accent.border} rounded-tr-md`}
+        className={`absolute top-5 right-5 w-10 h-10 border-t border-r ${accent.border} rounded-tr-premium-xs`}
       />
       <div
-        className={`absolute bottom-5 left-5 w-10 h-10 border-b border-l ${accent.border} rounded-bl-md`}
+        className={`absolute bottom-5 left-5 w-10 h-10 border-b border-l ${accent.border} rounded-bl-premium-xs`}
       />
       <div
-        className={`absolute bottom-5 right-5 w-10 h-10 border-b border-r ${accent.border} rounded-br-md`}
+        className={`absolute bottom-5 right-5 w-10 h-10 border-b border-r ${accent.border} rounded-br-premium-xs`}
       />
 
       <div className="text-center space-y-7 px-10 relative z-10">
@@ -162,7 +162,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
         <div className="space-y-3">
           {badge && (
             <div
-              className={`inline-block px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest transition-colors duration-300 ${badgeStyles[badgeColor]}`}
+              className={`inline-block px-3 py-1 rounded-full border text-micro font-black uppercase tracking-widest transition-colors duration-300 ${badgeStyles[badgeColor]}`}
             >
               {badge}
             </div>
@@ -176,12 +176,12 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
             </Typography.Label>
 
             {/* Cyberpunk HUD Container */}
-            <div className="relative inline-flex delay-1000 items-center justify-center px-6 py-3 bg-black/40 border border-white/5 rounded-md overflow-visible">
+            <div className="relative inline-flex delay-1000 items-center justify-center px-6 py-3 bg-black/40 border border-white/5 rounded-premium-xs overflow-visible">
               {/* Технологический микро-текст по бокам */}
-              <span className="absolute left-1 bottom-1 text-[6px] font-mono text-white/20 select-none">
+              <span className="absolute left-1 bottom-1 text-pico font-mono text-white/20 select-none">
                 SYS_ERR
               </span>
-              <span className="absolute right-1 top-1 text-[6px] font-mono text-premium-pink/40 select-none">
+              <span className="absolute right-1 top-1 text-pico font-mono text-premium-pink/40 select-none">
                 [v4.02]
               </span>
 

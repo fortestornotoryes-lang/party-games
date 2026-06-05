@@ -32,16 +32,16 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
       className="p-5 space-y-6"
     >
       <div className="text-center space-y-2 pt-2">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-yellow/40">
+        <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-yellow/40">
           Загаданное слово
         </p>
-        <h2 className="text-[52px] font-black italic uppercase text-white tracking-tighter leading-none">
+        <h2 className="text-5xl font-black italic uppercase text-white tracking-tighter leading-none">
           {word}
         </h2>
       </div>
 
       <div className="p-4 rounded-premium-md bg-premium-yellow/[0.05] border border-premium-yellow/15 text-center">
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 mb-1">
+        <p className="text-micro font-black uppercase tracking-[0.3em] text-white/30 mb-1">
           Отгадывает
         </p>
         <h3 className="text-xl font-black italic uppercase text-premium-yellow">{guesser}</h3>
@@ -49,10 +49,10 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-1">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/35">
+          <span className="text-micro font-black uppercase tracking-[0.4em] text-white/35">
             Подсказки
           </span>
-          <span className="text-[9px] font-black px-3 py-1 bg-white/4 rounded-full text-white/30 border border-white/6">
+          <span className="text-micro font-black px-3 py-1 bg-white/4 rounded-full text-white/30 border border-white/6">
             {Object.keys(hints).length}/{hinters.length}
           </span>
         </div>

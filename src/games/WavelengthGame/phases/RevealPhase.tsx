@@ -82,13 +82,13 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
           <div className="flex justify-between mt-2">
             <div className="flex items-center gap-1">
               <div className="w-3 h-0.5 bg-white/70" />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/45">
+              <span className="text-micro font-black uppercase tracking-[0.2em] text-white/45">
                 Цель
               </span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-3 h-0.5 bg-premium-yellow" />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/45">
+              <span className="text-micro font-black uppercase tracking-[0.2em] text-white/45">
                 Ответ
               </span>
             </div>
@@ -97,7 +97,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
 
         {/* Score display */}
         <div className="text-center space-y-3 w-full">
-          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/35">
+          <div className="text-tag font-black uppercase tracking-[0.4em] text-white/35">
             Твои очки
           </div>
           <motion.div

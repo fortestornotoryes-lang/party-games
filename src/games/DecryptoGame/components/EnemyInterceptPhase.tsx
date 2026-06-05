@@ -32,7 +32,7 @@ export const EnemyInterceptPhase: React.FC<EnemyInterceptPhaseProps> = ({
     className="space-y-4 flex flex-col h-full overflow-auto"
   >
     <p
-      className={`text-[10px] tracking-widest uppercase font-black text-center ${tText(enemyColor)}`}
+      className={`text-tag tracking-widest uppercase font-black text-center ${tText(enemyColor)}`}
     >
       ВРЕМЯ ПЕРЕХВАТА · КОМАНДА {tLabel(enemyColor).toUpperCase()}
     </p>
@@ -69,7 +69,7 @@ export const EnemyInterceptPhase: React.FC<EnemyInterceptPhaseProps> = ({
       }}
       className="mt-2 space-y-4 flex-1"
     >
-      <p className="text-[10px] font-bold text-center text-white/40 uppercase">
+      <p className="text-tag font-bold text-center text-white/40 uppercase">
         Введите перехваченный код
       </p>
       <CodeInput value={interceptGuess} onChange={onChange} max={wordCount} team={enemyColor} />

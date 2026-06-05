@@ -385,7 +385,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                     key={color}
                     className={`px-5 py-3 rounded-2xl border ${tBg(color)} text-center`}
                   >
-                    <p className={`text-[9px] font-black uppercase ${tText(color)} mb-1`}>
+                    <p className={`text-micro font-black uppercase ${tText(color)} mb-1`}>
                       {tLabel(color)}
                     </p>
                     <p className="text-white/40 text-xs">✗ {state.interceptions} перехватов</p>

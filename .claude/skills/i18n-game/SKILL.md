@@ -450,7 +450,7 @@ subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
 |------|-------|
 | `<h2 className="text-2xl font-black ...">` | `<Typography.Heading>` |
 | `<p className="text-sm text-white/50">` | `<Typography.Body color="faint">` |
-| `<span className="text-[10px] font-black uppercase tracking-...">` | `<Typography.Label>` |
+| `<span className="text-tag font-black uppercase tracking-...">` | `<Typography.Label>` |
 | `<p className="text-4xl font-black italic uppercase">` | `<Typography.Display>` |
 
 Делай это только там, где Typography подходит по семантике. Не трогай кнопки, badge-элементы, элементы с уникальной стилизацией.

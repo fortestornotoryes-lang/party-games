@@ -41,7 +41,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
   <div>
     <div className="flex items-center gap-3 mb-6 px-1">
       <Icon className="w-4 h-4 text-white/20" />
-      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">
+      <span className="text-tag font-black uppercase tracking-[0.4em] text-white/80">
         {label}
       </span>
     </div>
@@ -60,13 +60,13 @@ const SettingRow: React.FC<SettingRowProps> = ({
             }`}
           >
             <span
-              className={`text-[13px] font-black italic uppercase tracking-tighter ${isActive ? '' : 'text-white/80'}`}
+              className={`text-card font-black italic uppercase tracking-tighter ${isActive ? '' : 'text-white/80'}`}
             >
               {opt.label}
             </span>
             {opt.sublabel && (
               <span
-                className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${isActive ? 'opacity-80' : 'text-white/20'}`}
+                className={`text-micro font-bold uppercase tracking-widest mt-0.5 ${isActive ? 'opacity-80' : 'text-white/20'}`}
               >
                 {opt.sublabel}
               </span>
@@ -171,7 +171,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         <div>
           <div className="flex items-center gap-3 mb-6 px-1">
             <Zap className="w-4 h-4 text-white/20" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">
+            <span className="text-tag font-black uppercase tracking-[0.4em] text-white/80">
               {modeLabel}
             </span>
           </div>
@@ -199,10 +199,10 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                     <m.icon className="w-7 h-7" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-[17px] font-black italic uppercase tracking-tight mb-1 text-white opacity-90">
+                    <div className="text-lg font-black italic uppercase tracking-tight mb-1 text-white opacity-90">
                       {m.name}
                     </div>
-                    <div className="text-[12px] font-medium leading-tight opacity-60 italic">
+                    <div className="text-xs font-medium leading-tight opacity-60 italic">
                       {m.description}
                     </div>
                   </div>

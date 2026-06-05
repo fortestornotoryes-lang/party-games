@@ -39,8 +39,8 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
             ? `1.5px solid ${rgba('red', 0.45)}`
             : `1.5px solid ${rgba('sky', 0.35)}`,
           boxShadow: player.isSpy
-            ? `0 0 80px ${rgba('red', 0.22)}, 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 ${rgba('red', 0.12)}`
-            : `0 0 70px ${rgba('sky', 0.15)}, 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 ${rgba('sky', 0.08)}`,
+            ? `0 0 80px ${rgba('red', 0.22)}, var(--shadow-card), inset 0 1px 0 ${rgba('red', 0.12)}`
+            : `0 0 70px ${rgba('sky', 0.15)}, var(--shadow-card), inset 0 1px 0 ${rgba('sky', 0.08)}`,
         },
       })}
       renderCard={(player, isLast, onNext) => (
@@ -69,7 +69,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">
+                  <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-red/50">
                     Секретная роль
                   </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
@@ -86,18 +86,18 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     />
                   </motion.div>
                   <h3
-                    className="text-[56px] font-black italic text-premium-red tracking-tighter leading-none"
+                    className="text-5xl font-black italic text-premium-red tracking-tighter leading-none"
                     style={{ textShadow: `0 0 48px ${rgba('red', 0.45)}` }}
                   >
                     САМО&shy;ЗВАНЕЦ
                   </h3>
                   <div className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
-                    <p className="text-[8px] font-black uppercase text-premium-red/55 mb-0.5">
+                    <p className="text-micro font-black uppercase text-premium-red/55 mb-0.5">
                       Тема
                     </p>
                     <p className="text-sm font-black italic text-white uppercase">{category}</p>
                   </div>
-                  <p className="text-white/30 text-[10px] leading-relaxed">
+                  <p className="text-white/30 text-tag leading-relaxed">
                     Слово неизвестно — рисуй,
                     <br />
                     чтобы не выдать себя
@@ -122,7 +122,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-sky/50">
+                  <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-sky/50">
                     Художник
                   </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
@@ -134,23 +134,23 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     style={{ filter: `drop-shadow(0 0 16px ${rgba('sky', 0.45)})` }}
                   />
                   <div className="space-y-1">
-                    <p className="text-[9px] font-black uppercase tracking-[0.35em] text-premium-sky/50">
+                    <p className="text-micro font-black uppercase tracking-[0.35em] text-premium-sky/50">
                       Твоё слово
                     </p>
                     <h3
-                      className="text-[46px] font-black italic text-white uppercase tracking-tighter leading-tight"
+                      className="text-5xl font-black italic text-white uppercase tracking-tighter leading-tight"
                       style={{ textShadow: `0 0 32px ${rgba('sky', 0.25)}` }}
                     >
                       {word}
                     </h3>
                   </div>
                   <div className="px-4 py-3 bg-premium-sky/10 border border-premium-sky/20 rounded-2xl">
-                    <p className="text-[8px] font-black uppercase text-premium-sky/50 tracking-widest mb-1">
+                    <p className="text-micro font-black uppercase text-premium-sky/50 tracking-widest mb-1">
                       Тема
                     </p>
                     <p className="text-base font-black italic text-white uppercase">{category}</p>
                   </div>
-                  <p className="text-white/[0.22] text-[10px]">
+                  <p className="text-white/[0.22] text-tag">
                     Рисуй, не раскрывая слово напрямую
                   </p>
                 </div>

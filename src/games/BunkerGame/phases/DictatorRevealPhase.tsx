@@ -59,7 +59,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={handleReveal}
-            className="w-full rounded-[2rem] p-10 text-center space-y-4 active:scale-[0.98] transition-transform"
+            className="w-full rounded-premium-2xl p-10 text-center space-y-4 active:scale-[0.98] transition-transform"
             style={{
               background: `linear-gradient(160deg, ${rgba('yellow', 0.08)} 0%, rgba(0,0,0,0.3) 100%)`,
               border: `1.5px dashed ${rgba('yellow', 0.3)}`,
@@ -78,7 +78,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-            className="w-full rounded-[2rem] p-8 text-center space-y-4"
+            className="w-full rounded-premium-2xl p-8 text-center space-y-4"
             style={{
               background: `linear-gradient(160deg, ${rgba('yellow', 0.15)} 0%, rgba(0,0,0,0.3) 100%)`,
               border: `1.5px solid ${rgba('yellow', 0.4)}`,
@@ -116,7 +116,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
             >
               <Shield className="w-3.5 h-3.5" style={{ color: 'var(--color-premium-yellow)' }} />
               <span
-                className="text-[10px] font-black uppercase tracking-[0.25em]"
+                className="text-tag font-black uppercase tracking-[0.25em]"
                 style={{ color: 'var(--color-premium-yellow)' }}
               >
                 {t(`${NS.BUNKER}.guaranteedSpot`)}

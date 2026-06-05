@@ -33,7 +33,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
     </div>
 
     <div className="w-full max-w-sm space-y-3">
-      <p className="text-[9px] text-white/25 uppercase font-black tracking-widest mb-3 text-center">
+      <p className="text-micro text-white/25 uppercase font-black tracking-widest mb-3 text-center">
         Сложность
       </p>
       {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
@@ -63,7 +63,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
               >
                 {cfg.drawTime}с
               </p>
-              <p className="text-[9px] text-white/25 uppercase font-bold tracking-widest">
+              <p className="text-micro text-white/25 uppercase font-bold tracking-widest">
                 рисунок
               </p>
             </div>

@@ -51,11 +51,11 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           transition={{ delay: 0.22 }}
           className="text-center space-y-1"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-premium-red/70">
+          <p className="text-tag font-black uppercase tracking-[0.3em] text-premium-red/70">
             Неверно!
           </p>
-          <p className="text-[15px] font-bold text-white/65">{currentPlayer}</p>
-          <p className="text-[11px] text-white/30">Вопрос {questionIndex + 1} из 15</p>
+          <p className="text-label font-bold text-white/65">{currentPlayer}</p>
+          <p className="text-label text-white/30">Вопрос {questionIndex + 1} из 15</p>
         </motion.div>
 
         {/* Correct answer */}
@@ -71,11 +71,11 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle className="w-4 h-4 text-premium-green" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-premium-green">
+                <span className="text-tag font-black uppercase tracking-widest text-premium-green">
                   Правильный ответ
                 </span>
               </div>
-              <p className="text-[15px] font-bold text-white text-center">{correctAnswer}</p>
+              <p className="text-label font-bold text-white text-center">{correctAnswer}</p>
             </div>
           </motion.div>
         )}
@@ -87,14 +87,14 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           transition={{ delay: 0.38 }}
           className="w-full glass-card rounded-premium-lg p-4 text-center"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/30 mb-1">
+          <p className="text-tag font-black uppercase tracking-[0.22em] text-white/30 mb-1">
             Гарантированная сумма
           </p>
-          <p className="text-[38px] font-black font-display italic tracking-tighter text-white/55 leading-none">
+          <p className="text-4xl font-black font-display italic tracking-tighter text-white/55 leading-none">
             {guaranteed === '0' ? '0' : guaranteed}
           </p>
           {guaranteed === '0' && (
-            <p className="text-[10px] text-white/20 mt-1 font-black uppercase tracking-wider">
+            <p className="text-tag text-white/20 mt-1 font-black uppercase tracking-wider">
               Ничего не заработано
             </p>
           )}
@@ -110,7 +110,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
+              <span className="text-tag font-black uppercase tracking-[0.22em] text-white/35">
                 Счёт
               </span>
             </div>
@@ -123,9 +123,9 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                 .map(([name, score], i) => (
                   <div key={name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
+                      <span className="text-tag font-black text-white/20 w-4">{i + 1}</span>
                       <span
-                        className={`text-[13px] font-semibold ${
+                        className={`text-label font-semibold ${
                           name === currentPlayer ? 'text-white' : 'text-white/50'
                         }`}
                       >
@@ -133,7 +133,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                       </span>
                     </div>
                     <span
-                      className={`text-[13px] font-black ${
+                      className={`text-label font-black ${
                         name === currentPlayer ? 'text-white/55' : 'text-white/35'
                       }`}
                     >

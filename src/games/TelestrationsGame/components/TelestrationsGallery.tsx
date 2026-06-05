@@ -30,7 +30,7 @@ export const TelestrationsGallery: React.FC<Props> = ({
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="w-11 h-11 flex-shrink-0 rounded-full bg-premium-orange/10 border border-premium-orange/20 flex items-center justify-center text-[9px] font-black text-premium-orange">
+        <div className="w-11 h-11 flex-shrink-0 rounded-full bg-premium-orange/10 border border-premium-orange/20 flex items-center justify-center text-micro font-black text-premium-orange">
           START
         </div>
         <div className="flex-1 p-4 bg-premium-orange/10 border border-premium-orange/20 rounded-2xl">
@@ -63,7 +63,7 @@ export const TelestrationsGallery: React.FC<Props> = ({
               {step.author}
             </p>
           </div>
-          <div className="ml-14 bg-white/5 border border-white/5 rounded-[1.5rem] overflow-hidden p-3">
+          <div className="ml-14 bg-white/5 border border-white/5 rounded-premium-lg overflow-hidden p-3">
             {step.type === 'draw' ? (
               <img src={step.content} alt="Drawing" className="w-full rounded-xl" />
             ) : (

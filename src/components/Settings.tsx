@@ -102,7 +102,7 @@ const SettingToggle: React.FC<{
   <div className="flex items-center justify-between py-2">
     <div>
       <p className="text-sm font-bold text-white/80">{label}</p>
-      <p className="text-[10px] text-white/25 uppercase font-black tracking-widest">
+      <p className="text-tag text-white/25 uppercase font-black tracking-widest">
         {description}
       </p>
     </div>
@@ -270,7 +270,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-white/5 p-1 rounded-2xl mb-8">
+      <div className="flex bg-white/5 p-1 rounded-premium-md mb-8">
         <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')}>
           Общие
         </TabButton>
@@ -289,7 +289,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            <div className="glass-card rounded-3xl p-6 border border-white/5 space-y-1">
+            <div className="glass-card rounded-premium-xl p-6 border border-white/5 space-y-1">
               <SectionLabel className="mb-5">Эффекты и отклик</SectionLabel>
               <div className="divide-y divide-white/5">
                 <SettingToggle
@@ -313,34 +313,34 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </div>
             </div>
 
-            <div className="glass-card rounded-3xl p-6 border border-white/5">
+            <div className="glass-card rounded-premium-xl p-6 border border-white/5">
               <SectionLabel className="mb-5">Язык / Language</SectionLabel>
               <div className="flex gap-2">
                 {(['ru', 'en'] as const).map((l) => (
                   <button
                     key={l}
                     onClick={() => setLang(l)}
-                    className={`flex-1 py-3 rounded-2xl text-xs font-black uppercase tracking-wider border transition-all ${
+                    className={`flex-1 py-3 rounded-premium-md text-xs font-black uppercase tracking-wider border transition-all ${
                       lang === l
                         ? 'bg-white/15 text-white border-white/25'
                         : 'bg-white/3 text-white/30 border-white/5'
                     }`}
                   >
-                    {l === 'ru' ? '🇷🇺  Русский' : '🇬🇧  English'}
+                    {l === 'ru' ? 'Русский' : 'English'}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="glass-card rounded-3xl p-6 border border-white/5">
+            <div className="glass-card rounded-premium-xl p-6 border border-white/5">
               <SectionLabel className="mb-4">Хранилище</SectionLabel>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-premium-green/10 rounded-xl flex items-center justify-center border border-premium-green/20">
+                <div className="w-10 h-10 bg-premium-green/10 rounded-premium-sm flex items-center justify-center border border-premium-green/20">
                   <Database className="w-5 h-5 text-premium-green" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white/80">LocalStorage</p>
-                  <p className="text-[10px] text-premium-green font-black uppercase tracking-widest">
+                  <p className="text-tag text-premium-green font-black uppercase tracking-widest">
                     Активно
                   </p>
                 </div>
@@ -350,7 +350,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </p>
             </div>
 
-            <div className="glass-card rounded-3xl p-6 border border-white/5">
+            <div className="glass-card rounded-premium-xl p-6 border border-white/5">
               <SectionLabel className="mb-2">О приложении</SectionLabel>
               <p className="text-xs text-white/30 leading-relaxed">
                 Версия 1.1.0-beta · Я писал это на отьебись, как и всё остальное
@@ -383,7 +383,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       <button
                         key={t}
                         onClick={() => setTodType(t)}
-                        className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        className={`py-3 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                           todType === t
                             ? t === 'truth'
                               ? 'bg-premium-sky/10 border-premium-sky/30 text-premium-sky'
@@ -400,7 +400,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       <button
                         key={d.id}
                         onClick={() => setTodDiff(d.id)}
-                        className={`py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        className={`py-3 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                           todDiff === d.id
                             ? d.id === 'easy'
                               ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
@@ -421,17 +421,17 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             {/* 2. Progress */}
             <div className="flex items-center justify-between py-1">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-0.5">
+                <p className="text-tag font-black uppercase tracking-[0.4em] text-white/40 mb-0.5">
                   Прогресс
                 </p>
-                <p className="text-[11px] text-white/20 font-medium">
+                <p className="text-label text-white/20 font-medium">
                   {usedCount > 0 ? `${usedCount} пройдено` : 'Нет пройденных'}
                 </p>
               </div>
               {usedCount > 0 && (
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-premium-red/10 text-premium-red rounded-xl text-[9px] font-black uppercase tracking-widest border border-premium-red/20 active:scale-95 transition-transform"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-premium-red/10 text-premium-red rounded-premium-sm text-micro font-black uppercase tracking-widest border border-premium-red/20 active:scale-95 transition-transform"
                 >
                   <RefreshCw className="w-3 h-3" />
                   Сброс
@@ -450,7 +450,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                     <button
                       key={d.id}
                       onClick={() => setWordDiff(d.id)}
-                      className={`py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                      className={`py-2.5 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                         wordDiff === d.id
                           ? d.id === 'easy'
                             ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
@@ -481,7 +481,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   <button
                     onClick={handleAdd}
                     disabled={newWord.trim().length < 3}
-                    className="shrink-0 w-12 rounded-2xl bg-premium-green text-black flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all"
+                    className="shrink-0 w-12 rounded-premium-md bg-premium-green text-black flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all"
                   >
                     <Plus className="w-5 h-5" />
                   </button>
@@ -494,7 +494,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
-                      className="text-[10px] font-black uppercase tracking-widest text-premium-red/70 pl-1"
+                      className="text-tag font-black uppercase tracking-widest text-premium-red/70 pl-1"
                     >
                       {validationError}
                     </motion.p>
@@ -504,7 +504,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
 
               {/* Game chips — primary game selector */}
               <div>
-                <p className="text-[9px] font-black uppercase tracking-[0.35em] text-white/20 mb-2">
+                <p className="text-micro font-black uppercase tracking-[0.35em] text-white/20 mb-2">
                   Добавить в:
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -512,7 +512,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                     <button
                       key={game.id}
                       onClick={() => toggleAlsoAdd(game.id)}
-                      className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                      className={`px-3 py-1.5 rounded-full text-micro font-black uppercase tracking-widest border transition-all ${
                         alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
                       }`}
                     >
@@ -532,7 +532,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               </SectionLabel>
 
               {customWords.length === 0 ? (
-                <p className="text-[11px] text-white/15 font-medium text-center py-10 italic">
+                <p className="text-label text-white/15 font-medium text-center py-10 italic">
                   Ничего не добавлено
                 </p>
               ) : (
@@ -547,13 +547,13 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                         setCurrentPage(1);
                       }}
                       placeholder="Поиск..."
-                      className="w-full pl-8 pr-4 py-2.5 bg-white/5 rounded-2xl text-sm text-white/60 placeholder:text-white/20 border border-white/8 outline-none"
+                      className="w-full pl-8 pr-4 py-2.5 bg-white/5 rounded-premium-md text-sm text-white/60 placeholder:text-white/20 border border-white/8 outline-none"
                     />
                   </div>
 
                   {/* Word list */}
                   {filteredWords.length === 0 ? (
-                    <p className="text-[11px] text-white/15 font-medium text-center py-6 italic">
+                    <p className="text-label text-white/15 font-medium text-center py-6 italic">
                       Ничего не найдено
                     </p>
                   ) : (
@@ -561,14 +561,14 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       {pagedWords.map((word) => (
                         <div
                           key={word}
-                          className="flex items-center justify-between bg-white/2 px-4 py-3 rounded-2xl border border-white/5"
+                          className="flex items-center justify-between bg-white/2 px-4 py-3 rounded-premium-md border border-white/5"
                         >
                           <span className="text-sm font-medium text-white/60 leading-snug flex-1 mr-3">
                             {word}
                           </span>
                           <button
                             onClick={() => handleRemove(word)}
-                            className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-lg"
+                            className="text-white/15 hover:text-premium-red active:scale-90 transition-all shrink-0 p-1 rounded-premium-xs"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

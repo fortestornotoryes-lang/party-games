@@ -106,8 +106,8 @@ const Display = ({
     sm: 'text-4xl',
     md: 'text-5xl',
     lg: 'text-6xl',
-    xl: 'text-[70px]',
-    '2xl': 'text-[88px]',
+    xl: 'text-display-xl',
+    '2xl': 'text-display-2xl',
   } as const;
 
   const style = glow && GLOW[color] ? { textShadow: GLOW[color] } : undefined;
@@ -156,7 +156,7 @@ const Title = ({
 }) => {
   const SIZES = {
     sm: 'text-xl',
-    md: 'text-[28px] leading-[0.75]',
+    md: 'text-heading leading-[0.75]',
     lg: 'text-3xl',
     xl: 'text-4xl',
   } as const;
@@ -253,8 +253,8 @@ const Label = ({
   size?: 'xs' | 'sm' | 'md';
 }) => {
   const SIZES = {
-    xs: 'text-[10px] tracking-[0.4em]',
-    sm: 'text-[11px] tracking-[0.3em]',
+    xs: 'text-tag tracking-[0.4em]',
+    sm: 'text-label tracking-[0.3em]',
     md: 'text-xs tracking-[0.2em]',
   } as const;
 
@@ -345,8 +345,8 @@ const Caption = ({
   size?: 'xs' | 'sm';
 }) => {
   const SIZES = {
-    xs: 'text-[8px] tracking-[0.35em]',
-    sm: 'text-[9px] tracking-[0.3em]',
+    xs: 'text-micro tracking-[0.35em]',
+    sm: 'text-micro tracking-[0.3em]',
   } as const;
 
   return (

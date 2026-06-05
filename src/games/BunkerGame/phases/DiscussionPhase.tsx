@@ -104,7 +104,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
               >
                 <span className="text-xl w-7 text-center flex-shrink-0">{rev.entry.emoji}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[9px] text-white/30 font-black uppercase tracking-widest">
+                  <div className="text-micro text-white/30 font-black uppercase tracking-widest">
                     {char.playerName} · {char.age} л · {char.gender} ·{' '}
                     {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                   </div>
@@ -131,7 +131,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                 if (rev) prev.push(`${rev.entry.emoji} ${rev.entry.name}`);
               }
               return (
-                <div key={char.playerName} className="flex items-start gap-2 text-[11px]">
+                <div key={char.playerName} className="flex items-start gap-2 text-label">
                   <span className="font-black text-white/50 w-20 flex-shrink-0 truncate">
                     {char.playerName}
                   </span>

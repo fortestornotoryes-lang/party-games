@@ -59,10 +59,10 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             isBlitz &&
             blitzStats && (
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black tabular-nums text-premium-green">
+                <span className="text-label font-black tabular-nums text-premium-green">
                   ✓{blitzStats.guessed}
                 </span>
-                <span className="text-[11px] font-black tabular-nums text-premium-red">
+                <span className="text-label font-black tabular-nums text-premium-red">
                   ✗{blitzStats.skipped}
                 </span>
               </div>
@@ -72,7 +72,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
         {/* Secret word */}
         <div className="p-8 rounded-4xl border-2 border-premium-orange/30 bg-premium-orange/5 text-center">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-orange/50 mb-3">
+          <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-orange/50 mb-3">
             Загаданное слово
           </p>
           <h2
@@ -85,7 +85,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
         {/* Required words */}
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30 mb-3 text-center">
+          <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30 mb-3 text-center">
             Обязательные слова — используй все!
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -116,7 +116,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                 className="flex items-center justify-center gap-2 px-5 py-4 rounded-premium-lg glass-card border border-white/10 text-white/50 active:scale-95 transition-all"
               >
                 <SkipForward className="w-5 h-5" />
-                <span className="text-[11px] font-black uppercase tracking-wider">−1</span>
+                <span className="text-label font-black uppercase tracking-wider">−1</span>
               </button>
             </div>
           ) : (
@@ -129,7 +129,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             </PrimaryButton>
           )}
 
-          <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20">
+          <p className="text-center text-micro font-black uppercase tracking-widest text-white/20">
             {isBlitz ? 'Пропуск даёт −1 объясняющему' : 'Само слово называть нельзя'}
           </p>
         </div>

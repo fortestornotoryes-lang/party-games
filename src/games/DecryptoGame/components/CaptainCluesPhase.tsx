@@ -30,7 +30,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
     className="space-y-6 flex flex-col overflow-auto pb-8 relative h-full"
   >
     <div className={`text-center sticky top-0 bg-black/60 backdrop-blur-md py-3 z-10`}>
-      <p className={`text-[10px] tracking-widest uppercase font-black ${tText(activeTeam)}`}>
+      <p className={`text-tag tracking-widest uppercase font-black ${tText(activeTeam)}`}>
         Шифровальщик
       </p>
       <h3 className="text-3xl text-white font-black tracking-[0.2em]">{currentCode.join(' - ')}</h3>

@@ -162,7 +162,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                 >
                   {val}%
                 </span>
-                <span className="text-[10px] text-white/25 w-14 flex-shrink-0">
+                <span className="text-tag text-white/25 w-14 flex-shrink-0">
                   {t(`${NS.BUNKER}.resources.${key}`)}
                 </span>
               </div>
@@ -194,7 +194,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
               <span className="text-xl">{char.profession.emoji}</span>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-black text-white">{char.playerName}</div>
-                <div className="text-[10px] text-white/40">{char.profession.name}</div>
+                <div className="text-tag text-white/40">{char.profession.name}</div>
               </div>
               <div className="flex gap-1 flex-wrap justify-end">
                 {[char.health, char.hobby, char.trait].map(

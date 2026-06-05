@@ -31,7 +31,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className={`w-32 h-32 rounded-[2.5rem] mx-auto flex items-center justify-center shadow-2xl ${winner === 'resistance' ? 'bg-premium-blue shadow-premium-blue/40' : 'bg-premium-red shadow-premium-red/40'}`}
+            className={`w-32 h-32 rounded-premium-3xl mx-auto flex items-center justify-center shadow-2xl ${winner === 'resistance' ? 'bg-premium-blue shadow-premium-blue/40' : 'bg-premium-red shadow-premium-red/40'}`}
           >
             {winner === 'resistance' ? (
               <Shield className="w-16 h-16 text-white" />
@@ -48,7 +48,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
                 {winner === 'resistance' ? 'Свободы' : 'Хаоса'}
               </span>
             </h1>
-            <p className="text-[12px] text-white/30 uppercase tracking-[0.4em] font-black mt-4">
+            <p className="text-label text-white/30 uppercase tracking-[0.4em] font-black mt-4">
               Мир уже не будет прежним
             </p>
           </div>
@@ -56,7 +56,7 @@ export const ResistanceResult: React.FC<ResistanceResultProps> = ({
 
         <div className="space-y-4">
           <div className="p-6 bg-white/5 border border-white/10 rounded-2xl space-y-4">
-            <div className="flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-white/30">
+            <div className="flex items-center justify-between text-tag uppercase font-black tracking-widest text-white/30">
               <span>Шпионы этой игры</span>
               <Award className="w-4 h-4" />
             </div>

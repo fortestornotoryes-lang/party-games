@@ -26,7 +26,7 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ psychic, onReady }) => (
         {psychic}
       </Typography.Display>
     </div>
-    <div className="p-8 bg-premium-purple/5 border-2 border-premium-purple/10 rounded-[40px] max-w-xs transition-all">
+    <div className="p-8 bg-premium-purple/5 border-2 border-premium-purple/10 rounded-premium-3xl max-w-xs transition-all">
       <Typography.Body color="muted">
         {psychic}, возьми телефон! Только ты должен видеть секретную цель. Убедись, что остальные не
         смотрят.

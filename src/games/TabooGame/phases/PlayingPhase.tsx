@@ -51,7 +51,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
         {/* Forbidden words — shown first so explainer sees the constraints */}
         <div className="p-5 rounded-3xl border-2 border-premium-red/30 bg-premium-red/5">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-premium-red/60 mb-3 text-center">
+          <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-red/60 mb-3 text-center">
             🚫 {t(`${NS.TABOO}.forbiddenWords`)}
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -69,7 +69,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         {/* Main word */}
         <div className="flex-1 flex items-center justify-center">
           <div className="p-8 rounded-4xl border-2 border-white/15 bg-white/5 text-center w-full">
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30 mb-3">
+            <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30 mb-3">
               {t(`${NS.TABOO}.wordToGuess`)}
             </p>
             <h2
@@ -89,7 +89,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           >
             {t(`${NS.TABOO}.wordGuessed`)}
           </PrimaryButton>
-          <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20">
+          <p className="text-center text-micro font-black uppercase tracking-widest text-white/20">
             {t(`${NS.TABOO}.forbiddenHint`)}
           </p>
         </div>

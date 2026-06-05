@@ -193,7 +193,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     <div className="flex-1 flex flex-col min-h-0 p-3 gap-2">
       <div className="flex-shrink-0 flex items-center justify-between px-1">
         <div>
-          <p className="text-[8px] text-white/30 uppercase font-black tracking-widest">
+          <p className="text-micro text-white/30 uppercase font-black tracking-widest">
             ✏️ Рисуешь
           </p>
           <motion.p
@@ -212,19 +212,19 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           </span>
           <button
             onClick={undoDrawing}
-            className="p-2.5 bg-white/5 rounded-xl hover:bg-premium-orange/20 text-white/35 hover:text-premium-orange transition-all"
+            className="p-2.5 bg-white/5 rounded-premium-sm hover:bg-premium-orange/20 text-white/35 hover:text-premium-orange transition-all"
           >
             <Undo2 className="w-5 h-5" />
           </button>
           <button
             onClick={clearCanvas}
-            className="p-2.5 bg-white/5 rounded-xl hover:bg-premium-red/20 text-white/35 hover:text-premium-red transition-all"
+            className="p-2.5 bg-white/5 rounded-premium-sm hover:bg-premium-red/20 text-white/35 hover:text-premium-red transition-all"
           >
             <Eraser className="w-5 h-5" />
           </button>
           <button
             onClick={handleSubmit}
-            className="p-2.5 bg-white text-black rounded-xl hover:bg-zinc-200 transition-all"
+            className="p-2.5 bg-white text-black rounded-premium-sm hover:bg-zinc-200 transition-all"
           >
             <CheckCircle2 className="w-5 h-5" />
           </button>
@@ -246,7 +246,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         ))}
       </div>
 
-      <div className="flex-1 relative min-h-0 bg-[#120a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+      <div className="flex-1 relative min-h-0 bg-[#120a0a] rounded-premium-md border border-white/10 overflow-hidden shadow-2xl">
         <canvas
           ref={canvasRef}
           onMouseDown={startDrawing}
@@ -260,7 +260,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
         />
       </div>
 
-      <div className="flex-shrink-0 bg-black/70  border border-white/10 rounded-2xl px-3 py-2.5 flex flex-col gap-2">
+      <div className="flex-shrink-0 bg-black/70  border border-white/10 rounded-premium-md px-3 py-2.5 flex flex-col gap-2">
         <div className="flex items-center justify-center gap-1.5">
           {BRUSH_COLORS.map((color) => (
             <button

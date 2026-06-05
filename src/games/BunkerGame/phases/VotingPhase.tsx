@@ -112,7 +112,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
           <div className="flex-1 min-w-0">
             <span className="font-black italic uppercase text-white">{directorName}</span>
             <span
-              className="ml-2 text-[10px] font-black uppercase tracking-wider"
+              className="ml-2 text-tag font-black uppercase tracking-wider"
               style={{ color: 'var(--color-premium-yellow)' }}
             >
               {t(`${NS.BUNKER}.directorProtected`)}
@@ -160,7 +160,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                     {isSelected && (
                       <div className="flex items-center gap-1">
                         <UserX className="w-3.5 h-3.5 text-premium-red" />
-                        <span className="text-[10px] font-black text-premium-red uppercase tracking-wider">
+                        <span className="text-tag font-black text-premium-red uppercase tracking-wider">
                           {t(`${NS.BUNKER}.eliminatedBadge`)}
                         </span>
                       </div>
@@ -176,7 +176,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                   {revealed.map((rev, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-tag font-bold"
                       style={{
                         background: 'rgba(255,255,255,0.06)',
                         color: isSelected ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.65)',

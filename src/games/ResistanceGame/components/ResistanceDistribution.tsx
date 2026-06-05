@@ -24,12 +24,12 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
           ? {
               border: '1.5px solid rgba(239,68,68,0.4)',
               boxShadow:
-                '0 0 80px rgba(239,68,68,0.18), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(239,68,68,0.1)',
+                '0 0 80px rgba(239,68,68,0.18), var(--shadow-card), inset 0 1px 0 rgba(239,68,68,0.1)',
             }
           : {
               border: '1.5px solid rgba(59,130,246,0.35)',
               boxShadow:
-                '0 0 70px rgba(63,123,255,0.15), 0 32px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(59,130,246,0.08)',
+                '0 0 70px rgba(63,123,255,0.15), var(--shadow-card), inset 0 1px 0 rgba(59,130,246,0.08)',
             },
       })}
       renderCard={(player, isLast, onNext) => (
@@ -59,7 +59,7 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-red/50">
+                  <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-red/50">
                     Секретная роль
                   </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
@@ -71,20 +71,20 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                     style={{ filter: 'drop-shadow(0 0 18px rgba(239,68,68,0.5))' }}
                   />
                   <h3
-                    className="text-[52px] font-black italic text-premium-red tracking-tighter leading-none"
+                    className="text-5xl font-black italic text-premium-red tracking-tighter leading-none"
                     style={{ textShadow: '0 0 40px rgba(239,68,68,0.4)' }}
                   >
                     ШПИОН
                   </h3>
                   <div className="px-4 py-3 bg-premium-red/10 border border-premium-red/20 rounded-2xl">
-                    <p className="text-[8px] font-black uppercase text-premium-red/50 mb-1">
+                    <p className="text-micro font-black uppercase text-premium-red/50 mb-1">
                       Союзники
                     </p>
                     <p className="text-sm font-black italic text-white">
                       {spyNames.filter((n) => n !== player.name).join(', ') || 'Ты один'}
                     </p>
                   </div>
-                  <p className="text-white/25 text-[10px] leading-relaxed">
+                  <p className="text-white/25 text-tag leading-relaxed">
                     Срывай миссии, не раскрывая себя
                   </p>
                 </div>
@@ -104,7 +104,7 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex-1 flex flex-col items-center justify-between w-full"
               >
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-premium-blue/50">
+                  <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-blue/50">
                     Роль
                   </p>
                   <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
@@ -116,12 +116,12 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                     style={{ filter: 'drop-shadow(0 0 16px rgba(63,123,255,0.5))' }}
                   />
                   <h3
-                    className="text-[48px] font-black italic text-premium-blue tracking-tighter leading-none"
+                    className="text-5xl font-black italic text-premium-blue tracking-tighter leading-none"
                     style={{ textShadow: '0 0 36px rgba(63,123,255,0.35)' }}
                   >
                     СОПРО&shy;ТИВЛЕНИЕ
                   </h3>
-                  <p className="text-white/25 text-[10px] leading-relaxed">
+                  <p className="text-white/25 text-tag leading-relaxed">
                     Выполняй миссии — вычисли шпионов
                   </p>
                 </div>

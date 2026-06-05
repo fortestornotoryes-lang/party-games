@@ -49,7 +49,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
           initial={{ opacity: 0, scale: 0.88 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.08 }}
-          className="w-full rounded-[28px] p-8 text-center relative overflow-hidden"
+          className="w-full rounded-premium-xl p-8 text-center relative overflow-hidden"
           style={{
             background: isTruth
               ? 'linear-gradient(145deg, rgba(31,182,255,0.1) 0%, rgba(31,182,255,0.04) 100%)'

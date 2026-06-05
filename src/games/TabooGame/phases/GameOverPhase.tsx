@@ -35,7 +35,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
     >
       <div className="text-center space-y-2 pt-4">
         <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
+        <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
           {t(`${NS.TABOO}.gameEnded`)}
         </p>
         {hasWinner ? (

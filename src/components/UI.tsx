@@ -100,7 +100,7 @@ export const SectionLabel: React.FC<{ children: React.ReactNode; className?: str
   className = '',
 }) => (
   <span
-    className={`text-[11px] font-black uppercase tracking-[0.5em] text-white/80 block mb-3 italic ${className}`}
+    className={`text-label font-black uppercase tracking-[0.5em] text-white/80 block mb-3 italic ${className}`}
   >
     {children}
   </span>
@@ -112,7 +112,7 @@ export const Badge: React.FC<{
   variant?: 'default' | 'outline';
 }> = ({ children, className = '', variant = 'default' }) => (
   <span
-    className={`px-3 py-1 rounded-premium-sm text-[9px] font-black uppercase tracking-wider ${
+    className={`px-3 py-1 rounded-premium-sm text-micro font-black uppercase tracking-wider ${
       variant === 'default'
         ? 'bg-white/5 text-white/80 border border-white/5'
         : 'border border-white/10 text-white/20'
@@ -170,7 +170,7 @@ export const TabButton: React.FC<{
 }> = ({ active, onClick, children }) => (
   <button
     onClick={onClick}
-    className={`flex-1 py-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all border-b-2 font-display italic ${
+    className={`flex-1 py-4 text-label font-black uppercase tracking-[0.3em] transition-all border-b-2 font-display italic ${
       active ? 'text-white border-premium-red' : 'text-white/20 border-white/5'
     }`}
   >

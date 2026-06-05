@@ -17,17 +17,17 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ guesser, onReady }) => (
     className="min-h-full flex flex-col items-center justify-center gap-8 p-6 text-center"
   >
     <div className="space-y-3">
-      <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/25">Новый раунд</p>
+      <p className="text-micro font-black uppercase tracking-[0.5em] text-white/25">Новый раунд</p>
       <h3 className="text-base font-black uppercase tracking-[0.3em] text-white/50">Отгадывает:</h3>
       <h2
-        className="text-[52px] font-black italic uppercase text-premium-yellow tracking-tighter leading-none"
+        className="text-5xl font-black italic uppercase text-premium-yellow tracking-tighter leading-none"
         style={{ textShadow: '0 0 40px rgba(255,204,31,0.3)' }}
       >
         {guesser}
       </h2>
     </div>
 
-    <div className="w-full max-w-sm p-6 bg-premium-yellow/[0.05] border border-premium-yellow/15 rounded-[28px] text-sm text-white/40 leading-relaxed">
+    <div className="w-full max-w-sm p-6 bg-premium-yellow/[0.05] border border-premium-yellow/15 rounded-premium-xl text-sm text-white/40 leading-relaxed">
       {guesser}, передай телефон остальным. Только они увидят загаданное слово!
     </div>
 

@@ -34,11 +34,11 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     {/* Word reveal */}
     <div className="text-center space-y-2 pt-2">
       {timedOut && (
-        <p className="text-[9px] font-black uppercase tracking-widest text-premium-red/70">
+        <p className="text-micro font-black uppercase tracking-widest text-premium-red/70">
           Время вышло!
         </p>
       )}
-      <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">
+      <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30">
         Загаданное слово
       </p>
       <h2 className="text-5xl font-black italic uppercase tracking-tighter text-white">
@@ -48,7 +48,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
     {/* Mark used words */}
     <div>
-      <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30 mb-3 text-center">
+      <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30 mb-3 text-center">
         Отметьте использованные слова
       </p>
       <div className="flex flex-wrap gap-2 justify-center">
@@ -66,7 +66,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           </button>
         ))}
       </div>
-      <p className="text-center text-[9px] font-black uppercase tracking-widest text-white/20 mt-3">
+      <p className="text-center text-micro font-black uppercase tracking-widest text-white/20 mt-3">
         Использовано: {usedWordIdxs.size}/{card.required.length}
       </p>
     </div>
@@ -75,7 +75,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
     {/* Who guessed? */}
     <div className="space-y-3">
-      <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30 text-center">
+      <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30 text-center">
         Кто угадал?
       </p>
 
@@ -92,7 +92,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
               <p className="font-black italic text-premium-green text-base leading-tight">
                 {player}
               </p>
-              <p className="text-[10px] text-white/30 mt-0.5">
+              <p className="text-tag text-white/30 mt-0.5">
                 {allWordsUsed
                   ? 'Все слова использованы'
                   : `Слов использовано: ${usedWordIdxs.size}/${card.required.length}`}
@@ -119,7 +119,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
           <p className="font-black italic text-premium-red text-base leading-tight">
             {currentExplainer} назвал слово
           </p>
-          <p className="text-[10px] text-white/30 mt-0.5">Штраф объяснявшему</p>
+          <p className="text-tag text-white/30 mt-0.5">Штраф объяснявшему</p>
         </div>
         <span className="text-3xl font-black italic text-premium-red ml-4">−1</span>
       </button>

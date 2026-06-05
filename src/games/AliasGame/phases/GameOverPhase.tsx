@@ -22,7 +22,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBac
     >
       <div className="relative">
         <div
-          className={`absolute -inset-16 blur-[70px] rounded-full ${isRed ? 'bg-premium-red/15' : 'bg-premium-blue/15'}`}
+          className={`absolute -inset-16 blur-3xl rounded-full ${isRed ? 'bg-premium-red/15' : 'bg-premium-blue/15'}`}
         />
         <Trophy className={`w-24 h-24 mx-auto mb-5 relative ${teamColor}`} />
         <Typography.Display size="xl" align="center" className="mb-2 relative">

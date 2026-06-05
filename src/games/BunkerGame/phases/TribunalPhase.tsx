@@ -151,7 +151,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                       style={{ color: 'var(--color-premium-yellow)' }}
                     />
                     <span
-                      className="text-[10px] font-black uppercase tracking-wider"
+                      className="text-tag font-black uppercase tracking-wider"
                       style={{ color: 'var(--color-premium-yellow)' }}
                     >
                       {t(`${NS.BUNKER}.appealBtn`)}
@@ -188,7 +188,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-              className="w-full rounded-[2rem] p-8 text-center space-y-4"
+              className="w-full rounded-premium-2xl p-8 text-center space-y-4"
               style={{
                 background: `linear-gradient(160deg, ${rgba('yellow', 0.12)} 0%, rgba(0,0,0,0.3) 100%)`,
                 border: `1.5px solid ${rgba('yellow', 0.35)}`,
@@ -196,7 +196,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
               }}
             >
               <div
-                className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.3em]"
+                className="inline-block px-3 py-1 rounded-full text-tag font-black uppercase tracking-[0.3em]"
                 style={{
                   background: rgba('yellow', 0.15),
                   border: `1px solid ${rgba('yellow', 0.3)}`,
@@ -253,7 +253,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => handleVote('pardoned')}
-              className="w-full p-6 rounded-[2rem] text-center space-y-2 active:scale-[0.98] transition-transform"
+              className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
               style={{
                 background: rgba('green', 0.08),
                 border: `2px solid ${rgba('green', 0.35)}`,
@@ -271,7 +271,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => handleVote('rejected')}
-              className="w-full p-6 rounded-[2rem] text-center space-y-2 active:scale-[0.98] transition-transform"
+              className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
               style={{
                 background: rgba('red', 0.06),
                 border: `2px solid ${rgba('red', 0.25)}`,
@@ -295,7 +295,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         <motion.div key="swap" {...SLIDE} className="flex flex-col min-h-full px-5 py-6 gap-5">
           <div className="text-center space-y-2">
             <div
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-tag font-black uppercase tracking-widest"
               style={{
                 background: rgba('green', 0.12),
                 border: `1px solid ${rgba('green', 0.3)}`,
@@ -337,7 +337,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                   style={{ background: rgba('red', 0.12), border: `1px solid ${rgba('red', 0.3)}` }}
                 >
                   <X className="w-3.5 h-3.5 text-premium-red" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-premium-red">
+                  <span className="text-tag font-black uppercase tracking-wider text-premium-red">
                     {t(`${NS.BUNKER}.excludeSmall`)}
                   </span>
                 </div>

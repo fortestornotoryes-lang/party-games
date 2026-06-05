@@ -196,12 +196,12 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                 {p1}
               </span>
             </div>
-            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pl-6">
+            <p className="text-micro font-black text-white/40 mt-1 uppercase tracking-widest pl-6">
               {score[1]} побед
             </p>
           </div>
 
-          <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">vs</span>
+          <span className="text-tag font-black text-white/20 uppercase tracking-widest">vs</span>
 
           <div
             className={`text-right transition-all duration-300 ${!gameOver && current === 2 ? 'opacity-100' : 'opacity-35'}`}
@@ -212,7 +212,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               </span>
               <div className="w-4 h-4 rounded-full bg-premium-yellow shadow-[0_0_8px_rgba(255,204,31,0.7)]" />
             </div>
-            <p className="text-[9px] font-black text-white/40 mt-1 uppercase tracking-widest pr-6">
+            <p className="text-micro font-black text-white/40 mt-1 uppercase tracking-widest pr-6">
               {score[2]} побед
             </p>
           </div>
@@ -230,7 +230,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
             >
               <button
                 onClick={() => setAction('place')}
-                className={`flex-1 py-3 rounded-2xl font-black text-[11px] uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-3 rounded-2xl font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                   action === 'place'
                     ? current === 1
                       ? 'bg-premium-red/15 border-premium-red/50 text-premium-red'
@@ -243,7 +243,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
               </button>
               <button
                 onClick={() => setAction('pop')}
-                className={`flex-1 py-3 rounded-2xl font-black text-[11px] uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-3 rounded-2xl font-black text-label uppercase tracking-wider border transition-all flex items-center justify-center gap-1.5 ${
                   action === 'pop'
                     ? 'bg-white/10 border-white/35 text-white'
                     : 'bg-white/5 border-white/10 text-white/30'
@@ -379,7 +379,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
                   : 'bg-white/5 border-white/20'
               }`}
             >
-              <p className="text-[9px] font-black uppercase tracking-[0.45em] text-white/35 mb-2">
+              <p className="text-micro font-black uppercase tracking-[0.45em] text-white/35 mb-2">
                 {win ? 'Победитель' : 'Итог раунда'}
               </p>
               <h3

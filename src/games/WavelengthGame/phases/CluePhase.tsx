@@ -27,7 +27,7 @@ export const CluePhase: React.FC<CluePhaseProps> = ({
   >
     {/* Psychic identity */}
     <div className="text-center space-y-2">
-      <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/35">
+      <div className="text-tag font-black uppercase tracking-[0.4em] text-white/35">
         Текущий Телепат
       </div>
       <h3 className="text-4xl font-black italic text-premium-purple tracking-tighter uppercase">
@@ -81,10 +81,10 @@ export const CluePhase: React.FC<CluePhaseProps> = ({
 
           {/* Pair labels */}
           <div className="flex justify-between mt-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-premium-purple/80">
+            <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple/80">
               {currentPair[0]}
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-premium-purple/80">
+            <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple/80">
               {currentPair[1]}
             </span>
           </div>

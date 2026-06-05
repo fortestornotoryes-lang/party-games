@@ -47,7 +47,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
       {teams ? (
         <div className="text-center space-y-2 pt-4 w-full">
           <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
+          <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
             Игра завершена
           </p>
           {teamWinner === -1 ? (
@@ -82,7 +82,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                   }`}
                 >
                   <p
-                    className={`text-[9px] font-black uppercase tracking-widest ${
+                    className={`text-micro font-black uppercase tracking-widest ${
                       ti === 0 ? 'text-premium-orange/70' : 'text-premium-sky/70'
                     }`}
                   >
@@ -105,8 +105,8 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                       .sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0))
                       .map((p) => (
                         <div key={p} className="flex justify-between items-center">
-                          <span className="text-[11px] font-bold text-white/50 truncate">{p}</span>
-                          <span className="text-[11px] font-black text-white/40 ml-2 tabular-nums">
+                          <span className="text-label font-bold text-white/50 truncate">{p}</span>
+                          <span className="text-label font-black text-white/40 ml-2 tabular-nums">
                             {scores[p] ?? 0}
                           </span>
                         </div>
@@ -121,7 +121,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
         /* ── Classic / blitz result header ─────────────────────────────────── */
         <div className="text-center space-y-2 pt-4">
           <Trophy className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]" />
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
+          <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
             Игра завершена
           </p>
           {hasWinner ? (

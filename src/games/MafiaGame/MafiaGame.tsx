@@ -23,7 +23,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
         <h2 className="text-3xl font-black italic uppercase tracking-tighter">
           {GAMES_REGISTRY.mafia.title}
         </h2>
-        <p className="text-white/30 uppercase tracking-[0.2em] text-[10px] font-bold">
+        <p className="text-white/30 uppercase tracking-[0.2em] text-tag font-bold">
           Город засыпает...
         </p>
       </div>

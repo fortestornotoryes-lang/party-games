@@ -39,7 +39,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
         <div
           className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-premium-red' : 'bg-premium-blue'}`}
         />
-        <p className="text-[10px] text-white/40 uppercase tracking-widest font-black mb-1">
+        <p className="text-tag text-white/40 uppercase tracking-widest font-black mb-1">
           {t('codenames.clueLabel')}
         </p>
         <div className="flex items-baseline gap-2">
@@ -64,7 +64,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
                 <p className="text-xl font-black text-center text-white tracking-widest">
                   {lastActionMsg}
                 </p>
-                <p className="text-[10px] text-white/30 text-center uppercase font-bold mt-2">
+                <p className="text-tag text-white/30 text-center uppercase font-bold mt-2">
                   {t('codenames.turnPassing')}
                 </p>
               </div>
@@ -85,7 +85,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
                         `}
           >
             <span
-              className={`text-[10px] sm:text-xs font-black leading-tight wrap-break-word uppercase ${!card.revealed ? 'text-stone-800' : ''}`}
+              className={`text-tag sm:text-xs font-black leading-tight wrap-break-word uppercase ${!card.revealed ? 'text-stone-800' : ''}`}
             >
               {card.word}
             </span>

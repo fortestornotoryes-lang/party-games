@@ -57,10 +57,10 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
           <CheckCircle className="w-10 h-10 text-premium-green" />
         </div>
         <div className="text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-premium-green/70 mb-1">
+          <p className="text-tag font-black uppercase tracking-[0.28em] text-premium-green/70 mb-1">
             Правильно!
           </p>
-          <p className="text-[14px] text-white/55 font-semibold">{currentPlayer}</p>
+          <p className="text-label text-white/55 font-semibold">{currentPlayer}</p>
         </div>
       </motion.div>
 
@@ -73,19 +73,19 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
         style={{ borderColor: 'rgba(255,204,31,0.2)' }}
       >
         <div className="h-px bg-gradient-to-r from-transparent via-premium-yellow/40 to-transparent mb-4" />
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/35 mb-1">
+        <p className="text-tag font-black uppercase tracking-[0.22em] text-white/35 mb-1">
           Вопрос {questionIndex + 1} — Сумма
         </p>
         <motion.p
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.3 }}
-          className="text-[46px] font-black font-display italic tracking-tighter text-premium-yellow leading-none"
+          className="text-5xl font-black font-display italic tracking-tighter text-premium-yellow leading-none"
           style={{ textShadow: '0 0 40px rgba(255,204,31,0.5)' }}
         >
           {currentPrize}
         </motion.p>
-        <p className="text-[10px] text-white/25 mt-2 font-black uppercase tracking-wider">
+        <p className="text-tag text-white/25 mt-2 font-black uppercase tracking-wider">
           ₽ в кармане
         </p>
       </motion.div>

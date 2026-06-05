@@ -142,7 +142,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
       <div className="p-6 flex-1 flex flex-col max-w-sm mx-auto w-full gap-6">
         <div className="flex justify-between p-4 bg-white/5 rounded-3xl border border-white/10 shadow-2xl">
           <div className="text-center group">
-            <p className="text-[10px] text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
+            <p className="text-tag text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
             <div className="flex items-center gap-2">
               {[...Array(3)].map((_, i) => (
                 <div
@@ -153,7 +153,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
             </div>
           </div>
           <div className="text-center group">
-            <p className="text-[10px] text-premium-red font-black tracking-widest mb-1">ШПИОНЫ</p>
+            <p className="text-tag text-premium-red font-black tracking-widest mb-1">ШПИОНЫ</p>
             <div className="flex items-center gap-2 justify-end">
               {[...Array(3)].map((_, i) => (
                 <div
@@ -175,7 +175,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               className="space-y-6"
             >
               <div className="text-center space-y-1">
-                <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">
+                <p className="text-tag text-white/80 font-black uppercase tracking-widest">
                   Лидер миссии
                 </p>
                 <h3 className="text-4xl font-black italic text-white uppercase">
@@ -249,7 +249,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               className="space-y-8 flex-1 flex flex-col items-center justify-center"
             >
               <div className="text-center">
-                <p className="text-[10px] text-premium-blue font-black uppercase tracking-widest mb-2">
+                <p className="text-tag text-premium-blue font-black uppercase tracking-widest mb-2">
                   Голосует
                 </p>
                 <h4 className="text-4xl font-black italic text-white uppercase">
@@ -260,7 +260,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               <div className="grid grid-cols-1 gap-4 w-full">
                 <button
                   onClick={() => handleMissionVote(true)}
-                  className="group p-8 bg-premium-green/10 border-2 border-premium-green/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all"
+                  className="group p-8 bg-premium-green/10 border-2 border-premium-green/30 rounded-premium-3xl flex flex-col items-center gap-4 active:scale-95 transition-all"
                 >
                   <CheckCircle2 className="w-12 h-12 text-premium-green" />
                   <span className="text-xl font-black italic text-premium-green uppercase tracking-widest">
@@ -269,7 +269,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 </button>
                 <button
                   onClick={() => handleMissionVote(false)}
-                  className="group p-8 bg-premium-red/10 border-2 border-premium-red/30 rounded-[2.5rem] flex flex-col items-center gap-4 active:scale-95 transition-all"
+                  className="group p-8 bg-premium-red/10 border-2 border-premium-red/30 rounded-premium-3xl flex flex-col items-center gap-4 active:scale-95 transition-all"
                 >
                   <XCircle className="w-12 h-12 text-premium-red" />
                   <span className="text-xl font-black italic text-premium-red uppercase tracking-widest">
@@ -289,7 +289,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               className="space-y-8 text-center flex-1 flex flex-col items-center justify-center"
             >
               <div
-                className={`p-12 rounded-[40px] w-full border-2 ${missionVotes.includes(false) ? 'bg-premium-red/10 border-premium-red/40' : 'bg-premium-green/10 border-premium-green/40'}`}
+                className={`p-12 rounded-premium-3xl w-full border-2 ${missionVotes.includes(false) ? 'bg-premium-red/10 border-premium-red/40' : 'bg-premium-green/10 border-premium-green/40'}`}
               >
                 <div className="mb-4 flex justify-center">
                   {missionVotes.includes(false) ? (
@@ -321,9 +321,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               className="space-y-12 text-center flex-1 flex flex-col items-center justify-center"
             >
               <div
-                className={`p-12 rounded-[40px] w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}
+                className={`p-12 rounded-premium-3xl w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}
               >
-                <h2 className="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-60">
+                <h2 className="text-tag font-black uppercase tracking-[0.5em] mb-4 opacity-60">
                   ФИНАЛЬНЫЙ СЧЕТ
                 </h2>
                 <h3
@@ -336,7 +336,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               </div>
 
               <div className="w-full space-y-3">
-                <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">
+                <p className="text-tag font-black text-white/20 uppercase tracking-widest">
                   Агенты шпионажа
                 </p>
                 <div className="grid grid-cols-2 gap-2">

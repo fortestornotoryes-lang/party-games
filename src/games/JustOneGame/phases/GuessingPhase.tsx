@@ -61,7 +61,7 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
         onKeyDown={(e) => {
           if (e.key === 'Enter' && guess.trim()) onGuess();
         }}
-        className="w-full py-5 bg-white/4 border border-white/8 rounded-[20px] text-center text-3xl font-black italic uppercase outline-none focus:border-premium-yellow/40 transition-all placeholder:text-white/15"
+        className="w-full py-5 bg-white/4 border border-white/8 rounded-premium-lg text-center text-3xl font-black italic uppercase outline-none focus:border-premium-yellow/40 transition-all placeholder:text-white/15"
       />
       <PrimaryButton onClick={onGuess} disabled={!guess.trim()}>
         ОТВЕТИТЬ

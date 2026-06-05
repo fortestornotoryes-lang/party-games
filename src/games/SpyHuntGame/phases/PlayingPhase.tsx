@@ -47,7 +47,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
         >
           <div className="flex items-center space-x-3">
             <MessageSquare className="w-4 h-4 text-premium-red" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">
+            <span className="text-tag font-black uppercase tracking-widest text-white/60">
               Идеи для вопросов
             </span>
           </div>
@@ -63,7 +63,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
             {QUESTION_IDEAS.map((q, i) => (
               <div
                 key={i}
-                className="p-4 bg-white/4 rounded-premium-md text-[13px] text-white/55 italic border border-white/6"
+                className="p-4 bg-white/4 rounded-premium-md text-label text-white/55 italic border border-white/6"
               >
                 "{q}"
               </div>
@@ -77,7 +77,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
         >
           <div className="flex items-center space-x-3">
             <List className="w-4 h-4 text-premium-sky" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">
+            <span className="text-tag font-black uppercase tracking-widest text-white/60">
               Возможные локации
             </span>
           </div>
@@ -93,7 +93,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
             {LOCATIONS.map((loc, i) => (
               <div
                 key={i}
-                className="p-3 rounded-premium-sm text-[10px] font-bold text-center bg-white/4 border border-white/6 text-white/45"
+                className="p-3 rounded-premium-sm text-tag font-bold text-center bg-white/4 border border-white/6 text-white/45"
               >
                 {loc}
               </div>
@@ -103,7 +103,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
       </div>
 
       <div className="pt-6">
-        <h4 className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] mb-4 text-center">
+        <h4 className="text-tag font-black text-white/20 uppercase tracking-[0.3em] mb-4 text-center">
           Агенты под подозрением
         </h4>
         <div className="grid grid-cols-2 gap-3">

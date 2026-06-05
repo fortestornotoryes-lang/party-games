@@ -33,7 +33,7 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
           initial={{ scale: 0.82 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-          className={`w-full max-w-[220px] py-8 px-6 rounded-[32px] border-2 ${teamBg} flex flex-col items-center`}
+          className={`w-full max-w-[220px] py-8 px-6 rounded-premium-xl border-2 ${teamBg} flex flex-col items-center`}
           style={{
             boxShadow: isRed ? '0 0 60px rgba(255,46,77,0.12)' : '0 0 60px rgba(63,123,255,0.12)',
           }}
@@ -52,7 +52,7 @@ export const StartPhase: React.FC<StartPhaseProps> = ({ teams, currentTeamIdx, o
         {teams.map((t, i) => (
           <div
             key={i}
-            className={`p-4 rounded-[20px] border ${
+            className={`p-4 rounded-premium-lg border ${
               i === 0
                 ? 'bg-premium-red/[0.05] border-premium-red/15'
                 : 'bg-premium-blue/[0.05] border-premium-blue/15'

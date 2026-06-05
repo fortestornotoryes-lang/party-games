@@ -34,11 +34,10 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
       }}
       whileTap={{ scale: 0.975 }}
       onClick={onSelect}
-      className="w-full p-4 rounded-r-premium-lg flex items-center gap-4 text-left relative overflow-hidden
+      className="w-full p-4 rounded-r-premium-2xl flex items-center gap-4 text-left relative overflow-hidden shadow-card2
                 transition-all duration-300 group
                 bg-white/[0.035] border border-white/8
                 hover:bg-white/6 hover:border-white/12"
-      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}
     >
       {/* Background image (optional, per-game) — right-anchored with left fade */}
       {game.backgroundImage && (
@@ -67,21 +66,21 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
 
       {/* Content */}
       <div className="flex-1 min-w-0 relative z-10">
-        <h3 className="text-[17px] font-black italic uppercase tracking-tight leading-none mb-1.5 text-white">
+        <h3 className="text-lg font-black italic uppercase tracking-widest leading-none mb-1.5 text-white">
           {game.title}
         </h3>
-        <p className="text-[12px] text-white/45 font-medium leading-snug mb-2.5 pr-1">
+        <p className="text-xs text-white/45 font-medium leading-snug mb-2.5 pr-1">
           {game.subtitle}
         </p>
         <div className="flex items-center gap-2 flex-wrap">
           <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.25 rounded-premium-sm ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.25 rounded-premium-sm ${t.bg10} ${t.text} border border-current/25 text-micro font-black uppercase tracking-[0.15em]`}
           >
             <Users className="w-2.5 h-2.5" />
             {game.players}
           </span>
           {countDisplay && (
-            <span className="inline-flex items-center px-2.5 py-1.25 rounded-premium-sm bg-white/4 text-white/25 border border-white/6 text-[9px] font-black uppercase tracking-[0.12em]">
+            <span className="inline-flex items-center px-2.5 py-1.25 rounded-premium-sm bg-white/4 text-white/25 border border-white/6 text-micro font-black uppercase tracking-[0.12em]">
               {countDisplay}
             </span>
           )}

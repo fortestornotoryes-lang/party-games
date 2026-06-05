@@ -18,9 +18,9 @@ export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({ roundScore, onCont
     className="h-full flex flex-col p-6 items-center justify-center text-center gap-8"
   >
     <div className="space-y-2">
-      <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/20">Время вышло</p>
+      <p className="text-micro font-black uppercase tracking-[0.5em] text-white/20">Время вышло</p>
       <div
-        className={`text-[96px] font-black italic tracking-tighter leading-none ${
+        className={`text-8xl font-black italic tracking-tighter leading-none ${
           roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'
         }`}
       >

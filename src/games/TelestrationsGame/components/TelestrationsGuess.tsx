@@ -23,7 +23,7 @@ export const TelestrationsGuess: React.FC<Props> = ({
 }) => (
   <div className="absolute inset-0 overflow-y-auto flex flex-col items-center justify-center p-6 gap-4">
     <div className="text-center space-y-1">
-      <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">
+      <p className="text-tag text-white/30 uppercase font-black tracking-widest">
         💬 Угадай рисунок
       </p>
       <span

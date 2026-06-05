@@ -55,7 +55,7 @@ export const PassScreen: React.FC<PassScreenProps> = ({
       >
         {buttonLabel}
       </PrimaryButton>
-      <p className="text-[10px] text-white/25 font-bold uppercase animate-pulse">{subtitle}</p>
+      <p className="text-tag text-white/25 font-bold uppercase animate-pulse">{subtitle}</p>
     </div>
   </motion.div>
 );

@@ -188,7 +188,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
             <div className="p-6 flex-1 flex flex-col items-center space-y-6">
               <div className="w-full flex justify-between items-end">
                 <div className="space-y-1">
-                  <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">
+                  <p className="text-tag text-white/80 font-black uppercase tracking-widest">
                     Рисует
                   </p>
                   <div className="flex items-center gap-3">
@@ -209,7 +209,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                       {timeLeft}с
                     </p>
                   )}
-                  <p className="text-[10px] text-white/80 font-black uppercase tracking-widest">
+                  <p className="text-tag text-white/80 font-black uppercase tracking-widest">
                     Тема
                   </p>
                   <h3 className="text-xl font-black italic uppercase text-premium-green leading-none">
@@ -307,7 +307,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                   <GameCard className="w-full max-w-xs aspect-square flex flex-col items-center justify-center space-y-4 border-premium-green/20 bg-premium-green/5">
                     <Palette className="w-16 h-16 text-premium-green animate-pulse" />
                     <div className="text-center space-y-4">
-                      <p className="text-[10px] text-white/80 font-black uppercase tracking-[0.3em]">
+                      <p className="text-tag text-white/80 font-black uppercase tracking-[0.3em]">
                         Следующий игрок
                       </p>
                       <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">

@@ -40,7 +40,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
           transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center px-4 mb-10"
         >
-          <h1 className="text-[56px] font-black italic tracking-tighter uppercase leading-[0.72] mb-3 select-none font-display">
+          <h1 className="text-logo font-black italic tracking-tighter uppercase leading-[0.72] mb-3 select-none font-display">
             PARTY{' '}
             <span
               className="text-premium-red"
@@ -49,7 +49,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
               HUB
             </span>
           </h1>
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/20 italic">
+          <p className="text-micro font-black uppercase tracking-[0.5em] text-white/20 italic">
             {GAMES.length} ИГР · ВЕЧЕРИНКА НАЧИНАЕТСЯ
           </p>
         </motion.div>
@@ -91,7 +91,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   transition={{ duration: 0.2 }}
                   onClick={() => setDescriptionGameId(null)}
                   className="fixed inset-0 z-40 bg-black/60"
-                  style={{ backdropFilter: 'blur(4px)' }}
+                  style={{ backdropFilter: 'blur(var(--blur-backdrop))' }}
                 />
 
                 {/* Sheet */}
@@ -104,13 +104,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   className="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto px-4 pb-8"
                 >
                   <div
-                    className="rounded-[28px] overflow-hidden border border-white/8"
+                    className="rounded-premium-xl overflow-hidden border border-white/8"
                     style={{
                       background:
                         'linear-gradient(160deg, rgba(20,20,25,0.97) 0%, rgba(10,10,12,0.99) 100%)',
-                      backdropFilter: 'blur(32px)',
-                      boxShadow:
-                        '0 -8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      backdropFilter: 'blur(var(--blur-modal))',
+                      boxShadow: '0 -8px 48px rgba(0,0,0,0.5), var(--shadow-rim)',
                     }}
                   >
                     {/* Drag handle */}
@@ -129,11 +128,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3
-                            className={`text-[18px] font-black italic uppercase tracking-tight ${t.text}`}
+                            className={`text-lg font-black italic uppercase tracking-tight ${t.text}`}
                           >
                             {descriptionGame.title}
                           </h3>
-                          <p className="text-[11px] text-white/35 font-medium mt-0.5">
+                          <p className="text-label text-white/35 font-medium mt-0.5">
                             {descriptionGame.subtitle}
                           </p>
                         </div>
@@ -146,8 +145,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                       </div>
 
                       {/* Description */}
-                      <div className={`rounded-2xl border p-4 ${t.border20} ${t.bg5}`}>
-                        <p className="text-[13px] text-white/70 font-medium leading-relaxed">
+                      <div className={`rounded-premium-md border p-4 ${t.border20} ${t.bg5}`}>
+                        <p className="text-card text-white/70 font-medium leading-relaxed">
                           {descriptionGame.description}
                         </p>
                       </div>
@@ -155,7 +154,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                       {/* Info row */}
                       <div className="flex items-center gap-2">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-premium-sm ${t.bg10} ${t.text} border border-current/25 text-[9px] font-black uppercase tracking-[0.15em]`}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-premium-sm ${t.bg10} ${t.text} border border-current/25 text-micro font-black uppercase tracking-[0.15em]`}
                         >
                           <Users className="w-2.5 h-2.5" />
                           {descriptionGame.players} игроков
@@ -169,8 +168,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           setDescriptionGameId(null);
                           onSelectGame(descriptionGame.id);
                         }}
-                        className={`w-full py-4 rounded-premium-md font-black uppercase tracking-[0.15em] text-[13px] text-black ${t.solid} active:scale-[0.98] transition-transform`}
-                        style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}
+                        className={`w-full py-4 rounded-premium-md font-black uppercase tracking-[0.15em] text-card text-black ${t.solid} active:scale-[0.98] transition-transform`}
+                        style={{ boxShadow: 'var(--shadow-button)' }}
                       >
                         Играть
                       </motion.button>

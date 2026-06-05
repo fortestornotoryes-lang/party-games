@@ -27,8 +27,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       className="sticky top-0 z-30 px-4 py-2.5 border-b border-white/6 flex items-center justify-between"
       style={{
         background: 'rgba(11, 9, 21, 0.75)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(var(--blur-overlay))',
+        WebkitBackdropFilter: 'blur(var(--blur-overlay))',
       }}
     >
       <div className="flex items-center gap-3">
@@ -38,10 +38,10 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           <Icon className="w-4 h-4" />
         </div>
         <div>
-          <h2 className="text-[14px] font-black uppercase italic tracking-tight leading-none text-white">
+          <h2 className="text-sm font-black uppercase italic tracking-tight leading-none text-white ">
             {title}
           </h2>
-          <p className="text-[9px] text-white/35 uppercase tracking-[0.18em] font-black mt-0.75">
+          <p className="text-micro text-white/35 uppercase tracking-[0.18em] font-black mt-0.75">
             {subtitle}
           </p>
         </div>

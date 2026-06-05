@@ -94,7 +94,7 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
                 initial={{ scale: 0.82, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className={`w-full rounded-[2.5rem] flex flex-col relative overflow-hidden ${cardMeta.className ?? ''}`}
+                className={`w-full rounded-premium-2xl flex flex-col relative overflow-hidden ${cardMeta.className ?? ''}`}
                 style={cardMeta.style}
               >
                 {renderCard(currentPlayer, isLast, handleNext)}

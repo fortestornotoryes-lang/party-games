@@ -34,11 +34,11 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
       {/* Word reveal */}
       <div className="text-center space-y-2 pt-2">
         {timedOut && (
-          <p className="text-[9px] font-black uppercase tracking-widest text-premium-red/70">
+          <p className="text-micro font-black uppercase tracking-widest text-premium-red/70">
             {t(`${NS.TABOO}.timeOut`)}
           </p>
         )}
-        <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">
+        <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30">
           {t(`${NS.TABOO}.wordToGuess`)}
         </p>
         <h2 className="text-5xl font-black italic uppercase tracking-tighter text-white">
@@ -48,14 +48,14 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
       {/* Forbidden words reminder */}
       <div className="p-4 rounded-2xl border border-premium-red/20 bg-premium-red/5">
-        <p className="text-[9px] font-black uppercase tracking-[0.4em] text-premium-red/50 mb-2 text-center">
+        <p className="text-micro font-black uppercase tracking-[0.4em] text-premium-red/50 mb-2 text-center">
           {t(`${NS.TABOO}.forbiddenWords`)}
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
           {card.forbidden.map((w, i) => (
             <span
               key={i}
-              className="px-3 py-1 rounded-xl border border-premium-red/30 bg-premium-red/10 text-[11px] font-black italic uppercase text-premium-red/70"
+              className="px-3 py-1 rounded-xl border border-premium-red/30 bg-premium-red/10 text-label font-black italic uppercase text-premium-red/70"
             >
               {w}
             </span>
@@ -67,7 +67,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
 
       {/* Who guessed? */}
       <div className="space-y-3">
-        <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30 text-center">
+        <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30 text-center">
           {t(`${NS.TABOO}.whoGuessed`)}
         </p>
 
@@ -100,7 +100,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
             <p className="font-black italic text-premium-red text-base leading-tight">
               {t(`${NS.TABOO}.saidForbidden`, { player: currentExplainer })}
             </p>
-            <p className="text-[10px] text-white/30 mt-0.5">{t(`${NS.TABOO}.penaltyHint`)}</p>
+            <p className="text-tag text-white/30 mt-0.5">{t(`${NS.TABOO}.penaltyHint`)}</p>
           </div>
           <span className="text-3xl font-black italic text-premium-red ml-4">−1</span>
         </button>

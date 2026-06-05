@@ -50,7 +50,7 @@ export const TeamGuessPhase: React.FC<TeamGuessPhaseProps> = ({
       }}
       className="mt-2 space-y-4 flex-1"
     >
-      <p className="text-[10px] font-bold text-center text-white/40 uppercase">Введите ваш код</p>
+      <p className="text-tag font-bold text-center text-white/40 uppercase">Введите ваш код</p>
       <CodeInput value={teamGuess} onChange={onChange} max={wordCount} team={activeTeam} />
       <PrimaryButton type="submit" variant={activeTeam} className="w-full">
         РАЗГАДАТЬ

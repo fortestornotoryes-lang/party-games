@@ -36,10 +36,10 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
       <div className="w-full space-y-5">
         {/* Pole labels */}
         <div className="flex justify-between px-2">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-premium-purple">
+          <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple">
             {currentPair[0]}
           </span>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-premium-purple">
+          <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple">
             {currentPair[1]}
           </span>
         </div>
@@ -84,7 +84,7 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
 
       {/* Value display */}
       <GameCard className="w-full text-center py-6 border border-premium-purple/20 bg-premium-purple/5">
-        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-premium-purple/60 mb-1">
+        <div className="text-tag font-black uppercase tracking-[0.3em] text-premium-purple/60 mb-1">
           Значение
         </div>
         <div className="text-5xl font-black italic tracking-tighter text-white">

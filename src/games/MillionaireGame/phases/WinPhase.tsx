@@ -101,13 +101,13 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           transition={{ delay: 0.25 }}
           className="text-center"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/35 mb-1">
+          <p className="text-tag font-black uppercase tracking-[0.3em] text-white/35 mb-1">
             {isMillion ? 'МИЛЛИОНЕР!' : 'Выиграл'}
           </p>
-          <p className="text-[15px] font-bold text-white/65 mb-2">{currentPlayer}</p>
+          <p className="text-label font-bold text-white/65 mb-2">{currentPlayer}</p>
           <p
             className={`font-black font-display italic tracking-tighter leading-none ${
-              isMillion ? 'text-[48px] text-premium-yellow' : 'text-[42px] text-premium-green'
+              isMillion ? 'text-5xl text-premium-yellow' : 'text-5xl text-premium-green'
             }`}
             style={{
               textShadow: isMillion
@@ -122,9 +122,9 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-[11px] font-black uppercase tracking-[0.3em] text-premium-yellow/50 mt-2"
+              className="text-label font-black uppercase tracking-[0.3em] text-premium-yellow/50 mt-2"
             >
-              ₽ рублей
+              чего то там
             </motion.p>
           )}
         </motion.div>
@@ -139,7 +139,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           >
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-premium-yellow" />
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
+              <span className="text-tag font-black uppercase tracking-[0.22em] text-white/35">
                 Счёт
               </span>
             </div>
@@ -152,9 +152,9 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
                 .map(([name, score], i) => (
                   <div key={name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-white/20 w-4">{i + 1}</span>
+                      <span className="text-tag font-black text-white/20 w-4">{i + 1}</span>
                       <span
-                        className={`text-[13px] font-semibold ${
+                        className={`text-label font-semibold ${
                           name === currentPlayer ? 'text-premium-yellow' : 'text-white/60'
                         }`}
                       >
@@ -162,7 +162,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
                       </span>
                     </div>
                     <span
-                      className={`text-[13px] font-black ${
+                      className={`text-label font-black ${
                         name === currentPlayer ? 'text-premium-yellow' : 'text-white/40'
                       }`}
                     >

@@ -17,7 +17,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, total, perPage, on
       <button
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        className="w-8 h-8 rounded-xl border border-white/8 flex items-center justify-center text-white/40 disabled:opacity-25 active:scale-90 transition-all"
+        className="w-8 h-8 rounded-premium-sm border border-white/8 flex items-center justify-center text-white/40 disabled:opacity-25 active:scale-90 transition-all"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -37,7 +37,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, total, perPage, on
       <button
         onClick={() => onChange(page + 1)}
         disabled={page === pageCount}
-        className="w-8 h-8 rounded-xl border border-white/8 flex items-center justify-center text-white/40 disabled:opacity-25 active:scale-90 transition-all"
+        className="w-8 h-8 rounded-premium-sm border border-white/8 flex items-center justify-center text-white/40 disabled:opacity-25 active:scale-90 transition-all"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
