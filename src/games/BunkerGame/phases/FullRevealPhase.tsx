@@ -181,7 +181,7 @@ export const FullRevealPhase: React.FC<FullRevealPhaseProps> = ({
 
             {/* Continue button */}
             <div className="mt-auto pt-2">
-                <PrimaryButton onClick={onContinue} theme="orange">
+                <PrimaryButton onClick={onContinue}>
                     {t(`${NS.BUNKER}.toSurvivalBtn`)}
                 </PrimaryButton>
             </div>

@@ -56,7 +56,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
     );
     const [events] = useState<SurvivalEvent[]>(() => {
         const pool = shuffle([...SURVIVAL_EVENTS]);
-        const count = Math.floor(Math.random() * 10) + 1;
+        const count = Math.floor(Math.random() * 5) + 1;
         return pool.slice(0, count);
     });
 
@@ -85,9 +85,12 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
             };
         }
         const team = characters.filter((c) => !eliminatedNames.includes(c.playerName));
-        const opts = countHiddenTraits ? undefined : {revealedTraitsOnly: true, totalRounds};
-        return calculateSurvival(team, scenario, events, opts);
-    }, [eliminatedNames, characters, scenario, events, countHiddenTraits, totalRounds]);
+        return calculateSurvival(team, scenario, events, {
+            revealedTraitsOnly: !countHiddenTraits,
+            totalRounds,
+            difficulty,
+        });
+    }, [eliminatedNames, characters, scenario, events, countHiddenTraits, totalRounds, difficulty]);
 
     // ── Subtitle for GameHeader ────────────────────────────────────────────────
     const subtitle = (() => {

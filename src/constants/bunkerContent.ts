@@ -2848,23 +2848,35 @@ export function getAgeBonuses(age: number): ResourceBonus {
     return {medicine: 5, morale: 7, energy: -25, food: 2};
 }
 
+const DIFFICULTY_BASE_OFFSET: Record<string, number> = {easy: 10, medium: 0, hard: -8};
+const DIFFICULTY_SCENARIO_SCALE: Record<string, number> = {easy: 0.65, medium: 1.0, hard: 1.35};
+const RESOURCE_KEYS_CALC: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
+
 export function calculateSurvival(
     bunkerTeam: BunkerCharacter[],
     scenario: CatastropheScenario,
     events: SurvivalEvent[],
-    options?: {revealedTraitsOnly: boolean; totalRounds: number}
+    options?: {revealedTraitsOnly?: boolean; totalRounds?: number; difficulty?: 'easy' | 'medium' | 'hard'}
 ): { resources: BunkerResources; outcome: 'full_victory' | 'partial' | 'pyrrhic' | 'defeat' } {
     const base: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
 
-    // Apply scenario penalty
-    applyBonus(base, scenario.resourcePenalty);
+    // Apply difficulty base offset
+    const diffOffset = DIFFICULTY_BASE_OFFSET[options?.difficulty ?? 'medium'] ?? 0;
+    if (diffOffset !== 0) {
+        RESOURCE_KEYS_CALC.forEach(k => { base[k] += diffOffset; });
+    }
+
+    // Apply difficulty-scaled scenario penalty
+    const scenarioScale = DIFFICULTY_SCENARIO_SCALE[options?.difficulty ?? 'medium'] ?? 1.0;
+    (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
+        .forEach(([k, v]) => { base[k] += Math.round(v * scenarioScale); });
 
     // Apply team bonuses (scaled by team size to avoid stacking)
     const teamScale = Math.max(0.4, 1 - (bunkerTeam.length - 2) * 0.08);
     for (const char of bunkerTeam) {
         let attrs: AttributeEntry[];
         if (options?.revealedTraitsOnly) {
-            const revealed = new Set<string>(['profession', ...char.revealOrder.slice(0, options.totalRounds - 1)]);
+            const revealed = new Set<string>(['profession', ...char.revealOrder.slice(0, (options.totalRounds ?? 0) - 1)]);
             attrs = (
                 [
                     ['profession', char.profession],

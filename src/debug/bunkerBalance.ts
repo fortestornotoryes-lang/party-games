@@ -54,7 +54,9 @@ export interface SimReport {
 const RESOURCE_KEYS: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
 const CAPACITY_PCT: Record<Difficulty, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
-const BASE_RESOURCES: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
+const BASE_RESOURCES: BunkerResources = {food: 25, water: 45, medicine: 50, energy: 65, morale: 65};
+const DIFFICULTY_BASE_OFFSET: Record<Difficulty, number> = {easy: 15, medium: 0, hard: -5};
+const DIFFICULTY_SCENARIO_SCALE: Record<Difficulty, number> = {easy: 0.75, medium: 1.0, hard: 1.25};
 
 function cloneRes(r: BunkerResources): BunkerResources {
     return {...r};
@@ -139,9 +141,13 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         // Replicate calculateSurvival step-by-step to capture per-phase deltas
         const res = cloneRes(BASE_RESOURCES);
 
-        // Phase 1 — catastrophe
+        // Phase 1 — catastrophe (with difficulty offset + scaled penalty)
         const snap0 = cloneRes(res);
-        applyBonus(res, scenario.resourcePenalty);
+        const diffOffset = DIFFICULTY_BASE_OFFSET[difficulty];
+        if (diffOffset !== 0) RESOURCE_KEYS.forEach(k => { res[k] += diffOffset; });
+        const scenarioScale = DIFFICULTY_SCENARIO_SCALE[difficulty];
+        (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
+            .forEach(([k, v]) => { res[k] += Math.round(v * scenarioScale); });
         const scenarioDelta = sumAbsDelta(snap0, res);
         const scenarioNet = sumNetDelta(snap0, res);
 
