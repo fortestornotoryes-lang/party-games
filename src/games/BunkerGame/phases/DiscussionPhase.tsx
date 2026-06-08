@@ -7,49 +7,51 @@ import {type BunkerCharacter, getRevealedTrait} from '../types';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
 import {Typography} from '@/components/Typography';
+import {getRevealedResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 
-
 interface DiscussionPhaseProps {
     characters: BunkerCharacter[];
-    revealRound: number; // 1, 2, or 3
+    revealRound: number;
     totalRounds: number;
-    onNext: () => void; // go to next reveal round or voting
+    difficulty: string;
+    onNext: () => void;
 }
 
-const DISCUSSION_SECONDS = 150; // 2.5 minutes
-
 export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
-                                                                    characters,
-                                                                    revealRound,
-                                                                    totalRounds,
-                                                                    onNext,
-                                                                }) => {
+    characters,
+    revealRound,
+    totalRounds,
+    difficulty,
+    onNext,
+}) => {
     const {t} = useTranslation();
+    const {timerSeconds} = useGameSettings();
     const isLastRound = revealRound === totalRounds;
 
     const {timeLeft, start, reset} = useTimer({
-        initialTime: DISCUSSION_SECONDS,
+        initialTime: timerSeconds,
         onTimeUp: () => {
             feedbackService.vibrate(VIBRATE.timeout);
         },
     });
 
     useEffect(() => {
-        reset(DISCUSSION_SECONDS);
+        reset(timerSeconds);
         start();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [revealRound]);
+    }, [revealRound, timerSeconds]);
 
     const handleNext = () => {
         feedbackService.vibrate(VIBRATE.tap);
         onNext();
     };
 
-    const timerPct = (timeLeft / DISCUSSION_SECONDS) * 100;
+    const timerPct = (timeLeft / timerSeconds) * 100;
     const timerColor = timerPct > 50 ? '#00D88A' : timerPct > 20 ? '#FFCC1F' : '#FF2E4D';
 
     const minutes = Math.floor(timeLeft / 60);
@@ -140,6 +142,39 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                     {char.playerName}
                   </span>
                                     <span className="text-white/30">{prev.join(' · ')}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* Resource contribution per player (revealed traits only, hidden on hard) */}
+            {difficulty !== 'hard' && (
+                <div className="space-y-2">
+                    <Typography.Label size="xs" color="muted">
+                        Ресурсный вклад
+                    </Typography.Label>
+                    <div className="space-y-1">
+                        {characters.map((char) => {
+                            const contrib = getRevealedResourceContribution(char, revealRound);
+                            const nonZero = RESOURCE_META.filter(({key}) => contrib[key] !== 0);
+                            if (nonZero.length === 0) return null;
+                            return (
+                                <div key={char.playerName} className="flex items-center gap-2 min-w-0">
+                                    <span className="text-xs font-black text-white/50 w-20 flex-shrink-0 truncate">
+                                        {char.playerName}
+                                    </span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {nonZero.map(({key, emoji}) => {
+                                            const val = contrib[key];
+                                            return (
+                                                <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
+                                                    {emoji}{val > 0 ? '+' : ''}{val}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             );
                         })}

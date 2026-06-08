@@ -203,6 +203,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
                             characters={characters}
                             revealRound={revealRound}
                             totalRounds={totalRounds}
+                            difficulty={difficulty}
                             onNext={handleDiscussionNext}
                         />
                     )}
@@ -212,6 +213,8 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
                             key="voting"
                             characters={characters}
                             bunkerCapacity={bunkerCapacity}
+                            totalRounds={totalRounds}
+                            difficulty={difficulty}
                             directorName={directorName}
                             onConfirm={handleVotingConfirm}
                         />

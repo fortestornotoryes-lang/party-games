@@ -6,6 +6,7 @@ import {type BunkerCharacter, getRevealedTrait} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
+import {getPlayerResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -13,16 +14,20 @@ import {feedbackService, VIBRATE} from '@/services/feedbackService';
 interface VotingPhaseProps {
     characters: BunkerCharacter[];
     bunkerCapacity: number;
+    totalRounds: number;
+    difficulty: string;
     directorName?: string | null;
     onConfirm: (eliminatedNames: string[]) => void;
 }
 
 export const VotingPhase: React.FC<VotingPhaseProps> = ({
-                                                            characters,
-                                                            bunkerCapacity,
-                                                            directorName,
-                                                            onConfirm,
-                                                        }) => {
+    characters,
+    bunkerCapacity,
+    totalRounds,
+    difficulty,
+    directorName,
+    onConfirm,
+}) => {
     const {t} = useTranslation();
 
     // Director occupies one guaranteed spot — exclude from voting
@@ -128,9 +133,10 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
             <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
                 {votable.map((char) => {
                     const isSelected = selected.has(char.playerName);
-                    const revealed = [1, 2, 3, 4, 5]
+                    const revealed = Array.from({length: totalRounds}, (_, i) => i + 1)
                         .map((r) => getRevealedTrait(char, r))
                         .filter(Boolean) as { label: string; entry: { emoji: string; name: string } }[];
+                    const contrib = difficulty !== 'hard' ? getPlayerResourceContribution(char) : null;
 
                     return (
                         <motion.button
@@ -188,10 +194,24 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                                 color: isSelected ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.65)',
                                             }}
                                         >
-                      {rev.entry.emoji} {rev.entry.name}
-                    </span>
+                                            {rev.entry.emoji} {rev.entry.name}
+                                        </span>
                                     ))}
                                 </div>
+
+                                {/* Resource contribution (easy/medium only) */}
+                                {contrib && (
+                                    <div className="flex flex-wrap gap-2 mt-1.5">
+                                        {RESOURCE_META.filter(({key}) => contrib[key] !== 0).map(({key, emoji}) => {
+                                            const val = contrib[key];
+                                            return (
+                                                <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
+                                                    {emoji}{val > 0 ? '+' : ''}{val}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
                         </motion.button>
                     );
