@@ -2474,7 +2474,7 @@ export function calculateSurvival(
     scenario: CatastropheScenario,
     events: SurvivalEvent[]
 ): { resources: BunkerResources; outcome: 'full_victory' | 'partial' | 'pyrrhic' | 'defeat' } {
-    const base: BunkerResources = {food: 100, water: 100, medicine: 100, energy: 100, morale: 100};
+    const base: BunkerResources = {food: 65, water: 65, medicine: 65, energy: 65, morale: 65};
 
     // Apply scenario penalty
     applyBonus(base, scenario.resourcePenalty);
@@ -2509,15 +2509,15 @@ export function calculateSurvival(
     // Determine outcome
     const values = Object.values(base);
     const criticalCount = values.filter((v) => v <= 0).length;
-    const lowCount = values.filter((v) => v < 20).length;
+    const lowCount = values.filter((v) => v < 25).length;
     const goodCount = values.filter((v) => v >= 40).length;
 
     let outcome: 'full_victory' | 'partial' | 'pyrrhic' | 'defeat';
     if (criticalCount >= 1) {
         outcome = 'defeat';
-    } else if (lowCount >= 3) {
+    } else if (lowCount >= 2) {
         outcome = 'pyrrhic';
-    } else if (goodCount >= 3) {
+    } else if (goodCount >= 5) {
         outcome = 'full_victory';
     } else {
         outcome = 'partial';
