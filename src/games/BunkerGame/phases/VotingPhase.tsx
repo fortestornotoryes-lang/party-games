@@ -4,11 +4,10 @@ import React, {useState} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
 import {type BunkerCharacter, type DifficultyLevel} from '../types';
-import {getRevealedTrait} from '../helpers';
+import {getPlayerResourceContribution, getRevealedTrait} from '../helpers';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
-import {getPlayerResourceContribution} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -23,13 +22,13 @@ interface VotingPhaseProps {
 }
 
 export const VotingPhase: React.FC<VotingPhaseProps> = ({
-    characters,
-    bunkerCapacity,
-    totalRounds,
-    difficulty,
-    directorName,
-    onConfirm,
-}) => {
+                                                            characters,
+                                                            bunkerCapacity,
+                                                            totalRounds,
+                                                            difficulty,
+                                                            directorName,
+                                                            onConfirm,
+                                                        }) => {
     const {t} = useTranslation();
 
     // Director occupies one guaranteed spot — exclude from voting
@@ -202,7 +201,8 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                 </div>
 
                                 {/* Resource contribution (easy/medium only) */}
-                                {contrib && <ResourceContribRow contrib={contrib} className="flex gap-2 mt-1.5 flex-wrap" />}
+                                {contrib &&
+                                    <ResourceContribRow contrib={contrib} className="flex gap-2 mt-1.5 flex-wrap"/>}
                             </div>
                         </motion.button>
                     );

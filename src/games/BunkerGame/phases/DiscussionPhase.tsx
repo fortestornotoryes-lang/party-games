@@ -4,12 +4,11 @@ import React, {useEffect} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
 import {type BunkerCharacter, type DifficultyLevel} from '../types';
-import {getRevealedTrait} from '../helpers';
+import {getRevealedResourceContribution, getRevealedTrait} from '../helpers';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
 import {Typography} from '@/components/Typography';
-import {getRevealedResourceContribution} from '@/constants/bunkerContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
@@ -25,12 +24,12 @@ interface DiscussionPhaseProps {
 }
 
 export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
-    characters,
-    revealRound,
-    totalRounds,
-    difficulty,
-    onNext,
-}) => {
+                                                                    characters,
+                                                                    revealRound,
+                                                                    totalRounds,
+                                                                    difficulty,
+                                                                    onNext,
+                                                                }) => {
     const {t} = useTranslation();
     const {timerSeconds} = useGameSettings();
     const isLastRound = revealRound === totalRounds;
@@ -166,7 +165,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                                     <span className="text-xs font-black text-white/50 w-20 flex-shrink-0 truncate">
                                         {char.playerName}
                                     </span>
-                                    <ResourceContribRow contrib={contrib} className="flex gap-2 flex-wrap" />
+                                    <ResourceContribRow contrib={contrib} className="flex gap-2 flex-wrap"/>
                                 </div>
                             );
                         })}

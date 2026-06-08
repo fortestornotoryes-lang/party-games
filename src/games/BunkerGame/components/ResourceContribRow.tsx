@@ -2,7 +2,8 @@ import React from 'react';
 
 import type {BunkerResources} from '../types';
 
-import {RESOURCE_META} from '@/constants/bunkerContent';
+
+import {RESOURCE_META} from "@/games/BunkerGame/constants.ts";
 
 interface Props {
     contrib: BunkerResources;
@@ -17,7 +18,8 @@ export const ResourceContribRow: React.FC<Props> = ({contrib, className = 'flex 
             {nonZero.map(({key, emoji}) => {
                 const val = contrib[key];
                 return (
-                    <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
+                    <span key={key} className="text-xs font-black tabular-nums"
+                          style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
                         {emoji}{val > 0 ? '+' : ''}{val}
                     </span>
                 );

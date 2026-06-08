@@ -3,14 +3,20 @@ import {motion} from 'motion/react';
 import React, {useEffect, useRef, useState} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
-import {OUTCOME_COLOR_MAP, OUTCOME_CONFIG, STEP_ORDER} from '../constants';
 import type {Step} from '../constants';
-import {atLeast, barColor} from '../helpers';
-import type {BunkerCharacter, BunkerResources, CatastropheScenario, ResourceKey, SurvivalEvent, SurvivalOutcome} from '../types';
+import {OUTCOME_COLOR_MAP, OUTCOME_CONFIG, RESOURCE_META} from '../constants';
+import {atLeast, barColor, getPlayerResourceContribution} from '../helpers';
+import type {
+    BunkerCharacter,
+    BunkerResources,
+    CatastropheScenario,
+    ResourceKey,
+    SurvivalEvent,
+    SurvivalOutcome
+} from '../types';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
-import {getPlayerResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -27,14 +33,14 @@ interface SurvivalPhaseProps {
 
 
 export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
-    bunkerTeam,
-    eliminated,
-    scenario,
-    events,
-    finalResources,
-    outcome,
-    onRestart,
-}) => {
+                                                                bunkerTeam,
+                                                                eliminated,
+                                                                scenario,
+                                                                events,
+                                                                finalResources,
+                                                                outcome,
+                                                                onRestart,
+                                                            }) => {
     const {t} = useTranslation();
     const [step, setStep] = useState<Step>('team');
     const [displayedResources, setDisplayedResources] = useState<BunkerResources>(
@@ -43,8 +49,12 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
     const resultsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const t1 = setTimeout(() => { setStep('events'); },    800);
-        const t2 = setTimeout(() => { setStep('resources'); }, 1500);
+        const t1 = setTimeout(() => {
+            setStep('events');
+        }, 800);
+        const t2 = setTimeout(() => {
+            setStep('resources');
+        }, 1500);
         const t3 = setTimeout(() => {
             setDisplayedResources(finalResources);
             feedbackService.vibrate(VIBRATE.celebrate);
@@ -52,7 +62,12 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
         const t4 = setTimeout(() => {
             setStep('results');
         }, 3000);
-        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            clearTimeout(t3);
+            clearTimeout(t4);
+        };
     }, [finalResources]);
 
     useEffect(() => {
@@ -64,7 +79,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
     useEffect(() => {
         if (step === 'results') {
             if (outcome === 'full_victory') feedbackService.vibrate(VIBRATE.celebrate);
-            else if (outcome === 'defeat')  feedbackService.vibrate(VIBRATE.error);
+            else if (outcome === 'defeat') feedbackService.vibrate(VIBRATE.error);
         }
     }, [step, outcome]);
 
@@ -113,7 +128,11 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                             <span
                                 key={key}
                                 className="px-2 py-1 rounded-full text-tag font-bold tabular-nums"
-                                style={{background: 'rgba(255,46,77,0.12)', border: '1px solid rgba(255,46,77,0.3)', color: '#FF6B7A'}}
+                                style={{
+                                    background: 'rgba(255,46,77,0.12)',
+                                    border: '1px solid rgba(255,46,77,0.3)',
+                                    color: '#FF6B7A'
+                                }}
                             >
                                 {meta?.emoji} {val}
                             </span>
@@ -135,7 +154,11 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                             animate={{scale: 1, opacity: 1}}
                             transition={{delay: i * 0.12, type: 'spring'}}
                             className="px-3 py-1.5 rounded-premium-sm text-xs font-bold"
-                            style={{background: 'rgba(0,216,138,0.1)', border: '1px solid rgba(0,216,138,0.3)', color: '#00D88A'}}
+                            style={{
+                                background: 'rgba(0,216,138,0.1)',
+                                border: '1px solid rgba(0,216,138,0.3)',
+                                color: '#00D88A'
+                            }}
                         >
                             {c.profession.emoji} {c.playerName}
                         </motion.div>
@@ -147,7 +170,11 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                             animate={{scale: 1, opacity: 0.35}}
                             transition={{delay: (bunkerTeam.length + i) * 0.12}}
                             className="px-3 py-1.5 rounded-premium-sm text-xs font-bold line-through"
-                            style={{background: 'rgba(255,46,77,0.08)', border: '1px solid rgba(255,46,77,0.2)', color: '#FF2E4D'}}
+                            style={{
+                                background: 'rgba(255,46,77,0.08)',
+                                border: '1px solid rgba(255,46,77,0.2)',
+                                color: '#FF2E4D'
+                            }}
                         >
                             {c.playerName}
                         </motion.div>
@@ -179,7 +206,8 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                     <div className="text-xs font-bold text-white/80 leading-tight">{ev.title}</div>
                                     <div className="text-tag text-white/40 leading-tight mt-0.5">{ev.description}</div>
                                 </div>
-                                <div className="text-tag font-black flex-shrink-0" style={{color: ev.positive ? '#00D88A' : '#FF8A1F'}}>
+                                <div className="text-tag font-black flex-shrink-0"
+                                     style={{color: ev.positive ? '#00D88A' : '#FF8A1F'}}>
                                     {Object.entries(ev.effect).map(([k, v]) => `${k}:${v > 0 ? '+' : ''}${v}`).join(' ')}
                                 </div>
                             </motion.div>
@@ -203,11 +231,13 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-1.5">
                                             <span className="text-sm">{emoji}</span>
-                                            <span className="text-tag text-white/50 font-black uppercase tracking-wider">
+                                            <span
+                                                className="text-tag text-white/50 font-black uppercase tracking-wider">
                                                 {t(`${NS.BUNKER}.resources.${key}`)}
                                             </span>
                                         </div>
-                                        <motion.span key={val} initial={{scale: 1.2}} animate={{scale: 1}} className="text-sm font-black tabular-nums" style={{color}}>
+                                        <motion.span key={val} initial={{scale: 1.2}} animate={{scale: 1}}
+                                                     className="text-sm font-black tabular-nums" style={{color}}>
                                             {val}%
                                         </motion.span>
                                     </div>
@@ -243,7 +273,11 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                         animate={{scale: 1, opacity: 1}}
                         transition={{type: 'spring', stiffness: 240, damping: 22}}
                         className="rounded-premium-md p-7 text-center space-y-3"
-                        style={{background: cfg.bgColor, border: `2px solid ${cfg.borderColor}`, boxShadow: `${cfg.shadow}, 0 24px 64px rgba(0,0,0,0.5)`}}
+                        style={{
+                            background: cfg.bgColor,
+                            border: `2px solid ${cfg.borderColor}`,
+                            boxShadow: `${cfg.shadow}, 0 24px 64px rgba(0,0,0,0.5)`
+                        }}
                     >
                         <OutcomeIcon className="w-8 h-8 mx-auto" style={{color: cfg.color}}/>
                         <Typography.Display size="md" glow align="center" color={OUTCOME_COLOR_MAP[outcome]}>
@@ -255,7 +289,8 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                     </motion.div>
 
                     {/* Survivors */}
-                    <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}} transition={{delay: 0.2}} className="space-y-2">
+                    <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}} transition={{delay: 0.2}}
+                                className="space-y-2">
                         <Typography.Label size="xs" color="muted">
                             {t(`${NS.BUNKER}.survivorsLabel`)}
                         </Typography.Label>
@@ -267,7 +302,10 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                     animate={{opacity: 1, x: 0}}
                                     transition={{delay: 0.3 + idx * 0.07, type: 'spring', stiffness: 280, damping: 26}}
                                     className="p-3 rounded-premium-sm"
-                                    style={{background: 'rgba(0,216,138,0.06)', border: '1px solid rgba(0,216,138,0.2)'}}
+                                    style={{
+                                        background: 'rgba(0,216,138,0.06)',
+                                        border: '1px solid rgba(0,216,138,0.2)'
+                                    }}
                                 >
                                     <div className="flex items-center gap-3">
                                         <span className="text-xl">{char.profession.emoji}</span>
@@ -279,7 +317,8 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                         </div>
                                         <div className="flex gap-1 flex-wrap justify-end">
                                             {[char.health, char.hobby, char.trait].map(
-                                                (a, i) => a.isPositive && <span key={i} className="text-sm" title={a.name}>{a.emoji}</span>
+                                                (a, i) => a.isPositive &&
+                                                    <span key={i} className="text-sm" title={a.name}>{a.emoji}</span>
                                             )}
                                         </div>
                                     </div>
@@ -291,7 +330,8 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
 
                     {/* Eliminated */}
                     {eliminated.length > 0 && (
-                        <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}} transition={{delay: eliminatedBaseDelay}} className="space-y-2">
+                        <motion.div initial={{opacity: 0, y: 8}} animate={{opacity: 1, y: 0}}
+                                    transition={{delay: eliminatedBaseDelay}} className="space-y-2">
                             <Typography.Label size="xs" color="muted">
                                 {t(`${NS.BUNKER}.outsidersLabel`)}
                             </Typography.Label>
@@ -301,14 +341,23 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                         key={char.playerName}
                                         initial={{opacity: 0, x: -16}}
                                         animate={{opacity: 1, x: 0}}
-                                        transition={{delay: eliminatedBaseDelay + 0.1 + idx * 0.07, type: 'spring', stiffness: 280, damping: 26}}
+                                        transition={{
+                                            delay: eliminatedBaseDelay + 0.1 + idx * 0.07,
+                                            type: 'spring',
+                                            stiffness: 280,
+                                            damping: 26
+                                        }}
                                         className="p-3 rounded-premium-sm"
-                                        style={{background: 'rgba(255,46,77,0.05)', border: '1px solid rgba(255,46,77,0.18)'}}
+                                        style={{
+                                            background: 'rgba(255,46,77,0.05)',
+                                            border: '1px solid rgba(255,46,77,0.18)'
+                                        }}
                                     >
                                         <div className="flex items-center gap-3">
                                             <span className="text-xl opacity-50">{char.profession.emoji}</span>
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-sm font-black" style={{color: 'rgba(255,100,120,0.8)'}}>
+                                                <div className="text-sm font-black"
+                                                     style={{color: 'rgba(255,100,120,0.8)'}}>
                                                     {char.playerName}
                                                 </div>
                                                 <div className="text-tag text-white/30">

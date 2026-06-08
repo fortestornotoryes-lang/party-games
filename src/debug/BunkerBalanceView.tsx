@@ -5,18 +5,14 @@ import React, {useState} from 'react';
 import type {SimReport} from './bunkerBalance';
 import {runBunkerSimulation} from './bunkerBalance';
 
-import {RESOURCE_META} from '@/constants/bunkerContent';
+
+import {OUTCOME_CONFIG, RESOURCE_META} from "@/games/BunkerGame/constants.ts";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const RUN_OPTIONS = [50, 200, 1000, 5000];
 
-const OUTCOME_META = {
-    full_victory: {label: 'Победа',       color: '#00D88A', bg: 'rgba(0,216,138,0.12)'},
-    partial:      {label: 'Частичная',    color: '#FFCC1F', bg: 'rgba(255,204,31,0.12)'},
-    pyrrhic:      {label: 'Пиррова',      color: '#FF8A1F', bg: 'rgba(255,138,31,0.12)'},
-    defeat:       {label: 'Поражение',    color: '#FF2E4D', bg: 'rgba(255,46,77,0.12)'},
-} as const;
+
 
 
 const FACTOR_META = [
@@ -229,8 +225,8 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                             <div>
                                 <SectionTitle>Распределение исходов</SectionTitle>
                                 <Card className="space-y-2.5">
-                                    {(Object.keys(OUTCOME_META) as (keyof typeof OUTCOME_META)[]).map(key => {
-                                        const meta = OUTCOME_META[key];
+                                    {(Object.keys(OUTCOME_CONFIG) as (keyof typeof OUTCOME_CONFIG)[]).map(key => {
+                                        const meta = OUTCOME_CONFIG[key];
                                         const pct = report.outcomesPct[key];
                                         const cnt = report.outcomes[key];
                                         return (
@@ -244,7 +240,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                                                         initial={{width: 0}}
                                                         animate={{width: `${pct}%`}}
                                                         transition={{duration: 0.5, ease: 'easeOut'}}
-                                                        style={{background: meta.bg, minWidth: pct > 5 ? undefined : 0}}
+                                                        style={{background: meta.bgColor, minWidth: pct > 5 ? undefined : 0}}
                                                     />
                                                     {pct > 7 && (
                                                         <span
@@ -346,7 +342,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                                                 </span>
                                             </div>
                                             <div className="flex gap-1">
-                                                {(Object.keys(OUTCOME_META) as (keyof typeof OUTCOME_META)[]).map(key => {
+                                                {(Object.keys(OUTCOME_CONFIG) as (keyof typeof OUTCOME_CONFIG)[]).map(key => {
                                                     const cnt = d.outcomes[key];
                                                     if (!cnt) return null;
                                                     const pct = Math.round(cnt / d.runs * 100);
@@ -355,11 +351,11 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                                                             key={key}
                                                             className="flex-1 h-1 rounded-full"
                                                             style={{
-                                                                background: OUTCOME_META[key].color,
+                                                                background: OUTCOME_CONFIG[key].color,
                                                                 opacity: 0.6 + pct / 200,
                                                                 flexBasis: `${pct}%`,
                                                             }}
-                                                            title={`${OUTCOME_META[key].label}: ${pct}%`}
+                                                            title={`${OUTCOME_CONFIG[key].label}: ${pct}%`}
                                                         />
                                                     );
                                                 })}
@@ -401,7 +397,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                                             <span className="text-sm flex-shrink-0">{sc.emoji}</span>
                                             <span className="text-xs text-white/70 flex-1 truncate">{sc.title}</span>
                                             <div className="flex gap-0.5 flex-shrink-0">
-                                                {(Object.keys(OUTCOME_META) as (keyof typeof OUTCOME_META)[]).map(key => {
+                                                {(Object.keys(OUTCOME_CONFIG) as (keyof typeof OUTCOME_CONFIG)[]).map(key => {
                                                     const cnt = sc.outcomes[key];
                                                     if (!cnt) return null;
                                                     return (
@@ -409,10 +405,10 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                                                             key={key}
                                                             className="text-micro tabular-nums px-1 rounded"
                                                             style={{
-                                                                color: OUTCOME_META[key].color,
-                                                                background: OUTCOME_META[key].bg,
+                                                                color: OUTCOME_CONFIG[key].color,
+                                                                background: OUTCOME_CONFIG[key].bgColor,
                                                             }}
-                                                            title={OUTCOME_META[key].label}
+                                                            title={OUTCOME_CONFIG[key].label}
                                                         >
                                                             {cnt}
                                                         </span>

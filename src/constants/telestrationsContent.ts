@@ -589,7 +589,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
         drawTime: 90,
         guessTime: 45,
         text: 'text-premium-green',
-        bg: 'bg-premium-green/10',
+        bgColor: 'bg-premium-green/10',
         border: 'border-premium-green/30',
     },
     medium: {
@@ -599,7 +599,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
         drawTime: 60,
         guessTime: 30,
         text: 'text-premium-orange',
-        bg: 'bg-premium-orange/10',
+        bgColor: 'bg-premium-orange/10',
         border: 'border-premium-orange/30',
     },
     hard: {
@@ -609,7 +609,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
         drawTime: 45,
         guessTime: 25,
         text: 'text-premium-red',
-        bg: 'bg-premium-red/10',
+        bgColor: 'bg-premium-red/10',
         border: 'border-premium-red/30',
     },
 } as const;

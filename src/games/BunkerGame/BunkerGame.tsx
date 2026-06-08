@@ -2,6 +2,7 @@ import {Siren} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useMemo, useState} from 'react';
 
+import {CAPACITY_PCT} from './constants';
 import {BriefingPhase} from './phases/BriefingPhase';
 import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
 import {DiscussionPhase} from './phases/DiscussionPhase';
@@ -10,19 +11,13 @@ import {RevealPhase} from './phases/RevealPhase';
 import {SurvivalPhase} from './phases/SurvivalPhase';
 import {TribunalPhase} from './phases/TribunalPhase';
 import {VotingPhase} from './phases/VotingPhase';
-import {CAPACITY_PCT} from './constants';
 import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome,} from './types';
 import {BunkerPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {
-  BUNKER_MODES,
-  calculateSurvival,
-  CATASTROPHE_SCENARIOS,
-  generateCharacter,
-  SURVIVAL_EVENTS
-} from '@/constants/bunkerContent';
+import {BUNKER_MODES, CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from '@/constants/bunkerContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {calculateSurvival, generateCharacter} from "@/games/BunkerGame/helpers.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
@@ -149,7 +144,9 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
         setPhase(BunkerPhase.FullReveal);
     };
 
-    const handleFullRevealDone = () => { setPhase(BunkerPhase.SurvivalSim); };
+    const handleFullRevealDone = () => {
+        setPhase(BunkerPhase.SurvivalSim);
+    };
 
     const handleRestart = () => {
         (onRestart ?? onBack)();
@@ -192,7 +189,9 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
                             characters={characters}
                             revealRound={revealRound}
                             totalRounds={totalRounds}
-                            onDone={() => { setPhase(BunkerPhase.Discussion); }}
+                            onDone={() => {
+                                setPhase(BunkerPhase.Discussion);
+                            }}
                         />
                     )}
 
