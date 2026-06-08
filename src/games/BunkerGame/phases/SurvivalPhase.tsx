@@ -6,7 +6,7 @@ import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEven
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
-import {getPlayerResourceContribution} from '@/constants/bunkerContent';
+import {getPlayerResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -26,13 +26,6 @@ const STEP_ORDER: Step[] = ['team', 'events', 'resources', 'results'];
 const atLeast = (current: Step, min: Step) =>
     STEP_ORDER.indexOf(current) >= STEP_ORDER.indexOf(min);
 
-const RESOURCE_META: {key: keyof BunkerResources; emoji: string}[] = [
-    {key: 'food', emoji: '🍎'},
-    {key: 'water', emoji: '💧'},
-    {key: 'medicine', emoji: '💊'},
-    {key: 'energy', emoji: '⚡'},
-    {key: 'morale', emoji: '🧠'},
-];
 
 function barColor(val: number) {
     if (val >= 60) return '#00D88A';

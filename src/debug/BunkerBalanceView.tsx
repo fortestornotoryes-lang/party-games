@@ -5,9 +5,11 @@ import React, {useState} from 'react';
 import type {SimReport} from './bunkerBalance';
 import {runBunkerSimulation} from './bunkerBalance';
 
+import {RESOURCE_META} from '@/constants/bunkerContent';
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const RUN_OPTIONS = [50, 200, 1000];
+const RUN_OPTIONS = [50, 200, 1000, 5000];
 
 const OUTCOME_META = {
     full_victory: {label: 'Победа',       color: '#00D88A', bg: 'rgba(0,216,138,0.12)'},
@@ -16,13 +18,6 @@ const OUTCOME_META = {
     defeat:       {label: 'Поражение',    color: '#FF2E4D', bg: 'rgba(255,46,77,0.12)'},
 } as const;
 
-const RESOURCE_META = [
-    {key: 'food'     as const, emoji: '🍎', label: 'Еда'},
-    {key: 'water'    as const, emoji: '💧', label: 'Вода'},
-    {key: 'medicine' as const, emoji: '💊', label: 'Медицина'},
-    {key: 'energy'   as const, emoji: '⚡', label: 'Энергия'},
-    {key: 'morale'   as const, emoji: '🧠', label: 'Мораль'},
-];
 
 const FACTOR_META = [
     {key: 'scenario' as const, label: 'Катастрофа', color: '#FF2E4D', netKey: 'scenarioNet' as const},

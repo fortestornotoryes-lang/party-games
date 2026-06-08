@@ -2928,6 +2928,14 @@ export function calculateSurvival(
 }
 
 /** Returns the raw sum of all attribute resource bonuses for a single character. */
+export const RESOURCE_META: {key: keyof BunkerResources; emoji: string; label: string}[] = [
+    {key: 'food',     emoji: '🍎', label: 'Еда'},
+    {key: 'water',    emoji: '💧', label: 'Вода'},
+    {key: 'medicine', emoji: '💊', label: 'Медицина'},
+    {key: 'energy',   emoji: '⚡', label: 'Энергия'},
+    {key: 'morale',   emoji: '🧠', label: 'Мораль'},
+];
+
 export function getPlayerResourceContribution(char: BunkerCharacter): BunkerResources {
     const result: BunkerResources = {food: 0, water: 0, medicine: 0, energy: 0, morale: 0};
     const attrs = [char.profession, char.health, char.hobby, char.trait, char.item, char.specialFact, char.phobia];
