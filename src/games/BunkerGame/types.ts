@@ -88,3 +88,8 @@ export const ALL_TRAIT_KEYS: readonly TraitKey[] = [
     'specialFact',
 ];
 
+export interface CalculateSurvivalOptions {
+    revealedTraitsOnly?: boolean;
+    totalRounds?: number;
+    difficulty?: DifficultyLevel;
+}

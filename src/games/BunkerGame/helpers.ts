@@ -3,6 +3,7 @@ import {
     AttributeEntry,
     BunkerCharacter,
     BunkerResources,
+    CalculateSurvivalOptions,
     type CatastropheScenario,
     ResourceBonus,
     ResourceKey,
@@ -16,21 +17,13 @@ import {
     BUNKER_DIFFICULTY_SCALE,
     RESOURCE_KEYS_CALC,
     Step,
-    STEP_ORDER
+    STEP_ORDER,
+    TRAITS_TO_REVEAL
 } from './constants';
 
 import {pickRandom, shuffle} from "@/utils/random.ts";
-import {
-    CalculateSurvivalOptions,
-    HEALTH_CONDITIONS,
-    HOBBIES,
-    ITEMS,
-    PHOBIAS,
-    PROFESSIONS,
-    SPECIAL_FACTS,
-    TRAITS,
-    TRAITS_TO_REVEAL
-} from "@/constants/bunkerContent.ts";
+import {PROFESSIONS,HOBBIES,ITEMS,TRAITS,PHOBIAS,CATASTROPHE_SCENARIOS,HEALTH_CONDITIONS,SURVIVAL_EVENTS,SPECIAL_FACTS} from "@/games/BunkerGame/contents";
+
 
 export function barColor(val: number): string {
     if (val >= 60) return '#00D88A';

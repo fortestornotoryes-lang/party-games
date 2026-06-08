@@ -2,7 +2,7 @@ import {Siren} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useMemo, useState} from 'react';
 
-import {CAPACITY_PCT} from './constants';
+import {BUNKER_MODES, CAPACITY_PCT} from './constants';
 import {BriefingPhase} from './phases/BriefingPhase';
 import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
 import {DiscussionPhase} from './phases/DiscussionPhase';
@@ -15,7 +15,6 @@ import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEven
 import {BunkerPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {BUNKER_MODES, CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from '@/constants/bunkerContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {calculateSurvival, generateCharacter} from "@/games/BunkerGame/helpers.ts";
 import {useTranslation} from '@/i18n';
@@ -23,6 +22,7 @@ import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {GameKey} from '@/types/games';
 import {pickRandom, shuffle} from '@/utils/random';
+import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from "@/games/BunkerGame/contents";
 
 interface BunkerGameProps {
     playerNames: string[];

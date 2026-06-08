@@ -1,15 +1,12 @@
 import {
-    CATASTROPHE_SCENARIOS,
-    SURVIVAL_EVENTS,
-} from '@/constants/bunkerContent';
-import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
-import {pickRandom, shuffle} from '@/utils/random';
-import {
     BUNKER_BASE_RESOURCES,
     BUNKER_DIFFICULTY_OFFSET,
     BUNKER_DIFFICULTY_SCALE
 } from "@/games/BunkerGame/constants.ts";
+import {SURVIVAL_EVENTS,CATASTROPHE_SCENARIOS} from "@/games/BunkerGame/contents";
 import {applyBonus, applyBonusScaled, generateCharacter, getAgeBonuses} from "@/games/BunkerGame/helpers.ts";
+import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
+import {pickRandom, shuffle} from '@/utils/random';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -79,8 +76,12 @@ function sumNetDelta(before: BunkerResources, after: BunkerResources): number {
 function avgRes(list: BunkerResources[]): BunkerResources {
     const out: BunkerResources = {food: 0, water: 0, medicine: 0, energy: 0, morale: 0};
     if (!list.length) return out;
-    for (const r of list) RESOURCE_KEYS.forEach(k => { out[k] += r[k]; });
-    RESOURCE_KEYS.forEach(k => { out[k] = Math.round(out[k] / list.length); });
+    for (const r of list) RESOURCE_KEYS.forEach(k => {
+        out[k] += r[k];
+    });
+    RESOURCE_KEYS.forEach(k => {
+        out[k] = Math.round(out[k] / list.length);
+    });
     return out;
 }
 
@@ -138,10 +139,14 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         // Phase 1 — catastrophe (with difficulty offset + scaled penalty)
         const snap0 = cloneRes(res);
         const diffOffset = BUNKER_DIFFICULTY_OFFSET[difficulty];
-        if (diffOffset !== 0) RESOURCE_KEYS.forEach(k => { res[k] += diffOffset; });
+        if (diffOffset !== 0) RESOURCE_KEYS.forEach(k => {
+            res[k] += diffOffset;
+        });
         const scenarioScale = BUNKER_DIFFICULTY_SCALE[difficulty];
         (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
-            .forEach(([k, v]) => { res[k] += Math.round(v * scenarioScale); });
+            .forEach(([k, v]) => {
+                res[k] += Math.round(v * scenarioScale);
+            });
         const scenarioDelta = sumAbsDelta(snap0, res);
         const scenarioNet = sumNetDelta(snap0, res);
 
@@ -149,19 +154,19 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         const snap1 = cloneRes(res);
         const teamScale = Math.max(0.4, 1 - (bunkerTeam.length - 2) * 0.08);
         for (const char of bunkerTeam) {
-            let attrs: {bonus: Partial<BunkerResources>}[];
+            let attrs: { bonus: Partial<BunkerResources> }[];
             if (!countHiddenTraits) {
                 const revealed = new Set<string>(['profession', ...char.revealOrder.slice(0, totalRounds - 1)]);
                 attrs = (
                     [
                         ['profession', char.profession],
-                        ['health',     char.health],
-                        ['hobby',      char.hobby],
-                        ['phobia',     char.phobia],
-                        ['trait',      char.trait],
-                        ['item',       char.item],
-                        ['specialFact',char.specialFact],
-                    ] as [string, {bonus: Partial<BunkerResources>}][]
+                        ['health', char.health],
+                        ['hobby', char.hobby],
+                        ['phobia', char.phobia],
+                        ['trait', char.trait],
+                        ['item', char.item],
+                        ['specialFact', char.specialFact],
+                    ] as [string, { bonus: Partial<BunkerResources> }][]
                 ).filter(([k]) => revealed.has(k)).map(([, a]) => a);
             } else {
                 attrs = [char.profession, char.health, char.hobby, char.trait, char.item, char.specialFact, char.phobia];
@@ -183,7 +188,9 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         const eventNet = sumNetDelta(snap2, res);
 
         // Clamp & determine outcome
-        RESOURCE_KEYS.forEach(k => { res[k] = Math.max(0, Math.min(100, Math.round(res[k]))); });
+        RESOURCE_KEYS.forEach(k => {
+            res[k] = Math.max(0, Math.min(100, Math.round(res[k])));
+        });
 
         data.push({
             difficulty, scenarioTitle: scenario.title, scenarioEmoji: scenario.emoji,
@@ -208,11 +215,11 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
     const totAll = totScenario + totTeam + totEvents || 1;
     const factorInfluence: FactorInfluence = {
         scenario: Math.round(totScenario / totAll * 100),
-        team:     Math.round(totTeam     / totAll * 100),
-        events:   Math.round(totEvents   / totAll * 100),
+        team: Math.round(totTeam / totAll * 100),
+        events: Math.round(totEvents / totAll * 100),
         scenarioNet: Math.round(data.reduce((s, r) => s + r.scenarioNet, 0) / runs),
-        teamNet:     Math.round(data.reduce((s, r) => s + r.teamNet,     0) / runs),
-        eventsNet:   Math.round(data.reduce((s, r) => s + r.eventNet,    0) / runs),
+        teamNet: Math.round(data.reduce((s, r) => s + r.teamNet, 0) / runs),
+        eventsNet: Math.round(data.reduce((s, r) => s + r.eventNet, 0) / runs),
     };
 
     // Per-scenario
@@ -269,8 +276,8 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         factorInfluence,
         scenarioStats,
         difficultyStats,
-        avgEventCount:  Math.round(data.reduce((s, r) => s + r.eventCount,  0) / runs * 10) / 10,
+        avgEventCount: Math.round(data.reduce((s, r) => s + r.eventCount, 0) / runs * 10) / 10,
         avgPlayerCount: Math.round(data.reduce((s, r) => s + r.playerCount, 0) / runs * 10) / 10,
-        avgBunkerSize:  Math.round(data.reduce((s, r) => s + r.bunkerSize,  0) / runs * 10) / 10,
+        avgBunkerSize: Math.round(data.reduce((s, r) => s + r.bunkerSize, 0) / runs * 10) / 10,
     };
 }

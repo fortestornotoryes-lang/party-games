@@ -1,7 +1,7 @@
 import {AlertTriangle, Skull, Trophy, Zap} from 'lucide-react';
 import type {CSSProperties, FC} from 'react';
 
-import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from './types';
+import {ALL_TRAIT_KEYS, BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from './types';
 
 export type Step = 'team' | 'events' | 'resources' | 'results';
 export const STEP_ORDER: Step[] = ['team', 'events', 'resources', 'results'];
@@ -61,7 +61,7 @@ export const OUTCOME_CONFIG: Record<
 export const OUTCOME_COLOR_MAP: Record<SurvivalOutcome, 'green' | 'yellow' | 'orange' | 'red'> = {
     full_victory: 'green', partial: 'yellow', pyrrhic: 'orange', defeat: 'red',
 };
-export const BUNKER_BASE_RESOURCES: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
+export const BUNKER_BASE_RESOURCES: BunkerResources = {food: 45, water: 50, medicine: 50, energy: 65, morale: 65};
 export const BUNKER_DIFFICULTY_OFFSET: Record<DifficultyLevel, number> = {easy: 10, medium: 0, hard: -8};
 export const BUNKER_DIFFICULTY_SCALE: Record<DifficultyLevel, number> = {easy: 0.65, medium: 1.0, hard: 1.35};
 export const RESOURCE_KEYS_CALC: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
@@ -72,3 +72,10 @@ export const RESOURCE_META: { key: keyof BunkerResources; emoji: string; label: 
     {key: 'energy', emoji: '⚡', label: 'Энергия'},
     {key: 'morale', emoji: '🧠', label: 'Мораль'},
 ];
+export const BUNKER_MODES = {
+    CLASSIC: 'classic',
+    DICTATOR: 'dictator',
+    TRIBUNAL: 'tribunal',
+} as const; // How many traits to reveal after round 1 (rounds 2…N).
+// Must be ≤ ALL_TRAIT_KEYS.length (6). Currently 4 → 5 total rounds.
+export const TRAITS_TO_REVEAL = ALL_TRAIT_KEYS.length;
