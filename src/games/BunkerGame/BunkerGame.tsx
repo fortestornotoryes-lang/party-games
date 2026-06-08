@@ -38,7 +38,7 @@ const CAPACITY_PCT: Record<string, number> = {easy: 0.8, medium: 0.6, hard: 0.4}
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRestart}) => {
     const {t} = useTranslation();
-    const {mode, difficulty, rounds} = useGameSettings();
+    const {mode, difficulty, rounds, countHiddenTraits} = useGameSettings();
     const totalRounds = Math.max(3, Math.min(7, rounds));
     const isDictator = mode === BUNKER_MODES.DICTATOR;
     const isTribunal = mode === BUNKER_MODES.TRIBUNAL;
@@ -85,8 +85,9 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
             };
         }
         const team = characters.filter((c) => !eliminatedNames.includes(c.playerName));
-        return calculateSurvival(team, scenario, events);
-    }, [eliminatedNames, characters, scenario, events]);
+        const opts = countHiddenTraits ? undefined : {revealedTraitsOnly: true, totalRounds};
+        return calculateSurvival(team, scenario, events, opts);
+    }, [eliminatedNames, characters, scenario, events, countHiddenTraits, totalRounds]);
 
     // ── Subtitle for GameHeader ────────────────────────────────────────────────
     const subtitle = (() => {

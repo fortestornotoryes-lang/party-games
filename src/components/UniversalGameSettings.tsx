@@ -94,6 +94,8 @@ interface UniversalGameSettingsProps {
     setRounds?: (r: number) => void;
     timerSeconds?: number;
     setTimerSeconds?: (s: number) => void;
+    countHiddenTraits?: boolean;
+    setCountHiddenTraits?: (v: boolean) => void;
     modes?: GameModeOption[];
     difficultyLabel?: string;
     modeLabel?: string;
@@ -109,6 +111,8 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                                                                                 setRounds,
                                                                                 timerSeconds,
                                                                                 setTimerSeconds,
+                                                                                countHiddenTraits,
+                                                                                setCountHiddenTraits,
                                                                                 modes = [] as GameModeOption[],
                                                                                 difficultyLabel = '',
                                                                                 modeLabel,
@@ -235,6 +239,20 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                         {value: 3, label: '3 РАУНДА', sublabel: 'быстро'},
                         {value: 5, label: '5 РАУНДОВ', sublabel: 'стандарт'},
                         {value: 7, label: '7 РАУНДОВ', sublabel: 'полная'},
+                    ]}
+                />
+            )}
+
+            {currentGameId === GameKey.Bunker && !!setCountHiddenTraits && (
+                <SettingRow
+                    label="Расчёт выживания"
+                    icon={Target}
+                    color="orange"
+                    value={countHiddenTraits ? 'all' : 'revealed'}
+                    onChange={(v) => setCountHiddenTraits(v === 'all')}
+                    options={[
+                        {value: 'all',      label: 'ВСЕ ЧЕРТЫ',   sublabel: 'включая скрытые'},
+                        {value: 'revealed', label: 'РАСКРЫТЫЕ',   sublabel: 'только показанные'},
                     ]}
                 />
             )}

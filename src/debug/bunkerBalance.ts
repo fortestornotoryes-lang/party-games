@@ -119,7 +119,7 @@ interface RunData {
     eventNet: number;
 }
 
-export function runBunkerSimulation(runs: number): SimReport {
+export function runBunkerSimulation(runs: number, countHiddenTraits = true): SimReport {
     const t0 = performance.now();
     const data: RunData[] = [];
 
@@ -127,6 +127,7 @@ export function runBunkerSimulation(runs: number): SimReport {
         const playerCount = 4 + Math.floor(Math.random() * 5); // 4–8
         const difficulty = DIFFICULTIES[Math.floor(Math.random() * 3)];
         const bunkerSize = Math.max(2, Math.round(playerCount * CAPACITY_PCT[difficulty]));
+        const totalRounds = 3 + Math.floor(Math.random() * 3) * 2; // 3, 5, or 7
 
         const allChars = Array.from({length: playerCount}, (_, j) => generateCharacter(`P${j + 1}`));
         const bunkerTeam = shuffle(allChars).slice(0, bunkerSize);
@@ -148,7 +149,24 @@ export function runBunkerSimulation(runs: number): SimReport {
         const snap1 = cloneRes(res);
         const teamScale = Math.max(0.4, 1 - (bunkerTeam.length - 2) * 0.08);
         for (const char of bunkerTeam) {
-            for (const attr of [char.profession, char.health, char.hobby, char.trait, char.item, char.specialFact, char.phobia]) {
+            let attrs: {bonus: Partial<BunkerResources>}[];
+            if (!countHiddenTraits) {
+                const revealed = new Set<string>(['profession', ...char.revealOrder.slice(0, totalRounds - 1)]);
+                attrs = (
+                    [
+                        ['profession', char.profession],
+                        ['health',     char.health],
+                        ['hobby',      char.hobby],
+                        ['phobia',     char.phobia],
+                        ['trait',      char.trait],
+                        ['item',       char.item],
+                        ['specialFact',char.specialFact],
+                    ] as [string, {bonus: Partial<BunkerResources>}][]
+                ).filter(([k]) => revealed.has(k)).map(([, a]) => a);
+            } else {
+                attrs = [char.profession, char.health, char.hobby, char.trait, char.item, char.specialFact, char.phobia];
+            }
+            for (const attr of attrs) {
                 applyBonusScaled(res, attr.bonus, teamScale);
             }
             applyBonusScaled(res, getAgeBonuses(char.age), teamScale);

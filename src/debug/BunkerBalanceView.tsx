@@ -96,14 +96,14 @@ interface BunkerBalanceViewProps {
 
 export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) => {
     const [runCount, setRunCount] = useState(200);
+    const [countHidden, setCountHidden] = useState(true);
     const [report, setReport] = useState<SimReport | null>(null);
     const [running, setRunning] = useState(false);
 
     const handleRun = () => {
         setRunning(true);
-        // defer one tick so the spinner renders
         setTimeout(() => {
-            const result = runBunkerSimulation(runCount);
+            const result = runBunkerSimulation(runCount, countHidden);
             setReport(result);
             setRunning(false);
         }, 16);
@@ -146,7 +146,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
             </div>
 
             {/* Controls */}
-            <div className="px-4 py-3 flex items-center gap-2 flex-shrink-0"
+            <div className="px-4 py-3 flex flex-wrap items-center gap-2 flex-shrink-0"
                 style={{borderBottom: '1px solid rgba(255,255,255,0.06)'}}>
                 <span className="text-xs text-white/40 mr-1">Попыток:</span>
                 {RUN_OPTIONS.map(n => (
@@ -163,6 +163,18 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                         {n}
                     </button>
                 ))}
+                <div className="w-px h-4 bg-white/10 mx-1"/>
+                <button
+                    onClick={() => setCountHidden(v => !v)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-black transition-all active:scale-95"
+                    style={{
+                        background: countHidden ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.05)',
+                        border: `1px solid ${countHidden ? 'rgba(96,165,250,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                        color: countHidden ? '#60A5FA' : 'rgba(255,255,255,0.35)',
+                    }}
+                >
+                    {countHidden ? '👁 все черты' : '👁 раскрытые'}
+                </button>
                 <div className="flex-1"/>
                 <button
                     onClick={handleRun}

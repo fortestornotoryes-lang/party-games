@@ -38,10 +38,12 @@ function AppContent() {
         mode,
         rounds,
         timerSeconds,
+        countHiddenTraits,
         setDifficulty,
         setMode,
         setRounds,
         setTimerSeconds,
+        setCountHiddenTraits,
         currentGameId,
         setCurrentGameId,
     } = useGameSettings();
@@ -168,6 +170,8 @@ function AppContent() {
                                         setRounds={setRounds}
                                         timerSeconds={timerSeconds}
                                         setTimerSeconds={setTimerSeconds}
+                                        countHiddenTraits={countHiddenTraits}
+                                        setCountHiddenTraits={setCountHiddenTraits}
                                         modes={config.modes as GameModeOption[]}
                                     />
                                 </Setup>
