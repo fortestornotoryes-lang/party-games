@@ -249,7 +249,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                     icon={Target}
                     color="orange"
                     value={countHiddenTraits ? 'all' : 'revealed'}
-                    onChange={(v) => setCountHiddenTraits(v === 'all')}
+                    onChange={(v) => { setCountHiddenTraits(v === 'all'); }}
                     options={[
                         {value: 'all',      label: 'ВСЕ ЧЕРТЫ',   sublabel: 'включая скрытые'},
                         {value: 'revealed', label: 'РАСКРЫТЫЕ',   sublabel: 'только показанные'},

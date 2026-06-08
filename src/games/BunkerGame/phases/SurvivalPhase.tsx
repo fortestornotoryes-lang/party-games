@@ -90,8 +90,8 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
     const resultsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const t1 = setTimeout(() => setStep('events'),    1800);
-        const t2 = setTimeout(() => setStep('resources'), 3500);
+        const t1 = setTimeout(() => { setStep('events'); },    1800);
+        const t2 = setTimeout(() => { setStep('resources'); }, 3500);
         const t3 = setTimeout(() => {
             setDisplayedResources(finalResources);
             feedbackService.vibrate(VIBRATE.celebrate);

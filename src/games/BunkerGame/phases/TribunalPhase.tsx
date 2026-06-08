@@ -164,7 +164,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 <motion.button
                                     key={char.playerName}
                                     whileTap={{scale: 0.97}}
-                                    onClick={() => handleAppeal(char)}
+                                    onClick={() => { handleAppeal(char); }}
                                     className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                     style={{
                                         background: rgba('yellow', 0.05),
@@ -289,7 +289,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     <div className="flex-1 flex flex-col justify-center gap-4">
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => handleVote('pardoned')}
+                            onClick={() => { handleVote('pardoned'); }}
                             className="w-full p-6 rounded-premium-2xl text-center space-y-2"
                             style={{
                                 background: rgba('green', 0.08),
@@ -307,7 +307,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => handleVote('rejected')}
+                            onClick={() => { handleVote('rejected'); }}
                             className="w-full p-6 rounded-premium-2xl text-center space-y-2"
                             style={{
                                 background: rgba('red', 0.06),
@@ -354,7 +354,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                             <motion.button
                                 key={char.playerName}
                                 whileTap={{scale: 0.97}}
-                                onClick={() => handleSwap(char.playerName)}
+                                onClick={() => { handleSwap(char.playerName); }}
                                 className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                 style={{
                                     background: rgba('red', 0.05),

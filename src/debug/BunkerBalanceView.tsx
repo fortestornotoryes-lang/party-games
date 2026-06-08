@@ -152,7 +152,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                 {RUN_OPTIONS.map(n => (
                     <button
                         key={n}
-                        onClick={() => setRunCount(n)}
+                        onClick={() => { setRunCount(n); }}
                         className="px-3 py-1.5 rounded-lg text-xs font-black transition-all active:scale-95"
                         style={{
                             background: runCount === n ? 'rgba(255,138,31,0.2)' : 'rgba(255,255,255,0.05)',
@@ -165,7 +165,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                 ))}
                 <div className="w-px h-4 bg-white/10 mx-1"/>
                 <button
-                    onClick={() => setCountHidden(v => !v)}
+                    onClick={() => { setCountHidden(v => !v); }}
                     className="px-3 py-1.5 rounded-lg text-xs font-black transition-all active:scale-95"
                     style={{
                         background: countHidden ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.05)',

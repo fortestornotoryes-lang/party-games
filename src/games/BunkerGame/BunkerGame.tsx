@@ -5,8 +5,8 @@ import React, {useMemo, useState} from 'react';
 import {BriefingPhase} from './phases/BriefingPhase';
 import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
 import {DiscussionPhase} from './phases/DiscussionPhase';
-import {RevealPhase} from './phases/RevealPhase';
 import {FullRevealPhase} from './phases/FullRevealPhase';
+import {RevealPhase} from './phases/RevealPhase';
 import {SurvivalPhase} from './phases/SurvivalPhase';
 import {TribunalPhase} from './phases/TribunalPhase';
 import {VotingPhase} from './phases/VotingPhase';
@@ -150,7 +150,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
         setPhase(BunkerPhase.FullReveal);
     };
 
-    const handleFullRevealDone = () => setPhase(BunkerPhase.SurvivalSim);
+    const handleFullRevealDone = () => { setPhase(BunkerPhase.SurvivalSim); };
 
     const handleRestart = () => {
         (onRestart ?? onBack)();
@@ -193,7 +193,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
                             characters={characters}
                             revealRound={revealRound}
                             totalRounds={totalRounds}
-                            onDone={() => setPhase(BunkerPhase.Discussion)}
+                            onDone={() => { setPhase(BunkerPhase.Discussion); }}
                         />
                     )}
 
