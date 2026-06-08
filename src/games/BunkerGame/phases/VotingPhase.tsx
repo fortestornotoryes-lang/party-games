@@ -2,11 +2,12 @@ import {Check, UserX, Vote} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useState} from 'react';
 
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {ResourceContribRow} from '../components/ResourceContribRow';
+import {type BunkerCharacter, type DifficultyLevel, getRevealedTrait} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
-import {getPlayerResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
+import {getPlayerResourceContribution} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -15,7 +16,7 @@ interface VotingPhaseProps {
     characters: BunkerCharacter[];
     bunkerCapacity: number;
     totalRounds: number;
-    difficulty: string;
+    difficulty: DifficultyLevel;
     directorName?: string | null;
     onConfirm: (eliminatedNames: string[]) => void;
 }
@@ -200,18 +201,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                 </div>
 
                                 {/* Resource contribution (easy/medium only) */}
-                                {contrib && (
-                                    <div className="flex flex-wrap gap-2 mt-1.5">
-                                        {RESOURCE_META.filter(({key}) => contrib[key] !== 0).map(({key, emoji}) => {
-                                            const val = contrib[key];
-                                            return (
-                                                <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
-                                                    {emoji}{val > 0 ? '+' : ''}{val}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
-                                )}
+                                {contrib && <ResourceContribRow contrib={contrib} className="flex gap-2 mt-1.5 flex-wrap" />}
                             </div>
                         </motion.button>
                     );

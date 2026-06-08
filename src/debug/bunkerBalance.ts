@@ -1,10 +1,20 @@
-import {CATASTROPHE_SCENARIOS, generateCharacter, getAgeBonuses, SURVIVAL_EVENTS} from '@/constants/bunkerContent';
-import type {BunkerResources, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
+import {
+    applyBonus,
+    applyBonusScaled,
+    BUNKER_BASE_RESOURCES,
+    BUNKER_DIFFICULTY_OFFSET,
+    BUNKER_DIFFICULTY_SCALE,
+    CATASTROPHE_SCENARIOS,
+    generateCharacter,
+    getAgeBonuses,
+    SURVIVAL_EVENTS,
+} from '@/constants/bunkerContent';
+import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
 import {pickRandom, shuffle} from '@/utils/random';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type Difficulty = 'easy' | 'medium' | 'hard';
+export type Difficulty = DifficultyLevel;
 
 export interface ScenarioStat {
     title: string;
@@ -54,24 +64,9 @@ export interface SimReport {
 const RESOURCE_KEYS: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
 const CAPACITY_PCT: Record<Difficulty, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
-const BASE_RESOURCES: BunkerResources = {food: 25, water: 45, medicine: 50, energy: 65, morale: 65};
-const DIFFICULTY_BASE_OFFSET: Record<Difficulty, number> = {easy: 15, medium: 0, hard: -5};
-const DIFFICULTY_SCENARIO_SCALE: Record<Difficulty, number> = {easy: 0.75, medium: 1.0, hard: 1.25};
 
 function cloneRes(r: BunkerResources): BunkerResources {
     return {...r};
-}
-
-function applyBonus(res: BunkerResources, bonus: Partial<BunkerResources>): void {
-    (Object.entries(bonus) as [ResourceKey, number][]).forEach(([k, v]) => {
-        res[k] += v;
-    });
-}
-
-function applyBonusScaled(res: BunkerResources, bonus: Partial<BunkerResources>, scale: number): void {
-    (Object.entries(bonus) as [ResourceKey, number][]).forEach(([k, v]) => {
-        res[k] += Math.round(v * scale);
-    });
 }
 
 function sumAbsDelta(before: BunkerResources, after: BunkerResources): number {
@@ -139,13 +134,13 @@ export function runBunkerSimulation(runs: number, countHiddenTraits = true): Sim
         const events = shuffle([...SURVIVAL_EVENTS]).slice(0, eventCount);
 
         // Replicate calculateSurvival step-by-step to capture per-phase deltas
-        const res = cloneRes(BASE_RESOURCES);
+        const res = cloneRes(BUNKER_BASE_RESOURCES);
 
         // Phase 1 — catastrophe (with difficulty offset + scaled penalty)
         const snap0 = cloneRes(res);
-        const diffOffset = DIFFICULTY_BASE_OFFSET[difficulty];
+        const diffOffset = BUNKER_DIFFICULTY_OFFSET[difficulty];
         if (diffOffset !== 0) RESOURCE_KEYS.forEach(k => { res[k] += diffOffset; });
-        const scenarioScale = DIFFICULTY_SCENARIO_SCALE[difficulty];
+        const scenarioScale = BUNKER_DIFFICULTY_SCALE[difficulty];
         (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
             .forEach(([k, v]) => { res[k] += Math.round(v * scenarioScale); });
         const scenarioDelta = sumAbsDelta(snap0, res);

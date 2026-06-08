@@ -2,7 +2,9 @@ import type {
     AttributeEntry,
     BunkerCharacter,
     BunkerResources,
-    CatastropheScenario, ResourceBonus,
+    CatastropheScenario,
+    DifficultyLevel,
+    ResourceBonus,
     ResourceKey,
     SurvivalEvent,
     TraitKey,
@@ -2843,26 +2845,33 @@ export function getAgeBonuses(age: number): ResourceBonus {
     return {medicine: 5, morale: 7, energy: -25, food: 2};
 }
 
-const DIFFICULTY_BASE_OFFSET: Record<string, number> = {easy: 10, medium: 0, hard: -8};
-const DIFFICULTY_SCENARIO_SCALE: Record<string, number> = {easy: 0.65, medium: 1.0, hard: 1.35};
+export const BUNKER_BASE_RESOURCES: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
+export const BUNKER_DIFFICULTY_OFFSET: Record<DifficultyLevel, number> = {easy: 10, medium: 0, hard: -8};
+export const BUNKER_DIFFICULTY_SCALE: Record<DifficultyLevel, number>  = {easy: 0.65, medium: 1.0, hard: 1.35};
 const RESOURCE_KEYS_CALC: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
+
+export interface CalculateSurvivalOptions {
+    revealedTraitsOnly?: boolean;
+    totalRounds?: number;
+    difficulty?: DifficultyLevel;
+}
 
 export function calculateSurvival(
     bunkerTeam: BunkerCharacter[],
     scenario: CatastropheScenario,
     events: SurvivalEvent[],
-    options?: {revealedTraitsOnly?: boolean; totalRounds?: number; difficulty?: 'easy' | 'medium' | 'hard'}
+    options?: CalculateSurvivalOptions
 ): { resources: BunkerResources; outcome: 'full_victory' | 'partial' | 'pyrrhic' | 'defeat' } {
-    const base: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
+    const base: BunkerResources = {...BUNKER_BASE_RESOURCES};
 
     // Apply difficulty base offset
-    const diffOffset = DIFFICULTY_BASE_OFFSET[options?.difficulty ?? 'medium'] ?? 0;
+    const diffOffset = BUNKER_DIFFICULTY_OFFSET[options?.difficulty ?? 'medium'];
     if (diffOffset !== 0) {
         RESOURCE_KEYS_CALC.forEach(k => { base[k] += diffOffset; });
     }
 
     // Apply difficulty-scaled scenario penalty
-    const scenarioScale = DIFFICULTY_SCENARIO_SCALE[options?.difficulty ?? 'medium'] ?? 1.0;
+    const scenarioScale = BUNKER_DIFFICULTY_SCALE[options?.difficulty ?? 'medium'];
     (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
         .forEach(([k, v]) => { base[k] += Math.round(v * scenarioScale); });
 
@@ -2959,13 +2968,13 @@ export function getPlayerResourceContribution(char: BunkerCharacter): BunkerReso
     return result;
 }
 
-function applyBonus(res: BunkerResources, bonus: Partial<BunkerResources>): void {
+export function applyBonus(res: BunkerResources, bonus: Partial<BunkerResources>): void {
     (Object.entries(bonus) as [ResourceKey, number][]).forEach(([k, v]) => {
         res[k] += v;
     });
 }
 
-function applyBonusScaled(
+export function applyBonusScaled(
     res: BunkerResources,
     bonus: Partial<BunkerResources>,
     scale: number

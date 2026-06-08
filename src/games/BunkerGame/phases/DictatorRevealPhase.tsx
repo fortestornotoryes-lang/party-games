@@ -15,9 +15,9 @@ interface DictatorRevealPhaseProps {
 }
 
 export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
-                                                                            directorName,
-                                                                            onContinue,
-                                                                        }) => {
+    directorName,
+    onContinue,
+}) => {
     const {t} = useTranslation();
     const [isRevealed, setIsRevealed] = useState(false);
 

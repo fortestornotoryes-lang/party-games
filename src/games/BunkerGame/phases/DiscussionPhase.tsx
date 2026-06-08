@@ -2,12 +2,13 @@ import {ChevronRight, Clock, MessageCircle} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {ResourceContribRow} from '../components/ResourceContribRow';
+import {type BunkerCharacter, type DifficultyLevel, getRevealedTrait} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
 import {Typography} from '@/components/Typography';
-import {getRevealedResourceContribution, RESOURCE_META} from '@/constants/bunkerContent';
+import {getRevealedResourceContribution} from '@/constants/bunkerContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
@@ -18,7 +19,7 @@ interface DiscussionPhaseProps {
     characters: BunkerCharacter[];
     revealRound: number;
     totalRounds: number;
-    difficulty: string;
+    difficulty: DifficultyLevel;
     onNext: () => void;
 }
 
@@ -158,23 +159,13 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                     <div className="space-y-1">
                         {characters.map((char) => {
                             const contrib = getRevealedResourceContribution(char, revealRound);
-                            const nonZero = RESOURCE_META.filter(({key}) => contrib[key] !== 0);
-                            if (nonZero.length === 0) return null;
+                            if (Object.values(contrib).every(v => v === 0)) return null;
                             return (
                                 <div key={char.playerName} className="flex items-center gap-2 min-w-0">
                                     <span className="text-xs font-black text-white/50 w-20 flex-shrink-0 truncate">
                                         {char.playerName}
                                     </span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {nonZero.map(({key, emoji}) => {
-                                            const val = contrib[key];
-                                            return (
-                                                <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
-                                                    {emoji}{val > 0 ? '+' : ''}{val}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
+                                    <ResourceContribRow contrib={contrib} className="flex gap-2 flex-wrap" />
                                 </div>
                             );
                         })}

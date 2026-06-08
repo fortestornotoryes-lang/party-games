@@ -18,11 +18,11 @@ interface BriefingPhaseProps {
 }
 
 export const BriefingPhase: React.FC<BriefingPhaseProps> = ({
-                                                                scenario,
-                                                                playerCount,
-                                                                bunkerCapacity,
-                                                                onStart,
-                                                            }) => {
+    scenario,
+    playerCount,
+    bunkerCapacity,
+    onStart,
+}) => {
     const {t} = useTranslation();
 
     const handleStart = () => {

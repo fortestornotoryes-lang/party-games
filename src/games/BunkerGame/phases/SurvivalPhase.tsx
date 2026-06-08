@@ -2,6 +2,7 @@ import {AlertTriangle, Cpu, RotateCcw, Skull, Trophy, Zap} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useEffect, useRef, useState} from 'react';
 
+import {ResourceContribRow} from '../components/ResourceContribRow';
 import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome} from '../types';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
@@ -48,23 +49,6 @@ const OUTCOME_COLOR_MAP: Record<SurvivalOutcome, 'green' | 'yellow' | 'orange' |
     full_victory: 'green', partial: 'yellow', pyrrhic: 'orange', defeat: 'red',
 };
 
-function ResourceContribRow({char}: {char: BunkerCharacter}) {
-    const contrib = getPlayerResourceContribution(char);
-    const nonZero = RESOURCE_META.filter(({key}) => contrib[key] !== 0);
-    if (nonZero.length === 0) return null;
-    return (
-        <div className="flex gap-3 mt-2 flex-wrap">
-            {nonZero.map(({key, emoji}) => {
-                const val = contrib[key];
-                return (
-                    <span key={key} className="text-xs font-black tabular-nums" style={{color: val > 0 ? '#00D88A' : '#FF2E4D'}}>
-                        {emoji}{val > 0 ? '+' : ''}{val}
-                    </span>
-                );
-            })}
-        </div>
-    );
-}
 
 export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
     bunkerTeam,
@@ -83,15 +67,15 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
     const resultsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const t1 = setTimeout(() => { setStep('events'); },    1800);
-        const t2 = setTimeout(() => { setStep('resources'); }, 3500);
+        const t1 = setTimeout(() => { setStep('events'); },    800);
+        const t2 = setTimeout(() => { setStep('resources'); }, 1500);
         const t3 = setTimeout(() => {
             setDisplayedResources(finalResources);
             feedbackService.vibrate(VIBRATE.celebrate);
-        }, 4000);
+        }, 2000);
         const t4 = setTimeout(() => {
             setStep('results');
-        }, 5800);
+        }, 3000);
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
     }, [finalResources]);
 
@@ -295,7 +279,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                             )}
                                         </div>
                                     </div>
-                                    <ResourceContribRow char={char}/>
+                                    <ResourceContribRow contrib={getPlayerResourceContribution(char)}/>
                                 </motion.div>
                             ))}
                         </div>
@@ -328,7 +312,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                                 </div>
                                             </div>
                                         </div>
-                                        <ResourceContribRow char={char}/>
+                                        <ResourceContribRow contrib={getPlayerResourceContribution(char)}/>
                                     </motion.div>
                                 ))}
                             </div>

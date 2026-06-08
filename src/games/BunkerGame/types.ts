@@ -11,6 +11,8 @@ export enum BunkerPhase {
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
 
+export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+
 export type ResourceBonus = Partial<Record<ResourceKey, number>>;
 
 export interface AttributeEntry {
