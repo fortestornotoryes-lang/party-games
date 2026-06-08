@@ -59,6 +59,7 @@ export interface BunkerTranslations {
     subtitleTribunal: string;
     subtitleSurvival: string;
     subtitleResults: string;
+    subtitleFullReveal: string;
 
     // BriefingPhase
     emergencyAlert: string;
@@ -170,6 +171,9 @@ export interface BunkerTranslations {
     survivorsLabel: string;
     outsidersLabel: string;
     newGameBtn: string;
+    fullRevealLabel: string;
+    fullRevealDesc: string;
+    hiddenBadge: string;
 
     // Trait labels (from types.ts TRAIT_LABELS)
     traitLabels: {

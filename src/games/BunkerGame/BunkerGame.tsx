@@ -5,8 +5,8 @@ import React, {useMemo, useState} from 'react';
 import {BriefingPhase} from './phases/BriefingPhase';
 import {DictatorRevealPhase} from './phases/DictatorRevealPhase';
 import {DiscussionPhase} from './phases/DiscussionPhase';
-import {ResultsPhase} from './phases/ResultsPhase';
 import {RevealPhase} from './phases/RevealPhase';
+import {FullRevealPhase} from './phases/FullRevealPhase';
 import {SurvivalPhase} from './phases/SurvivalPhase';
 import {TribunalPhase} from './phases/TribunalPhase';
 import {VotingPhase} from './phases/VotingPhase';
@@ -31,11 +31,12 @@ import {pickRandom, shuffle} from '@/utils/random';
 interface BunkerGameProps {
     playerNames: string[];
     onBack: () => void;
+    onRestart?: () => void;
 }
 
 const CAPACITY_PCT: Record<string, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
 
-export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => {
+export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRestart}) => {
     const {t} = useTranslation();
     const {mode, difficulty, rounds} = useGameSettings();
     const totalRounds = Math.max(3, Math.min(7, rounds));
@@ -55,7 +56,8 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
     );
     const [events] = useState<SurvivalEvent[]>(() => {
         const pool = shuffle([...SURVIVAL_EVENTS]);
-        return [pool[0], pool[1]]; // pick 2 events
+        const count = Math.floor(Math.random() * 10) + 1;
+        return pool.slice(0, count);
     });
 
     // ── Mode-specific state ────────────────────────────────────────────────────
@@ -101,10 +103,10 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
                 return t(`${NS.BUNKER}.subtitleVoting`);
             case BunkerPhase.Tribunal:
                 return t(`${NS.BUNKER}.subtitleTribunal`);
+            case BunkerPhase.FullReveal:
+                return t(`${NS.BUNKER}.subtitleFullReveal`);
             case BunkerPhase.SurvivalSim:
                 return t(`${NS.BUNKER}.subtitleSurvival`);
-            case BunkerPhase.Results:
-                return t(`${NS.BUNKER}.subtitleResults`);
             default:
                 return '';
         }
@@ -135,23 +137,19 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
     // Voting confirmed
     const handleVotingConfirm = (names: string[]) => {
         setEliminatedNames(names);
-        setPhase(isTribunal ? BunkerPhase.Tribunal : BunkerPhase.SurvivalSim);
+        setPhase(isTribunal ? BunkerPhase.Tribunal : BunkerPhase.FullReveal);
     };
 
     // Tribunal done
     const handleTribunalDone = (finalEliminated: string[]) => {
         setEliminatedNames(finalEliminated);
-        setPhase(BunkerPhase.SurvivalSim);
+        setPhase(BunkerPhase.FullReveal);
     };
 
-    // Survival → Results
-    const handleRevealResults = () => {
-        setPhase(BunkerPhase.Results);
-    };
+    const handleFullRevealDone = () => setPhase(BunkerPhase.SurvivalSim);
 
-    // Restart
     const handleRestart = () => {
-        onBack();
+        (onRestart ?? onBack)();
     };
 
     // ── Render ─────────────────────────────────────────────────────────────────
@@ -225,6 +223,16 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
                         />
                     )}
 
+                    {phase === BunkerPhase.FullReveal && (
+                        <FullRevealPhase
+                            key="full-reveal"
+                            characters={characters}
+                            eliminatedNames={eliminatedNames}
+                            totalRounds={totalRounds}
+                            onContinue={handleFullRevealDone}
+                        />
+                    )}
+
                     {phase === BunkerPhase.SurvivalSim && (
                         <SurvivalPhase
                             key="survival"
@@ -233,17 +241,6 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
                             scenario={scenario}
                             events={events}
                             finalResources={resources}
-                            outcome={outcome}
-                            onReveal={handleRevealResults}
-                        />
-                    )}
-
-                    {phase === BunkerPhase.Results && (
-                        <ResultsPhase
-                            key="results"
-                            bunkerTeam={bunkerTeam}
-                            eliminated={eliminated}
-                            resources={resources}
                             outcome={outcome}
                             onRestart={handleRestart}
                         />

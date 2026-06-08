@@ -41,6 +41,7 @@ export const ru: Translations = {
         subtitleTribunal: 'Трибунал',
         subtitleSurvival: 'Симуляция',
         subtitleResults: 'Итоги',
+        subtitleFullReveal: 'Финальное раскрытие',
 
         // BriefingPhase
         emergencyAlert: 'ЭКСТРЕННОЕ ОПОВЕЩЕНИЕ',
@@ -165,6 +166,9 @@ export const ru: Translations = {
         survivorsLabel: '🏠 Выжившие в бункере',
         outsidersLabel: '🚪 Не попали в бункер',
         newGameBtn: 'НОВАЯ ИГРА',
+        fullRevealLabel: 'ФИНАЛЬНОЕ РАСКРЫТИЕ',
+        fullRevealDesc: 'Все параметры всех игроков открыты перед симуляцией',
+        hiddenBadge: 'СКРЫТО',
 
         // Trait labels
         traitLabels: {

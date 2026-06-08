@@ -41,6 +41,7 @@ export const en: Translations = {
         subtitleTribunal: 'Tribunal',
         subtitleSurvival: 'Simulation',
         subtitleResults: 'Results',
+        subtitleFullReveal: 'Full reveal',
 
         // BriefingPhase
         emergencyAlert: 'EMERGENCY ALERT',
@@ -165,6 +166,9 @@ export const en: Translations = {
         survivorsLabel: '🏠 Bunker survivors',
         outsidersLabel: '🚪 Did not enter the bunker',
         newGameBtn: 'NEW GAME',
+        fullRevealLabel: 'FULL REVEAL',
+        fullRevealDesc: 'All player parameters revealed before the simulation',
+        hiddenBadge: 'HIDDEN',
 
         // Trait labels
         traitLabels: {

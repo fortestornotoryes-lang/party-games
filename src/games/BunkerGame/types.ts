@@ -5,8 +5,8 @@ export enum BunkerPhase {
     Discussion = 'discussion',
     Voting = 'voting',
     Tribunal = 'tribunal',
+    FullReveal = 'full_reveal',
     SurvivalSim = 'survival_sim',
-    Results = 'results',
 }
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';

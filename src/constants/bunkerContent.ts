@@ -2124,6 +2124,152 @@ const SPECIAL_FACTS: AttributeEntry[] = [
 
 export const SURVIVAL_EVENTS: SurvivalEvent[] = [
     {
+        title: 'Разгерметизация сектора',
+        description: 'В одном из жилых отсеков произошла утечка воздуха.',
+        emoji: '🧯',
+        effect: { energy: -20, morale: -15 },
+        positive: false,
+    },
+    {
+        title: 'Пожар на складе медикаментов',
+        description: 'Огонь уничтожил значительную часть медицинских запасов.',
+        emoji: '🔥',
+        effect: { medicine: -30, morale: -10 },
+        positive: false,
+    },
+    {
+        title: 'Загрязнение теплицы',
+        description: 'Неизвестная болезнь уничтожила большую часть урожая.',
+        emoji: '🦠',
+        effect: { food: -35 },
+        positive: false,
+    },
+    {
+        title: 'Отказ реактора',
+        description: 'Основной источник энергии остановлен до завершения ремонта.',
+        emoji: '⚛️',
+        effect: { energy: -40, morale: -10 },
+        positive: false,
+    },
+    {
+        title: 'Массовое пищевое отравление',
+        description: 'Испорченные продукты привели к вспышке болезни.',
+        emoji: '🤢',
+        effect: { food: -15, medicine: -25, morale: -15 },
+        positive: false,
+    },
+    {
+        title: 'Серия краж',
+        description: 'Кто-то систематически похищал припасы со складов.',
+        emoji: '🕵️',
+        effect: { food: -20, water: -20, morale: -20 },
+        positive: false,
+    },
+    {
+        title: 'Бунт рабочих',
+        description: 'Часть жителей отказалась выполнять свои обязанности.',
+        emoji: '⚒️',
+        effect: { morale: -35, energy: -15 },
+        positive: false,
+    },
+    {
+        title: 'Разрушение водохранилища',
+        description: 'Трещина в резервуаре привела к потере запасов воды.',
+        emoji: '💧',
+        effect: { water: -40 },
+        positive: false,
+    },
+    {
+        title: 'Эпидемия неизвестной инфекции',
+        description: 'Болезнь быстро распространяется среди жителей.',
+        emoji: '☣️',
+        effect: { medicine: -30, morale: -20 },
+        positive: false,
+    },
+    {
+        title: 'Критический износ фильтров',
+        description: 'Система очистки воздуха почти вышла из строя.',
+        emoji: '🌫️',
+        effect: { energy: -20, medicine: -15, morale: -15 },
+        positive: false,
+    },
+    {
+        title: 'Провал экспедиции',
+        description: 'Разведчики не вернулись, а ресурсы были потрачены впустую.',
+        emoji: '🗺️',
+        effect: { food: -15, energy: -20, morale: -20 },
+        positive: false,
+    },
+    {
+        title: 'Радиационная утечка',
+        description: 'Повреждённый контейнер вызвал заражение части комплекса.',
+        emoji: '☢️',
+        effect: { medicine: -20, energy: -20, morale: -20 },
+        positive: false,
+    },
+    {
+        title: 'Падение морального духа',
+        description: 'Жители начинают сомневаться, что спасение вообще возможно.',
+        emoji: '😔',
+        effect: { morale: -40 },
+        positive: false,
+    },
+    {
+        title: 'Обрушение фермы',
+        description: 'Конструкция гидропонной фермы не выдержала нагрузки.',
+        emoji: '🌱',
+        effect: { food: -30, energy: -10 },
+        positive: false,
+    },
+    {
+        title: 'Поломка насосной станции',
+        description: 'Вода перестала поступать в жилые отсеки.',
+        emoji: '🚰',
+        effect: { water: -30, energy: -10 },
+        positive: false,
+    },
+    {
+        title: 'Смертельная плесень',
+        description: 'Опасный грибок распространился по жилым помещениям.',
+        emoji: '🍄',
+        effect: { medicine: -20, food: -20, morale: -15 },
+        positive: false,
+    },
+    {
+        title: 'Диверсия в энергосети',
+        description: 'Неизвестный вывел из строя несколько ключевых систем.',
+        emoji: '💣',
+        effect: { energy: -35, morale: -15 },
+        positive: false,
+    },
+    {
+        title: 'Черный рынок',
+        description: 'Подпольная торговля привела к исчезновению запасов.',
+        emoji: '💰',
+        effect: { food: -15, medicine: -15, morale: -20 },
+        positive: false,
+    },
+    {
+        title: 'Отказ системы очистки воды',
+        description: 'Большая часть запасов оказалась заражена.',
+        emoji: '🚱',
+        effect: { water: -35, medicine: -15 },
+        positive: false,
+    },
+    {
+        title: 'Катастрофическая авария',
+        description: 'Сразу несколько систем жизнеобеспечения вышли из строя.',
+        emoji: '💥',
+        effect: {
+            food: -15,
+            water: -15,
+            energy: -25,
+            medicine: -15,
+            morale: -25,
+        },
+        positive: false,
+    },
+    {
         title: 'Неисправный датчик радиации',
         description: 'Несколько недель система показывала ложную тревогу.',
         emoji: '📟',
@@ -2826,7 +2972,7 @@ export function calculateSurvival(
     scenario: CatastropheScenario,
     events: SurvivalEvent[]
 ): { resources: BunkerResources; outcome: 'full_victory' | 'partial' | 'pyrrhic' | 'defeat' } {
-    const base: BunkerResources = {food: 65, water: 65, medicine: 65, energy: 65, morale: 65};
+    const base: BunkerResources = {food: 50, water: 65, medicine: 40, energy: 65, morale: 15};
 
     // Apply scenario penalty
     applyBonus(base, scenario.resourcePenalty);
@@ -2876,6 +3022,18 @@ export function calculateSurvival(
     }
 
     return {resources: base, outcome};
+}
+
+/** Returns the raw sum of all attribute resource bonuses for a single character. */
+export function getPlayerResourceContribution(char: BunkerCharacter): BunkerResources {
+    const result: BunkerResources = {food: 0, water: 0, medicine: 0, energy: 0, morale: 0};
+    const attrs = [char.profession, char.health, char.hobby, char.trait, char.item, char.specialFact, char.phobia];
+    for (const attr of attrs) {
+        (Object.entries(attr.bonus) as [ResourceKey, number][]).forEach(([k, v]) => {
+            result[k] += v;
+        });
+    }
+    return result;
 }
 
 function applyBonus(res: BunkerResources, bonus: Partial<BunkerResources>): void {

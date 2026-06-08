@@ -125,7 +125,7 @@ function AppContent() {
                         case GameStatus.TabooPlaying:
                             return <TabooGame playerNames={playerNames} onBack={reset}/>;
                         case GameStatus.BunkerPlaying:
-                            return <BunkerGame playerNames={playerNames} onBack={reset}/>;
+                            return <BunkerGame playerNames={playerNames} onBack={reset} onRestart={() => setStatus(GameStatus.Setup)}/>;
                         case GameStatus.MillionairePlaying:
                             return <MillionaireGame playerNames={playerNames} onBack={reset}/>;
 

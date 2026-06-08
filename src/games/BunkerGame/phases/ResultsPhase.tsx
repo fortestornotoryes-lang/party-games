@@ -4,8 +4,9 @@ import React from 'react';
 
 import type {BunkerCharacter, BunkerResources, SurvivalOutcome} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
+import {getPlayerResourceContribution} from '@/constants/bunkerContent';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -33,7 +34,7 @@ const OUTCOME_CONFIG: Record<
         bgColor: string;
         borderColor: string;
         shadow: string;
-        icon: React.FC<{ className?: string; style?: React.CSSProperties }>;
+        icon: React.FC<{className?: string; style?: React.CSSProperties}>;
     }
 > = {
     full_victory: {
@@ -70,7 +71,7 @@ const OUTCOME_CONFIG: Record<
     },
 };
 
-const RESOURCE_META: { key: keyof BunkerResources; emoji: string }[] = [
+const RESOURCE_META: {key: keyof BunkerResources; emoji: string}[] = [
     {key: 'food', emoji: '🍎'},
     {key: 'water', emoji: '💧'},
     {key: 'medicine', emoji: '💊'},
@@ -85,13 +86,32 @@ function barColor(val: number) {
     return '#FF2E4D';
 }
 
+function ResourceContribRow({char}: {char: BunkerCharacter}) {
+    const contrib = getPlayerResourceContribution(char);
+    const nonZero = RESOURCE_META.filter(({key}) => contrib[key] !== 0);
+    if (nonZero.length === 0) return null;
+    return (
+        <div className="flex gap-3 mt-2 flex-wrap">
+            {nonZero.map(({key, emoji}) => {
+                const val = contrib[key];
+                const color = val > 0 ? '#00D88A' : '#FF2E4D';
+                return (
+                    <span key={key} className="text-xs font-black tabular-nums" style={{color}}>
+                        {emoji}{val > 0 ? '+' : ''}{val}
+                    </span>
+                );
+            })}
+        </div>
+    );
+}
+
 export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
-                                                              bunkerTeam,
-                                                              eliminated,
-                                                              resources,
-                                                              outcome,
-                                                              onRestart,
-                                                          }) => {
+    bunkerTeam,
+    eliminated,
+    resources,
+    outcome,
+    onRestart,
+}) => {
     const {t} = useTranslation();
     const cfg = OUTCOME_CONFIG[outcome];
     const Icon = cfg.icon;
@@ -103,6 +123,8 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
             feedbackService.vibrate(VIBRATE.error);
         }
     }, [outcome]);
+
+    const eliminatedBaseDelay = 0.5 + bunkerTeam.length * 0.07 + 0.15;
 
     return (
         <motion.div
@@ -123,7 +145,6 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                     boxShadow: `${cfg.shadow}, 0 24px 64px rgba(0,0,0,0.5)`,
                 }}
             >
-                <div className="text-6xl">{cfg.emoji}</div>
                 <Icon className="w-8 h-8 mx-auto" style={{color: cfg.color}}/>
                 <Typography.Display size="md" glow align="center" color={OUTCOME_COLOR_MAP[outcome]}>
                     {t(`${NS.BUNKER}.outcomes.${outcome}.title`)}
@@ -163,11 +184,11 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                                     className="text-xs font-black tabular-nums w-8 text-right flex-shrink-0"
                                     style={{color}}
                                 >
-                  {val}%
-                </span>
+                                    {val}%
+                                </span>
                                 <span className="text-tag text-white/25 w-14 flex-shrink-0">
-                  {t(`${NS.BUNKER}.resources.${key}`)}
-                </span>
+                                    {t(`${NS.BUNKER}.resources.${key}`)}
+                                </span>
                             </div>
                         );
                     })}
@@ -185,31 +206,44 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                     {t(`${NS.BUNKER}.survivorsLabel`)}
                 </Typography.Label>
                 <div className="space-y-1.5">
-                    {bunkerTeam.map((char) => (
-                        <div
+                    {bunkerTeam.map((char, idx) => (
+                        <motion.div
                             key={char.playerName}
-                            className="flex items-center gap-3 p-3 rounded-premium-sm"
+                            initial={{opacity: 0, x: -16}}
+                            animate={{opacity: 1, x: 0}}
+                            transition={{
+                                delay: 0.5 + idx * 0.07,
+                                type: 'spring',
+                                stiffness: 280,
+                                damping: 26,
+                            }}
+                            className="p-3 rounded-premium-sm"
                             style={{
                                 background: 'rgba(0,216,138,0.06)',
                                 border: '1px solid rgba(0,216,138,0.2)',
                             }}
                         >
-                            <span className="text-xl">{char.profession.emoji}</span>
-                            <div className="flex-1 min-w-0">
-                                <div className="text-sm font-black text-white">{char.playerName}</div>
-                                <div className="text-tag text-white/40">{char.profession.name}</div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xl">{char.profession.emoji}</span>
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-black text-white">{char.playerName}</div>
+                                    <div className="text-tag text-white/40">
+                                        {char.profession.name} · {char.age} л · {char.gender}
+                                    </div>
+                                </div>
+                                <div className="flex gap-1 flex-wrap justify-end">
+                                    {[char.health, char.hobby, char.trait].map(
+                                        (a, i) =>
+                                            a.isPositive && (
+                                                <span key={i} className="text-sm" title={a.name}>
+                                                    {a.emoji}
+                                                </span>
+                                            )
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex gap-1 flex-wrap justify-end">
-                                {[char.health, char.hobby, char.trait].map(
-                                    (a, i) =>
-                                        a.isPositive && (
-                                            <span key={i} className="text-sm" title={a.name}>
-                        {a.emoji}
-                      </span>
-                                        )
-                                )}
-                            </div>
-                        </div>
+                            <ResourceContribRow char={char} />
+                        </motion.div>
                     ))}
                 </div>
             </motion.div>
@@ -219,25 +253,43 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({
                 <motion.div
                     initial={{opacity: 0, y: 10}}
                     animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.5}}
+                    transition={{delay: eliminatedBaseDelay}}
                     className="space-y-2"
                 >
                     <Typography.Label size="xs" color="muted">
                         {t(`${NS.BUNKER}.outsidersLabel`)}
                     </Typography.Label>
-                    <div className="flex flex-wrap gap-1.5">
-                        {eliminated.map((char) => (
-                            <div
+                    <div className="space-y-1.5">
+                        {eliminated.map((char, idx) => (
+                            <motion.div
                                 key={char.playerName}
-                                className="px-3 py-1.5 rounded-premium-sm text-xs font-bold"
+                                initial={{opacity: 0, x: -16}}
+                                animate={{opacity: 1, x: 0}}
+                                transition={{
+                                    delay: eliminatedBaseDelay + 0.1 + idx * 0.07,
+                                    type: 'spring',
+                                    stiffness: 280,
+                                    damping: 26,
+                                }}
+                                className="p-3 rounded-premium-sm"
                                 style={{
-                                    background: 'rgba(255,46,77,0.07)',
-                                    border: '1px solid rgba(255,46,77,0.2)',
-                                    color: 'rgba(255,100,120,0.7)',
+                                    background: 'rgba(255,46,77,0.05)',
+                                    border: '1px solid rgba(255,46,77,0.18)',
                                 }}
                             >
-                                {char.profession.emoji} {char.playerName}
-                            </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xl opacity-50">{char.profession.emoji}</span>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-sm font-black" style={{color: 'rgba(255,100,120,0.8)'}}>
+                                            {char.playerName}
+                                        </div>
+                                        <div className="text-tag text-white/30">
+                                            {char.profession.name} · {char.age} л · {char.gender}
+                                        </div>
+                                    </div>
+                                </div>
+                                <ResourceContribRow char={char} />
+                            </motion.div>
                         ))}
                     </div>
                 </motion.div>
