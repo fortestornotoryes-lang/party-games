@@ -1,7 +1,8 @@
-import {Users, X} from 'lucide-react';
+import {BarChart3, Users, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
+import {BunkerBalanceView} from '../debug/BunkerBalanceView';
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
 import {contentService} from '../services/contentService';
@@ -19,6 +20,7 @@ const GAMES = Object.values(GAMES_REGISTRY);
 export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
     const {setCurrentGameId} = useGameSettings();
     const [descriptionGameId, setDescriptionGameId] = useState<GameKey | null>(null);
+    const [showBalance, setShowBalance] = useState(false);
 
     useEffect(() => {
         setCurrentGameId(null);
@@ -77,7 +79,31 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                         );
                     })}
                 </div>
+
+                {/* Balance debug button */}
+                <motion.button
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: 0.6}}
+                    onClick={() => setShowBalance(true)}
+                    className="mt-6 mx-auto flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95"
+                    style={{
+                        background: 'rgba(255,138,31,0.07)',
+                        border: '1px solid rgba(255,138,31,0.18)',
+                        color: 'rgba(255,138,31,0.55)',
+                    }}
+                >
+                    <BarChart3 className="w-3.5 h-3.5"/>
+                    Баланс · Бункер
+                </motion.button>
             </div>
+
+            {/* Balance view overlay */}
+            <AnimatePresence>
+                {showBalance && (
+                    <BunkerBalanceView key="balance" onClose={() => setShowBalance(false)}/>
+                )}
+            </AnimatePresence>
 
             {/* Description bottom sheet */}
             <AnimatePresence>
