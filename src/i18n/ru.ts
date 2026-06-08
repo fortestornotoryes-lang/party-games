@@ -84,6 +84,8 @@ export const ru: Translations = {
             r3: 'ТРЕТИЙ РАУНД',
             r4: 'ЧЕТВЁРТЫЙ РАУНД',
             r5: 'ПЯТЫЙ РАУНД',
+            r6: 'ШЕСТОЙ РАУНД',
+            r7: 'СЕДЬМОЙ РАУНД',
         },
         revealedThisRound: 'Раскрыто в этом раунде',
         revealedBefore: 'Ранее раскрыто',
@@ -102,7 +104,7 @@ export const ru: Translations = {
         // TribunalPhase
         tribunalLabel: 'ТРИБУНАЛ',
         eliminatedCanAppeal: 'Исключённые могут оспорить решение',
-        tribunalDesc: 'Один игрок раскроет скрытую черту и попросит пересмотреть голосование',
+        tribunalDesc: 'Каждый исключённый может раскрыть скрытую черту и оспорить своё исключение',
         eliminatedPlayers: 'Исключённые игроки',
         appealBtn: 'Оспорить',
         skipToSimBtn: 'ПРОПУСТИТЬ — К СИМУЛЯЦИИ',
@@ -124,6 +126,7 @@ export const ru: Translations = {
         playerExcludedTitle: '{{player}} ИСКЛЮЧЁН',
         spotFreedBy: 'Место освобождает {{player}}',
         toSurvivalBtn: 'К СИМУЛЯЦИИ ВЫЖИВАНИЯ',
+        nextAppellantBtn: 'СЛЕДУЮЩИЙ ОБВИНЯЕМЫЙ',
 
         // SurvivalPhase
         survivalLabel: 'СИМУЛЯЦИЯ ВЫЖИВАНИЯ',

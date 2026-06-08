@@ -2447,7 +2447,7 @@ function randomAge(): number {
 
 // How many traits to reveal after round 1 (rounds 2…N).
 // Must be ≤ ALL_TRAIT_KEYS.length (6). Currently 4 → 5 total rounds.
-const TRAITS_TO_REVEAL = 4;
+const TRAITS_TO_REVEAL = ALL_TRAIT_KEYS.length;
 
 export function generateCharacter(playerName: string): BunkerCharacter {
     const revealOrder = shuffle<TraitKey>([...ALL_TRAIT_KEYS]).slice(0, TRAITS_TO_REVEAL);

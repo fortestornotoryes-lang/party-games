@@ -33,12 +33,12 @@ interface BunkerGameProps {
     onBack: () => void;
 }
 
-const TOTAL_REVEAL_ROUNDS = 5;
 const CAPACITY_PCT: Record<string, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
-    const {mode, difficulty} = useGameSettings();
+    const {mode, difficulty, rounds} = useGameSettings();
+    const totalRounds = Math.max(3, Math.min(7, rounds));
     const isDictator = mode === BUNKER_MODES.DICTATOR;
     const isTribunal = mode === BUNKER_MODES.TRIBUNAL;
 
@@ -66,7 +66,6 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
     // ── Phase state ────────────────────────────────────────────────────────────
     const [phase, setPhase] = useState<BunkerPhase>(BunkerPhase.Briefing);
     const [revealRound, setRevealRound] = useState(1);
-    const [revealPlayerIdx, setRevealPlayerIdx] = useState(0);
     const [eliminatedNames, setEliminatedNames] = useState<string[]>([]);
 
     // ── Derived ────────────────────────────────────────────────────────────────
@@ -95,7 +94,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
             case BunkerPhase.DictatorReveal:
                 return t(`${NS.BUNKER}.subtitleDirector`);
             case BunkerPhase.RevealPass:
-                return t(`${NS.BUNKER}.roundOf`, {current: revealRound, total: TOTAL_REVEAL_ROUNDS});
+                return t(`${NS.BUNKER}.roundOf`, {current: revealRound, total: totalRounds});
             case BunkerPhase.Discussion:
                 return t(`${NS.BUNKER}.subtitleDiscussion`, {n: revealRound});
             case BunkerPhase.Voting:
@@ -115,7 +114,6 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
 
     const handleBriefingStart = () => {
         setRevealRound(1);
-        setRevealPlayerIdx(0);
         setPhase(isDictator ? BunkerPhase.DictatorReveal : BunkerPhase.RevealPass);
     };
 
@@ -123,28 +121,13 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
         setPhase(BunkerPhase.RevealPass);
     };
 
-    // A player confirmed they announced their trait
-    const handleRevealConfirm = () => {
-        const isLastPlayer = revealPlayerIdx >= characters.length - 1;
-        if (isLastPlayer) {
-            // All players revealed — go to discussion
-            setPhase(BunkerPhase.Discussion);
-        } else {
-            // Next player
-            setRevealPlayerIdx((prev) => prev + 1);
-            // Stay in RevealPass (the key change re-mounts the phase component)
-            setPhase(BunkerPhase.RevealPass);
-        }
-    };
-
     // Discussion "next" button
     const handleDiscussionNext = () => {
-        const isLastRound = revealRound >= TOTAL_REVEAL_ROUNDS;
+        const isLastRound = revealRound >= totalRounds;
         if (isLastRound) {
             setPhase(BunkerPhase.Voting);
         } else {
             setRevealRound((prev) => prev + 1);
-            setRevealPlayerIdx(0);
             setPhase(BunkerPhase.RevealPass);
         }
     };
@@ -204,11 +187,11 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
 
                     {phase === BunkerPhase.RevealPass && (
                         <RevealPhase
-                            key={`reveal-${revealRound}-${revealPlayerIdx}`}
+                            key={`reveal-${revealRound}`}
                             characters={characters}
                             revealRound={revealRound}
-                            revealPlayerIdx={revealPlayerIdx}
-                            onConfirm={handleRevealConfirm}
+                            totalRounds={totalRounds}
+                            onDone={() => setPhase(BunkerPhase.Discussion)}
                         />
                     )}
 
@@ -217,7 +200,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack}) => 
                             key={`discussion-${revealRound}`}
                             characters={characters}
                             revealRound={revealRound}
-                            totalRounds={TOTAL_REVEAL_ROUNDS}
+                            totalRounds={totalRounds}
                             onNext={handleDiscussionNext}
                         />
                     )}

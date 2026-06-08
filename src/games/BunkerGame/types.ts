@@ -86,11 +86,13 @@ export const ALL_TRAIT_KEYS: readonly TraitKey[] = [
     'specialFact',
 ];
 
-/** Returns the traits that were NOT revealed during any round (still hidden). */
+/** Returns the traits that were NOT revealed during the game (still hidden at game end). */
 export function getHiddenTraits(
-    char: BunkerCharacter
+    char: BunkerCharacter,
+    totalRounds: number
 ): { key: TraitKey; label: string; entry: AttributeEntry }[] {
-    return ALL_TRAIT_KEYS.filter((k) => !char.revealOrder.includes(k)).map((k) => ({
+    const revealedKeys = new Set<TraitKey>(char.revealOrder.slice(0, totalRounds - 1));
+    return ALL_TRAIT_KEYS.filter((k) => !revealedKeys.has(k)).map((k) => ({
         key: k,
         label: TRAIT_LABELS[k],
         entry: char[k],

@@ -3,7 +3,11 @@ import React, {createContext, useContext, useState} from 'react';
 
 import {storageService} from '../services/storageService';
 import type {Difficulty, GameMode} from '../types';
-import type {GameKey} from '../types/games';
+import {GameKey} from '../types/games';
+
+const GAME_DEFAULT_ROUNDS: Partial<Record<GameKey, number>> = {
+    [GameKey.Bunker]: 5,
+};
 
 interface GameSettingsContextType {
     difficulty: Difficulty;
@@ -46,7 +50,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
         } else {
             setDifficultyState('medium');
             setModeState('classic');
-            setRoundsState(2);
+            setRoundsState(GAME_DEFAULT_ROUNDS[id] ?? 2);
             setTimerSecondsState(30);
         }
     };

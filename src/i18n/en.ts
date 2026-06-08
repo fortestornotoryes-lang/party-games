@@ -84,6 +84,8 @@ export const en: Translations = {
             r3: 'ROUND 3',
             r4: 'ROUND 4',
             r5: 'ROUND 5',
+            r6: 'ROUND 6',
+            r7: 'ROUND 7',
         },
         revealedThisRound: 'Revealed this round',
         revealedBefore: 'Previously revealed',
@@ -102,7 +104,7 @@ export const en: Translations = {
         // TribunalPhase
         tribunalLabel: 'TRIBUNAL',
         eliminatedCanAppeal: 'Eliminated players can appeal the decision',
-        tribunalDesc: 'One player reveals a hidden trait and requests a revote',
+        tribunalDesc: 'Each eliminated player can reveal a hidden trait and appeal their elimination',
         eliminatedPlayers: 'Eliminated players',
         appealBtn: 'Appeal',
         skipToSimBtn: 'SKIP — TO SIMULATION',
@@ -124,6 +126,7 @@ export const en: Translations = {
         playerExcludedTitle: '{{player}} EXCLUDED',
         spotFreedBy: '{{player}} frees their spot',
         toSurvivalBtn: 'TO SURVIVAL SIMULATION',
+        nextAppellantBtn: 'NEXT APPELLANT',
 
         // SurvivalPhase
         survivalLabel: 'SURVIVAL SIMULATION',

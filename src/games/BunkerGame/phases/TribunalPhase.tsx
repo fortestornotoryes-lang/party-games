@@ -4,8 +4,9 @@ import React, {useState} from 'react';
 
 import {type AttributeEntry, type BunkerCharacter, getHiddenTraits, type TraitKey,} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
+import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
@@ -34,29 +35,40 @@ const SLIDE = {
 } as const;
 
 export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
-                                                                characters,
-                                                                eliminatedNames,
-                                                                bunkerTeam,
-                                                                onDone,
-                                                            }) => {
+    characters,
+    eliminatedNames,
+    bunkerTeam,
+    onDone,
+}) => {
     const {t} = useTranslation();
+    const {rounds} = useGameSettings();
+    const totalRounds = Math.max(3, Math.min(7, rounds));
+
+    // ── Multi-appeal state ────────────────────────────────────────────────────
+    const [pendingNames, setPendingNames] = useState<string[]>(() => [...eliminatedNames]);
+    const [currentEliminatedNames, setCurrentEliminatedNames] = useState<string[]>(() => [...eliminatedNames]);
+    const [currentBunkerTeam, setCurrentBunkerTeam] = useState<BunkerCharacter[]>(() => [...bunkerTeam]);
+
+    // ── Per-appeal state ──────────────────────────────────────────────────────
     const [step, setStep] = useState<TribunalStep>('choose');
     const [appellant, setAppellant] = useState<BunkerCharacter | null>(null);
     const [appealTrait, setAppealTrait] = useState<AppealTrait | null>(null);
     const [voteResult, setVoteResult] = useState<'pardoned' | 'rejected' | null>(null);
     const [swapTarget, setSwapTarget] = useState<string | null>(null);
 
-    const eliminated = characters.filter((c) => eliminatedNames.includes(c.playerName));
+    const pendingEliminated = characters.filter((c) => pendingNames.includes(c.playerName));
+    const hasMoreAfterThis = pendingNames.length > 1;
+
+    // ── Handlers ──────────────────────────────────────────────────────────────
 
     const handleAppeal = (char: BunkerCharacter) => {
         feedbackService.vibrate(VIBRATE.tap);
-        const hidden = getHiddenTraits(char);
+        const hidden = getHiddenTraits(char, totalRounds);
         setAppellant(char);
         if (hidden.length > 0) {
             setAppealTrait(pickRandom(hidden));
             setStep('reveal');
         } else {
-            // All traits already revealed — skip straight to vote
             setAppealTrait(null);
             setStep('vote');
         }
@@ -64,7 +76,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
     const handleSkip = () => {
         feedbackService.vibrate(VIBRATE.tap);
-        onDone(eliminatedNames);
+        onDone(currentEliminatedNames);
     };
 
     const handleRevealContinue = () => {
@@ -84,17 +96,44 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
         setStep('result');
     };
 
-    const handleFinish = () => {
+    const handleContinue = () => {
         feedbackService.vibrate(VIBRATE.tap);
+
+        // Apply this appeal's result
+        let newEliminated = [...currentEliminatedNames];
+        let newTeam = [...currentBunkerTeam];
+
         if (voteResult === 'pardoned' && appellant && swapTarget) {
-            onDone([...eliminatedNames.filter((n) => n !== appellant.playerName), swapTarget]);
+            newEliminated = newEliminated.filter((n) => n !== appellant.playerName);
+            newEliminated.push(swapTarget);
+            const appellantChar = characters.find((c) => c.playerName === appellant.playerName)!;
+            newTeam = newTeam.filter((c) => c.playerName !== swapTarget);
+            newTeam.push(appellantChar);
+        }
+
+        const newPending = pendingNames.filter((n) => n !== appellant?.playerName);
+
+        setCurrentEliminatedNames(newEliminated);
+        setCurrentBunkerTeam(newTeam);
+        setPendingNames(newPending);
+
+        // Reset per-appeal state
+        setAppellant(null);
+        setAppealTrait(null);
+        setVoteResult(null);
+        setSwapTarget(null);
+
+        if (newPending.length === 0) {
+            onDone(newEliminated);
         } else {
-            onDone(eliminatedNames);
+            setStep('choose');
         }
     };
 
+    // ── Step rendering ────────────────────────────────────────────────────────
+
     const stepContent = (() => {
-        // ── CHOOSE ────────────────────────────────────────────────────────────────
+        // ── CHOOSE ────────────────────────────────────────────────────────────
         if (step === 'choose')
             return (
                 <motion.div key="choose" {...SLIDE} className="flex flex-col min-h-full px-5 py-6 gap-5">
@@ -116,15 +155,16 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     <div className="space-y-2">
                         <Typography.Label size="xs" color="muted">
                             {t(`${NS.BUNKER}.eliminatedPlayers`)}
+                            {pendingEliminated.length > 0 && (
+                                <span className="ml-2 opacity-50">({pendingEliminated.length})</span>
+                            )}
                         </Typography.Label>
                         <div className="space-y-2">
-                            {eliminated.map((char) => (
+                            {pendingEliminated.map((char) => (
                                 <motion.button
                                     key={char.playerName}
                                     whileTap={{scale: 0.97}}
-                                    onClick={() => {
-                                        handleAppeal(char);
-                                    }}
+                                    onClick={() => handleAppeal(char)}
                                     className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                     style={{
                                         background: rgba('yellow', 0.05),
@@ -136,8 +176,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                             {char.playerName}
                                         </div>
                                         <div className="text-xs text-white/40 mt-1">
-                                            {char.age} л
-                                            · {char.gender} · {char.profession.emoji} {char.profession.name}
+                                            {char.age} л · {char.gender} · {char.profession.emoji} {char.profession.name}
                                         </div>
                                     </div>
                                     <div
@@ -147,16 +186,13 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                             border: `1px solid ${rgba('yellow', 0.3)}`,
                                         }}
                                     >
-                                        <Scale
-                                            className="w-3.5 h-3.5"
-                                            style={{color: 'var(--color-premium-yellow)'}}
-                                        />
+                                        <Scale className="w-3.5 h-3.5" style={{color: 'var(--color-premium-yellow)'}}/>
                                         <span
                                             className="text-tag font-black uppercase tracking-wider"
                                             style={{color: 'var(--color-premium-yellow)'}}
                                         >
-                      {t(`${NS.BUNKER}.appealBtn`)}
-                    </span>
+                                            {t(`${NS.BUNKER}.appealBtn`)}
+                                        </span>
                                     </div>
                                 </motion.button>
                             ))}
@@ -171,7 +207,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 </motion.div>
             );
 
-        // ── REVEAL ────────────────────────────────────────────────────────────────
+        // ── REVEAL ────────────────────────────────────────────────────────────
         if (step === 'reveal' && appellant && appealTrait)
             return (
                 <motion.div key="reveal" {...SLIDE} className="flex flex-col min-h-full px-5 py-6 gap-6">
@@ -234,7 +270,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 </motion.div>
             );
 
-        // ── VOTE ──────────────────────────────────────────────────────────────────
+        // ── VOTE ──────────────────────────────────────────────────────────────
         if (step === 'vote' && appellant)
             return (
                 <motion.div key="vote" {...SLIDE} className="flex flex-col min-h-full px-5 py-6 gap-6">
@@ -253,10 +289,8 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     <div className="flex-1 flex flex-col justify-center gap-4">
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => {
-                                handleVote('pardoned');
-                            }}
-                            className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
+                            onClick={() => handleVote('pardoned')}
+                            className="w-full p-6 rounded-premium-2xl text-center space-y-2"
                             style={{
                                 background: rgba('green', 0.08),
                                 border: `2px solid ${rgba('green', 0.35)}`,
@@ -273,10 +307,8 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
                         <motion.button
                             whileTap={{scale: 0.97}}
-                            onClick={() => {
-                                handleVote('rejected');
-                            }}
-                            className="w-full p-6 rounded-premium-2xl text-center space-y-2 active:scale-[0.98] transition-transform"
+                            onClick={() => handleVote('rejected')}
+                            className="w-full p-6 rounded-premium-2xl text-center space-y-2"
                             style={{
                                 background: rgba('red', 0.06),
                                 border: `2px solid ${rgba('red', 0.25)}`,
@@ -294,7 +326,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 </motion.div>
             );
 
-        // ── SWAP ──────────────────────────────────────────────────────────────────
+        // ── SWAP ──────────────────────────────────────────────────────────────
         if (step === 'swap' && appellant)
             return (
                 <motion.div key="swap" {...SLIDE} className="flex flex-col min-h-full px-5 py-6 gap-5">
@@ -318,13 +350,11 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                     </div>
 
                     <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
-                        {bunkerTeam.map((char) => (
+                        {currentBunkerTeam.map((char) => (
                             <motion.button
                                 key={char.playerName}
                                 whileTap={{scale: 0.97}}
-                                onClick={() => {
-                                    handleSwap(char.playerName);
-                                }}
+                                onClick={() => handleSwap(char.playerName)}
                                 className="w-full flex items-center justify-between p-4 rounded-premium-md text-left"
                                 style={{
                                     background: rgba('red', 0.05),
@@ -345,8 +375,8 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 >
                                     <X className="w-3.5 h-3.5 text-premium-red"/>
                                     <span className="text-tag font-black uppercase tracking-wider text-premium-red">
-                    {t(`${NS.BUNKER}.excludeSmall`)}
-                  </span>
+                                        {t(`${NS.BUNKER}.excludeSmall`)}
+                                    </span>
                                 </div>
                             </motion.button>
                         ))}
@@ -354,7 +384,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 </motion.div>
             );
 
-        // ── RESULT ────────────────────────────────────────────────────────────────
+        // ── RESULT ────────────────────────────────────────────────────────────
         if (step === 'result') {
             const pardoned = voteResult === 'pardoned';
             return (
@@ -380,7 +410,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 ? t(`${NS.BUNKER}.playerPardonedTitle`, {player: appellant?.playerName ?? ''})
                                 : t(`${NS.BUNKER}.playerExcludedTitle`, {player: appellant?.playerName ?? ''})}
                         </Typography.Display>
-                        {!!pardoned && !!swapTarget && (
+                        {pardoned && !!swapTarget && (
                             <Typography.Body size="sm" color="muted" align="center">
                                 {t(`${NS.BUNKER}.spotFreedBy`, {player: swapTarget})}
                             </Typography.Body>
@@ -389,11 +419,13 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
 
                     <div className="w-full mt-auto">
                         <PrimaryButton
-                            onClick={handleFinish}
+                            onClick={handleContinue}
                             variant={pardoned ? 'premium' : 'outline'}
                             icon={ChevronRight}
                         >
-                            {t(`${NS.BUNKER}.toSurvivalBtn`)}
+                            {hasMoreAfterThis
+                                ? t(`${NS.BUNKER}.nextAppellantBtn`)
+                                : t(`${NS.BUNKER}.toSurvivalBtn`)}
                         </PrimaryButton>
                     </div>
                 </motion.div>

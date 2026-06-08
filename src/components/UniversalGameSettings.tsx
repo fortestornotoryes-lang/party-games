@@ -222,6 +222,23 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                 </div>
             )}
 
+            {currentGameId === GameKey.Bunker && !!setRounds && (
+                <SettingRow
+                    label="Раунды раскрытия"
+                    icon={Shield}
+                    color="orange"
+                    value={rounds ?? 5}
+                    onChange={(v) => {
+                        setRounds(v as number);
+                    }}
+                    options={[
+                        {value: 3, label: '3 РАУНДА', sublabel: 'быстро'},
+                        {value: 5, label: '5 РАУНДОВ', sublabel: 'стандарт'},
+                        {value: 7, label: '7 РАУНДОВ', sublabel: 'полная'},
+                    ]}
+                />
+            )}
+
             {currentGameId === GameKey.FakeArtist && !!setRounds && (
                 <SettingRow
                     label="Раунды"

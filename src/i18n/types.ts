@@ -101,6 +101,8 @@ export interface BunkerTranslations {
         r3: string;
         r4: string;
         r5: string;
+        r6: string;
+        r7: string;
     };
     revealedThisRound: string;
     revealedBefore: string;
@@ -141,6 +143,7 @@ export interface BunkerTranslations {
     playerExcludedTitle: string; // '{{player}} ИСКЛЮЧЁН'
     spotFreedBy: string; // 'Место освобождает {{player}}'
     toSurvivalBtn: string;
+    nextAppellantBtn: string;
 
     // SurvivalPhase
     survivalLabel: string;

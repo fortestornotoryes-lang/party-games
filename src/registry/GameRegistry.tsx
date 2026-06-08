@@ -395,7 +395,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             {
                 id: BUNKER_MODES.CLASSIC,
                 name: 'Классика',
-                description: '5 раундов раскрытия, честное голосование',
+                description: 'Раунды раскрытия по очереди, честное голосование',
                 icon: Target,
             },
             {
