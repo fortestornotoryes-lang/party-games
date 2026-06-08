@@ -10,6 +10,7 @@ import {RevealPhase} from './phases/RevealPhase';
 import {SurvivalPhase} from './phases/SurvivalPhase';
 import {TribunalPhase} from './phases/TribunalPhase';
 import {VotingPhase} from './phases/VotingPhase';
+import {CAPACITY_PCT} from './constants';
 import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome,} from './types';
 import {BunkerPhase} from './types';
 
@@ -33,8 +34,6 @@ interface BunkerGameProps {
     onBack: () => void;
     onRestart?: () => void;
 }
-
-const CAPACITY_PCT: Record<string, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRestart}) => {
     const {t} = useTranslation();

@@ -2,7 +2,8 @@ import {ChevronRight, Scale, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useState} from 'react';
 
-import {type AttributeEntry, type BunkerCharacter, getHiddenTraits, type TraitKey,} from '../types';
+import {type AttributeEntry, type BunkerCharacter, type TraitKey} from '../types';
+import {getHiddenTraits} from '../helpers';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';

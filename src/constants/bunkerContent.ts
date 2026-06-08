@@ -11,6 +11,12 @@ import type {
 } from '../games/BunkerGame/types';
 import {ALL_TRAIT_KEYS} from '../games/BunkerGame/types';
 import {pickRandom, shuffle} from '../utils/random';
+import {
+    BUNKER_BASE_RESOURCES,
+    BUNKER_DIFFICULTY_OFFSET,
+    BUNKER_DIFFICULTY_SCALE,
+    RESOURCE_KEYS_CALC
+} from "@/games/BunkerGame/constants.ts";
 
 export const BUNKER_MODES = {
     CLASSIC: 'classic',
@@ -1242,7 +1248,7 @@ const ITEMS: AttributeEntry[] = [
         isPositive: true,
     },
     {name: 'Фляга спирта', emoji: '🧴', bonus: {medicine: 8, morale: 4}, isPositive: true},
-    {name: 'Пустая банка хлама', emoji: '🗑️', bonus: {morale: -14}, isPositive: false},
+    {name: 'Пустая банка хлама', emoji: '🗑️', bonus: {morale: -5}, isPositive: false},
     {
         name: 'Просроченные консервы',
         emoji: '🥫',
@@ -2844,11 +2850,6 @@ export function getAgeBonuses(age: number): ResourceBonus {
     if (age <= 55) return {medicine: 6, morale: 4, energy: -13};
     return {medicine: 5, morale: 7, energy: -25, food: 2};
 }
-
-export const BUNKER_BASE_RESOURCES: BunkerResources = {food: 35, water: 50, medicine: 50, energy: 65, morale: 65};
-export const BUNKER_DIFFICULTY_OFFSET: Record<DifficultyLevel, number> = {easy: 10, medium: 0, hard: -8};
-export const BUNKER_DIFFICULTY_SCALE: Record<DifficultyLevel, number>  = {easy: 0.65, medium: 1.0, hard: 1.35};
-const RESOURCE_KEYS_CALC: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
 
 export interface CalculateSurvivalOptions {
     revealedTraitsOnly?: boolean;

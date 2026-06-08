@@ -1,9 +1,12 @@
-import {AlertTriangle, Cpu, RotateCcw, Skull, Trophy, Zap} from 'lucide-react';
+import {Cpu, RotateCcw} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useEffect, useRef, useState} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
-import type {BunkerCharacter, BunkerResources, CatastropheScenario, SurvivalEvent, SurvivalOutcome} from '../types';
+import {OUTCOME_COLOR_MAP, OUTCOME_CONFIG, STEP_ORDER} from '../constants';
+import type {Step} from '../constants';
+import {atLeast, barColor} from '../helpers';
+import type {BunkerCharacter, BunkerResources, CatastropheScenario, ResourceKey, SurvivalEvent, SurvivalOutcome} from '../types';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
@@ -21,33 +24,6 @@ interface SurvivalPhaseProps {
     outcome: SurvivalOutcome;
     onRestart: () => void;
 }
-
-type Step = 'team' | 'events' | 'resources' | 'results';
-const STEP_ORDER: Step[] = ['team', 'events', 'resources', 'results'];
-const atLeast = (current: Step, min: Step) =>
-    STEP_ORDER.indexOf(current) >= STEP_ORDER.indexOf(min);
-
-
-function barColor(val: number) {
-    if (val >= 60) return '#00D88A';
-    if (val >= 35) return '#FFCC1F';
-    if (val >= 15) return '#FF8A1F';
-    return '#FF2E4D';
-}
-
-const OUTCOME_CONFIG: Record<
-    SurvivalOutcome,
-    {color: string; bgColor: string; borderColor: string; shadow: string; emoji: string; icon: React.FC<{className?: string; style?: React.CSSProperties}>}
-> = {
-    full_victory: {color: '#00D88A', bgColor: 'rgba(0,216,138,0.1)',  borderColor: 'rgba(0,216,138,0.5)', shadow: '0 0 80px rgba(0,216,138,0.3)',  emoji: '🏆', icon: Trophy},
-    partial:      {color: '#FFCC1F', bgColor: 'rgba(255,204,31,0.1)', borderColor: 'rgba(255,204,31,0.4)', shadow: '0 0 60px rgba(255,204,31,0.2)', emoji: '⚠️', icon: AlertTriangle},
-    pyrrhic:      {color: '#FF8A1F', bgColor: 'rgba(255,138,31,0.1)', borderColor: 'rgba(255,138,31,0.4)', shadow: '0 0 60px rgba(255,138,31,0.2)', emoji: '💀', icon: Zap},
-    defeat:       {color: '#FF2E4D', bgColor: 'rgba(255,46,77,0.1)',  borderColor: 'rgba(255,46,77,0.45)', shadow: '0 0 80px rgba(255,46,77,0.3)',  emoji: '☠️', icon: Skull},
-};
-
-const OUTCOME_COLOR_MAP: Record<SurvivalOutcome, 'green' | 'yellow' | 'orange' | 'red'> = {
-    full_victory: 'green', partial: 'yellow', pyrrhic: 'orange', defeat: 'red',
-};
 
 
 export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
@@ -79,7 +55,6 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
         return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
     }, [finalResources]);
 
-    // Scroll results block into view when it appears
     useEffect(() => {
         if (step === 'results' && resultsRef.current) {
             setTimeout(() => resultsRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'}), 80);
@@ -105,18 +80,47 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
             exit={{opacity: 0}}
             className="flex flex-col px-5 py-6 gap-5"
         >
-            {/* Header */}
-            <div className="text-center space-y-1">
-                <div className="flex items-center justify-center gap-2">
-                    <Cpu className="w-4 h-4 text-premium-sky animate-pulse"/>
-                    <Typography.Label size="sm" color="sky">
-                        {t(`${NS.BUNKER}.survivalLabel`)}
-                    </Typography.Label>
-                </div>
-                <Typography.Caption color="faint">
-                    {scenario.emoji} {scenario.title}
-                </Typography.Caption>
+            {/* Simulation label */}
+            <div className="flex items-center justify-center gap-2">
+                <Cpu className="w-4 h-4 text-premium-sky animate-pulse"/>
+                <Typography.Label size="sm" color="sky">
+                    {t(`${NS.BUNKER}.survivalLabel`)}
+                </Typography.Label>
             </div>
+
+            {/* Catastrophe card */}
+            <motion.div
+                initial={{opacity: 0, y: 10}}
+                animate={{opacity: 1, y: 0}}
+                transition={{delay: 0.1, type: 'spring', stiffness: 280, damping: 24}}
+                className="rounded-premium-md p-4 space-y-3"
+                style={{
+                    background: 'linear-gradient(160deg, rgba(255,138,31,0.09) 0%, rgba(255,46,77,0.06) 100%)',
+                    border: '1px solid rgba(255,138,31,0.28)',
+                }}
+            >
+                <div className="flex items-start gap-3">
+                    <span className="text-3xl leading-none flex-shrink-0">{scenario.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-sm font-black text-white leading-tight">{scenario.title}</div>
+                        <div className="text-xs text-white/55 leading-snug mt-1">{scenario.description}</div>
+                    </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                    {(Object.entries(scenario.resourcePenalty) as [ResourceKey, number][]).map(([key, val]) => {
+                        const meta = RESOURCE_META.find(m => m.key === key);
+                        return (
+                            <span
+                                key={key}
+                                className="px-2 py-1 rounded-full text-tag font-bold tabular-nums"
+                                style={{background: 'rgba(255,46,77,0.12)', border: '1px solid rgba(255,46,77,0.3)', color: '#FF6B7A'}}
+                            >
+                                {meta?.emoji} {val}
+                            </span>
+                        );
+                    })}
+                </div>
+            </motion.div>
 
             {/* Team composition */}
             <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-2">

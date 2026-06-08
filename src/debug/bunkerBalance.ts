@@ -1,9 +1,6 @@
 import {
     applyBonus,
     applyBonusScaled,
-    BUNKER_BASE_RESOURCES,
-    BUNKER_DIFFICULTY_OFFSET,
-    BUNKER_DIFFICULTY_SCALE,
     CATASTROPHE_SCENARIOS,
     generateCharacter,
     getAgeBonuses,
@@ -11,6 +8,11 @@ import {
 } from '@/constants/bunkerContent';
 import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
 import {pickRandom, shuffle} from '@/utils/random';
+import {
+    BUNKER_BASE_RESOURCES,
+    BUNKER_DIFFICULTY_OFFSET,
+    BUNKER_DIFFICULTY_SCALE
+} from "@/games/BunkerGame/constants.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

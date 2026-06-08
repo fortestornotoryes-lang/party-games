@@ -2,7 +2,8 @@ import {ChevronRight} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {type BunkerCharacter, getRevealedTrait} from '../types';
+import {type BunkerCharacter} from '../types';
+import {getRevealedTrait} from '../helpers';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';

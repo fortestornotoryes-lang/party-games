@@ -3,7 +3,8 @@ import {AnimatePresence, motion} from 'motion/react';
 import React, {useState} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
-import {type BunkerCharacter, type DifficultyLevel, getRevealedTrait} from '../types';
+import {type BunkerCharacter, type DifficultyLevel} from '../types';
+import {getRevealedTrait} from '../helpers';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
