@@ -26,7 +26,7 @@ export type TraitKey = 'health' | 'hobby' | 'phobia' | 'trait' | 'item' | 'speci
 export interface BunkerCharacter {
     playerName: string;
     age: number;
-    gender: 'М' | 'Ж';
+    gender: 'Мужчина' | 'Женщина';
     profession: AttributeEntry;
     health: AttributeEntry;
     hobby: AttributeEntry;

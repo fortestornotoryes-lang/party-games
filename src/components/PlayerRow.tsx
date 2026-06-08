@@ -6,7 +6,7 @@ import type {PlayerEntry} from "@/components/Setup.tsx";
 import {TextInput} from "@/components/TextInput.tsx";
 import type {ThemeTokens} from "@/theme/colors.ts";
 
-export const DEFAULT_NAMES = ['Дуня', 'Валера', 'Булочка', 'Люба', 'Саша'];
+export const DEFAULT_NAMES = ['Дуня', 'Валера', 'Диана', 'Люба', 'Саша'];
 type Config = ThemeTokens;
 
 interface PlayerRowProps {
