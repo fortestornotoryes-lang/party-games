@@ -14,3 +14,4 @@
 - [Phase Enum Pattern](phase_enum_pattern.md) — фазы игры = enum в `./types.ts`, не строковые литералы (TelestrationsPhase, AliasPhase)
 - [Truth or Dare Plan](truth_or_dare_plan.md) — архитектура незавершённой игры «Правда или Действие» (GameKey, файлы, фазы, контент)
 - [Hooks & Patterns](hooks_and_patterns.md) — usePlayerCycle, useTimer, VIBRATE, shuffle/pickRandom, DistributionFlow; таблица антипаттернов → замен
+- [Bunker Architecture](bunker_architecture.md) — constants.ts / helpers.ts / types.ts BunkerGame; SurvivalPhase карточка катастрофы; таблица всех экспортов
