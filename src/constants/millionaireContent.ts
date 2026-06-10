@@ -1,28 +1,10 @@
+import {PRIZE_LADDER} from "@/games/MillionaireGame/constants.ts";
+
 export interface MillionaireQuestion {
     text: string;
     options: [string, string, string, string];
     correctIndex: number;
 }
-
-export const PRIZE_LADDER = [
-    '100',
-    '200',
-    '300',
-    '500',
-    '1 000',
-    '2 000',
-    '4 000',
-    '8 000',
-    '16 000',
-    '32 000',
-    '64 000',
-    '125 000',
-    '250 000',
-    '500 000',
-    '1 000 000',
-] as const;
-
-export const SAFE_CHECKPOINTS = [4, 9] as const;
 
 export const getGuaranteedAmount = (questionIndex: number): string => {
     if (questionIndex >= 10) return PRIZE_LADDER[9];

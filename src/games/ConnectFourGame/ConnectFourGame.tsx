@@ -7,7 +7,7 @@ import {useGameSettings} from '../../contexts/GameSettingsContext';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {CONNECT_FOUR_MODES} from '@/constants/connectFourContent';
+import {CONNECT_FOUR_MODES} from "@/games/ConnectFourGame/constants.ts";
 
 
 type Cell = 0 | 1 | 2;

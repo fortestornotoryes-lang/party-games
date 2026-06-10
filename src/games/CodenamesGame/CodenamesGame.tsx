@@ -15,7 +15,7 @@ import {CodenamesPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
-import {CODENAMES_MODES} from '@/constants/codenamesContent';
+import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {shuffle} from '@/utils/random.ts';
 

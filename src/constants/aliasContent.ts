@@ -1,15 +1,5 @@
 import type {Difficulty} from "@/types.ts";
 
-export type AliasDifficulty = Difficulty;
-
-export const ALIAS_DIFFICULTY_CONFIG: Record<Difficulty, { roundTime: number }> = {
-    easy: {roundTime: 90},
-    medium: {roundTime: 60},
-    hard: {roundTime: 40},
-};
-
-export const WIN_SCORE = 30;
-export const TROPHY_THRESHOLD = 20;
 
 export interface WordCategory {
     id: string;

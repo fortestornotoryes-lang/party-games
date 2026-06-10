@@ -2,15 +2,15 @@ import {ChevronRight} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {type BunkerCharacter} from '../types';
 import {getRevealedTrait} from '../helpers';
+import {type BunkerCharacter} from '../types';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
-import type {GameTheme} from '@/types';
 import {rgba} from '@/theme/colors';
+import type {GameTheme} from '@/types';
 
 interface RevealPhaseProps {
     characters: BunkerCharacter[];

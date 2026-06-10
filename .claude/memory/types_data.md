@@ -128,7 +128,7 @@ type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
 | telestrationsContent.ts | `WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS` |
 | justOneContent.ts | `JUST_ONE_DATA_BY_DIFFICULTY` |
 | codenamesContent.ts | `WORDS_BY_DIFFICULTY as CODENAMES_WORDS` |
-| decryptoContent.ts | `WORDS_BY_DIFFICULTY as DECRYPTO_WORDS` |
+| decryptoWords.ts | `WORDS_BY_DIFFICULTY as DECRYPTO_WORDS` |
 | instructions.ts | `GAME_INSTRUCTIONS: GameInstructionsMap` — инструкции для Setup |
 
 ## storageService

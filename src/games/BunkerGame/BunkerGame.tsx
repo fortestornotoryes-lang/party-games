@@ -16,13 +16,13 @@ import {BunkerPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from "@/games/BunkerGame/contents";
 import {calculateSurvival, generateCharacter} from "@/games/BunkerGame/helpers.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {GameKey} from '@/types/games';
 import {pickRandom, shuffle} from '@/utils/random';
-import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from "@/games/BunkerGame/contents";
 
 interface BunkerGameProps {
     playerNames: string[];

@@ -1,7 +1,8 @@
 import {AlertTriangle, Skull, Trophy, Zap} from 'lucide-react';
 import type {CSSProperties, FC} from 'react';
 
-import {ALL_TRAIT_KEYS, BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from './types';
+import type { BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from './types';
+import {ALL_TRAIT_KEYS} from './types';
 
 export type Step = 'team' | 'events' | 'resources' | 'results';
 export const STEP_ORDER: Step[] = ['team', 'events', 'resources', 'results'];

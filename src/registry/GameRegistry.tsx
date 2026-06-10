@@ -37,16 +37,16 @@ import TabyImage from '../assets/tabyImage2.JPG';
 import telestrationsImg from '../assets/telephone.png';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import WavelengthImage from '../assets/WavelengthImage.JPG';
-import {CODENAMES_MODES} from '../constants/codenamesContent';
-import {CONNECT_FOUR_MODES} from '../constants/connectFourContent';
-import {DECRYPTO_MODES} from '../constants/decryptoContent';
-import {SPY_HUNT_MODES} from '../constants/spyHuntContent';
 import {TABOO_REVERSE_MODES} from '../constants/tabooReverseContent';
 import {GameStatus} from '../types';
 import type {GamesRegistryMap} from '../types/games';
 import {GameKey} from '../types/games';
 
 import {BUNKER_MODES} from "@/games/BunkerGame/constants.ts";
+import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
+import {CONNECT_FOUR_MODES} from "@/games/ConnectFourGame/constants.ts";
+import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
+import {SPY_HUNT_MODES} from "@/games/SpyHuntGame/constants.ts";
 
 // Lazy load game components
 const SpyHuntGame = lazy(() =>

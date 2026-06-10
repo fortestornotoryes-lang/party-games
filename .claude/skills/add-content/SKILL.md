@@ -27,7 +27,7 @@ Then proceed without further prompts.
 | **FakeArtist** | `src/constants/fakeArtistContent.ts` | `FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<FakeArtistDifficulty, FakeArtistCategory[]>` — each item is `{ category: string, word: string }`. Append to the correct difficulty array. |
 | **TruthOrDare** | `src/constants/truthOrDareContent.ts` | `TRUTHS_BY_DIFFICULTY: Record<Difficulty, string[]>` and `DARES_BY_DIFFICULTY: Record<Difficulty, string[]>`. Append strings to the correct difficulty array. |
 | **Wavelength** | `src/constants/wavelengthContent.ts` | `WAVELENGTH_DATA_BY_DIFFICULTY: { easy: string[][], medium: string[][], hard: string[][] }` — each item is a 2-element array `["Полюс А", "Полюс Б"]`. Append to the correct difficulty array. |
-| **Decrypto** | `src/constants/decryptoContent.ts` | Read the file first to confirm structure, then append accordingly. |
+| **Decrypto** | `src/constants/decryptoWords.ts` | Read the file first to confirm structure, then append accordingly. |
 | **JustOne** | `src/constants/justOneContent.ts` | Read the file first to confirm structure, then append accordingly. |
 | **Telestrations** | `src/constants/telestrationsContent.ts` | Read the file first to confirm structure, then append accordingly. |
 | **Resistance** | `src/constants/resistanceContent.ts` | Read the file first to confirm structure, then append accordingly. |

@@ -4,7 +4,7 @@ import {motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {PRIZE_LADDER} from '@/constants/millionaireContent';
+import {PRIZE_LADDER} from "@/games/MillionaireGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

@@ -1,28 +1,31 @@
-import {
-    ALL_TRAIT_KEYS,
-    AttributeEntry,
-    BunkerCharacter,
-    BunkerResources,
-    CalculateSurvivalOptions,
-    type CatastropheScenario,
-    ResourceBonus,
-    ResourceKey,
-    type SurvivalEvent,
-    TRAIT_LABELS,
-    TraitKey
-} from './types';
+import type {
+    Step} from './constants';
 import {
     BUNKER_BASE_RESOURCES,
     BUNKER_DIFFICULTY_OFFSET,
     BUNKER_DIFFICULTY_SCALE,
     RESOURCE_KEYS_CALC,
-    Step,
     STEP_ORDER,
     TRAITS_TO_REVEAL
 } from './constants';
+import type {
+    AttributeEntry,
+    BunkerCharacter,
+    BunkerResources,
+    CalculateSurvivalOptions,
+    ResourceBonus,
+    ResourceKey,
+    TraitKey
+} from './types';
+import {
+    ALL_TRAIT_KEYS,
+    type CatastropheScenario,
+    type SurvivalEvent,
+    TRAIT_LABELS
+} from './types';
 
-import {pickRandom, shuffle} from "@/utils/random.ts";
 import {PROFESSIONS,HOBBIES,ITEMS,TRAITS,PHOBIAS,CATASTROPHE_SCENARIOS,HEALTH_CONDITIONS,SURVIVAL_EVENTS,SPECIAL_FACTS} from "@/games/BunkerGame/contents";
+import {pickRandom, shuffle} from "@/utils/random.ts";
 
 
 export function barColor(val: number): string {

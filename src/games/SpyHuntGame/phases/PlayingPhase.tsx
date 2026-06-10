@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 
 import {GameCard} from '@/components/GameCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {LOCATIONS, QUESTION_IDEAS} from '@/constants/spyHuntContent';
+import {LOCATIONS, QUESTION_IDEAS} from "@/games/SpyHuntGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import type {Player} from '@/types';

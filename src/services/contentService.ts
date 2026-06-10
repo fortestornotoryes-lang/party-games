@@ -5,15 +5,15 @@ import {storageService} from './storageService';
 
 import {ALIAS_CATEGORIES} from '@/constants/aliasContent';
 import {WORDS_BY_DIFFICULTY as CODENAMES_WORDS} from '@/constants/codenamesContent';
-import {WORDS_BY_DIFFICULTY as DECRYPTO_WORDS} from '@/constants/decryptoContent';
+import {WORDS_BY_DIFFICULTY as DECRYPTO_WORDS} from '@/constants/decryptoWords.ts';
 import {FAKE_ARTIST_DATA_BY_DIFFICULTY} from '@/constants/fakeArtistContent';
 import {JUST_ONE_DATA_BY_DIFFICULTY} from '@/constants/justOneContent';
-import {LOCATIONS_BY_DIFFICULTY} from '@/constants/spyHuntContent';
 import {TABOO_CLASSIC_CARDS} from '@/constants/tabooContent';
 import {TABOO_REVERSE_CARDS} from '@/constants/tabooReverseContent';
 import {WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS} from '@/constants/telestrationsContent';
 import {DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY} from '@/constants/truthOrDareContent';
 import {WAVELENGTH_DATA_BY_DIFFICULTY} from '@/constants/wavelengthContent';
+import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 
 export const contentService = {
     // TODO: RN — replace with useEffect async load (called synchronously on the UI render path of MainMenu/UniversalGameSettings)

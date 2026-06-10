@@ -1,4 +1,4 @@
-import {WORDS_BY_DIFFICULTY as DECRYPTO_WORDS} from '@/constants/decryptoContent';
+import {WORDS_BY_DIFFICULTY as DECRYPTO_WORDS} from '@/constants/decryptoWords.ts';
 import {storageService} from '@/services/storageService';
 import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';

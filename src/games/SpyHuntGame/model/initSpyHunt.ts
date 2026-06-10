@@ -1,6 +1,6 @@
 import {useSpyHuntContent} from './useSpyHuntContent';
 
-import {SPY_HUNT_MODES, SPY_HUNT_ROLE_IDS} from '@/constants/spyHuntContent';
+import {SPY_HUNT_MODES, SPY_HUNT_ROLE_IDS} from "@/games/SpyHuntGame/constants.ts";
 import type {Player} from '@/types';
 import {generateId} from '@/utils/gameLogic';
 import {shuffle} from '@/utils/random';

@@ -3,8 +3,8 @@ import {motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
 import {ResourceContribRow} from '../components/ResourceContribRow';
-import {type BunkerCharacter, type DifficultyLevel} from '../types';
 import {getRevealedResourceContribution, getRevealedTrait} from '../helpers';
+import {type BunkerCharacter, type DifficultyLevel} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';

@@ -201,8 +201,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                                 </div>
 
                                 {/* Resource contribution (easy/medium only) */}
-                                {contrib &&
-                                    <ResourceContribRow contrib={contrib} className="flex gap-2 mt-1.5 flex-wrap"/>}
+                                {!!contrib && <ResourceContribRow contrib={contrib} className="flex gap-2 mt-1.5 flex-wrap"/>}
                             </div>
                         </motion.button>
                     );

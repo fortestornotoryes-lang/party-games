@@ -18,7 +18,7 @@ interface FullRevealPhaseProps {
 
 const ALL_TRAIT_ROWS: {key: 'profession' | (typeof ALL_TRAIT_KEYS)[number]; label: string}[] = [
     {key: 'profession', label: TRAIT_LABELS.profession},
-    ...ALL_TRAIT_KEYS.map((k) => ({key: k as (typeof ALL_TRAIT_KEYS)[number], label: TRAIT_LABELS[k]})),
+    ...ALL_TRAIT_KEYS.map((k) => ({key: k, label: TRAIT_LABELS[k]})),
 ];
 
 function CharacterCard({

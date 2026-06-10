@@ -1,5 +1,5 @@
 import type {SpyDifficulty} from '@/constants/spyHuntContent';
-import {LOCATIONS_BY_DIFFICULTY} from '@/constants/spyHuntContent';
+import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 import {storageService} from '@/services/storageService';
 import {GameKey} from '@/types/games';
 import {pickRandom} from '@/utils/random';

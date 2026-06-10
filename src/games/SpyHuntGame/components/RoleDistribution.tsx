@@ -8,7 +8,7 @@ import type {Player} from '../../../types';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
 import {Typography} from '@/components/Typography';
-import {SPY_HUNT_ROLE_IDS} from '@/constants/spyHuntContent';
+import {SPY_HUNT_ROLE_IDS} from "@/games/SpyHuntGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

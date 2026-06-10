@@ -246,7 +246,7 @@ All 15 files: **PORTABLE** — pure TypeScript data arrays, no browser APIs.
 | `src/constants/aliasContent.ts` | PORTABLE |
 | `src/constants/codenamesContent.ts` | PORTABLE |
 | `src/constants/connectFourContent.ts` | PORTABLE |
-| `src/constants/decryptoContent.ts` | PORTABLE |
+| `src/constants/decryptoWords.ts` | PORTABLE |
 | `src/constants/fakeArtistContent.ts` | PORTABLE |
 | `src/constants/instructions.ts` | PORTABLE |
 | `src/constants/justOneContent.ts` | PORTABLE |

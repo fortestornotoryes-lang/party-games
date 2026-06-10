@@ -1,6 +1,5 @@
 import type {Difficulty} from "@/types.ts";
 
-export type FakeArtistDifficulty = Difficulty;
 
 export interface FakeArtistCategory {
     category: string;
@@ -35,6 +34,7 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Животные', word: 'Ёж'},
         {category: 'Животные', word: 'Белка'},
         {category: 'Животные', word: 'Петух'},
+
 
         // Еда
         {category: 'Еда', word: 'Пицца'},
@@ -101,7 +101,6 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Природа', word: 'Молния'},
         {category: 'Природа', word: 'Айсберг'},
 
-        // Транспорт
         {category: 'Транспорт', word: 'Машина'},
         {category: 'Транспорт', word: 'Автобус'},
         {category: 'Транспорт', word: 'Велосипед'},
@@ -121,10 +120,65 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Транспорт', word: 'Экскаватор'},
         {category: 'Транспорт', word: 'Скутер'},
         {category: 'Транспорт', word: 'Парусник'},
+
+        {category: 'Игрушки', word: 'Мяч'},
+        {category: 'Игрушки', word: 'Кукла'},
+        {category: 'Игрушки', word: 'Плюшевый мишка'},
+        {category: 'Игрушки', word: 'Воздушный змей'},
+        {category: 'Игрушки', word: 'Йо-йо'},
+        {category: 'Игрушки', word: 'Водяной пистолет'},
+
+        {category: 'Фрукты и ягоды', word: 'Клубника'},
+        {category: 'Фрукты и ягоды', word: 'Виноград'},
+        {category: 'Фрукты и ягоды', word: 'Апельсин'},
+        {category: 'Фрукты и ягоды', word: 'Лимон'},
+        {category: 'Фрукты и ягоды', word: 'Груша'},
+        {category: 'Фрукты и ягоды', word: 'Вишня'},
+
+        {category: 'Дом', word: 'Кровать'},
+        {category: 'Дом', word: 'Холодильник'},
+        {category: 'Дом', word: 'Плита'},
+        {category: 'Дом', word: 'Окно'},
+        {category: 'Дом', word: 'Дверь'},
+        {category: 'Дом', word: 'Полка'},
+
+        {category: 'Овощи', word: 'Морковь'},
+        {category: 'Овощи', word: 'Огурец'},
+        {category: 'Овощи', word: 'Помидор'},
+        {category: 'Овощи', word: 'Лук'},
+        {category: 'Овощи', word: 'Капуста'},
+        {category: 'Овощи', word: 'Тыква'},
+
+        {category: 'Сезоны', word: 'Зима'},
+        {category: 'Сезоны', word: 'Весна'},
+        {category: 'Сезоны', word: 'Осень'},
+        {category: 'Сезоны', word: 'Лето'},
+        {category: 'Сезоны', word: 'Дождь'},
+        {category: 'Сезоны', word: 'Снег'},
+
+        {category: 'Цветы', word: 'Роза'},
+        {category: 'Цветы', word: 'Калла'},
+        {category: 'Цветы', word: 'Тюльпан'},
+        {category: 'Цветы', word: 'Нарцисс'},
+        {category: 'Цветы', word: 'Сирень'},
+        {category: 'Цветы', word: 'Жасмин'},
+
+        {category: 'Кухня', word: 'Сковородка'},
+        {category: 'Кухня', word: 'Кастрюля'},
+        {category: 'Кухня', word: 'Тарелка'},
+        {category: 'Кухня', word: 'Ложка'},
+        {category: 'Кухня', word: 'Нож'},
+        {category: 'Кухня', word: 'Вилка'},
+
+        {category: 'Птицы', word: 'Воробей'},
+        {category: 'Птицы', word: 'Синица'},
+        {category: 'Птицы', word: 'Дятел'},
+        {category: 'Птицы', word: 'Утка'},
+        {category: 'Птицы', word: 'Гусь'},
+        {category: 'Птицы', word: 'Индейка'},
     ],
 
     medium: [
-        // Профессии
         {category: 'Профессии', word: 'Повар'},
         {category: 'Профессии', word: 'Пожарный'},
         {category: 'Профессии', word: 'Хирург'},
@@ -144,7 +198,6 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Профессии', word: 'Пилот'},
         {category: 'Профессии', word: 'Самурай'},
 
-        // Места
         {category: 'Места', word: 'Больница'},
         {category: 'Места', word: 'Аэропорт'},
         {category: 'Места', word: 'Супермаркет'},
@@ -164,7 +217,6 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Места', word: 'Замок'},
         {category: 'Места', word: 'Пирамида'},
 
-        // Одежда
         {category: 'Одежда', word: 'Кроссовки'},
         {category: 'Одежда', word: 'Шляпа'},
         {category: 'Одежда', word: 'Куртка'},
@@ -180,7 +232,6 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Одежда', word: 'Сапоги'},
         {category: 'Одежда', word: 'Шарф'},
 
-        // Технологии
         {category: 'Технологии', word: 'Ноутбук'},
         {category: 'Технологии', word: 'Робот'},
         {category: 'Технологии', word: 'Дрон'},
@@ -195,13 +246,75 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Технологии', word: 'VR-шлем'},
         {category: 'Технологии', word: 'Роутер'},
 
-        // Развлечения
         {category: 'Развлечения', word: 'Квест'},
         {category: 'Развлечения', word: 'Настолка'},
         {category: 'Развлечения', word: 'Фейерверк'},
         {category: 'Развлечения', word: 'Караоке'},
         {category: 'Развлечения', word: 'Концерт'},
         {category: 'Развлечения', word: 'Кинотеатр'},
+
+        {category: 'Спорт', word: 'Футбол'},
+        {category: 'Спорт', word: 'Теннис'},
+        {category: 'Спорт', word: 'Бокс'},
+        {category: 'Спорт', word: 'Сёрфинг'},
+        {category: 'Спорт', word: 'Шахматы'},
+        {category: 'Спорт', word: 'Сноуборд'},
+
+        {category: 'Музыкальные инструменты', word: 'Барабан'},
+        {category: 'Музыкальные инструменты', word: 'Скрипка'},
+        {category: 'Музыкальные инструменты', word: 'Пианино'},
+        {category: 'Музыкальные инструменты', word: 'Труба'},
+        {category: 'Музыкальные инструменты', word: 'Арфа'},
+        {category: 'Музыкальные инструменты', word: 'Саксофон'},
+
+        {category: 'Погода', word: 'Туман'},
+        {category: 'Погода', word: 'Метель'},
+        {category: 'Погода', word: 'Жара'},
+        {category: 'Погода', word: 'Ливень'},
+        {category: 'Погода', word: 'Ураган'},
+        {category: 'Погода', word: 'Гололёд'},
+
+        {category: 'История и культура', word: 'Рыцарь'},
+        {category: 'История и культура', word: 'Викинг'},
+        {category: 'История и культура', word: 'Фараон'},
+        {category: 'История и культура', word: 'Гладиатор'},
+        {category: 'История и культура', word: 'Шаман'},
+        {category: 'История и культура', word: 'Монах'},
+
+        {category: 'Природа 2', word: 'Берёза'},
+        {category: 'Природа 2', word: 'Клён'},
+        {category: 'Природа 2', word: 'Дуб'},
+        {category: 'Природа 2', word: 'Осина'},
+        {category: 'Природа 2', word: 'Папоротник'},
+        {category: 'Природа 2', word: 'Кактус'},
+
+        {category: 'Времена года', word: 'Январь'},
+        {category: 'Времена года', word: 'Июль'},
+        {category: 'Времена года', word: 'Март'},
+        {category: 'Времена года', word: 'Ноябрь'},
+        {category: 'Времена года', word: 'Воскресенье'},
+        {category: 'Времена года', word: 'Четверг'},
+
+        {category: 'Растения', word: 'Картофель'},
+        {category: 'Растения', word: 'Баклажан'},
+        {category: 'Растения', word: 'Редиска'},
+        {category: 'Растения', word: 'Чеснок'},
+        {category: 'Растения', word: 'Базилик'},
+        {category: 'Растения', word: 'Мята'},
+
+        {category: 'Аксессуары', word: 'Сумка'},
+        {category: 'Аксессуары', word: 'Ремень'},
+        {category: 'Аксессуары', word: 'Браслет'},
+        {category: 'Аксессуары', word: 'Кольцо'},
+        {category: 'Аксессуары', word: 'Заколка'},
+        {category: 'Аксессуары', word: 'Брошь'},
+
+        {category: 'Наука', word: 'Атмосфера'},
+        {category: 'Наука', word: 'Океан'},
+        {category: 'Наука', word: 'География'},
+        {category: 'Наука', word: 'Математика'},
+        {category: 'Наука', word: 'Химия'},
+        {category: 'Наука', word: 'Физика'},
     ],
 
     hard: [
@@ -270,5 +383,74 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Сложные объекты', word: 'Монолит'},
         {category: 'Сложные объекты', word: 'Турбина'},
         {category: 'Сложные объекты', word: 'Крипта'},
+        {category: 'Философия', word: 'Истина'},
+        {category: 'Философия', word: 'Мораль'},
+        {category: 'Философия', word: 'Сознание'},
+        {category: 'Философия', word: 'Сомнение'},
+        {category: 'Философия', word: 'Выбор'},
+        {category: 'Философия', word: 'Парадокс'},
+
+        {category: 'Социальные явления', word: 'Революция'},
+        {category: 'Социальные явления', word: 'Пропаганда'},
+        {category: 'Социальные явления', word: 'Паника толпы'},
+        {category: 'Социальные явления', word: 'Культ'},
+        {category: 'Социальные явления', word: 'Изоляция'},
+        {category: 'Социальные явления', word: 'Бунт'},
+
+        {category: 'Мистика', word: 'Проклятие'},
+        {category: 'Мистика', word: 'Омен'},
+        {category: 'Мистика', word: 'Одержимость'},
+        {category: 'Мистика', word: 'Ритуал'},
+        {category: 'Мистика', word: 'Пророчество'},
+        {category: 'Мистика', word: 'Астрал'},
+
+        {category: 'Космос', word: 'Сингулярность'},
+        {category: 'Космос', word: 'Сверхновая'},
+        {category: 'Космос', word: 'Червоточина'},
+        {category: 'Космос', word: 'Орбита'},
+        {category: 'Космос', word: 'Пульсар'},
+        {category: 'Космос', word: 'Туманность'},
+
+        {category: 'Психология', word: 'Психоз'},
+        {category: 'Психология', word: 'Апатия'},
+        {category: 'Психология', word: 'Экзальтация'},
+        {category: 'Психология', word: 'Амбивалентность'},
+        {category: 'Психология', word: 'Деперсонализация'},
+        {category: 'Психология', word: 'Когнитивность'},
+
+        {category: 'Литература', word: 'Метафора'},
+        {category: 'Литература', word: 'Символизм'},
+        {category: 'Литература', word: 'Аллегория'},
+        {category: 'Литература', word: 'Параллель'},
+        {category: 'Литература', word: 'Ирония'},
+        {category: 'Литература', word: 'А **¿**азия'},
+
+        {category: 'Медицина', word: 'Анатомия'},
+        {category: 'Медицина', word: 'Вирус'},
+        {category: 'Медицина', word: 'Вакцина'},
+        {category: 'Медицина', word: 'Терапия'},
+        {category: 'Медицина', word: 'Диагностика'},
+        {category: 'Медицина', word: 'Рецепт'},
+
+        {category: 'Архитектура', word: 'Арка'},
+        {category: 'Архитектура', word: 'Купол'},
+        {category: 'Архитектура', word: 'Фундамент'},
+        {category: 'Архитектура', word: 'Колонна'},
+        {category: 'Архитектура', word: 'Балкон'},
+        {category: 'Архитектура', word: 'Атриум'},
+
+        {category: 'Астрономия', word: 'Галактика'},
+        {category: 'Астрономия', word: 'Звезда'},
+        {category: 'Астрономия', word: 'Комета'},
+        {category: 'Астрономия', word: 'Метеор'},
+        {category: 'Астрономия', word: 'Астероид'},
+        {category: 'Астрономия', word: 'Экзопланета'},
+
+        {category: 'Экономика', word: 'Бюджет'},
+        {category: 'Экономика', word: 'Инфляция'},
+        {category: 'Экономика', word: 'Кредит'},
+        {category: 'Экономика', word: 'Дивиденды'},
+        {category: 'Экономика', word: 'Акции'},
+        {category: 'Экономика', word: 'Налог'},
     ],
 };

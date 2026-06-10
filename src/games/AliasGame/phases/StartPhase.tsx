@@ -6,7 +6,7 @@ import type {Team} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
-import {TROPHY_THRESHOLD, WIN_SCORE} from '@/constants/aliasContent';
+import {TROPHY_THRESHOLD, WIN_SCORE} from "@/games/AliasGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

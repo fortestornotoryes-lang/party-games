@@ -12,8 +12,8 @@ import type {Team} from './types';
 import {AliasPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from '@/constants/aliasContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from "@/games/AliasGame/constants.ts";
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

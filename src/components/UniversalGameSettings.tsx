@@ -8,9 +8,9 @@ import {getTheme} from '../theme/colors';
 import type {Difficulty, GameMode, GameModeOption} from '../types';
 import {GameKey} from '../types/games';
 
-import {ALIAS_DIFFICULTY_CONFIG} from '@/constants/aliasContent';
-import {GAME_DURATION_BY_DIFFICULTY} from '@/constants/spyHuntContent';
 import {DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {ALIAS_DIFFICULTY_CONFIG} from "@/games/AliasGame/constants.ts";
+import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 
 // ─── universal setting row ────────────────────────────────────────────────────
 

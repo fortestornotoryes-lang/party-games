@@ -3,7 +3,7 @@ import {AnimatePresence, motion} from 'motion/react';
 import React from 'react';
 
 import type {MillionaireQuestion} from '@/constants/millionaireContent';
-import {PRIZE_LADDER, SAFE_CHECKPOINTS,} from '@/constants/millionaireContent';
+import {PRIZE_LADDER, SAFE_CHECKPOINTS} from "@/games/MillionaireGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

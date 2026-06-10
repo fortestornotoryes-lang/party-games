@@ -16,9 +16,9 @@ import {
     HARD_QUESTIONS,
     MEDIUM_QUESTIONS,
     type MillionaireQuestion,
-    PRIZE_LADDER,
     simulateAudienceVote,
 } from '@/constants/millionaireContent';
+import {PRIZE_LADDER} from "@/games/MillionaireGame/constants.ts";
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

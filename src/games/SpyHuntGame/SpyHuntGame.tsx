@@ -10,8 +10,8 @@ import {RevealPhase} from './phases/RevealPhase';
 import {SpyHuntPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {GAME_DURATION_BY_DIFFICULTY} from '@/constants/spyHuntContent';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';

@@ -18,7 +18,7 @@ import {DecryptoPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {DECRYPTO_MODES} from '@/constants/decryptoContent';
+import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 

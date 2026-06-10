@@ -269,7 +269,7 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 key={`hw${r}${c}`}
                                 x={c * STEP} y={r * STEP + CELL}
                                 width={2 * CELL + GAP} height={GAP} rx={3}
-                                fill={PLAYER_COLOR[placed as 1 | 2]}
+                                fill={PLAYER_COLOR[placed]}
                                 pointerEvents="none"
                             />
                         ) : null,
@@ -282,7 +282,7 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 key={`vw${r}${c}`}
                                 x={c * STEP + CELL} y={r * STEP}
                                 width={GAP} height={2 * CELL + GAP} rx={3}
-                                fill={PLAYER_COLOR[placed as 1 | 2]}
+                                fill={PLAYER_COLOR[placed]}
                                 pointerEvents="none"
                             />
                         ) : null,

@@ -2,8 +2,8 @@ import {ChevronRight, Scale, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useState} from 'react';
 
-import {type AttributeEntry, type BunkerCharacter, type TraitKey} from '../types';
 import {getHiddenTraits} from '../helpers';
+import {type AttributeEntry, type BunkerCharacter, type TraitKey} from '../types';
 
 import {PrimaryButton} from '@/components/PrimaryButton.tsx';
 import {Typography} from '@/components/Typography';
@@ -411,11 +411,11 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                 ? t(`${NS.BUNKER}.playerPardonedTitle`, {player: appellant?.playerName ?? ''})
                                 : t(`${NS.BUNKER}.playerExcludedTitle`, {player: appellant?.playerName ?? ''})}
                         </Typography.Display>
-                        {pardoned && !!swapTarget && (
+                        {!!pardoned && !!swapTarget && (
                             <Typography.Body size="sm" color="muted" align="center">
                                 {t(`${NS.BUNKER}.spotFreedBy`, {player: swapTarget})}
                             </Typography.Body>
-                        )}
+                          )}
                     </div>
 
                     <div className="w-full mt-auto">
