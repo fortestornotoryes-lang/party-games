@@ -113,6 +113,7 @@ const SettingToggle: React.FC<{
 
 export const Settings: React.FC<SettingsProps> = ({onBack}) => {
     const [activeTab, setActiveTab] = useState<'general' | 'words'>('general');
+    // TODO: RN — replace with useEffect async load (useState lazy initializer incompatible with async)
     const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
     const {lang, setLang} = useLanguage();
 
@@ -130,6 +131,7 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
     const selectedGame = Array.from(alsoAdd)[0] ?? GameKey.JustOne;
     const isTod = alsoAdd.has(GameKey.TruthOrDare);
 
+    // TODO: RN — replace with useEffect async load (useMemo render-path read incompatible with async)
     const customWords = useMemo(
         () =>
             isTod
@@ -139,6 +141,7 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
         [selectedGame, todType, todDiff, isTod, wordDiff, refreshKey],
     );
 
+    // TODO: RN — replace with useEffect async load (useMemo render-path read incompatible with async)
     const usedCount = useMemo(
         () => storageService.getUsedWords(selectedGame).length,
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,7 +168,7 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
     const toggleSetting = (key: keyof GameSettings) => {
         const next = {...settings, [key]: !settings[key]};
         setSettings(next);
-        storageService.saveSettings(next);
+        void storageService.saveSettingsAsync(next);
         if (key === 'vibration') feedbackService.vibrate(VIBRATE.tap);
         if (key === 'sounds') feedbackService.playSound('click');
     };
@@ -214,7 +217,7 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
         setCurrentPage(1);
     };
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         const word = newWord.trim();
 
         if (word.length < 3) {
@@ -224,14 +227,13 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
 
         const wordLower = word.toLowerCase();
         const isDuplicate = isTod
-            ? storageService
-                .getCustomWordsByKey(todKey(todType, todDiff))
+            ? (await storageService.getCustomWordsByKeyAsync(todKey(todType, todDiff)))
                 .some((w) => w.toLowerCase() === wordLower)
-            : Array.from(alsoAdd).some((id) =>
-                storageService
-                    .getCustomWordsByKey(`${id}_${wordDiff}`)
-                    .some((w) => w.toLowerCase() === wordLower),
-            );
+            : (await Promise.all(
+                Array.from(alsoAdd).map((id) =>
+                    storageService.getCustomWordsByKeyAsync(`${id}_${wordDiff}`),
+                ),
+            )).some((words) => words.some((w) => w.toLowerCase() === wordLower));
 
         if (isDuplicate) {
             setValidationError('Уже добавлено');
@@ -239,11 +241,11 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
         }
 
         if (isTod) {
-            storageService.addCustomWordByKey(todKey(todType, todDiff), word);
+            await storageService.addCustomWordByKeyAsync(todKey(todType, todDiff), word);
         } else {
-            alsoAdd.forEach((id) => {
-                storageService.addCustomWordByKey(`${id}_${wordDiff}`, word);
-            });
+            for (const id of alsoAdd) {
+                await storageService.addCustomWordByKeyAsync(`${id}_${wordDiff}`, word);
+            }
         }
 
         setNewWord('');
@@ -251,11 +253,11 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
         refresh();
     };
 
-    const handleRemove = (word: string) => {
+    const handleRemove = async (word: string) => {
         if (isTod) {
-            storageService.removeCustomWordByKey(todKey(todType, todDiff), word);
+            await storageService.removeCustomWordByKeyAsync(todKey(todType, todDiff), word);
         } else {
-            storageService.removeCustomWordByKey(`${selectedGame}_${wordDiff}`, word);
+            await storageService.removeCustomWordByKeyAsync(`${selectedGame}_${wordDiff}`, word);
         }
         if (pagedWords.length === 1 && effectivePage > 1) {
             setCurrentPage((p) => p - 1);
@@ -263,9 +265,9 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
         refresh();
     };
 
-    const handleReset = () => {
+    const handleReset = async () => {
         if (!confirm('Сбросить прогресс для этой игры?')) return;
-        storageService.resetUsedWords(selectedGame);
+        await storageService.resetUsedWordsAsync(selectedGame);
         refresh();
     };
 

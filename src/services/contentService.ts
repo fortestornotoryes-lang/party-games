@@ -16,6 +16,7 @@ import {DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY} from '@/constants/truthOrDare
 import {WAVELENGTH_DATA_BY_DIFFICULTY} from '@/constants/wavelengthContent';
 
 export const contentService = {
+    // TODO: RN — replace with useEffect async load (called synchronously on the UI render path of MainMenu/UniversalGameSettings)
     getWordStats(gameId: GameKey, difficulty: Difficulty): { total: number; remaining: number } {
         const used = storageService.getUsedWords(gameId);
         const custom = [

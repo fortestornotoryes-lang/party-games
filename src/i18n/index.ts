@@ -39,6 +39,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 export function LanguageProvider({children}: { children: React.ReactNode }) {
+    // TODO: RN — replace with useEffect async load (useState lazy initializer incompatible with async)
     const [lang, setLangState] = useState<Lang>(() => {
         const saved = storageService.getSettings().language;
         return (saved === 'en' ? 'en' : 'ru');
@@ -46,7 +47,7 @@ export function LanguageProvider({children}: { children: React.ReactNode }) {
 
     const setLang = useCallback((next: Lang) => {
         setLangState(next);
-        storageService.saveSettings({language: next});
+        void storageService.saveSettingsAsync({language: next});
     }, []);
 
     const t = useCallback(

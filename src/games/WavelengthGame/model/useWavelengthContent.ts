@@ -4,6 +4,7 @@ import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 import {pickRandom} from '@/utils/random';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useWavelengthContent(difficulty: Difficulty): string[] {
     const pool = (WAVELENGTH_DATA_BY_DIFFICULTY[difficulty] ||
         WAVELENGTH_DATA_BY_DIFFICULTY.medium);

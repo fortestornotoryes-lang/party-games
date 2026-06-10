@@ -4,6 +4,7 @@ import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useCodenamesContent(difficulty: Difficulty): string[] {
     const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
     // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks

@@ -42,10 +42,10 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
     const [countHiddenTraits, setCountHiddenTraitsState] = useState<boolean>(true);
     const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
 
-    const setCurrentGameId = (id: GameKey | null) => {
+    const setCurrentGameId = async (id: GameKey | null) => {
         setCurrentGameIdState(id);
         if (!id) return;
-        const savedConfig = storageService.getGameConfig<SavedConfig>(id);
+        const savedConfig = await storageService.getGameConfigAsync<SavedConfig>(id);
         if (savedConfig) {
             if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
             if (savedConfig.mode) setModeState(savedConfig.mode);
@@ -64,35 +64,35 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
     const setDifficulty = (d: Difficulty) => {
         setDifficultyState(d);
         if (currentGameId) {
-            storageService.saveGameConfig(currentGameId, {difficulty: d, mode, rounds, timerSeconds});
+            void storageService.saveGameConfigAsync(currentGameId, {difficulty: d, mode, rounds, timerSeconds});
         }
     };
 
     const setMode = (m: GameMode) => {
         setModeState(m);
         if (currentGameId) {
-            storageService.saveGameConfig(currentGameId, {difficulty, mode: m, rounds, timerSeconds});
+            void storageService.saveGameConfigAsync(currentGameId, {difficulty, mode: m, rounds, timerSeconds});
         }
     };
 
     const setRounds = (r: number) => {
         setRoundsState(r);
         if (currentGameId) {
-            storageService.saveGameConfig(currentGameId, {difficulty, mode, rounds: r, timerSeconds});
+            void storageService.saveGameConfigAsync(currentGameId, {difficulty, mode, rounds: r, timerSeconds});
         }
     };
 
     const setTimerSeconds = (s: number) => {
         setTimerSecondsState(s);
         if (currentGameId) {
-            storageService.saveGameConfig(currentGameId, {difficulty, mode, rounds, timerSeconds: s, countHiddenTraits});
+            void storageService.saveGameConfigAsync(currentGameId, {difficulty, mode, rounds, timerSeconds: s, countHiddenTraits});
         }
     };
 
     const setCountHiddenTraits = (v: boolean) => {
         setCountHiddenTraitsState(v);
         if (currentGameId) {
-            storageService.saveGameConfig(currentGameId, {difficulty, mode, rounds, timerSeconds, countHiddenTraits: v});
+            void storageService.saveGameConfigAsync(currentGameId, {difficulty, mode, rounds, timerSeconds, countHiddenTraits: v});
         }
     };
 

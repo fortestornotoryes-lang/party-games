@@ -4,6 +4,7 @@ import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
 export function useDecryptoContent(difficulty: Difficulty, count = 4): string[] {
     const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
     // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks

@@ -4,6 +4,7 @@ import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 import {pickRandom} from '@/utils/random';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useJustOneContent(difficulty: Difficulty): string {
     const pool = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
     // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks

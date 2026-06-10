@@ -3,6 +3,7 @@ import {storageService} from '@/services/storageService';
 import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useAliasContent(difficulty: Difficulty): string[] {
     const targetCategories = ALIAS_CATEGORIES.filter((c) => {
         if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';

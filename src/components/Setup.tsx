@@ -54,6 +54,7 @@ export const Setup: React.FC<SetupProps> = ({
                                             }) => {
     const {difficulty} = useGameSettings();
     const config = getTheme(themeColor);
+    // TODO: RN — replace with useEffect async load (useState lazy initializer incompatible with async)
     const [players, setPlayers] = useState<PlayerEntry[]>(() => {
         const savedNames = storageService.getPlayers();
         if (savedNames.length >= minPlayers) {

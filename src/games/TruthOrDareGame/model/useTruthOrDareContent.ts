@@ -4,6 +4,7 @@ import type {Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 import {pickRandom} from '@/utils/random';
 
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useTruthOrDareContent(type: 'truth' | 'dare', difficulty: Difficulty): string {
     const staticPool =
         type === 'truth' ? TRUTHS_BY_DIFFICULTY[difficulty] : DARES_BY_DIFFICULTY[difficulty];

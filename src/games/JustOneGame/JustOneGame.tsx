@@ -37,6 +37,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) =
     const [prevGuesserIdx, setPrevGuesserIdx] = useState(guesserIdx);
 
     // Если индекс изменился, сбрасываем стейт прямо во время рендеринга
+    // TODO: RN — replace with useEffect async load (render-time call incompatible with async)
     if (guesserIdx !== prevGuesserIdx) {
         setPrevGuesserIdx(guesserIdx);
         setWord(useJustOneContent(difficulty));

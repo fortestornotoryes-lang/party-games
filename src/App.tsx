@@ -64,7 +64,7 @@ function AppContent() {
             console.log('currentGameId', currentGameId)
             if (!currentGameId) return;
 
-            storageService.savePlayers(playerNames);
+            void storageService.savePlayersAsync(playerNames);
 
             const config = GAMES_REGISTRY[currentGameId];
             const initializedPlayers: Player[] = playerNames.map((name) => ({
