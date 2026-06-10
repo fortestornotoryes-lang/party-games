@@ -21,7 +21,7 @@ const PLAYER_COLOR: Record<1 | 2, string> = {1: P1_COLOR, 2: P2_COLOR};
 // ─── Pure helpers ──────────────────────────────────────────────────────────
 
 function emptyWalls(): WallGrid {
-    return Array.from({length: 8}, () => new Array<boolean>(8).fill(false));
+    return Array.from({length: 8}, () => new Array<0 | 1 | 2>(8).fill(0));
 }
 
 // Is the passage between adjacent cells (r1,c1)→(r2,c2) blocked by a wall?
@@ -161,8 +161,8 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
 
             const newH = hWalls.map(row => [...row]);
             const newV = vWalls.map(row => [...row]);
-            if (o === 'H') newH[r][c] = true;
-            else newV[r][c] = true;
+            if (o === 'H') newH[r][c] = current;
+            else newV[r][c] = current;
 
             // Validate both players still have a path
             if (!canReach(pawns[1], 0, newH, newV) || !canReach(pawns[2], 8, newH, newV)) return;
@@ -269,7 +269,7 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 key={`hw${r}${c}`}
                                 x={c * STEP} y={r * STEP + CELL}
                                 width={2 * CELL + GAP} height={GAP} rx={3}
-                                fill="rgba(255,255,255,0.82)"
+                                fill={PLAYER_COLOR[placed as 1 | 2]}
                                 pointerEvents="none"
                             />
                         ) : null,
@@ -282,7 +282,7 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 key={`vw${r}${c}`}
                                 x={c * STEP + CELL} y={r * STEP}
                                 width={GAP} height={2 * CELL + GAP} rx={3}
-                                fill="rgba(255,255,255,0.82)"
+                                fill={PLAYER_COLOR[placed as 1 | 2]}
                                 pointerEvents="none"
                             />
                         ) : null,
