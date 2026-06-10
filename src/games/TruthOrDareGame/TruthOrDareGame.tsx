@@ -1,6 +1,6 @@
 import {Flame} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useState} from 'react';
+import React from 'react';
 
 import {useTruthOrDareContent} from './model/useTruthOrDareContent';
 import {ActionPhase} from './phases/ActionPhase';
@@ -11,8 +11,10 @@ import {TruthOrDarePhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {GameKey} from '@/types/games';
 
 
 interface TruthOrDareGameProps {
@@ -22,10 +24,19 @@ interface TruthOrDareGameProps {
 
 export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({playerNames, onBack}) => {
     const {difficulty} = useGameSettings();
-    const [phase, setPhase] = useState<TruthOrDarePhase>(TruthOrDarePhase.Pass);
-    const {current: currentPlayer, next: nextPlayer} = usePlayerCycle(playerNames);
-    const [choice, setChoice] = useState<ChoiceType | null>(null);
-    const [content, setContent] = useState('');
+    const [phase, setPhase] = usePersistedState<TruthOrDarePhase>(
+        GameKey.TruthOrDare,
+        'phase',
+        TruthOrDarePhase.Pass
+    );
+    const playerIdxState = usePersistedState(GameKey.TruthOrDare, 'playerIdx', 0);
+    const {current: currentPlayer, next: nextPlayer} = usePlayerCycle(playerNames, playerIdxState);
+    const [choice, setChoice] = usePersistedState<ChoiceType | null>(
+        GameKey.TruthOrDare,
+        'choice',
+        null
+    );
+    const [content, setContent] = usePersistedState(GameKey.TruthOrDare, 'content', '');
 
     const handleChoice = (type: ChoiceType) => {
         const text = useTruthOrDareContent(type, difficulty);

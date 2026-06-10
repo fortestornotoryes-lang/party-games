@@ -6,6 +6,8 @@ import type {ActionMode, Pos, WallGrid} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from '@/components/PrimaryButton';
+import {usePersistedState} from '@/hooks/usePersistedState';
+import {GameKey} from '@/types/games';
 
 // ─── Board constants (SVG units) ───────────────────────────────────────────
 const CELL = 40;
@@ -120,13 +122,20 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
     const p1 = playerNames[0] ?? 'Игрок 1';
     const p2 = playerNames[1] ?? 'Игрок 2';
 
-    const [pawns, setPawns] = useState<{ 1: Pos; 2: Pos }>({1: {row: 8, col: 4}, 2: {row: 0, col: 4}});
-    const [hWalls, setHWalls] = useState(emptyWalls);
-    const [vWalls, setVWalls] = useState(emptyWalls);
-    const [wallsLeft, setWallsLeft] = useState({1: WALLS_INIT, 2: WALLS_INIT});
-    const [current, setCurrent] = useState<1 | 2>(1);
-    const [winner, setWinner] = useState<1 | 2 | null>(null);
-    const [actionMode, setActionMode] = useState<ActionMode>('move');
+    const K = GameKey.Corridor;
+    const [pawns, setPawns] = usePersistedState<{ 1: Pos; 2: Pos }>(K, 'pawns', {
+        1: {row: 8, col: 4},
+        2: {row: 0, col: 4},
+    });
+    const [hWalls, setHWalls] = usePersistedState<WallGrid>(K, 'hWalls', emptyWalls);
+    const [vWalls, setVWalls] = usePersistedState<WallGrid>(K, 'vWalls', emptyWalls);
+    const [wallsLeft, setWallsLeft] = usePersistedState<Record<1 | 2, number>>(K, 'wallsLeft', {
+        1: WALLS_INIT,
+        2: WALLS_INIT,
+    });
+    const [current, setCurrent] = usePersistedState<1 | 2>(K, 'current', 1);
+    const [winner, setWinner] = usePersistedState<1 | 2 | null>(K, 'winner', null);
+    const [actionMode, setActionMode] = usePersistedState<ActionMode>(K, 'actionMode', 'move');
     const [hovered, setHovered] = useState<{ r: number; c: number; o: 'H' | 'V' } | null>(null);
 
     const moves = winner ? [] : validMoves(current, pawns, hWalls, vWalls);

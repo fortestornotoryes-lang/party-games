@@ -16,6 +16,8 @@ import {FakeArtistPhase} from './types';
 import {GameCard} from '@/components/GameCard.tsx';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {usePersistedState} from '@/hooks/usePersistedState';
+import {GameKey} from '@/types/games';
 
 interface Props {
     playerNames: string[];
@@ -23,9 +25,14 @@ interface Props {
 }
 
 export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [phase, setPhase] = useState<FakeArtistPhase>(FakeArtistPhase.Distributing);
-    const [gameState, setGameState] = useState({
+    const K = GameKey.FakeArtist;
+    const [players, setPlayers] = usePersistedState<Player[]>(K, 'players', []);
+    const [phase, setPhase] = usePersistedState<FakeArtistPhase>(
+        K,
+        'phase',
+        FakeArtistPhase.Distributing
+    );
+    const [gameState, setGameState] = usePersistedState(K, 'gameState', {
         word: '',
         category: '',
         rounds: 2,
@@ -36,17 +43,20 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const drawAllRef = useRef<() => void>(() => undefined);
-    const [turnIndex, setTurnIndex] = useState(0);
+    const [turnIndex, setTurnIndex] = usePersistedState(K, 'turnIndex', 0);
     const [isDrawing, setIsDrawing] = useState(false);
-    const [hasDrawn, setHasDrawn] = useState(false);
-    const [strokes, setStrokes] = useState<any[]>([]);
+    const [hasDrawn, setHasDrawn] = usePersistedState(K, 'hasDrawn', false);
+    const [strokes, setStrokes] = usePersistedState<any[]>(K, 'strokes', []);
     const [currentStroke, setCurrentStroke] = useState<any>(null);
-    const [isTransitioning, setIsTransitioning] = useState(true);
+    const [isTransitioning, setIsTransitioning] = usePersistedState(K, 'isTransitioning', true);
     const [timeLeft, setTimeLeft] = useState(0);
 
     useEffect(() => {
+        // Роли уже восстановлены из сессии — не раздаём заново.
+        if (players.length > 0) return;
         const {players: p} = initFakeArtist(playerNames);
         setPlayers(p);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playerNames]);
 
     const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][
@@ -143,6 +153,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
 
     const getPos = (e: any) => {
         const canvas = canvasRef.current;
+        if (!canvas) return {x: 0, y: 0};
         const rect = canvas.getBoundingClientRect();
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -162,7 +173,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                     colors: ['#10b981', '#ffffff'],
                 });
             }
-            setGameState((prev) => ({...prev, canvasImage: canvasRef.current.toDataURL()}));
+            setGameState((prev) => ({...prev, canvasImage: canvasRef.current?.toDataURL() ?? ''}));
             setPhase(FakeArtistPhase.Voting);
         } else {
             feedbackService.playSound('click');

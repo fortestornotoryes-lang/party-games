@@ -5,6 +5,7 @@ import {UniversalGameSettings} from '../components/UniversalGameSettings';
 import {GAME_INSTRUCTIONS} from '../constants/instructions';
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
+import {sessionService} from '../services/sessionService';
 import {storageService} from '../services/storageService';
 import type {GameModeOption} from '../types';
 import type {GameKey} from '../types/games';
@@ -35,6 +36,9 @@ export function GameSetupRoute() {
     if (currentGameId !== currentGameKey) return null;
 
     const startGame = (playerNames: string[]) => {
+        // Новая партия всегда начинается с чистого листа — сохранённая
+        // сессия (восстановление после перезагрузки) сбрасывается.
+        sessionService.begin(currentGameKey, playerNames);
         void storageService.savePlayersAsync(playerNames);
         void navigate(`/game/${currentGameKey}/play`, {state: {playerNames}});
     };

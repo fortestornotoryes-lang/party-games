@@ -1,6 +1,6 @@
 import {Trophy} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {BetweenPhase} from './phases/BetweenPhase';
 import {GameOverPhase} from './phases/GameOverPhase';
@@ -19,10 +19,12 @@ import {
     simulateAudienceVote,
 } from '@/constants/millionaireContent';
 import {PRIZE_LADDER} from "@/games/MillionaireGame/constants.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random';
 
 
@@ -33,17 +35,48 @@ interface MillionaireGameProps {
 
 export const MillionaireGame: React.FC<MillionaireGameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
-    const [phase, setPhase] = useState<MillionairePhase>(MillionairePhase.Pass);
-    const {current: currentPlayer, next: nextPlayer} = usePlayerCycle(playerNames);
-    const [questionIndex, setQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [usedLifelines, setUsedLifelines] = useState<Set<string>>(new Set());
-    const [eliminatedOptions, setEliminatedOptions] = useState<number[]>([]);
-    const [audienceVotes, setAudienceVotes] = useState<number[] | null>(null);
-    const [phoneFriendSuggestion, setPhoneFriendSuggestion] = useState<number | null>(null);
-    const [playerScores, setPlayerScores] = useState<Record<string, string>>({});
-    const [currentQuestions, setCurrentQuestions] = useState<MillionaireQuestion[]>([]);
+    const K = GameKey.Millionaire;
+    const [phase, setPhase] = usePersistedState<MillionairePhase>(K, 'phase', MillionairePhase.Pass);
+    const playerIdxState = usePersistedState(K, 'playerIdx', 0);
+    const {current: currentPlayer, next: nextPlayer} = usePlayerCycle(playerNames, playerIdxState);
+    const [questionIndex, setQuestionIndex] = usePersistedState(K, 'questionIndex', 0);
+    const [selectedAnswer, setSelectedAnswer] = usePersistedState<number | null>(
+        K,
+        'selectedAnswer',
+        null
+    );
+    const [isCorrect, setIsCorrect] = usePersistedState(K, 'isCorrect', false);
+    const [usedLifelines, setUsedLifelines] = usePersistedState<Set<string>>(
+        K,
+        'usedLifelines',
+        new Set(),
+        {save: (s) => [...s], load: (raw) => new Set(raw as string[])}
+    );
+    const [eliminatedOptions, setEliminatedOptions] = usePersistedState<number[]>(
+        K,
+        'eliminatedOptions',
+        []
+    );
+    const [audienceVotes, setAudienceVotes] = usePersistedState<number[] | null>(
+        K,
+        'audienceVotes',
+        null
+    );
+    const [phoneFriendSuggestion, setPhoneFriendSuggestion] = usePersistedState<number | null>(
+        K,
+        'phoneFriendSuggestion',
+        null
+    );
+    const [playerScores, setPlayerScores] = usePersistedState<Record<string, string>>(
+        K,
+        'playerScores',
+        {}
+    );
+    const [currentQuestions, setCurrentQuestions] = usePersistedState<MillionaireQuestion[]>(
+        K,
+        'currentQuestions',
+        []
+    );
 
     const initQuestionsForPlayer = useCallback(() => {
         const easy = shuffle([...EASY_QUESTIONS]).slice(0, 5);

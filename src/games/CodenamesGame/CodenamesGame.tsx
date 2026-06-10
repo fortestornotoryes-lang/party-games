@@ -16,7 +16,9 @@ import {CodenamesPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
 import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {useTranslation} from '@/i18n';
+import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random.ts';
 
 interface CodenamesGameProps {
@@ -28,23 +30,26 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
     const {difficulty, mode: activeMode} = useGameSettings();
     const {t} = useTranslation();
 
-    const [phase, setPhase] = useState<CodenamesPhase>(CodenamesPhase.Setup);
-    const [cards, setCards] = useState<Card[]>([]);
-    const [turn, setTurn] = useState<Team>('red');
+    const K = GameKey.Codenames;
+    const [phase, setPhase] = usePersistedState<CodenamesPhase>(K, 'phase', CodenamesPhase.Setup);
+    const [cards, setCards] = usePersistedState<Card[]>(K, 'cards', []);
+    const [turn, setTurn] = usePersistedState<Team>(K, 'turn', 'red');
 
-    const [redCaptain, setRedCaptain] = useState('');
-    const [blueCaptain, setBlueCaptain] = useState('');
-    const [redTeam, setRedTeam] = useState<string[]>([]);
-    const [blueTeam, setBlueTeam] = useState<string[]>([]);
+    const [redCaptain, setRedCaptain] = usePersistedState(K, 'redCaptain', '');
+    const [blueCaptain, setBlueCaptain] = usePersistedState(K, 'blueCaptain', '');
+    const [redTeam, setRedTeam] = usePersistedState<string[]>(K, 'redTeam', []);
+    const [blueTeam, setBlueTeam] = usePersistedState<string[]>(K, 'blueTeam', []);
 
-    const [clueWord, setClueWord] = useState('');
-    const [clueCount, setClueCount] = useState(0);
-    const [guessesLeft, setGuessesLeft] = useState(0);
-    const [winner, setWinner] = useState<Team | null>(null);
+    const [clueWord, setClueWord] = usePersistedState(K, 'clueWord', '');
+    const [clueCount, setClueCount] = usePersistedState(K, 'clueCount', 0);
+    const [guessesLeft, setGuessesLeft] = usePersistedState(K, 'guessesLeft', 0);
+    const [winner, setWinner] = usePersistedState<Team | null>(K, 'winner', null);
     const [lastActionMsg, setLastActionMsg] = useState<string | null>(null);
 
     useEffect(() => {
         if (playerNames.length < 4) return;
+        // Доска и команды уже восстановлены из сессии — не пересоздаём.
+        if (cards.length > 0) return;
         const shuffled = shuffle(playerNames);
         setRedCaptain(shuffled[0]);
         setBlueCaptain(shuffled[1]);
@@ -53,6 +58,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
         setRedTeam(rest.slice(0, half));
         setBlueTeam(rest.slice(half));
         initBoard();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playerNames]);
 
     const initBoard = () => {

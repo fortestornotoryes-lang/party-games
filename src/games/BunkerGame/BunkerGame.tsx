@@ -1,6 +1,6 @@
 import {Siren} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
 import {BUNKER_MODES, CAPACITY_PCT} from './constants';
 import {BriefingPhase} from './phases/BriefingPhase';
@@ -18,6 +18,7 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from "@/games/BunkerGame/contents";
 import {calculateSurvival, generateCharacter} from "@/games/BunkerGame/helpers.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
@@ -44,25 +45,32 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({playerNames, onBack, onRe
         [playerNames.length, difficulty]
     );
 
-    const [scenario] = useState<CatastropheScenario>(() => pickRandom(CATASTROPHE_SCENARIOS));
-    const [characters] = useState<BunkerCharacter[]>(() =>
+    const K = GameKey.Bunker;
+    const [scenario] = usePersistedState<CatastropheScenario>(K, 'scenario', () =>
+        pickRandom(CATASTROPHE_SCENARIOS)
+    );
+    const [characters] = usePersistedState<BunkerCharacter[]>(K, 'characters', () =>
         shuffle(playerNames).map((name) => generateCharacter(name))
     );
-    const [events] = useState<SurvivalEvent[]>(() => {
+    const [events] = usePersistedState<SurvivalEvent[]>(K, 'events', () => {
         const pool = shuffle([...SURVIVAL_EVENTS]);
         const count = Math.floor(Math.random() * 5) + 1;
         return pool.slice(0, count);
     });
 
     // ── Mode-specific state ────────────────────────────────────────────────────
-    const [directorName] = useState<string | null>(() =>
+    const [directorName] = usePersistedState<string | null>(K, 'directorName', () =>
         isDictator ? pickRandom(characters).playerName : null
     );
 
     // ── Phase state ────────────────────────────────────────────────────────────
-    const [phase, setPhase] = useState<BunkerPhase>(BunkerPhase.Briefing);
-    const [revealRound, setRevealRound] = useState(1);
-    const [eliminatedNames, setEliminatedNames] = useState<string[]>([]);
+    const [phase, setPhase] = usePersistedState<BunkerPhase>(K, 'phase', BunkerPhase.Briefing);
+    const [revealRound, setRevealRound] = usePersistedState(K, 'revealRound', 1);
+    const [eliminatedNames, setEliminatedNames] = usePersistedState<string[]>(
+        K,
+        'eliminatedNames',
+        []
+    );
 
     // ── Derived ────────────────────────────────────────────────────────────────
     const bunkerTeam = characters.filter((c) => !eliminatedNames.includes(c.playerName));

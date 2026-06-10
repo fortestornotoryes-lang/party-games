@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {Ban} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
@@ -15,6 +15,7 @@ import {TabooPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import type {TabooClassicCard} from '@/constants/tabooContent';
 import {getNextTabooClassicCard, TABOO_CLASSIC_CARDS} from '@/constants/tabooContent';
+import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -34,15 +35,17 @@ export const TabooGame: React.FC<TabooGameProps> = ({playerNames, onBack}) => {
     const cardTimer = timerSeconds;
 
     // ── Players & scores ───────────────────────────────────────────────────────
-    const [scores, setScores] = useState<Record<string, number>>(() =>
-        Object.fromEntries(playerNames.map((p) => [p, 0]))
+    const [scores, setScores] = usePersistedState<Record<string, number>>(
+        GameKey.Taboo,
+        'scores',
+        () => Object.fromEntries(playerNames.map((p) => [p, 0]))
     );
-    const [explainerIdx, setExplainerIdx] = useState(0);
+    const [explainerIdx, setExplainerIdx] = usePersistedState(GameKey.Taboo, 'explainerIdx', 0);
     const currentExplainer = playerNames[explainerIdx % playerNames.length];
     const otherPlayers = playerNames.filter((p) => p !== currentExplainer);
 
     // ── Round counter ──────────────────────────────────────────────────────────
-    const [roundNum, setRoundNum] = useState(1);
+    const [roundNum, setRoundNum] = usePersistedState(GameKey.Taboo, 'roundNum', 1);
 
     // ── Card ───────────────────────────────────────────────────────────────────
     const buildUsedIds = (): Set<number> => {
@@ -56,16 +59,25 @@ export const TabooGame: React.FC<TabooGameProps> = ({playerNames, onBack}) => {
         );
     };
 
-    const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(buildUsedIds);
-    const [card, setCard] = useState<TabooClassicCard>(() =>
+    const [usedCardIds, setUsedCardIds] = usePersistedState<ReadonlySet<number>>(
+        GameKey.Taboo,
+        'usedCardIds',
+        buildUsedIds,
+        {save: (s) => [...s], load: (raw) => new Set(raw as number[])}
+    );
+    const [card, setCard] = usePersistedState<TabooClassicCard>(GameKey.Taboo, 'card', () =>
         getNextTabooClassicCard(difficulty, buildUsedIds())
     );
 
     // ── Phase ─────────────────────────────────────────────────────────────────
-    const [phase, setPhase] = useState<TabooPhase>(TabooPhase.Pass);
+    const [phase, setPhase] = usePersistedState<TabooPhase>(
+        GameKey.Taboo,
+        'phase',
+        TabooPhase.Pass
+    );
 
     // ── Timer ──────────────────────────────────────────────────────────────────
-    const [timedOut, setTimedOut] = useState(false);
+    const [timedOut, setTimedOut] = usePersistedState(GameKey.Taboo, 'timedOut', false);
 
     const {
         timeLeft,
@@ -79,6 +91,14 @@ export const TabooGame: React.FC<TabooGameProps> = ({playerNames, onBack}) => {
             setPhase(TabooPhase.Verdict);
         },
     });
+
+    // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
+    usePersistedTimer(
+        GameKey.Taboo,
+        'timeLeft',
+        {timeLeft, start: startTimer, reset: resetTimer},
+        phase === TabooPhase.Playing
+    );
 
     // ── Confetti on game over ──────────────────────────────────────────────────
     useEffect(() => {

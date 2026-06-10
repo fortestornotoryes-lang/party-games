@@ -8,6 +8,8 @@ import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {CONNECT_FOUR_MODES} from "@/games/ConnectFourGame/constants.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
+import {GameKey} from '@/types/games';
 
 
 type Cell = 0 | 1 | 2;
@@ -67,19 +69,29 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
     // Literal class strings — needed for Tailwind v4 static scan
     const colClass = COLS === 9 ? 'grid-cols-9' : 'grid-cols-7';
 
-    const [board, setBoard] = useState<Cell[][]>(() => emptyBoard(ROWS, COLS));
-    const [current, setCurrent] = useState<1 | 2>(1);
-    const [win, setWin] = useState<WinResult | null>(null);
-    const [isDraw, setIsDraw] = useState(false);
-    const [lastDrop, setLastDrop] = useState<{ row: number; col: number } | null>(null);
-    const [score, setScore] = useState({1: 0, 2: 0});
+    const K = GameKey.ConnectFour;
+    const [board, setBoard] = usePersistedState<Cell[][]>(K, 'board', () => emptyBoard(ROWS, COLS));
+    const [current, setCurrent] = usePersistedState<1 | 2>(K, 'current', 1);
+    const [win, setWin] = usePersistedState<WinResult | null>(K, 'win', null);
+    const [isDraw, setIsDraw] = usePersistedState(K, 'isDraw', false);
+    const [lastDrop, setLastDrop] = usePersistedState<{ row: number; col: number } | null>(
+        K,
+        'lastDrop',
+        null
+    );
+    const [score, setScore] = usePersistedState<Record<1 | 2, number>>(K, 'score', {1: 0, 2: 0});
     const [hoverCol, setHoverCol] = useState<number | null>(null);
-    const [action, setAction] = useState<'place' | 'pop'>('place');
+    const [action, setAction] = usePersistedState<'place' | 'pop'>(K, 'action', 'place');
 
     const gameOver = !!(win || isDraw);
 
-    // Reset when mode changes (user returned to setup and changed mod)
+    // Reset when mode changes (user returned to setup and changed mode).
+    // Сравниваем с режимом, сохранённым в сессии, чтобы не сбрасывать
+    // восстановленную после перезагрузки партию.
+    const [sessionMode, setSessionMode] = usePersistedState(K, 'mode', mode);
     useEffect(() => {
+        if (sessionMode === mode) return;
+        setSessionMode(mode);
         setBoard(emptyBoard(ROWS, COLS));
         setCurrent(1);
         setWin(null);

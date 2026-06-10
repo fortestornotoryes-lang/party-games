@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {ListChecks} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
@@ -17,6 +17,7 @@ import {TabooReversePhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import type {TabooCard} from '@/constants/tabooReverseContent';
 import {getNextTabooCard, TABOO_REVERSE_CARDS, TABOO_REVERSE_MODES} from '@/constants/tabooReverseContent';
+import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
 import {useTimer} from '@/hooks/useTimer';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
@@ -42,10 +43,16 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
     }, [isTeam, playerNames]);
 
     // ── Players & scores ───────────────────────────────────────────────────────
-    const [scores, setScores] = useState<Record<string, number>>(() =>
-        Object.fromEntries(playerNames.map((p) => [p, 0]))
+    const [scores, setScores] = usePersistedState<Record<string, number>>(
+        GameKey.TabooReverse,
+        'scores',
+        () => Object.fromEntries(playerNames.map((p) => [p, 0]))
     );
-    const [explainerIdx, setExplainerIdx] = useState(0);
+    const [explainerIdx, setExplainerIdx] = usePersistedState(
+        GameKey.TabooReverse,
+        'explainerIdx',
+        0
+    );
     const currentExplainer = playerNames[explainerIdx % playerNames.length];
 
     // In team mode, only the explainer's teammates can guess
@@ -58,7 +65,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
     }, [isTeam, teams, currentExplainer, playerNames]);
 
     // ── Round counter ──────────────────────────────────────────────────────────
-    const [roundNum, setRoundNum] = useState(1);
+    const [roundNum, setRoundNum] = usePersistedState(GameKey.TabooReverse, 'roundNum', 1);
 
     // ── Card ───────────────────────────────────────────────────────────────────
     const buildUsedIds = (): Set<number> => {
@@ -72,20 +79,40 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
         );
     };
 
-    const [usedCardIds, setUsedCardIds] = useState<ReadonlySet<number>>(buildUsedIds);
-    const [card, setCard] = useState<TabooCard>(() => getNextTabooCard(difficulty, buildUsedIds()));
+    const [usedCardIds, setUsedCardIds] = usePersistedState<ReadonlySet<number>>(
+        GameKey.TabooReverse,
+        'usedCardIds',
+        buildUsedIds,
+        {save: (s) => [...s], load: (raw) => new Set(raw as number[])}
+    );
+    const [card, setCard] = usePersistedState<TabooCard>(GameKey.TabooReverse, 'card', () =>
+        getNextTabooCard(difficulty, buildUsedIds())
+    );
 
     // ── Phase ─────────────────────────────────────────────────────────────────
-    const [phase, setPhase] = useState<TabooReversePhase>(TabooReversePhase.Pass);
+    const [phase, setPhase] = usePersistedState<TabooReversePhase>(
+        GameKey.TabooReverse,
+        'phase',
+        TabooReversePhase.Pass
+    );
 
     // ── Playing state ──────────────────────────────────────────────────────────
-    const [timedOut, setTimedOut] = useState(false);
+    const [timedOut, setTimedOut] = usePersistedState(GameKey.TabooReverse, 'timedOut', false);
 
     // ── Verdict state (classic / team) ────────────────────────────────────────
-    const [usedWordIdxs, setUsedWordIdxs] = useState<Set<number>>(new Set());
+    const [usedWordIdxs, setUsedWordIdxs] = usePersistedState<Set<number>>(
+        GameKey.TabooReverse,
+        'usedWordIdxs',
+        new Set(),
+        {save: (s) => [...s], load: (raw) => new Set(raw as number[])}
+    );
 
     // ── Blitz state ───────────────────────────────────────────────────────────
-    const [blitzResults, setBlitzResults] = useState<BlitzResult[]>([]);
+    const [blitzResults, setBlitzResults] = usePersistedState<BlitzResult[]>(
+        GameKey.TabooReverse,
+        'blitzResults',
+        []
+    );
 
     // ── Card-cycling helper (blitz) ────────────────────────────────────────────
     // Marks the card as used and loads the next one.
@@ -122,6 +149,14 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
         initialTime: cardTimer,
         onTimeUp: handleTimeUp,
     });
+
+    // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
+    usePersistedTimer(
+        GameKey.TabooReverse,
+        'timeLeft',
+        {timeLeft, start: startTimer, reset: resetTimer},
+        phase === TabooReversePhase.Playing
+    );
 
     // ── Confetti on game over ──────────────────────────────────────────────────
     useEffect(() => {

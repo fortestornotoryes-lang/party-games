@@ -22,6 +22,7 @@ import {
     TruthOrDareGame,
     WavelengthGame,
 } from '../registry/GameRegistry';
+import {sessionService} from '../services/sessionService';
 import {storageService} from '../services/storageService';
 import {GameKey} from '../types/games';
 
@@ -71,6 +72,10 @@ export function GamePlayRoute() {
     if (playerNames.length < config.minPlayers) {
         return <Navigate to={`/game/${currentGameKey}/setup`} replace/>;
     }
+
+    // Если сохранённая сессия (восстановление после перезагрузки) была начата
+    // с другим составом игроков — сбрасываем её до маунта игры. Идемпотентно.
+    sessionService.syncPlayers(currentGameKey, playerNames);
 
     const onBack = () => void navigate('/');
 

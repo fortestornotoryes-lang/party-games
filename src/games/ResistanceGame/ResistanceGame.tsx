@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {Activity, ArrowRight, CheckCircle2, Fingerprint, RotateCcw, Shield, Skull, XCircle,} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 
@@ -11,9 +11,11 @@ import {ResistancePhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import type {Player} from '@/types.ts';
-import {initResistance} from '@/utils/gameLogic.ts';
 import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
+import type {Player} from '@/types.ts';
+import {GameKey} from '@/types/games';
+import {initResistance} from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {
     playerNames: string[];
@@ -21,15 +23,28 @@ interface ResistanceGameProps {
 }
 
 export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBack}) => {
-    const [players] = useState<Player[]>(() => initResistance(playerNames).players);
-    const [phase, setPhase] = useState<ResistancePhase>(ResistancePhase.Distributing);
-    const [missionIndex, setMissionIndex] = useState(0);
-    const [resistanceScore, setResistanceScore] = useState(0);
-    const [spiesScore, setSpiesScore] = useState(0);
-    const [leaderIndex, setLeaderIndex] = useState(0);
-    const [selectedTeam, setSelectedTeam] = useState<string[]>([]);
-    const [missionVotes, setMissionVotes] = useState<boolean[]>([]);
-    const [winner, setWinner] = useState<'resistance' | 'spies' | null>(null);
+    const K = GameKey.Resistance;
+    const [players] = usePersistedState<Player[]>(
+        K,
+        'players',
+        () => initResistance(playerNames).players
+    );
+    const [phase, setPhase] = usePersistedState<ResistancePhase>(
+        K,
+        'phase',
+        ResistancePhase.Distributing
+    );
+    const [missionIndex, setMissionIndex] = usePersistedState(K, 'missionIndex', 0);
+    const [resistanceScore, setResistanceScore] = usePersistedState(K, 'resistanceScore', 0);
+    const [spiesScore, setSpiesScore] = usePersistedState(K, 'spiesScore', 0);
+    const [leaderIndex, setLeaderIndex] = usePersistedState(K, 'leaderIndex', 0);
+    const [selectedTeam, setSelectedTeam] = usePersistedState<string[]>(K, 'selectedTeam', []);
+    const [missionVotes, setMissionVotes] = usePersistedState<boolean[]>(K, 'missionVotes', []);
+    const [winner, setWinner] = usePersistedState<'resistance' | 'spies' | null>(
+        K,
+        'winner',
+        null
+    );
 
     useEffect(() => {
         if (phase === ResistancePhase.GameOver && winner) {

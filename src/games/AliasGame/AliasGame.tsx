@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {Brain} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useAliasContent} from './model/useAliasContent';
 import {GameOverPhase} from './phases/GameOverPhase';
@@ -14,6 +14,7 @@ import {AliasPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from "@/games/AliasGame/constants.ts";
+import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -37,11 +38,19 @@ const TEAMS_CONFIG = [
 export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
     const {difficulty} = useGameSettings();
-    const [teams, setTeams] = useState<Team[]>([]);
-    const [currentTeamIdx, setCurrentTeamIdx] = useState(0);
-    const [phase, setPhase] = useState<AliasPhase>(AliasPhase.Start);
-    const [currentWord, setCurrentWord] = useState('');
-    const [roundScore, setRoundScore] = useState(0);
+    const [teams, setTeams] = usePersistedState<Team[]>(GameKey.Alias, 'teams', []);
+    const [currentTeamIdx, setCurrentTeamIdx] = usePersistedState(
+        GameKey.Alias,
+        'currentTeamIdx',
+        0
+    );
+    const [phase, setPhase] = usePersistedState<AliasPhase>(
+        GameKey.Alias,
+        'phase',
+        AliasPhase.Start
+    );
+    const [currentWord, setCurrentWord] = usePersistedState(GameKey.Alias, 'currentWord', '');
+    const [roundScore, setRoundScore] = usePersistedState(GameKey.Alias, 'roundScore', 0);
 
     const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
     const {
@@ -55,7 +64,17 @@ export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
         },
     });
 
+    // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
+    usePersistedTimer(
+        GameKey.Alias,
+        'timeLeft',
+        {timeLeft, start: startTimer, reset: resetTimer},
+        phase === AliasPhase.Playing
+    );
+
     useEffect(() => {
+        // Команды уже восстановлены из сессии — не перетасовываем заново.
+        if (teams.length > 0) return;
         const shuffled = shuffle(playerNames);
         const mid = Math.ceil(shuffled.length / 2);
         setTeams([
@@ -72,6 +91,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
                 score: 0,
             },
         ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playerNames]);
 
     const nextWord = () => {

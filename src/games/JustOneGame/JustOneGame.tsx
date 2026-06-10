@@ -12,10 +12,12 @@ import {JustOnePhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
+import {GameKey} from '@/types/games';
 
 interface JustOneGameProps {
     playerNames: string[];
@@ -24,14 +26,32 @@ interface JustOneGameProps {
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) => {
     const {difficulty} = useGameSettings();
-    const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(playerNames);
+    const guesserIdxState = usePersistedState(GameKey.JustOne, 'guesserIdx', 0);
+    const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(
+        playerNames,
+        guesserIdxState
+    );
 
-    const [word, setWord] = useState('');
-    const [hints, setHints] = useState<Record<string, string>>({});
-    const [phase, setPhase] = useState<JustOnePhase>(JustOnePhase.Pass);
-    const [guess, setGuess] = useState('');
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [visibleHints, setVisibleHints] = useState<string[]>([]);
+    const [word, setWord] = usePersistedState(GameKey.JustOne, 'word', () =>
+        useJustOneContent(difficulty)
+    );
+    const [hints, setHints] = usePersistedState<Record<string, string>>(
+        GameKey.JustOne,
+        'hints',
+        {}
+    );
+    const [phase, setPhase] = usePersistedState<JustOnePhase>(
+        GameKey.JustOne,
+        'phase',
+        JustOnePhase.Pass
+    );
+    const [guess, setGuess] = usePersistedState(GameKey.JustOne, 'guess', '');
+    const [isCorrect, setIsCorrect] = usePersistedState(GameKey.JustOne, 'isCorrect', false);
+    const [visibleHints, setVisibleHints] = usePersistedState<string[]>(
+        GameKey.JustOne,
+        'visibleHints',
+        []
+    );
 
     // Храним индекс игрока с предыдущего рендера
     const [prevGuesserIdx, setPrevGuesserIdx] = useState(guesserIdx);

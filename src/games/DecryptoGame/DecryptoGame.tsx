@@ -1,6 +1,6 @@
 import {AlertOctagon, Key, KeyRound, Trophy, Users} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
@@ -19,8 +19,10 @@ import {DecryptoPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
+import {GameKey} from '@/types/games';
 
 interface DecryptoGameProps {
     playerNames: string[];
@@ -32,21 +34,33 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     const {difficulty, mode} = useGameSettings();
     const wordCount = mode === DECRYPTO_MODES.EXTENDED_5 ? 5 : mode === DECRYPTO_MODES.EXTENDED_6 ? 6 : 4;
 
-    const [phase, setPhase] = useState<DecryptoPhase>(DecryptoPhase.Setup);
-    const [round, setRound] = useState(1);
-    const [activeTeam, setActiveTeam] = useState<TeamColor>('red');
+    const K = GameKey.Decrypto;
+    const [phase, setPhase] = usePersistedState<DecryptoPhase>(K, 'phase', DecryptoPhase.Setup);
+    const [round, setRound] = usePersistedState(K, 'round', 1);
+    const [activeTeam, setActiveTeam] = usePersistedState<TeamColor>(K, 'activeTeam', 'red');
 
-    const [redState, setRedState] = useState<TeamState | null>(null);
-    const [blueState, setBlueState] = useState<TeamState | null>(null);
+    const [redState, setRedState] = usePersistedState<TeamState | null>(K, 'redState', null);
+    const [blueState, setBlueState] = usePersistedState<TeamState | null>(K, 'blueState', null);
 
-    const [currentCode, setCurrentCode] = useState<number[]>([]);
-    const [clues, setClues] = useState<string[]>(['', '', '']);
-    const [interceptGuess, setInterceptGuess] = useState<(number | '')[]>(['', '', '']);
-    const [teamGuess, setTeamGuess] = useState<(number | '')[]>(['', '', '']);
-    const [winner, setWinner] = useState<TeamColor | null>(null);
+    const [currentCode, setCurrentCode] = usePersistedState<number[]>(K, 'currentCode', []);
+    const [clues, setClues] = usePersistedState<string[]>(K, 'clues', ['', '', '']);
+    const [interceptGuess, setInterceptGuess] = usePersistedState<(number | '')[]>(
+        K,
+        'interceptGuess',
+        ['', '', '']
+    );
+    const [teamGuess, setTeamGuess] = usePersistedState<(number | '')[]>(K, 'teamGuess', [
+        '',
+        '',
+        '',
+    ]);
+    const [winner, setWinner] = usePersistedState<TeamColor | null>(K, 'winner', null);
 
     useEffect(() => {
+        // Состояние команд уже восстановлено из сессии — не пересоздаём партию.
+        if (redState !== null) return;
         initGame();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playerNames]);
 
     const generateCode = (): number[] => {
@@ -93,11 +107,11 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
     };
 
     const continueAfterReveal = () => {
-        const cur: TeamState = {
-            ...(activeTeam === 'red' ? redState : blueState),
-            history: [...(activeTeam === 'red' ? redState : blueState).history],
-        };
-        const env: TeamState = {...(activeTeam === 'red' ? blueState : redState)};
+        if (!redState || !blueState) return;
+        const curBase = activeTeam === 'red' ? redState : blueState;
+        const envBase = activeTeam === 'red' ? blueState : redState;
+        const cur: TeamState = {...curBase, history: [...curBase.history]};
+        const env: TeamState = {...envBase};
 
         const intercepted = round > 1 && (interceptGuess as number[]).join('') === currentCode.join('');
         const failed = (teamGuess as number[]).join('') !== currentCode.join('');

@@ -17,8 +17,11 @@ import {PassPhoneCard} from '@/components/PassPhoneCard';
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 import {useCountdown} from '@/hooks/useCountdown.ts';
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
+import {sessionService} from '@/services/sessionService';
 import {storageService} from '@/services/storageService.ts';
+import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random.ts';
 
 interface TelestrationsGameProps {
@@ -32,23 +35,43 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                                                         onBack,
                                                                         initialDifficulty,
                                                                     }) => {
-    const [shuffledPlayers, setShuffledPlayers] = useState(() => shuffle(playerNames));
-    const [steps, setSteps] = useState<Step[]>([]);
-    const [currentRound, setCurrentRound] = useState(0);
+    const K = GameKey.Telestrations;
+    const [shuffledPlayers, setShuffledPlayers] = usePersistedState(K, 'shuffledPlayers', () =>
+        shuffle(playerNames)
+    );
+    const [steps, setSteps] = usePersistedState<Step[]>(K, 'steps', []);
+    const [currentRound, setCurrentRound] = usePersistedState(K, 'currentRound', 0);
 
     const [initState] = useState(() => {
         if (!initialDifficulty) return null;
+        // Слово уже восстановлено из сессии — не тратим новое из пула.
+        if (sessionService.getField(K, 'initialWord') !== undefined) return null;
         const word = useTelestrationsContent(initialDifficulty);
         return {word, difficulty: initialDifficulty};
     });
 
-    const [phase, setPhase] = useState<TelestrationsPhase>(
-        initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup
+    const [phase, setPhase] = usePersistedState<TelestrationsPhase>(
+        K,
+        'phase',
+        initState ? TelestrationsPhase.Start : TelestrationsPhase.Setup,
+        {
+            save: (v) => v,
+            // Перезагрузка посреди хода: рисунок на холсте не сохранить,
+            // поэтому возвращаемся на экран «передай телефон» — ход начнётся заново.
+            load: (raw) =>
+                raw === TelestrationsPhase.Action
+                    ? TelestrationsPhase.Transition
+                    : (raw as TelestrationsPhase),
+        }
     );
-    const [difficulty, setDifficulty] = useState<Difficulty>(initState?.difficulty ?? 'medium');
-    const [initialWord, setInitialWord] = useState(initState?.word ?? '');
-    const [currentWord, setCurrentWord] = useState(initState?.word ?? '');
-    const [wordRevealed, setWordRevealed] = useState(false);
+    const [difficulty, setDifficulty] = usePersistedState<Difficulty>(
+        K,
+        'difficulty',
+        initState?.difficulty ?? 'medium'
+    );
+    const [initialWord, setInitialWord] = usePersistedState(K, 'initialWord', initState?.word ?? '');
+    const [currentWord, setCurrentWord] = usePersistedState(K, 'currentWord', initState?.word ?? '');
+    const [wordRevealed, setWordRevealed] = usePersistedState(K, 'wordRevealed', false);
     const [guess, setGuess] = useState('');
 
     const currentPlayer = shuffledPlayers[currentRound % shuffledPlayers.length];

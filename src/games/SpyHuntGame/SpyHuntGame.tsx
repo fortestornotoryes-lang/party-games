@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {Skull} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {RoleDistribution} from './components/RoleDistribution';
 import {initSpyHunt} from './model/initSpyHunt';
@@ -12,6 +12,7 @@ import {SpyHuntPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
+import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
 import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -19,6 +20,7 @@ import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 import type {Player} from '@/types';
+import {GameKey} from '@/types/games';
 
 interface GameProps {
     playerNames: string[];
@@ -28,20 +30,35 @@ interface GameProps {
 export const SpyHuntGame: React.FC<GameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
     const {difficulty, mode} = useGameSettings();
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [location, setLocation] = useState('');
-    const [phase, setPhase] = useState<SpyHuntPhase>(SpyHuntPhase.Distributing);
+    const [players, setPlayers] = usePersistedState<Player[]>(GameKey.Spy, 'players', []);
+    const [location, setLocation] = usePersistedState(GameKey.Spy, 'location', '');
+    const [phase, setPhase] = usePersistedState<SpyHuntPhase>(
+        GameKey.Spy,
+        'phase',
+        SpyHuntPhase.Distributing
+    );
 
     const gameDuration =
         GAME_DURATION_BY_DIFFICULTY[
         (difficulty) ?? 'medium'
             ] ?? 480;
-    const {timeLeft, start: startTimer} = useTimer({initialTime: gameDuration});
+    const {timeLeft, start: startTimer, reset: resetTimer} = useTimer({initialTime: gameDuration});
+
+    // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
+    usePersistedTimer(
+        GameKey.Spy,
+        'timeLeft',
+        {timeLeft, start: startTimer, reset: resetTimer},
+        phase === SpyHuntPhase.Playing
+    );
 
     useEffect(() => {
+        // Роли уже восстановлены из сессии — не раздаём заново.
+        if (players.length > 0) return;
         const {players: p, location: loc} = initSpyHunt(playerNames, difficulty, mode);
         setPlayers(p);
         setLocation(loc);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playerNames, difficulty, mode]);
 
     useEffect(() => {

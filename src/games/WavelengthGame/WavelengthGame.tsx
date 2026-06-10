@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 import {Radio} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useWavelengthContent} from './model/useWavelengthContent';
 import {CluePhase} from './phases/CluePhase';
@@ -12,10 +12,12 @@ import {WavelengthPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
+import {GameKey} from '@/types/games';
 import {randomInt} from '@/utils/random';
 
 interface WavelengthGameProps {
@@ -25,11 +27,22 @@ interface WavelengthGameProps {
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBack}) => {
     const {difficulty} = useGameSettings();
-    const [phase, setPhase] = useState<WavelengthPhase>(WavelengthPhase.Pass);
-    const [currentPair, setCurrentPair] = useState<string[]>(() => useWavelengthContent(difficulty));
-    const [targetValue, setTargetValue] = useState(() => randomInt(5, 94));
-    const [guessValue, setGuessValue] = useState(50);
-    const {current: psychic, next: nextPsychic} = usePlayerCycle(playerNames);
+    const [phase, setPhase] = usePersistedState<WavelengthPhase>(
+        GameKey.Wavelength,
+        'phase',
+        WavelengthPhase.Pass
+    );
+    const [currentPair, setCurrentPair] = usePersistedState<string[]>(
+        GameKey.Wavelength,
+        'currentPair',
+        () => useWavelengthContent(difficulty)
+    );
+    const [targetValue, setTargetValue] = usePersistedState(GameKey.Wavelength, 'targetValue', () =>
+        randomInt(5, 94)
+    );
+    const [guessValue, setGuessValue] = usePersistedState(GameKey.Wavelength, 'guessValue', 50);
+    const psychicIdxState = usePersistedState(GameKey.Wavelength, 'psychicIdx', 0);
+    const {current: psychic, next: nextPsychic} = usePlayerCycle(playerNames, psychicIdxState);
 
     const handleNextRound = () => {
         nextPsychic();
