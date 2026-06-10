@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react';
 
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-import {contentService} from '../../services/contentService';
 import {randomInt, shuffle} from '../../utils/random';
 
 import {CaptainCluesPhase} from './components/CaptainCluesPhase';
@@ -13,6 +12,7 @@ import {PassScreen} from './components/PassScreen';
 import {ScoreRow} from './components/ScoreRow';
 import {TeamGuessPhase} from './components/TeamGuessPhase';
 import {tBadge, tBg, teamLabel, tText} from './helpers';
+import {useDecryptoContent} from './model/useDecryptoContent';
 import type {TeamColor, TeamState} from './types';
 import {DecryptoPhase} from './types';
 
@@ -58,7 +58,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
         const shuffled = shuffle([...playerNames]);
         const half = Math.ceil(shuffled.length / 2);
         setRedState({
-            words: contentService.getDecryptoWords(difficulty, wordCount),
+            words: useDecryptoContent(difficulty, wordCount),
             players: shuffled.slice(0, half),
             interceptions: 0,
             fails: 0,
@@ -66,7 +66,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({playerNames, onBack})
             captainIndex: randomInt(0, half - 1),
         });
         setBlueState({
-            words: contentService.getDecryptoWords(difficulty, wordCount),
+            words: useDecryptoContent(difficulty, wordCount),
             players: shuffled.slice(half),
             interceptions: 0,
             fails: 0,

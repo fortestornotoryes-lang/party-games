@@ -4,6 +4,7 @@ import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
 import {RoleDistribution} from './components/RoleDistribution';
+import {initSpyHunt} from './model/initSpyHunt';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {RevealPhase} from './phases/RevealPhase';
 import {SpyHuntPhase} from './types';
@@ -18,7 +19,6 @@ import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 import type {Player} from '@/types';
-import {initSpyHunt} from '@/utils/gameLogic';
 
 interface GameProps {
     playerNames: string[];

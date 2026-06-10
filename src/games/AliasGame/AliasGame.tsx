@@ -3,6 +3,7 @@ import {Brain} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
+import {useAliasContent} from './model/useAliasContent';
 import {GameOverPhase} from './phases/GameOverPhase';
 import {PlayingPhase} from './phases/PlayingPhase';
 import {RoundEndPhase} from './phases/RoundEndPhase';
@@ -17,7 +18,6 @@ import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {contentService} from '@/services/contentService';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 import {GameKey} from '@/types/games';
@@ -75,7 +75,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
     }, [playerNames]);
 
     const nextWord = () => {
-        const available = contentService.getAliasWords(difficulty);
+        const available = useAliasContent(difficulty);
         const word = pickRandom(available);
         setCurrentWord(word);
         storageService.markWordAsUsed(GameKey.Alias, word);

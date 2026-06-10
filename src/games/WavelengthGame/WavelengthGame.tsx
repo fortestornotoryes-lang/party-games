@@ -3,6 +3,7 @@ import {Radio} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
+import {useWavelengthContent} from './model/useWavelengthContent';
 import {CluePhase} from './phases/CluePhase';
 import {GuessingPhase} from './phases/GuessingPhase';
 import {PassPhase} from './phases/PassPhase';
@@ -13,7 +14,6 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {contentService} from '@/services/contentService';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 import {randomInt} from '@/utils/random';
@@ -26,14 +26,14 @@ interface WavelengthGameProps {
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBack}) => {
     const {difficulty} = useGameSettings();
     const [phase, setPhase] = useState<WavelengthPhase>(WavelengthPhase.Pass);
-    const [currentPair, setCurrentPair] = useState<string[]>(() => contentService.getWavelengthPair(difficulty));
+    const [currentPair, setCurrentPair] = useState<string[]>(() => useWavelengthContent(difficulty));
     const [targetValue, setTargetValue] = useState(() => randomInt(5, 94));
     const [guessValue, setGuessValue] = useState(50);
     const {current: psychic, next: nextPsychic} = usePlayerCycle(playerNames);
 
     const handleNextRound = () => {
         nextPsychic();
-        setCurrentPair(contentService.getWavelengthPair(difficulty));
+        setCurrentPair(useWavelengthContent(difficulty));
         setTargetValue(randomInt(5, 94));
         setGuessValue(50);
         setPhase(WavelengthPhase.Pass);

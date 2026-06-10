@@ -3,9 +3,9 @@ import {motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
 import {useGameSettings} from '../../../contexts/GameSettingsContext';
-import {contentService} from '../../../services/contentService';
 import {rgba} from '../../../theme/colors';
 import type {Player} from '../../../types';
+import {useFakeArtistContent} from '../model/useFakeArtistContent';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
 
@@ -21,7 +21,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
 
     useEffect(() => {
         const diff = (difficulty) ?? 'easy';
-        const item = contentService.getFakeArtistWord(diff);
+        const item = useFakeArtistContent(diff);
         setWord(item.word);
         setCategory(item.category);
     }, [difficulty]);

@@ -7,6 +7,7 @@ import {TelestrationsGallery} from './components/TelestrationsGallery';
 import {TelestrationsGuess} from './components/TelestrationsGuess';
 import {TelestrationsSetup} from './components/TelestrationsSetup';
 import {TelestrationsStart} from './components/TelestrationsStart';
+import {useTelestrationsContent} from './model/useTelestrationsContent';
 import type {Step, StepType} from './types';
 import {STEP_TYPE, TelestrationsPhase} from './types';
 
@@ -16,7 +17,6 @@ import {PassPhoneCard} from '@/components/PassPhoneCard';
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 import {useCountdown} from '@/hooks/useCountdown.ts';
-import {contentService} from '@/services/contentService.ts';
 import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
 import {storageService} from '@/services/storageService.ts';
 import {shuffle} from '@/utils/random.ts';
@@ -38,7 +38,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
 
     const [initState] = useState(() => {
         if (!initialDifficulty) return null;
-        const word = contentService.getTelestrationsWord(initialDifficulty);
+        const word = useTelestrationsContent(initialDifficulty);
         return {word, difficulty: initialDifficulty};
     });
 
@@ -89,7 +89,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     );
 
     const handleStartGame = () => {
-        const word = contentService.getTelestrationsWord(difficulty);
+        const word = useTelestrationsContent(difficulty);
         setInitialWord(word);
         setCurrentWord(word);
         setShuffledPlayers(shuffle(playerNames));

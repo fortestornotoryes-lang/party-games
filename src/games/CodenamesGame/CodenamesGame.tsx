@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 
+import {useCodenamesContent} from './model/useCodenamesContent';
 import {CaptainPhase} from './phases/CaptainPhase';
 import {GameOverPhase} from './phases/GameOverPhase';
 import {SetupPhase} from './phases/SetupPhase';
@@ -16,7 +17,6 @@ import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
 import {CODENAMES_MODES} from '@/constants/codenamesContent';
 import {useTranslation} from '@/i18n';
-import {contentService} from '@/services/contentService.ts';
 import {shuffle} from '@/utils/random.ts';
 
 interface CodenamesGameProps {
@@ -56,7 +56,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
     }, [playerNames]);
 
     const initBoard = () => {
-        const shuffledWords = contentService.getCodenamesWords(difficulty);
+        const shuffledWords = useCodenamesContent(difficulty);
         let colorAssignment: CardColor[];
 
         if (activeMode === CODENAMES_MODES.DEEP_COVER) {

@@ -3,6 +3,7 @@ import {Lightbulb} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {useJustOneContent} from './model/useJustOneContent';
 import {GuessingPhase} from './phases/GuessingPhase';
 import {HintingPhase} from './phases/HintingPhase';
 import {PassPhase} from './phases/PassPhase';
@@ -13,7 +14,6 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {contentService} from '@/services/contentService';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 
@@ -39,7 +39,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) =
     // Если индекс изменился, сбрасываем стейт прямо во время рендеринга
     if (guesserIdx !== prevGuesserIdx) {
         setPrevGuesserIdx(guesserIdx);
-        setWord(contentService.getJustOneWord(difficulty));
+        setWord(useJustOneContent(difficulty));
         setHints({});
         setGuess('');
         setPhase(JustOnePhase.Pass);
