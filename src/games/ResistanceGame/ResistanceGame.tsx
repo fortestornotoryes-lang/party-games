@@ -13,8 +13,8 @@ import {PassPhoneCard} from '@/components/PassPhoneCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
 import {usePersistedState} from '@/hooks/usePersistedState';
-import type {Player} from '@/types.ts';
 import {GameKey} from '@/types/games';
+import type {Player} from '@/types.ts';
 import {initResistance} from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {

@@ -129,11 +129,11 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                     </div>
                     <div className="text-micro text-white/30">Бункер</div>
                 </div>
-                {report && (
+                {!!report && (
                     <span className="text-micro text-white/25 tabular-nums">
                         {report.durationMs} мс
                     </span>
-                )}
+                  )}
             </div>
 
             {/* Controls */}
@@ -200,7 +200,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
                         </motion.div>
                     )}
 
-                    {report && (
+                    {!!report && (
                         <motion.div
                             key="results"
                             initial={{opacity: 0, y: 8}}
@@ -430,7 +430,7 @@ export const BunkerBalanceView: React.FC<BunkerBalanceViewProps> = ({onClose}) =
 
                             <div className="h-6"/>
                         </motion.div>
-                    )}
+                      )}
                 </AnimatePresence>
             </div>
         </motion.div>

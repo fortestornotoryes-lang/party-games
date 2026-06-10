@@ -86,7 +86,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
                     initial={{opacity: 0}}
                     animate={{opacity: 1}}
                     transition={{delay: 0.6}}
-                    onClick={() => setShowBalance(true)}
+                    onClick={() => { setShowBalance(true); }}
                     className="mt-6 mx-auto flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95"
                     style={{
                         background: 'rgba(255,138,31,0.07)',
@@ -101,9 +101,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
 
             {/* Balance view overlay */}
             <AnimatePresence>
-                {showBalance && (
-                    <BunkerBalanceView key="balance" onClose={() => setShowBalance(false)}/>
-                )}
+                {!!showBalance && <BunkerBalanceView key="balance" onClose={() => { setShowBalance(false); }}/>}
             </AnimatePresence>
 
             {/* Description bottom sheet */}
