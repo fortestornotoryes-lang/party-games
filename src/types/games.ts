@@ -19,6 +19,7 @@ export enum GameKey {
     Taboo = 'taboo',
     Bunker = 'bunker',
     Millionaire = 'millionaire',
+    Corridor = 'corridor',
 }
 
 export interface InstructionItem {

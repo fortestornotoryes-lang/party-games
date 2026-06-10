@@ -161,7 +161,10 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         {value: 'hard', label: 'ПРОФИ', sublabel: getDiffSublabel('hard'), color: 'red'},
     ];
 
-    const hideDifficulty = currentGameId === GameKey.Millionaire;
+    const hideDifficulty =
+        currentGameId === GameKey.Millionaire ||
+        currentGameId === GameKey.Corridor ||
+        currentGameId === GameKey.ConnectFour;
 
     return (
         <div className="space-y-12 mb-10">

@@ -13,6 +13,7 @@ import {
     BunkerGame,
     CodenamesGame,
     ConnectFourGame,
+    CorridorGame,
     DecryptoGame,
     FakeArtistGame,
     GAMES_REGISTRY,
@@ -130,6 +131,8 @@ function AppContent() {
                             return <BunkerGame playerNames={playerNames} onBack={reset} onRestart={() => { setStatus(GameStatus.Setup); }}/>;
                         case GameStatus.MillionairePlaying:
                             return <MillionaireGame playerNames={playerNames} onBack={reset}/>;
+                        case GameStatus.CorridorPlaying:
+                            return <CorridorGame playerNames={playerNames} onBack={reset}/>;
 
                         case GameStatus.SpyHuntPlaying:
                             return <SpyHuntGame playerNames={playerNames} onBack={reset}/>;

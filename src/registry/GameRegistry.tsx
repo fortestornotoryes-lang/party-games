@@ -12,6 +12,7 @@ import {
     Palette,
     Pencil,
     Radio,
+    Route,
     Scale,
     Shield,
     Siren,
@@ -97,6 +98,9 @@ const BunkerGame = lazy(() =>
 );
 const MillionaireGame = lazy(() =>
     import('../games/MillionaireGame/MillionaireGame').then((m) => ({default: m.MillionaireGame}))
+);
+const CorridorGame = lazy(() =>
+    import('../games/CorridorGame/CorridorGame').then((m) => ({default: m.CorridorGame}))
 );
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
@@ -414,6 +418,20 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         ],
     },
 
+    [GameKey.Corridor]: {
+        id: GameKey.Corridor,
+        title: 'КОРИДОР',
+        subtitle: 'Дойди первым до другой стороны',
+        icon: Route,
+        theme: 'teal',
+        placeholder: 'Игрок',
+        players: '2',
+        description:
+            'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
+        minPlayers: 2,
+        setupStatus: GameStatus.CorridorPlaying,
+    },
+
     [GameKey.Millionaire]: {
         id: GameKey.Millionaire,
         title: 'МИЛЛИОНЕР',
@@ -446,4 +464,5 @@ export {
     TabooGame,
     BunkerGame,
     MillionaireGame,
+    CorridorGame,
 };
