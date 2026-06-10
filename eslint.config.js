@@ -58,6 +58,7 @@ export default tseslint.config(
             'no-empty': 'warn',
             '@typescript-eslint/no-unnecessary-type-parameters': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'warn',
+            '@typescript-eslint/no-confusing-void-expression': 'warn',
 
 
             // Code Organization & Quality

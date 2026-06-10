@@ -11,6 +11,7 @@ import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {DIFFICULTY} from '@/types';
 
 interface VotingPhaseProps {
     characters: BunkerCharacter[];
@@ -137,7 +138,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                     const revealed = Array.from({length: totalRounds}, (_, i) => i + 1)
                         .map((r) => getRevealedTrait(char, r))
                         .filter(Boolean) as { label: string; entry: { emoji: string; name: string } }[];
-                    const contrib = difficulty !== 'hard' ? getPlayerResourceContribution(char) : null;
+                    const contrib = difficulty !== DIFFICULTY.HARD ? getPlayerResourceContribution(char) : null;
 
                     return (
                         <motion.button

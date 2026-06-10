@@ -5,8 +5,8 @@ import React from 'react';
 
 import {contentService} from '../services/contentService';
 import {getTheme} from '../theme/colors';
-import type {Difficulty, GameMode, GameModeOption} from '../types';
-import {GameKey} from '../types/games';
+import {DIFFICULTY, type Difficulty, type GameModeOption} from '../types';
+import {GameKey, type GameMode} from '../types/games';
 
 import {DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 import {ALIAS_DIFFICULTY_CONFIG} from "@/games/AliasGame/constants.ts";
@@ -88,8 +88,8 @@ interface UniversalGameSettingsProps {
     difficulty: Difficulty;
     setDifficulty: (d: Difficulty) => void;
     currentGameId?: GameKey;
-    mode?: GameMode;
-    setMode?: (m: GameMode) => void;
+    mode?: GameMode['id'];
+    setMode?: (m: GameMode['id']) => void;
     rounds?: number;
     setRounds?: (r: number) => void;
     timerSeconds?: number;
@@ -156,9 +156,9 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
     };
 
     const difficultyOptions: SettingOption[] = [
-        {value: 'easy', label: 'ЛЕГКО', sublabel: getDiffSublabel('easy'), color: 'green'},
-        {value: 'medium', label: 'НОРМА', sublabel: getDiffSublabel('medium'), color: 'sky'},
-        {value: 'hard', label: 'ПРОФИ', sublabel: getDiffSublabel('hard'), color: 'red'},
+        {value: DIFFICULTY.EASY, label: 'ЛЕГКО', sublabel: getDiffSublabel(DIFFICULTY.EASY), color: 'green'},
+        {value: DIFFICULTY.MEDIUM, label: 'НОРМА', sublabel: getDiffSublabel(DIFFICULTY.MEDIUM), color: 'sky'},
+        {value: DIFFICULTY.HARD, label: 'ПРОФИ', sublabel: getDiffSublabel(DIFFICULTY.HARD), color: 'red'},
     ];
 
     const hideDifficulty =

@@ -34,6 +34,9 @@ export interface GameMode {
     readonly icon: LucideIcon;
 }
 
+// Общий для всех игр id режима по умолчанию
+export const CLASSIC_MODE_ID = 'classic';
+
 export interface GameMetadata {
     readonly id: GameKey;
     readonly title: string;

@@ -1,6 +1,6 @@
 import type {LocationInfo} from "@/constants/spyHuntContent.ts";
 import { LOCATIONS_DATA} from "@/constants/spyHuntContent.ts";
-import type {Difficulty} from "@/types.ts";
+import {DIFFICULTY, type Difficulty} from "@/types.ts";
 
 export const SPY_HUNT_ROLE_IDS = {
     SPY: 'Шпион',
@@ -14,9 +14,9 @@ export const SPY_HUNT_MODES = {
 } as const;
 export const LOCATIONS: readonly string[] = LOCATIONS_DATA.map((l) => l.name);
 export const LOCATIONS_BY_DIFFICULTY: Record<Difficulty, readonly LocationInfo[]> = {
-    easy: LOCATIONS_DATA.filter((l) => l.difficulty === 'easy'),
-    medium: LOCATIONS_DATA.filter((l) => l.difficulty === 'medium'),
-    hard: LOCATIONS_DATA.filter((l) => l.difficulty === 'hard'),
+    easy: LOCATIONS_DATA.filter((l) => l.difficulty === DIFFICULTY.EASY),
+    medium: LOCATIONS_DATA.filter((l) => l.difficulty === DIFFICULTY.MEDIUM),
+    hard: LOCATIONS_DATA.filter((l) => l.difficulty === DIFFICULTY.HARD),
 } as const;
 export const GAME_DURATION_BY_DIFFICULTY: Record<Difficulty, number> = {
     easy: 600,

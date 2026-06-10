@@ -19,7 +19,7 @@ import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
-import type {Player} from '@/types';
+import {DIFFICULTY, type Player} from '@/types';
 import {GameKey} from '@/types/games';
 
 interface GameProps {
@@ -40,7 +40,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({playerNames, onBack}) => {
 
     const gameDuration =
         GAME_DURATION_BY_DIFFICULTY[
-        (difficulty) ?? 'medium'
+        (difficulty) ?? DIFFICULTY.MEDIUM
             ] ?? 480;
     const {timeLeft, start: startTimer, reset: resetTimer} = useTimer({initialTime: gameDuration});
 

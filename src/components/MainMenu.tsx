@@ -2,11 +2,12 @@ import {BarChart3, Users, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
-import {BunkerBalanceView} from '../debug/BunkerBalanceView';
 import {useGameSettings} from '../contexts/GameSettingsContext';
+import {BunkerBalanceView} from '../debug/BunkerBalanceView';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
 import {contentService} from '../services/contentService';
 import {getTheme} from '../theme/colors';
+import {DIFFICULTY} from '../types';
 import type {GameKey} from '../types/games';
 
 import {GameMenuCard} from './GameMenuCard';
@@ -20,14 +21,14 @@ const GAMES = Object.values(GAMES_REGISTRY);
 export const MainMenu: React.FC<MainMenuProps> = ({onSelectGame}) => {
     const {setCurrentGameId} = useGameSettings();
     const [descriptionGameId, setDescriptionGameId] = useState<GameKey | null>(null);
-    const [showBalance, setShowBalance] = useState(false);
+    const [showBalance, setShowBalance] = useState<boolean>(false);
 
     useEffect(() => {
         setCurrentGameId(null);
     }, []);
 
     const getGameStats = (gameId: GameKey) => {
-        const stats = contentService.getWordStats(gameId, 'medium');
+        const stats = contentService.getWordStats(gameId, DIFFICULTY.MEDIUM);
         return stats.total > 0 ? stats : null;
     };
 

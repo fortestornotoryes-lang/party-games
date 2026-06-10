@@ -1,7 +1,9 @@
-export enum CorridorPhase {
-    Playing = 'playing',
-    GameOver = 'game_over',
-}
+export const CorridorPhase = {
+    Playing: 'playing',
+    GameOver: 'game_over',
+} as const;
+
+export type CorridorPhase = (typeof CorridorPhase)[keyof typeof CorridorPhase];
 
 export interface Pos {
     row: number;
@@ -10,4 +12,10 @@ export interface Pos {
 
 export type WallGrid = (0 | 1 | 2)[][];
 
-export type ActionMode = 'move' | 'wall_h' | 'wall_v';
+export const ActionMode = {
+    Move: 'move',
+    WallH: 'wall_h',
+    WallV: 'wall_v',
+} as const;
+
+export type ActionMode = (typeof ActionMode)[keyof typeof ActionMode];

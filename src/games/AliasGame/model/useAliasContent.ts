@@ -1,13 +1,13 @@
 import {ALIAS_CATEGORIES} from '@/constants/aliasContent';
 import {storageService} from '@/services/storageService';
-import type {Difficulty} from '@/types';
+import {DIFFICULTY, type Difficulty} from '@/types';
 import {GameKey} from '@/types/games';
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useAliasContent(difficulty: Difficulty): string[] {
     const targetCategories = ALIAS_CATEGORIES.filter((c) => {
-        if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
-        if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
+        if (difficulty === DIFFICULTY.EASY) return c.difficulty === DIFFICULTY.EASY || c.id === 'verbs';
+        if (difficulty === DIFFICULTY.HARD) return c.difficulty === DIFFICULTY.HARD || c.id === 'emotions';
         return true;
     });
 

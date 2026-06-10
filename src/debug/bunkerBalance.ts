@@ -6,6 +6,7 @@ import {
 import {SURVIVAL_EVENTS,CATASTROPHE_SCENARIOS} from "@/games/BunkerGame/contents";
 import {applyBonus, applyBonusScaled, generateCharacter, getAgeBonuses} from "@/games/BunkerGame/helpers.ts";
 import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
+import {DIFFICULTY} from '@/types';
 import {pickRandom, shuffle} from '@/utils/random';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -59,7 +60,7 @@ export interface SimReport {
 
 const RESOURCE_KEYS: ResourceKey[] = ['food', 'water', 'medicine', 'energy', 'morale'];
 const CAPACITY_PCT: Record<Difficulty, number> = {easy: 0.8, medium: 0.6, hard: 0.4};
-const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
+const DIFFICULTIES: Difficulty[] = Object.values(DIFFICULTY);
 
 function cloneRes(r: BunkerResources): BunkerResources {
     return {...r};

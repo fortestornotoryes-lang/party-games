@@ -21,6 +21,7 @@ import {usePersistedState} from '@/hooks/usePersistedState';
 import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
 import {sessionService} from '@/services/sessionService';
 import {storageService} from '@/services/storageService.ts';
+import {DIFFICULTY} from '@/types';
 import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random.ts';
 
@@ -67,7 +68,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     const [difficulty, setDifficulty] = usePersistedState<Difficulty>(
         K,
         'difficulty',
-        initState?.difficulty ?? 'medium'
+        initState?.difficulty ?? DIFFICULTY.MEDIUM
     );
     const [initialWord, setInitialWord] = usePersistedState(K, 'initialWord', initState?.word ?? '');
     const [currentWord, setCurrentWord] = usePersistedState(K, 'currentWord', initState?.word ?? '');

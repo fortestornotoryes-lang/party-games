@@ -1,6 +1,7 @@
 import type {SpyDifficulty} from '@/constants/spyHuntContent';
 import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 import {storageService} from '@/services/storageService';
+import {DIFFICULTY} from '@/types';
 import {GameKey} from '@/types/games';
 import {pickRandom} from '@/utils/random';
 
@@ -18,7 +19,7 @@ export function useSpyHuntContent(difficulty: string) {
     const diffKey =
         (difficulty as SpyDifficulty) in LOCATIONS_BY_DIFFICULTY
             ? (difficulty as SpyDifficulty)
-            : 'medium';
+            : DIFFICULTY.MEDIUM;
 
     // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
     const custom = [

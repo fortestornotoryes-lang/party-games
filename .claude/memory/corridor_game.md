@@ -11,10 +11,14 @@ metadata:
 **Тема:** `teal` (P1 бирюзовый #14b8a6, P2 оранжевый #ff8a1f)
 **Иконка:** `Route` (lucide-react)
 
-## Файлы
+## Файлы (после разбиения god-компонента, 2026-06-10)
 
-- `src/games/CorridorGame/types.ts` — `CorridorPhase`, `Pos`, `WallGrid`, `ActionMode`
-- `src/games/CorridorGame/CorridorGame.tsx` — весь игровой компонент
+- `types.ts` — `CorridorPhase`, `Pos`, `WallGrid`, `ActionMode`
+- `constants.ts` — `CELL`, `GAP`, `STEP`, `BOARD_SZ`, `WALLS_INIT`, `PLAYER_COLOR`
+- `helpers.ts` — чистая логика: `emptyWalls`, `isBlocked`, `validMoves`, `canReach` (BFS), `canPlaceWall` (PORTABLE для RN)
+- `components/CorridorBoard.tsx` — SVG-доска (клетки, слоты стен, стены, фишки) + тип `HoveredSlot`
+- `components/PlayerStatusBar.tsx`, `components/ActionControls.tsx`, `components/GameOverOverlay.tsx`
+- `CorridorGame.tsx` — корень: persisted-состояние + обработчики ходов/стен
 
 ## Доска
 
@@ -48,4 +52,4 @@ SVG с viewBox `0 0 440 440`:
 | `wall_v` | Стена │ | Показывает вертикальные слоты; тап ставит стену |
 
 **Why:** SVG выбран вместо CSS-grid, потому что стены нужно точно позиционировать в зазорах между клетками.
-**How to apply:** При модификации игры — изменять только `CorridorGame.tsx`; логика стен полностью инлайновая (без contentService/storageService).
+**How to apply:** Логику стен/ходов менять в `helpers.ts` (чистые функции, без contentService/storageService); рендер доски — в `components/CorridorBoard.tsx`; состояние и обработчики — в `CorridorGame.tsx`.

@@ -2,8 +2,8 @@ import type {ReactNode} from 'react';
 import React, {createContext, useContext, useState} from 'react';
 
 import {storageService} from '../services/storageService';
-import type {Difficulty, GameMode} from '../types';
-import {GameKey} from '../types/games';
+import {DIFFICULTY, type Difficulty} from '../types';
+import {CLASSIC_MODE_ID, GameKey, type GameMode} from '../types/games';
 
 const GAME_DEFAULT_ROUNDS: Partial<Record<GameKey, number>> = {
     [GameKey.Bunker]: 5,
@@ -11,12 +11,12 @@ const GAME_DEFAULT_ROUNDS: Partial<Record<GameKey, number>> = {
 
 interface GameSettingsContextType {
     difficulty: Difficulty;
-    mode: GameMode;
+    mode: GameMode['id'];
     rounds: number;
     timerSeconds: number;
     countHiddenTraits: boolean;
     setDifficulty: (d: Difficulty) => void;
-    setMode: (m: GameMode) => void;
+    setMode: (m: GameMode['id']) => void;
     setRounds: (r: number) => void;
     setTimerSeconds: (s: number) => void;
     setCountHiddenTraits: (v: boolean) => void;
@@ -28,18 +28,26 @@ const GameSettingsContext = createContext<GameSettingsContextType | undefined>(u
 
 interface SavedConfig {
     difficulty?: Difficulty;
-    mode?: GameMode;
+    mode?: GameMode['id'];
     rounds?: number;
     timerSeconds?: number;
     countHiddenTraits?: boolean;
 }
 
+const DEFAULT_GAME_CONFIG: Required<SavedConfig> = {
+    difficulty: DIFFICULTY.MEDIUM,
+    mode: CLASSIC_MODE_ID,
+    rounds: 2,
+    timerSeconds: 30,
+    countHiddenTraits: true,
+};
+
 export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({children}) => {
-    const [difficulty, setDifficultyState] = useState<Difficulty>('medium');
-    const [mode, setModeState] = useState<GameMode>('classic');
-    const [rounds, setRoundsState] = useState<number>(2);
-    const [timerSeconds, setTimerSecondsState] = useState<number>(30);
-    const [countHiddenTraits, setCountHiddenTraitsState] = useState<boolean>(true);
+    const [difficulty, setDifficultyState] = useState<Difficulty>(DEFAULT_GAME_CONFIG.difficulty);
+    const [mode, setModeState] = useState<GameMode['id']>(DEFAULT_GAME_CONFIG.mode);
+    const [rounds, setRoundsState] = useState<number>(DEFAULT_GAME_CONFIG.rounds);
+    const [timerSeconds, setTimerSecondsState] = useState<number>(DEFAULT_GAME_CONFIG.timerSeconds);
+    const [countHiddenTraits, setCountHiddenTraitsState] = useState<boolean>(DEFAULT_GAME_CONFIG.countHiddenTraits);
     const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
 
     const setCurrentGameId = async (id: GameKey | null) => {
@@ -53,11 +61,11 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
             if (savedConfig.timerSeconds !== undefined) setTimerSecondsState(savedConfig.timerSeconds);
             if (savedConfig.countHiddenTraits !== undefined) setCountHiddenTraitsState(savedConfig.countHiddenTraits);
         } else {
-            setDifficultyState('medium');
-            setModeState('classic');
-            setRoundsState(GAME_DEFAULT_ROUNDS[id] ?? 2);
-            setTimerSecondsState(30);
-            setCountHiddenTraitsState(true);
+            setDifficultyState(DEFAULT_GAME_CONFIG.difficulty);
+            setModeState(DEFAULT_GAME_CONFIG.mode);
+            setRoundsState(GAME_DEFAULT_ROUNDS[id] ?? DEFAULT_GAME_CONFIG.rounds);
+            setTimerSecondsState(DEFAULT_GAME_CONFIG.timerSeconds);
+            setCountHiddenTraitsState(DEFAULT_GAME_CONFIG.countHiddenTraits);
         }
     };
 
@@ -68,7 +76,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({childre
         }
     };
 
-    const setMode = (m: GameMode) => {
+    const setMode = (m: GameMode['id']) => {
         setModeState(m);
         if (currentGameId) {
             void storageService.saveGameConfigAsync(currentGameId, {difficulty, mode: m, rounds, timerSeconds});

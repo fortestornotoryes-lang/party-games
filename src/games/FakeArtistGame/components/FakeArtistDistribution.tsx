@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 
 import {useGameSettings} from '../../../contexts/GameSettingsContext';
 import {rgba} from '../../../theme/colors';
-import type {Player} from '../../../types';
+import {DIFFICULTY, type Player} from '../../../types';
 import {useFakeArtistContent} from '../model/useFakeArtistContent';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
@@ -20,7 +20,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
     const [category, setCategory] = useState('');
 
     useEffect(() => {
-        const diff = (difficulty) ?? 'easy';
+        const diff = (difficulty) ?? DIFFICULTY.EASY;
         const item = useFakeArtistContent(diff);
         setWord(item.word);
         setCategory(item.category);

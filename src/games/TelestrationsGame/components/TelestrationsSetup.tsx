@@ -4,6 +4,7 @@ import React from 'react';
 
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {DIFFICULTY} from '@/types';
 
 interface Props {
     playerCount: number;
@@ -39,7 +40,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
             <p className="text-micro text-white/25 uppercase font-black tracking-widest mb-3 text-center">
                 Сложность
             </p>
-            {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
+            {(Object.values(DIFFICULTY) as Difficulty[]).map((diff) => {
                 const cfg = DIFFICULTY_CONFIG[diff];
                 const isSelected = difficulty === diff;
                 return (

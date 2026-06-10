@@ -25,6 +25,7 @@ import {
 } from './types';
 
 import {PROFESSIONS,HOBBIES,ITEMS,TRAITS,PHOBIAS,CATASTROPHE_SCENARIOS,HEALTH_CONDITIONS,SURVIVAL_EVENTS,SPECIAL_FACTS} from "@/games/BunkerGame/contents";
+import {DIFFICULTY} from "@/types";
 import {pickRandom, shuffle} from "@/utils/random.ts";
 
 
@@ -114,7 +115,7 @@ export function calculateSurvival(
     const base: BunkerResources = {...BUNKER_BASE_RESOURCES};
 
     // Apply difficulty base offset
-    const diffOffset = BUNKER_DIFFICULTY_OFFSET[options?.difficulty ?? 'medium'];
+    const diffOffset = BUNKER_DIFFICULTY_OFFSET[options?.difficulty ?? DIFFICULTY.MEDIUM];
     if (diffOffset !== 0) {
         RESOURCE_KEYS_CALC.forEach(k => {
             base[k] += diffOffset;
@@ -122,7 +123,7 @@ export function calculateSurvival(
     }
 
     // Apply difficulty-scaled scenario penalty
-    const scenarioScale = BUNKER_DIFFICULTY_SCALE[options?.difficulty ?? 'medium'];
+    const scenarioScale = BUNKER_DIFFICULTY_SCALE[options?.difficulty ?? DIFFICULTY.MEDIUM];
     (Object.entries(scenario.resourcePenalty) as [ResourceKey, number][])
         .forEach(([k, v]) => {
             base[k] += Math.round(v * scenarioScale);

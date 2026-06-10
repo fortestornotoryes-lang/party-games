@@ -1,3 +1,5 @@
+import type {Difficulty} from '@/types';
+
 export enum BunkerPhase {
     Briefing = 'briefing',
     DictatorReveal = 'dictator_reveal',
@@ -11,7 +13,7 @@ export enum BunkerPhase {
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
 
-export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+export type DifficultyLevel = Difficulty;
 
 export type ResourceBonus = Partial<Record<ResourceKey, number>>;
 

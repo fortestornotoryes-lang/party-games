@@ -1,4 +1,4 @@
-import type {Difficulty} from '../types';
+import {DIFFICULTY, type Difficulty} from '../types';
 import {GameKey} from '../types/games';
 
 import {storageService} from './storageService';
@@ -27,8 +27,8 @@ export const contentService = {
         switch (gameId) {
             case GameKey.Alias: {
                 const cats = ALIAS_CATEGORIES.filter((c) => {
-                    if (difficulty === 'easy') return c.difficulty === 'easy' || c.id === 'verbs';
-                    if (difficulty === 'hard') return c.difficulty === 'hard' || c.id === 'emotions';
+                    if (difficulty === DIFFICULTY.EASY) return c.difficulty === DIFFICULTY.EASY || c.id === 'verbs';
+                    if (difficulty === DIFFICULTY.HARD) return c.difficulty === DIFFICULTY.HARD || c.id === 'emotions';
                     return true;
                 });
                 const all = [...cats.flatMap((c) => c.words), ...custom];

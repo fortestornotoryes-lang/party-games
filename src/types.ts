@@ -5,8 +5,13 @@ export interface Player {
     isSpy: boolean;
 }
 
-export type Difficulty = 'easy' | 'medium' | 'hard';
-export type GameMode = 'classic' | 'double_agent' | 'mole' | string;
+export const DIFFICULTY = {
+    EASY: 'easy',
+    MEDIUM: 'medium',
+    HARD: 'hard',
+} as const;
+
+export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 export type GameTheme =
     | 'red'

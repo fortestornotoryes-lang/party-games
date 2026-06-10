@@ -5,7 +5,7 @@ import React, {useMemo, useState} from 'react';
 import {feedbackService, VIBRATE} from '../services/feedbackService';
 import type {GameSettings} from '../services/storageService';
 import {storageService} from '../services/storageService';
-import type {Difficulty} from '../types';
+import {DIFFICULTY, type Difficulty} from '../types';
 import {GameKey} from '../types/games';
 
 import {Pagination} from './Pagination';
@@ -73,9 +73,9 @@ const ALL_WORD_GAMES = [
 ] as const;
 
 const DIFFICULTIES: { id: Difficulty; label: string }[] = [
-    {id: 'easy', label: 'Легко'},
-    {id: 'medium', label: 'Норма'},
-    {id: 'hard', label: 'Профи'},
+    {id: DIFFICULTY.EASY, label: 'Легко'},
+    {id: DIFFICULTY.MEDIUM, label: 'Норма'},
+    {id: DIFFICULTY.HARD, label: 'Профи'},
 ];
 
 function todKey(type: 'truth' | 'dare', diff: Difficulty) {
@@ -119,9 +119,9 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
 
     // Words tab state
     const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set([GameKey.JustOne]));
-    const [wordDiff, setWordDiff] = useState<Difficulty>('medium');
+    const [wordDiff, setWordDiff] = useState<Difficulty>(DIFFICULTY.MEDIUM);
     const [todType, setTodType] = useState<'truth' | 'dare'>('truth');
-    const [todDiff, setTodDiff] = useState<Difficulty>('medium');
+    const [todDiff, setTodDiff] = useState<Difficulty>(DIFFICULTY.MEDIUM);
     const [newWord, setNewWord] = useState('');
     const [validationError, setValidationError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -432,9 +432,9 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
                                                 }}
                                                 className={`py-3 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                                                     todDiff === d.id
-                                                        ? d.id === 'easy'
+                                                        ? d.id === DIFFICULTY.EASY
                                                             ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
-                                                            : d.id === 'medium'
+                                                            : d.id === DIFFICULTY.MEDIUM
                                                                 ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
                                                                 : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
                                                         : 'border-white/8 text-white/20'
@@ -484,9 +484,9 @@ export const Settings: React.FC<SettingsProps> = ({onBack}) => {
                                             }}
                                             className={`py-2.5 rounded-premium-md text-tag font-black uppercase tracking-widest border transition-all ${
                                                 wordDiff === d.id
-                                                    ? d.id === 'easy'
+                                                    ? d.id === DIFFICULTY.EASY
                                                         ? 'bg-premium-green/10  border-premium-green/30  text-premium-green'
-                                                        : d.id === 'medium'
+                                                        : d.id === DIFFICULTY.MEDIUM
                                                             ? 'bg-premium-sky/10    border-premium-sky/30    text-premium-sky'
                                                             : 'bg-premium-red/10    border-premium-red/30    text-premium-red'
                                                     : 'border-white/8 text-white/20'

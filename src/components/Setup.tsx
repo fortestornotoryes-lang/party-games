@@ -6,14 +6,14 @@ import React, {useEffect, useState} from 'react';
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {storageService} from '../services/storageService';
 import {getTheme} from '../theme/colors';
-import type {GameTheme} from '../types';
+import {DIFFICULTY, type GameTheme} from '../types';
 import {shuffle} from '../utils/random';
 
 import {InstructionsModal} from './InstructionsModal';
+import { Typography } from "./Typography";
 
 import {DEFAULT_NAMES, PlayerRow} from "@/components/PlayerRow.tsx";
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import { Typography } from "./Typography";
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;
@@ -140,9 +140,9 @@ export const Setup: React.FC<SetupProps> = ({
                 </span>
                             </div>
                             <div
-                                className={`px-4 py-1.5 rounded-premium-sm glass-card border-none text-tag font-black italic uppercase tracking-[0.2em] font-display ${difficulty === 'easy' ? 'text-premium-green' : difficulty === 'medium' ? 'text-premium-sky' : 'text-premium-red'}`}
+                                className={`px-4 py-1.5 rounded-premium-sm glass-card border-none text-tag font-black italic uppercase tracking-[0.2em] font-display ${difficulty === DIFFICULTY.EASY ? 'text-premium-green' : difficulty === DIFFICULTY.MEDIUM ? 'text-premium-sky' : 'text-premium-red'}`}
                             >
-                                {difficulty === 'easy' ? 'ЛЕГКО' : difficulty === 'medium' ? 'НОРМА' : 'ПРОФИ'}
+                                {difficulty === DIFFICULTY.EASY ? 'ЛЕГКО' : difficulty === DIFFICULTY.MEDIUM ? 'НОРМА' : 'ПРОФИ'}
                             </div>
                         </div>
                     </div>

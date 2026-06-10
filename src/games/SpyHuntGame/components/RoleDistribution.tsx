@@ -4,7 +4,7 @@ import React from 'react';
 
 import {useGameSettings} from '../../../contexts/GameSettingsContext';
 import {ROLE_TOKENS} from '../../../theme/colors';
-import type {Player} from '../../../types';
+import {DIFFICULTY, type Player} from '../../../types';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
 import {Typography} from '@/components/Typography';
@@ -97,7 +97,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                                             <br/>
                                             {t(`${NS.SPY_HUNT}.dontRevealFindLocation`)}
                                         </Typography.Body>
-                                        {difficulty === 'easy' && (
+                                        {difficulty === DIFFICULTY.EASY && (
                                             <div
                                                 className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                                                 <Typography.Caption size="xs" color="red" className="opacity-55 mb-0.5">

@@ -14,6 +14,7 @@ import {useTimer} from '@/hooks/useTimer';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {DIFFICULTY} from '@/types';
 
 interface DiscussionPhaseProps {
     characters: BunkerCharacter[];
@@ -151,7 +152,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
             )}
 
             {/* Resource contribution per player (revealed traits only, hidden on hard) */}
-            {difficulty !== 'hard' && (
+            {difficulty !== DIFFICULTY.HARD && (
                 <div className="space-y-2">
                     <Typography.Label size="xs" color="muted">
                         Ресурсный вклад
