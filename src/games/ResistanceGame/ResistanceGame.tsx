@@ -11,9 +11,9 @@ import {ResistancePhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {MISSION_SIZES} from '@/constants/resistanceContent';
 import type {Player} from '@/types.ts';
 import {initResistance} from '@/utils/gameLogic.ts';
+import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
 
 interface ResistanceGameProps {
     playerNames: string[];
