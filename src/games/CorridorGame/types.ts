@@ -8,6 +8,6 @@ export interface Pos {
     col: number;
 }
 
-export type WallGrid = boolean[][];
+export type WallGrid = (0 | 1 | 2)[][];
 
 export type ActionMode = 'move' | 'wall_h' | 'wall_v';
