@@ -43,7 +43,8 @@
       "Bash(git commit -m 'feat: add i18n-game skill *)",
       "Bash(npx eslint *)",
       "PowerShell(npx eslint src/services/contentService.ts src/utils/gameLogic.ts src/games/AliasGame/AliasGame.tsx src/games/AliasGame/model/useAliasContent.ts src/games/CodenamesGame/CodenamesGame.tsx src/games/CodenamesGame/model/useCodenamesContent.ts src/games/DecryptoGame/DecryptoGame.tsx src/games/DecryptoGame/model/useDecryptoContent.ts src/games/JustOneGame/JustOneGame.tsx src/games/JustOneGame/model/useJustOneContent.ts src/games/WavelengthGame/WavelengthGame.tsx src/games/WavelengthGame/model/useWavelengthContent.ts src/games/TelestrationsGame/TelestrationsGame.tsx src/games/TelestrationsGame/model/useTelestrationsContent.ts src/games/FakeArtistGame/components/FakeArtistDistribution.tsx src/games/FakeArtistGame/model/useFakeArtistContent.ts src/games/SpyHuntGame/model/useSpyHuntContent.ts src/games/TruthOrDareGame/TruthOrDareGame.tsx src/games/TruthOrDareGame/model/useTruthOrDareContent.ts; \"eslint exit=$LASTEXITCODE\")",
-      "PowerShell($base = Get-Content C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\.lint-baseline.txt -Raw; \\($base | Select-String -Pattern 'rules-of-hooks' -AllMatches\\).Matches.Count; $base.Length)"
+      "PowerShell($base = Get-Content C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\.lint-baseline.txt -Raw; \\($base | Select-String -Pattern 'rules-of-hooks' -AllMatches\\).Matches.Count; $base.Length)",
+      "PowerShell(npx eslint src/App.tsx src/router/routes.tsx src/router/GameLayout.tsx src/router/GamePlayRoute.tsx src/router/GameSetupRoute.tsx src/registry/GameRegistry.tsx src/types.ts src/types/games.ts; \"eslint exit=$LASTEXITCODE\")"
     ]
   },
   "hooks": {

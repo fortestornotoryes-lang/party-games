@@ -38,7 +38,6 @@ import telestrationsImg from '../assets/telephone.png';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import WavelengthImage from '../assets/WavelengthImage.JPG';
 import {TABOO_REVERSE_MODES} from '../constants/tabooReverseContent';
-import {GameStatus} from '../types';
 import type {GamesRegistryMap} from '../types/games';
 import {GameKey} from '../types/games';
 
@@ -115,7 +114,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             'Один игрок не знает локацию. Остальные задают вопросы и отвечают так, чтобы не выдать место, но помочь найти шпиона.',
         players: '3–7',
         minPlayers: 3,
-        setupStatus: GameStatus.SpyHuntPlaying,
         modes: [
             {
                 id: SPY_HUNT_MODES.CLASSIC,
@@ -149,7 +147,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             'Все рисуют одно и то же, но один игрок не знает слово и пытается подстроиться под остальных, не выдав себя.',
         players: '4–7',
         minPlayers: 4,
-        setupStatus: GameStatus.FakeArtistPlaying,
         backgroundImage: FakeArtistImage,
     },
     [GameKey.TruthOrDare]: {
@@ -163,7 +160,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Задавайте неудобные вопросы, выполняйте смелые задания и проверяйте, кто готов рискнуть ради веселья.',
         minPlayers: 2,
-        setupStatus: GameStatus.TruthOrDarePlaying,
         backgroundImage: TruthOrDareImage,
     },
     [GameKey.Taboo]: {
@@ -177,7 +173,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Нужно объяснить слово команде, не используя самые очевидные и запрещённые подсказки с карточки.',
         minPlayers: 4,
-        setupStatus: GameStatus.TabooPlaying,
         backgroundImage: TabyImage,
     },
     [GameKey.TabooReverse]: {
@@ -191,7 +186,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Объясняй слово только через запрещённые ассоциации, но не произноси сам ответ. Чем точнее намёк, тем быстрее угадают.',
         minPlayers: 4,
-        setupStatus: GameStatus.TabooReversePlaying,
         backgroundImage: TabyImage,
         modes: [
             {
@@ -225,7 +219,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Передавайте слова и рисунки по цепочке, а потом смотрите, как исходная идея смешно меняется на каждом ходе.',
         minPlayers: 4,
-        setupStatus: GameStatus.TelestrationsPlaying,
         backgroundImage: telestrationsImg,
     },
     [GameKey.Codenames]: {
@@ -238,7 +231,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '4+',
         description: 'Битва двух команд шпионов',
         minPlayers: 4,
-        setupStatus: GameStatus.CodenamesPlaying,
         modes: [
             {id: CODENAMES_MODES.CLASSIC, name: 'Классика', description: '9 своих, 8 чужих, 1 убийца', icon: Target},
             {
@@ -267,7 +259,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Шифруйте числовые коды для своей команды так, чтобы союзники поняли намёк, а соперники не смогли его перехватить.',
         minPlayers: 4,
-        setupStatus: GameStatus.DecryptoPlaying,
         modes: [
             {id: DECRYPTO_MODES.CLASSIC, name: 'Классика', description: '4 слова, код из 3 цифр', icon: Key},
             {id: DECRYPTO_MODES.EXTENDED_5, name: 'Широкий код', description: '5 слов, код из 3 цифр', icon: Target},
@@ -291,7 +282,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'За ограниченное время объясняйте как можно больше слов, не используя однокоренные формы и прямые подсказки.',
         minPlayers: 4,
-        setupStatus: GameStatus.AliasPlaying,
         backgroundImage: alieaImage,
     },
     [GameKey.Resistance]: {
@@ -305,7 +295,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
             'Группа сопротивления пытается выполнить миссии, в то время как шпионы пытаются их саботировать.',
         placeholder: 'Игрок',
         minPlayers: 5,
-        setupStatus: GameStatus.ResistancePlaying,
         backgroundImage: ResistanceImage,
     },
     [GameKey.Wavelength]: {
@@ -318,7 +307,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '4+',
         description: 'Настройся на одну частоту',
         minPlayers: 2,
-        setupStatus: GameStatus.WavelengthPlaying,
         backgroundImage: WavelengthImage,
     },
     [GameKey.JustOne]: {
@@ -331,7 +319,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '3–12',
         description: 'Одно слово — одна подсказка',
         minPlayers: 3,
-        setupStatus: GameStatus.JustOnePlaying,
         backgroundImage: JustOneImage,
     },
     [GameKey.Mafia]: {
@@ -344,7 +331,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '6–12',
         description: 'Город засыпает...',
         minPlayers: 6,
-        setupStatus: GameStatus.MafiaPlaying,
         backgroundImage: mafia2,
     },
 
@@ -358,7 +344,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         players: '2',
         description: 'Первым собери 4 фишки в ряд — по горизонтали, вертикали или диагонали.',
         minPlayers: 2,
-        setupStatus: GameStatus.ConnectFourPlaying,
         backgroundImage: ConnectFourImage,
         modes: [
             {id: CONNECT_FOUR_MODES.CLASSIC, name: 'Классика', description: '7×6 — собери 4 фишки в ряд', icon: Grid},
@@ -394,7 +379,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
         minPlayers: 4,
-        setupStatus: GameStatus.BunkerPlaying,
         backgroundImage: hopperImage,
         modes: [
             {
@@ -429,7 +413,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
         minPlayers: 2,
-        setupStatus: GameStatus.CorridorPlaying,
     },
 
     [GameKey.Millionaire]: {
@@ -443,7 +426,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         description:
             'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
         minPlayers: 1,
-        setupStatus: GameStatus.MillionairePlaying,
     },
 } as const;
 

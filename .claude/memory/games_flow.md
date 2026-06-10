@@ -1,11 +1,15 @@
 ---
 name: games-flow
-description: "Все 10 игр: GameStatus-цепочки, setupStatus, темы, lazy loading, App.tsx routing"
+description: "Игры: темы, lazy loading, инициализация игроков. ВНИМАНИЕ: GameStatus/setupStatus удалены — роутинг через react-router"
 metadata:
   node_type: memory
   type: project
   originSessionId: d3ec9307-4021-49f9-822a-9589555ac09e
 ---
+
+> ⚠️ **Устарело (2026-06-10):** enum `GameStatus` и поле `setupStatus` УДАЛЕНЫ из кода.
+> Роутинг теперь через react-router v7: `src/router/` (`/game/:gameKey/setup|play`), см. [[project-overview]].
+> Упоминания GameStatus/setupStatus ниже — историческая справка о темах/цепочках фаз, не копировать в код.
 
 ## GameRegistry паттерн
 

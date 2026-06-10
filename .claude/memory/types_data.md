@@ -1,11 +1,14 @@
 ---
 name: types-data
-description: "TypeScript-типы, GameStatus enum, GameMetadata, GameState, константы контента, storageService"
+description: "TypeScript-типы, GameMetadata, константы контента, storageService. ВНИМАНИЕ: GameStatus enum удалён"
 metadata:
   node_type: memory
   type: project
   originSessionId: d3ec9307-4021-49f9-822a-9589555ac09e
 ---
+
+> ⚠️ **Устарело (2026-06-10):** enum `GameStatus` УДАЛЁН из `src/types.ts`, поле `setupStatus` удалено из `GameMetadata`.
+> Навигация — react-router v7 (`src/router/`), см. [[project-overview]]. Разделы про GameStatus ниже не применять.
 
 ## Player (src/types.ts)
 

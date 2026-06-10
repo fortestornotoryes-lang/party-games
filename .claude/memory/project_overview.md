@@ -29,10 +29,15 @@ npm run build    # Сборка в dist/
 
 ```
 src/
-  App.tsx                          # Главный state machine + роутер по GameStatus
+  App.tsx                          # Только провайдеры (GameSettings, Language) + RouterProvider
   main.tsx
   index.css                        # Tailwind + кастомные токены + glass-card
-  types.ts                         # Player, GameStatus, GameState, GameMetadata (legacy)
+  types.ts                         # Player, Difficulty, GameMode, GameTheme (GameStatus удалён)
+  router/
+    routes.tsx                     # createBrowserRouter + RootLayout/MenuRoute/SettingsRoute, basename из BASE_URL
+    GameLayout.tsx                 # /game/:gameKey/* — валидация gameKey + sync c GameSettingsContext
+    GameSetupRoute.tsx             # Setup + UniversalGameSettings, navigate('../play', {state:{playerNames}})
+    GamePlayRoute.tsx              # Маппинг GameKey→компонент, fallback игроков из storage, guard minPlayers
   types/
     games.ts                       # GameKey enum, GameMetadata, GameMode, GamesRegistryMap, GameInstructionsMap
     instructions.ts                # устаревший GameKey enum (не используется в основном коде)
@@ -111,9 +116,14 @@ src/
     gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance
 ```
 
-## Архитектура (App.tsx)
+## Архитектура (роутинг)
 
-`useState<GameStatus>` управляет всем. Нет роутера — рендер через `switch(status)` в `renderGame()`.
+React Router v7 (`react-router`, `createBrowserRouter`). Карта URL:
+`/` (меню) · `/settings` · `/game/:gameKey/setup` · `/game/:gameKey/play` · `*` → `/`.
+Базовый путь `/party-games/` (vite `base`) — пробрасывается в `basename` роутера.
+Фазы игр в URL не выносятся — остаются локальными enum'ами внутри игр.
+`playerNames` передаются через navigation state, при обновлении страницы — из `storageService.getPlayers()`.
+Спецслучаи в GamePlayRoute: Bunker (`onRestart` → navigate setup), Telestrations (`initialDifficulty`).
 
 Три контекста/сервиса:
 - `GameSettingsContext` — настройки текущей игры (difficulty, mode, rounds, timer)
@@ -123,6 +133,6 @@ src/
 `GAMES_REGISTRY` (объект `{ [gameId]: GameMetadata }`) — единственный источник правды о метаданных игр.
 
 **Как добавить игру:**
-1. Добавить статусы в `GameStatus` в types.ts
-2. Добавить запись в `GAMES_REGISTRY` (GameRegistry.tsx)
-3. Добавить кейс в `renderGame()` в App.tsx
+1. Добавить ключ в `GameKey` (types/games.ts)
+2. Добавить запись в `GAMES_REGISTRY` (GameRegistry.tsx) — поля `setupStatus` больше нет
+3. Добавить компонент в `GAME_COMPONENTS` в `src/router/GamePlayRoute.tsx`

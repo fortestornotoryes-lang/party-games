@@ -1,6 +1,6 @@
 import type {LucideIcon} from 'lucide-react';
 
-import type {GameStatus, GameTheme} from '../types';
+import type {GameTheme} from '../types';
 
 export enum GameKey {
     Spy = 'spy',
@@ -44,7 +44,6 @@ export interface GameMetadata {
     readonly description: string;
     readonly players: string;
     readonly minPlayers: number;
-    readonly setupStatus: GameStatus;
     readonly modes?: readonly GameMode[];
     readonly backgroundImage?: string;
 }
