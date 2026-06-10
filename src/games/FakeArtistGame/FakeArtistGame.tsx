@@ -35,6 +35,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const drawAllRef = useRef<() => void>(() => undefined);
     const [turnIndex, setTurnIndex] = useState(0);
     const [isDrawing, setIsDrawing] = useState(false);
     const [hasDrawn, setHasDrawn] = useState(false);
@@ -84,10 +85,11 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
             if (!ctx) return;
             canvas.width = Math.round(rect.width * dpr);
             canvas.height = Math.round(rect.height * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.lineWidth = 4;
+            // Пересоздание битмапа стирает рисунок — восстанавливаем штрихи
+            drawAllRef.current();
         };
 
         const ro = new ResizeObserver(initCanvas);
@@ -103,7 +105,14 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Координаты штрихов хранятся в CSS-пикселях (getPos). Масштаб битмап/CSS
+        // считаем в момент отрисовки — как в DrawingCanvas, иначе при расхождении
+        // размеров линия уезжает от пальца.
+        ctx.setTransform(canvas.width / rect.width, 0, 0, canvas.height / rect.height, 0, 0);
         strokes.forEach((s) => {
             ctx.beginPath();
             ctx.strokeStyle = s.color;
@@ -123,6 +132,10 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
             ctx.stroke();
         }
     }, [strokes, currentStroke, playerColor]);
+
+    useEffect(() => {
+        drawAllRef.current = drawAll;
+    }, [drawAll]);
 
     useEffect(() => {
         if (phase === FakeArtistPhase.Playing) drawAll();
