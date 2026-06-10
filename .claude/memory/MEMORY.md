@@ -16,3 +16,4 @@
 - [Hooks & Patterns](hooks_and_patterns.md) — usePlayerCycle, useTimer, VIBRATE, shuffle/pickRandom, DistributionFlow; таблица антипаттернов → замен
 - [Bunker Architecture](bunker_architecture.md) — constants.ts / helpers.ts / types.ts BunkerGame; SurvivalPhase карточка катастрофы; таблица всех экспортов
 - [Corridor Game](corridor_game.md) — SVG-доска Quoridor; механика hWalls/vWalls; isBlocked; BFS-валидация; ActionMode (move/wall_h/wall_v)
+- [Session Persistence](session_persistence.md) — восстановление партии после перезагрузки: sessionService, usePersistedState/usePersistedTimer, guard'ы init-эффектов
