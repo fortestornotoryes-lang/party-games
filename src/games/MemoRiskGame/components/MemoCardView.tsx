@@ -75,17 +75,17 @@ export const MemoCardView: React.FC<MemoCardViewProps> = ({
                 >
                     {card.isSuper ? (
                         <>
-                            <Zap className="w-2/5 h-2/5 text-premium-yellow" fill="currentColor" fillOpacity={0.3}/>
-                            <span className="text-[10px] leading-none font-black text-premium-yellow">×2</span>
+                            <Zap className="size-10 text-premium-yellow" fill="currentColor" fillOpacity={0.3}/>
+                            <span className="text-label leading-none font-black text-premium-yellow">×2</span>
                         </>
                     ) : (
                         <>
                             <ShapeIcon
-                                className={`w-2/5 h-2/5 ${tokens.text}`}
+                                className={`size-10 ${tokens.text}`}
                                 fill="currentColor"
                                 fillOpacity={0.25}
                             />
-                            <span className={`text-[10px] leading-none font-black tabular-nums ${rarity.text}`}>
+                            <span className={`text- leading-none font-black tabular-nums ${rarity.text}`}>
                                 +{rarity.points}
                             </span>
                         </>
