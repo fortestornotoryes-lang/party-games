@@ -447,7 +447,7 @@ export const ru: Translations = {
     memo_risk: {
         title: 'МЕМО-РИСК',
         subtitle: 'Запомни и рискни',
-        riskLevel: 'Уровень риска {{n}}',
+        riskLevel: 'Круг № {{n}}',
         findLabel: 'Ищи',
         avoidLabel: 'Избегай',
         turnPointsLabel: 'Очки хода',

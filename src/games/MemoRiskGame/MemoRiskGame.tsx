@@ -72,8 +72,6 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
     const [round, setRound] = usePersistedState<RoundShapes | null>(K, 'round', () =>
         pickRoundShapes(cards.board, INITIAL_ESCALATION)
     );
-// round?.targets
-// round?.dangers
     const [flipsLeft, setFlipsLeft] = usePersistedState<number | null>(K, 'flipsLeft', () =>
         isLimited ? cfg.flipLimit : null
     );

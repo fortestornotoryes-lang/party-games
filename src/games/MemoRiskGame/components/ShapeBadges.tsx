@@ -1,3 +1,4 @@
+import {AnimatePresence, motion} from 'motion/react';
 import React from 'react';
 
 import {SHAPE_META} from '../constants';
@@ -20,19 +21,29 @@ const ShapeBadgeRow: React.FC<{label: string; shapes: MemoShape[]; accent: 'gree
             <span className={`text-micro font-black uppercase tracking-[0.25em] ${tokens.text}`}>
                 {label}
             </span>
-            <div className="flex items-center gap-2">
-                {shapes.map((shape) => {
-                    const ShapeIcon = SHAPE_META[shape].icon;
-                    const shapeTokens = getTheme(SHAPE_META[shape].color);
-                    return (
-                        <ShapeIcon
-                            key={shape}
-                            className={`w-6 h-6 ${shapeTokens.text}`}
-                            fill="currentColor"
-                            fillOpacity={0.3}
-                        />
-                    );
-                })}
+            <div className="flex items-center gap-2 h-6">
+                <AnimatePresence mode="popLayout">
+                    {shapes.map((shape) => {
+                        const ShapeIcon = SHAPE_META[shape].icon;
+                        const shapeTokens = getTheme(SHAPE_META[shape].color);
+                        return (
+                            <motion.div
+                                key={shape}
+                                initial={{scale: 0, opacity: 0}}
+                                animate={{scale: 1, opacity: 1}}
+                                exit={{scale: 0, opacity: 0}}
+                                transition={{type: 'spring', stiffness: 400, damping: 25}}
+                                layout
+                            >
+                                <ShapeIcon
+                                    className={`w-6 h-6 ${shapeTokens.text}`}
+                                    fill="currentColor"
+                                    fillOpacity={0.3}
+                                />
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
             </div>
         </div>
     );

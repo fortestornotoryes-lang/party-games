@@ -65,7 +65,7 @@ export const MemoCardView: React.FC<MemoCardViewProps> = ({
                 {/* Лицо: рамка и ценность — по редкости */}
                 <div
                     className={`absolute inset-0 rounded-premium-sm border-2 flex flex-col items-center justify-center gap-0.5 ${
-                        card.isSuper ? 'border-premium-yellow/60 bg-premium-yellow/10' : `${rarity.border} ${tokens.bg10}`
+                        card.isSuper ? 'border-premium-yellow/80 bg-premium-yellow/10' : `${rarity.border} ${tokens.bg10}`
                     }`}
                     style={{
                         backfaceVisibility: 'hidden',
