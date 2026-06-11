@@ -13,6 +13,7 @@ import {
     GAMES_REGISTRY,
     JustOneGame,
     MafiaGame,
+    MemoRiskGame,
     MillionaireGame,
     ResistanceGame,
     SpyHuntGame,
@@ -34,7 +35,7 @@ interface GameProps {
 // Bunker (onRestart) и Telestrations (initialDifficulty) рендерятся отдельно —
 // у них дополнительные пропсы, см. GamePlayRoute ниже.
 const GAME_COMPONENTS: Record<
-    Exclude<GameKey, GameKey.Bunker | GameKey.Telestrations>,
+    Exclude<GameKey, typeof GameKey.Bunker | typeof GameKey.Telestrations>,
     ComponentType<GameProps>
 > = {
     [GameKey.Spy]: SpyHuntGame,
@@ -52,6 +53,7 @@ const GAME_COMPONENTS: Record<
     [GameKey.Taboo]: TabooGame,
     [GameKey.Millionaire]: MillionaireGame,
     [GameKey.Corridor]: CorridorGame,
+    [GameKey.MemoRisk]: MemoRiskGame,
 };
 
 /** Экран самой игры: резолвит игроков и рендерит компонент по gameKey. */

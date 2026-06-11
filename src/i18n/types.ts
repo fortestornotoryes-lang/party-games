@@ -594,6 +594,38 @@ export interface TelestrationsTranslations {
     toMenu: string;                  // 'В меню'
 }
 
+export interface MemoRiskTranslations {
+    // MemoRiskGame.tsx
+    title: string;             // 'МЕМО-РИСК'
+    subtitle: string;          // 'Запомни и рискни'
+    // PassPhase.tsx
+    riskLevel: string;         // 'Уровень риска {{n}}'
+    tapToStart: string;        // 'Нажми, чтобы начать ход'
+    passInstruction: string;   // 'Запоминай поле — открывай только цели'
+    // PlayingPhase.tsx
+    findLabel: string;         // 'Ищи'
+    avoidLabel: string;        // 'Избегай'
+    turnPointsLabel: string;   // 'Очки хода'
+    bankBtn: string;           // 'ЗАБРАТЬ {{n}}'
+    flipsLeftLabel: string;    // 'Открытий: {{n}}'
+    deckLeft: string;          // 'В колоде: {{n}}'
+    superBadge: string;        // 'СУПЕР ×2'
+    // Verdict (итог хода)
+    bankedTitle: string;       // '+{{n}} ОЧКОВ'
+    bankedDesc: string;        // 'Очки зафиксированы'
+    bustedTitle: string;       // 'ПРОВАЛ!'
+    bustedDesc: string;        // 'Опасная фигура — {{n}} очков сгорело'
+    timeoutTitle: string;      // 'ВРЕМЯ ВЫШЛО'
+    timeoutDesc: string;       // '+{{n}} очков зафиксировано'
+    outOfFlipsTitle: string;   // 'ОТКРЫТИЯ КОНЧИЛИСЬ'
+    outOfFlipsDesc: string;    // '+{{n}} очков зафиксировано'
+    passTurnBtn: string;       // 'ПЕРЕДАТЬ ХОД'
+    // GameOverPhase.tsx
+    deckEmpty: string;         // 'Фигуры закончились'
+    newGame: string;           // 'НОВАЯ ИГРА'
+    toMenu: string;            // 'В МЕНЮ'
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -617,6 +649,7 @@ export interface Translations {
     connect_four?: ConnectFourTranslations;
     taboo_reverse?: TabooReverseTranslations;
     corridor?: CorridorTranslations;
+    memo_risk?: MemoRiskTranslations;
 
     // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
     [gameKey: string]:
@@ -629,6 +662,7 @@ export interface Translations {
         | DecryptoTranslations
         | AliasTranslations
         | SpyHuntTranslations
+        | FakeArtistTranslations
         | ResistanceTranslations
         | TelestrationsTranslations
         | TruthOrDareTranslations
@@ -638,5 +672,6 @@ export interface Translations {
         | ConnectFourTranslations
         | TabooReverseTranslations
         | CorridorTranslations
+        | MemoRiskTranslations
         | undefined;
 }

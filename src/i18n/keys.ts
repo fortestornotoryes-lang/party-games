@@ -22,4 +22,5 @@ export const NS = {
     CONNECT_FOUR: 'connect_four',
     TABOO_REVERSE: 'taboo_reverse',
     CORRIDOR: 'corridor',
+    MEMO_RISK: 'memo_risk',
 } as const;

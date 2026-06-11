@@ -26,5 +26,5 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 - Режимы/фазы/варианты → const-объект в `types.ts` (см. [[phase-enum-pattern]]): `DIFFICULTY` (src/types.ts), `C4Action`, `ActionMode`, `CorridorPhase`, `CONNECT_FOUR_MODES`, `SPY_HUNT_MODES`.
 - Дефолты → именованная константа в одном месте: `DEFAULT_GAME_CONFIG` (GameSettingsContext.tsx), `CLASSIC_MODE_ID` (types/games.ts).
 - Списки всех значений → `Object.values(DIFFICULTY)`, не `['easy', 'medium', 'hard']`.
-- **Встретил `enum` при работе — переписать** на const-объект с теми же именем/значениями (call-sites и persisted-данные совместимы). Не переписаны пока: `GameKey`, `BunkerPhase`, `TelestrationsPhase`, `AliasPhase`, `SpyHuntPhase` и др.
+- **Встретил `enum` при работе — переписать** на const-объект с теми же именем/значениями (call-sites и persisted-данные совместимы). ⚠️ В type-позициях член const-объекта требует `typeof`: `Exclude<GameKey, typeof GameKey.Bunker>`. Не переписаны пока: `BunkerPhase`, `TelestrationsPhase`, `AliasPhase`, `SpyHuntPhase` и др. (`GameKey` переписан 2026-06-11).
 - НЕ трогать литералы-данные в `src/constants/*` (`difficulty: 'medium'` в тысячах строк контента) — union-тип их проверяет.

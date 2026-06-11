@@ -14,9 +14,11 @@ import {
     Radio,
     Route,
     Scale,
+    Shapes,
     Shield,
     Siren,
     Target,
+    Timer,
     Trophy,
     Users,
     Zap,
@@ -37,6 +39,7 @@ import TabyImage from '../assets/tabyImage2.JPG';
 import telestrationsImg from '../assets/telephone.png';
 import TruthOrDareImage from '../assets/TruthOrDare.png';
 import WavelengthImage from '../assets/WavelengthImage.JPG';
+import MemoryImage from '../assets/memoryImage2.png';
 import {TABOO_REVERSE_MODES} from '../constants/tabooReverseContent';
 import type {GamesRegistryMap} from '../types/games';
 import {GameKey} from '../types/games';
@@ -45,6 +48,7 @@ import {BUNKER_MODES} from "@/games/BunkerGame/constants.ts";
 import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
 import {CONNECT_FOUR_MODES} from "@/games/ConnectFourGame/constants.ts";
 import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
+import {MEMO_RISK_MODES} from "@/games/MemoRiskGame/types.ts";
 import {SPY_HUNT_MODES} from "@/games/SpyHuntGame/constants.ts";
 
 // Lazy load game components
@@ -100,6 +104,9 @@ const MillionaireGame = lazy(() =>
 );
 const CorridorGame = lazy(() =>
     import('../games/CorridorGame/CorridorGame').then((m) => ({default: m.CorridorGame}))
+);
+const MemoRiskGame = lazy(() =>
+    import('../games/MemoRiskGame/MemoRiskGame').then((m) => ({default: m.MemoRiskGame}))
 );
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
@@ -415,6 +422,41 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         minPlayers: 2,
     },
 
+    [GameKey.MemoRisk]: {
+        id: GameKey.MemoRisk,
+        title: 'МЕМО-РИСК',
+        subtitle: 'Запомни и рискни',
+        icon: Shapes,
+        theme: 'pink',
+        placeholder: 'Игрок',
+        players: '2+',
+        description:
+            'Открывай карты, запоминай поле и собирай целевые фигуры. Наткнёшься на опасную — очки хода сгорят. Рискни ещё раз или забери очки.',
+        minPlayers: 2,
+        backgroundImage: MemoryImage,
+
+        modes: [
+            {
+                id: MEMO_RISK_MODES.CLASSIC,
+                name: 'Классика',
+                description: 'Открывай без ограничений, пока сам не решишь остановиться',
+                icon: Grid,
+            },
+            {
+                id: MEMO_RISK_MODES.TIMED,
+                name: 'На время',
+                description: 'Ограниченное время на ход — решай быстрее',
+                icon: Timer,
+            },
+            {
+                id: MEMO_RISK_MODES.LIMITED,
+                name: 'Ограниченные ходы',
+                description: 'Фиксированное число открытий за ход',
+                icon: ListChecks,
+            },
+        ],
+    },
+
     [GameKey.Millionaire]: {
         id: GameKey.Millionaire,
         title: 'МИЛЛИОНЕР',
@@ -447,4 +489,5 @@ export {
     BunkerGame,
     MillionaireGame,
     CorridorGame,
+    MemoRiskGame,
 };

@@ -2,25 +2,28 @@ import type {LucideIcon} from 'lucide-react';
 
 import type {GameTheme} from '../types';
 
-export enum GameKey {
-    Spy = 'spy',
-    FakeArtist = 'fake_artist',
-    Resistance = 'resistance',
-    Alias = 'alias',
-    JustOne = 'just_one',
-    Telestrations = 'telestrations',
-    Wavelength = 'wavelength',
-    Codenames = 'codenames',
-    Decrypto = 'decrypto',
-    Mafia = 'mafia',
-    TruthOrDare = 'truth_or_dare',
-    ConnectFour = 'connect_four',
-    TabooReverse = 'taboo_reverse',
-    Taboo = 'taboo',
-    Bunker = 'bunker',
-    Millionaire = 'millionaire',
-    Corridor = 'corridor',
-}
+export const GameKey = {
+    Spy: 'spy',
+    FakeArtist: 'fake_artist',
+    Resistance: 'resistance',
+    Alias: 'alias',
+    JustOne: 'just_one',
+    Telestrations: 'telestrations',
+    Wavelength: 'wavelength',
+    Codenames: 'codenames',
+    Decrypto: 'decrypto',
+    Mafia: 'mafia',
+    TruthOrDare: 'truth_or_dare',
+    ConnectFour: 'connect_four',
+    TabooReverse: 'taboo_reverse',
+    Taboo: 'taboo',
+    Bunker: 'bunker',
+    Millionaire: 'millionaire',
+    Corridor: 'corridor',
+    MemoRisk: 'memo_risk',
+} as const;
+
+export type GameKey = (typeof GameKey)[keyof typeof GameKey];
 
 export interface InstructionItem {
     readonly title: string;

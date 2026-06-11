@@ -28,4 +28,4 @@ export type CorridorPhase = (typeof CorridorPhase)[keyof typeof CorridorPhase];
 
 **Примеры:** `CorridorPhase`, `ActionMode` (CorridorGame/types.ts), `C4Action` (ConnectFourGame/types.ts), `DIFFICULTY` (src/types.ts).
 
-**Ещё не переписаны (enum, ждут касания):** `GameKey` (types/games.ts), `BunkerPhase`, `TelestrationsPhase`, `AliasPhase`, `SpyHuntPhase` и прочие фазовые enum'ы игр.
+**Ещё не переписаны (enum, ждут касания):** `BunkerPhase`, `TelestrationsPhase`, `AliasPhase`, `SpyHuntPhase` и прочие фазовые enum'ы игр. `GameKey` переписан 2026-06-11 (в type-позициях понадобился `typeof`: `Exclude<GameKey, typeof GameKey.Bunker>`).

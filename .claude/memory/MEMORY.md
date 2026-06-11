@@ -16,5 +16,6 @@
 - [Hooks & Patterns](hooks_and_patterns.md) — usePlayerCycle, useTimer, VIBRATE, shuffle/pickRandom, DistributionFlow; таблица антипаттернов → замен
 - [Bunker Architecture](bunker_architecture.md) — constants.ts / helpers.ts / types.ts BunkerGame; SurvivalPhase карточка катастрофы; таблица всех экспортов
 - [Corridor Game](corridor_game.md) — SVG-доска Quoridor; механика hWalls/vWalls; isBlocked; BFS-валидация; ActionMode (move/wall_h/wall_v)
+- [Memo Risk Game](memo_risk_game.md) — memory push-your-luck (memo_risk): эскалация риска, супер-карта ×2, режимы classic/timed/limited, endTurn с явными значениями
 - [Session Persistence](session_persistence.md) — восстановление партии после перезагрузки: sessionService, usePersistedState/usePersistedTimer, guard'ы init-эффектов
 - [Code Style](code_style.md) — без магических литералов и БЕЗ enum: const-объект + производный тип (DIFFICULTY-паттерн), DEFAULT_GAME_CONFIG для дефолтов; встреченные enum'ы переписывать

@@ -10,6 +10,7 @@ import {GameKey, type GameMode} from '../types/games';
 
 import {DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 import {ALIAS_DIFFICULTY_CONFIG} from "@/games/AliasGame/constants.ts";
+import {MEMO_RISK_DIFFICULTY_CONFIG} from "@/games/MemoRiskGame/constants.ts";
 import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 
 // ─── universal setting row ────────────────────────────────────────────────────
@@ -140,6 +141,10 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                 const {roundTime} = ALIAS_DIFFICULTY_CONFIG[d];
                 return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
             }
+            case GameKey.MemoRisk: {
+                const {gridSize, shapeCount} = MEMO_RISK_DIFFICULTY_CONFIG[d];
+                return `${gridSize}×${gridSize} · ${shapeCount} фиг.`;
+            }
             case GameKey.TruthOrDare:
             case GameKey.TabooReverse:
             case GameKey.Taboo:
@@ -170,7 +175,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
         <div className="space-y-12 mb-10">
             {!hideDifficulty && (
                 <SettingRow
-                    label={difficultyLabel}
+                    label='Сложность'
                     icon={Target}
                     options={difficultyOptions}
                     value={difficulty}
@@ -185,7 +190,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                     <div className="flex items-center gap-3 mb-6 px-1">
                         <Zap className="w-4 h-4 text-white/20"/>
                         <span className="text-tag font-black uppercase tracking-[0.4em] text-white/80">
-              {modeLabel}
+             Мод
             </span>
                     </div>
                     <div className="flex flex-col gap-4">
@@ -194,20 +199,20 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                             return (
                                 <motion.button
                                     key={m.id}
-                                    whileTap={{scale: 0.98}}
+                                    whileTap={{scale: 0.90}}
                                     onClick={() => {
                                         setMode(m.id);
                                     }}
-                                    className={`p-6 rounded-premium-lg border transition-all text-left flex items-center gap-6 relative overflow-hidden ${
+                                    className={`p-3 rounded-premium-lg border transition-all text-left flex items-center gap-6 relative overflow-hidden ${
                                         isActive
-                                            ? `${getTheme('red').bg10} ${getTheme('red').border40} text-white shadow-[0_0_30px_rgba(255,46,77,0.15)]`
+                                            ? `${getTheme('green').bg10} ${getTheme('green').border40} text-white shadow-premium-green/20`
                                             : 'glass-card border-white/5 text-white/80'
                                     }`}
                                 >
                                     <div
                                         className={`w-14 h-14 shrink-0 rounded-premium-md flex items-center justify-center transition-all ${
                                             isActive
-                                                ? `${getTheme('red').solid} text-white shadow-xl shadow-premium-red/20`
+                                                ? `${getTheme('green').solid} text-white shadow-xl shadow-premium-green/20`
                                                 : 'bg-white/5 text-white/20'
                                         }`}
                                     >
