@@ -1,4 +1,4 @@
-import {Banknote, ChevronRight, Layers} from 'lucide-react';
+import {Banknote, Layers} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React from 'react';
 
@@ -8,6 +8,7 @@ import {MemoBoard} from './MemoBoard';
 import {ShapeBadges} from './ShapeBadges';
 
 import {PrimaryButton} from '@/components/PrimaryButton';
+import {StopGameButton} from '@/components/StopGameButton';
 import {TimerBar} from '@/components/TimerBar';
 import {useTranslation} from '@/i18n';
 import {NS} from '@/i18n/keys';
@@ -18,6 +19,8 @@ interface PlayingPhaseProps {
     /** Общие для всех игроков фигуры раунда */
     round: RoundShapes;
     currentPlayer: string;
+    /** Общий счёт текущего игрока */
+    totalScore: number;
     turnPoints: number;
     /** Сколько очков ушло в банк (с учётом супер-карты) — для вердикта */
     gainedPoints: number;
@@ -32,7 +35,7 @@ interface PlayingPhaseProps {
     escalation: number;
     onFlip: (slot: number) => void;
     onBank: () => void;
-    onNextTurn: () => void;
+    onStopGame: () => void;
 }
 
 const VERDICT_KEYS: Record<TurnOutcome, {title: string; desc: string}> = {
@@ -47,6 +50,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                                                               gridSize,
                                                               round,
                                                               currentPlayer,
+                                                              totalScore,
                                                               turnPoints,
                                                               gainedPoints,
                                                               superActive,
@@ -57,7 +61,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                                                               escalation,
                                                               onFlip,
                                                               onBank,
-                                                              onNextTurn,
+                                                              onStopGame,
                                                           }) => {
     const {t} = useTranslation();
 
@@ -75,10 +79,21 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             {/* Цели и опасности раунда — общие для всех */}
             <ShapeBadges round={round}/>
 
-            {/* Статус хода */}
+            {/* Текущий игрок и его счёт — меняются при передаче хода */}
             <div className="flex items-center justify-between px-4 py-3 rounded-premium-md border border-white/10 bg-white/5">
                 <div className="min-w-0">
-                    <p className="font-black truncate text-white/80">{currentPlayer}</p>
+                    <AnimatePresence mode="wait">
+                        <motion.p
+                            key={currentPlayer}
+                            initial={{opacity: 0, y: 8}}
+                            animate={{opacity: 1, y: 0}}
+                            exit={{opacity: 0, y: -8}}
+                            className="font-black truncate text-white/90"
+                        >
+                            {currentPlayer}
+                            <span className="ml-2 text-premium-pink tabular-nums">{totalScore}</span>
+                        </motion.p>
+                    </AnimatePresence>
                     <p className="text-micro font-black uppercase tracking-widest text-white/30">
                         {t(`${NS.MEMO_RISK}.riskLevel`, {n: escalation})}
                         {flipsLeft !== null && ` · ${t(`${NS.MEMO_RISK}.flipsLeftLabel`, {n: flipsLeft})}`}
@@ -113,7 +128,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                 onFlip={onFlip}
             />
 
-            {/* Вердикт хода или кнопка «забрать очки» */}
+            {/* Вердикт хода (ход передаётся сам) или кнопка «забрать очки» */}
             <AnimatePresence mode="wait">
                 {outcome === null ? (
                     <motion.div
@@ -137,35 +152,27 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                         initial={{opacity: 0, y: 10}}
                         animate={{opacity: 1, y: 0}}
                         exit={{opacity: 0, y: -10}}
-                        className="space-y-3"
+                        className={`px-4 py-4 rounded-premium-md border text-center ${
+                            isBusted
+                                ? 'border-premium-red/40 bg-premium-red/10'
+                                : 'border-premium-green/40 bg-premium-green/10'
+                        }`}
                     >
-                        <div
-                            className={`px-4 py-4 rounded-premium-md border text-center ${
-                                isBusted
-                                    ? 'border-premium-red/40 bg-premium-red/10'
-                                    : 'border-premium-green/40 bg-premium-green/10'
+                        <p
+                            className={`text-2xl font-black italic uppercase ${
+                                isBusted ? 'text-premium-red' : 'text-premium-green'
                             }`}
                         >
-                            <p
-                                className={`text-2xl font-black italic uppercase ${
-                                    isBusted ? 'text-premium-red' : 'text-premium-green'
-                                }`}
-                            >
-                                {t(`${NS.MEMO_RISK}.${VERDICT_KEYS[outcome].title}`, {n: verdictAmount})}
-                            </p>
-                            <p className="text-sm font-bold text-white/40 mt-1">
-                                {t(`${NS.MEMO_RISK}.${VERDICT_KEYS[outcome].desc}`, {n: verdictAmount})}
-                            </p>
-                        </div>
-                        {/* Провал передаёт ход сам — кнопка только для остальных исходов */}
-                        {!isBusted && (
-                            <PrimaryButton onClick={onNextTurn} icon={ChevronRight} variant="purple">
-                                {t(`${NS.MEMO_RISK}.passTurnBtn`)}
-                            </PrimaryButton>
-                        )}
+                            {t(`${NS.MEMO_RISK}.${VERDICT_KEYS[outcome].title}`, {n: verdictAmount})}
+                        </p>
+                        <p className="text-sm font-bold text-white/40 mt-1">
+                            {t(`${NS.MEMO_RISK}.${VERDICT_KEYS[outcome].desc}`, {n: verdictAmount})}
+                        </p>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <StopGameButton onClick={onStopGame}/>
         </div>
     );
 };

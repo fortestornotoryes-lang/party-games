@@ -1,5 +1,4 @@
 export const MemoRiskPhase = {
-    Pass: 'pass',
     Playing: 'playing',
     GameOver: 'game_over',
 } as const;

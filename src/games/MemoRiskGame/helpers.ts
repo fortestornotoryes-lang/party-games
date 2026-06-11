@@ -87,17 +87,52 @@ export function remainingShapes(board: (MemoCard | null)[]): MemoShape[] {
 /**
  * Выбирает целевые и опасные фигуры хода. Уровень риска (escalation) задаёт
  * их количество, но клампится так, чтобы наборы не пересекались.
+ * Старается сохранить фигуры из prevRound, если они ещё есть на поле.
  * null — фигур меньше двух видов, партия окончена (колода и поле истощены).
  */
-export function pickRoundShapes(board: (MemoCard | null)[], escalation: number): RoundShapes | null {
-    const available = shuffle(remainingShapes(board));
+export function pickRoundShapes(
+    board: (MemoCard | null)[],
+    escalation: number,
+    prevRound?: RoundShapes | null
+): RoundShapes | null {
+    const available = remainingShapes(board);
     if (available.length < 2) return null;
 
-    const level = Math.max(INITIAL_ESCALATION, Math.min(escalation, Math.floor(available.length / 2)));
-    return {
-        targets: available.slice(0, level),
-        dangers: available.slice(level, level * 2),
-    };
+    // По очереди добавляем в цели и опасности:
+    // E=1: T=1, D=1 (всего 2)
+    // E=2: T=2, D=1 (всего 3)
+    // E=3: T=2, D=2 (всего 4)
+    // E=4: T=3, D=2 (всего 5)
+    // E=5: T=3, D=3 (всего 6)
+    const safeE = Math.max(1, Math.min(escalation, available.length - 1));
+    const tCount = Math.floor(safeE / 2) + 1;
+    const dCount = Math.ceil(safeE / 2);
+
+    let targets: MemoShape[] = [];
+    let dangers: MemoShape[] = [];
+
+    if (prevRound) {
+        // Пытаемся сохранить старые фигуры, если они всё ещё на поле
+        targets = prevRound.targets.filter((s) => available.includes(s));
+        dangers = prevRound.dangers.filter((s) => available.includes(s));
+    }
+
+    // Обрезаем лишние, если уровень сложности упал или фигуры перемешались
+    if (targets.length > tCount) targets = targets.slice(0, tCount);
+    if (dangers.length > dCount) dangers = dangers.slice(0, dCount);
+
+    const picked = new Set([...targets, ...dangers]);
+    const pool = shuffle(available.filter((s) => !picked.has(s)));
+
+    // Добираем недостающие из свободных на поле
+    while (targets.length < tCount && pool.length > 0) {
+        targets.push(pool.shift()!);
+    }
+    while (dangers.length < dCount && pool.length > 0) {
+        dangers.push(pool.shift()!);
+    }
+
+    return {targets, dangers};
 }
 
 /** Можно ли начать следующий ход на этом поле. */

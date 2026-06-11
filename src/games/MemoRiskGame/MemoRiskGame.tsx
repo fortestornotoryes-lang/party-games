@@ -3,13 +3,12 @@ import {AnimatePresence, motion} from 'motion/react';
 import React, {useCallback, useEffect} from 'react';
 
 import {GameOverPhase} from './components/GameOverPhase';
-import {PassPhase} from './components/PassPhase';
 import {PlayingPhase} from './components/PlayingPhase';
 import {
-    BUSTED_PASS_DELAY_MS,
     INITIAL_ESCALATION,
     MEMO_RISK_DIFFICULTY_CONFIG,
     SUPER_MULTIPLIER,
+    TURN_END_DELAY_MS,
 } from './constants';
 import {
     canStartRound,
@@ -52,7 +51,11 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
     const isTimed = mode === MEMO_RISK_MODES.TIMED;
     const isLimited = mode === MEMO_RISK_MODES.LIMITED;
 
-    const [phase, setPhase] = usePersistedState<MemoRiskPhase>(K, 'phase', MemoRiskPhase.Pass);
+    const [phase, setPhase] = usePersistedState<MemoRiskPhase>(K, 'phase', MemoRiskPhase.Playing, {
+        save: (v) => v,
+        // Легаси-сессии могли сохранить удалённую фазу 'pass' — нормализуем
+        load: (raw) => (raw === MemoRiskPhase.GameOver ? MemoRiskPhase.GameOver : MemoRiskPhase.Playing),
+    });
     const [cards, setCards] = usePersistedState<CardsState>(K, 'cards', () => createGame(cfg));
     const [scores, setScores] = usePersistedState<Record<string, number>>(K, 'scores', () =>
         Object.fromEntries(playerNames.map((n) => [n, 0]))
@@ -69,7 +72,11 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
     const [round, setRound] = usePersistedState<RoundShapes | null>(K, 'round', () =>
         pickRoundShapes(cards.board, INITIAL_ESCALATION)
     );
-    const [flipsLeft, setFlipsLeft] = usePersistedState<number | null>(K, 'flipsLeft', null);
+// round?.targets
+// round?.dangers
+    const [flipsLeft, setFlipsLeft] = usePersistedState<number | null>(K, 'flipsLeft', () =>
+        isLimited ? cfg.flipLimit : null
+    );
     const [superActive, setSuperActive] = usePersistedState(K, 'superActive', false);
     const [outcome, setOutcome] = usePersistedState<TurnOutcome | null>(K, 'outcome', null);
 
@@ -99,6 +106,7 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
     }, [outcome, turnPoints, superActive, endTurn]);
 
     const timer = useTimer({initialTime: cfg.turnSeconds, onTimeUp: handleTimeUp});
+    // Первый ход стартует сразу при маунте — usePersistedTimer запускает отсчёт сам
     usePersistedTimer(
         K,
         'timeLeft',
@@ -106,33 +114,88 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
         isTimed && phase === MemoRiskPhase.Playing && outcome === null
     );
 
-    const {pause: pauseTimer} = timer;
+    const {pause: pauseTimer, reset: resetTimer, start: startTimer} = timer;
     useEffect(() => {
         if (phase !== MemoRiskPhase.Playing || outcome !== null) pauseTimer();
     }, [phase, outcome, pauseTimer]);
 
-    const startTurn = () => {
-        // Фигуры раунда общие — пере-разыгрываем только если текущих нет
-        // или какая-то из них уже выбыла с поля
-        if (!round || !isRoundValid(round, cards.board)) {
-            const fresh = pickRoundShapes(cards.board, escalation);
-            if (!fresh) {
-                setPhase(MemoRiskPhase.GameOver);
-                return;
-            }
-            setRound(fresh);
+    /** Завершить ход: убрать открытые карты, добрать из колоды, передать ход следующему */
+    const handleNextTurn = useCallback(() => {
+        const isBusted = outcome === TurnOutcome.Busted;
+
+        // Если игрок проиграл (Busted), забранные карты не считаются "взятыми" (за них не дали очков),
+        // поэтому они должны вернуться на поле, а не заменяться из колоды.
+        const cardsToClean = isBusted
+            ? {
+                  ...cards,
+                  board: cards.board.map((c) =>
+                      c?.state === MemoCardState.Collected ? {...c, state: MemoCardState.Revealed} : c
+                  ),
+              }
+            : cards;
+
+        // Игрок забрал целевые карты в этом ходу — фигуры раунда меняются.
+        // При провале (Busted) забор не засчитывается.
+        const tookTarget =
+            !isBusted &&
+            !!round &&
+            cards.board.some((c) => c?.state === MemoCardState.Collected && round.targets.includes(c.shape));
+
+        const cleaned = endOfTurnCleanup(cardsToClean);
+        setCards(cleaned);
+        if (!canStartRound(cleaned.board)) {
+            feedbackService.vibrate(VIBRATE.win);
+            feedbackService.playSound('win');
+            setPhase(MemoRiskPhase.GameOver);
+            return;
         }
+        const roundBroken = !round || !isRoundValid(round, cleaned.board);
+        if (tookTarget || isBusted || roundBroken) {
+            // Если игрок успешно забрал цели, уровень риска для следующего раунда сбрасывается.
+            // Иначе (если раунд просто перестал быть валидным или игрок проиграл) — сохраняем текущий уровень.
+            // При Busted уровень уже увеличен в endTurn.
+            const nextEscalation = tookTarget ? INITIAL_ESCALATION : escalation;
+            setRound(pickRoundShapes(cleaned.board, nextEscalation, tookTarget ? null : round));
+            if (tookTarget) setEscalation(INITIAL_ESCALATION);
+        }
+        // Следующий ход начинается сразу — меняется только игрок и его счёт
+        nextPlayer();
         setTurnPoints(0);
         setSuperActive(false);
         setOutcome(null);
         setFlipsLeft(isLimited ? cfg.flipLimit : null);
-        setPhase(MemoRiskPhase.Playing);
-        feedbackService.playSound('start');
         if (isTimed) {
-            timer.reset(cfg.turnSeconds);
-            timer.start();
+            resetTimer(cfg.turnSeconds);
+            startTimer();
         }
-    };
+    }, [
+        cards,
+        round,
+        outcome,
+        escalation,
+        isLimited,
+        isTimed,
+        cfg,
+        nextPlayer,
+        resetTimer,
+        startTimer,
+        setCards,
+        setPhase,
+        setRound,
+        setTurnPoints,
+        setSuperActive,
+        setOutcome,
+        setFlipsLeft,
+    ]);
+
+    // Любой исход хода передаёт его автоматически — игроки успевают увидеть вердикт
+    useEffect(() => {
+        if (outcome === null || phase !== MemoRiskPhase.Playing) return;
+        const id = setTimeout(handleNextTurn, TURN_END_DELAY_MS);
+        return () => {
+            clearTimeout(id);
+        };
+    }, [outcome, phase, handleNextTurn]);
 
     /** В режиме «Ограниченные ходы» каждое открытие тратит попытку */
     const consumeFlip = (pointsNow: number, superNow: boolean) => {
@@ -187,35 +250,6 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
         endTurn(TurnOutcome.Banked, turnPoints, superActive);
     };
 
-    const handleNextTurn = useCallback(() => {
-        // Игрок забрал карты в этом ходу — фигуры раунда меняются
-        const tookCards = cards.board.some((c) => c?.state === MemoCardState.Collected);
-        const cleaned = endOfTurnCleanup(cards);
-        setCards(cleaned);
-        if (!canStartRound(cleaned.board)) {
-            feedbackService.vibrate(VIBRATE.win);
-            feedbackService.playSound('win');
-            setPhase(MemoRiskPhase.GameOver);
-            return;
-        }
-        const escalated = outcome === TurnOutcome.Busted;
-        const roundBroken = !round || !isRoundValid(round, cleaned.board);
-        if (tookCards || escalated || roundBroken) {
-            setRound(pickRoundShapes(cleaned.board, escalation));
-        }
-        nextPlayer();
-        setPhase(MemoRiskPhase.Pass);
-    }, [cards, round, outcome, escalation, nextPlayer, setCards, setRound, setPhase]);
-
-    // Провал передаёт ход автоматически — игрок успевает увидеть опасную карту
-    useEffect(() => {
-        if (outcome !== TurnOutcome.Busted || phase !== MemoRiskPhase.Playing) return;
-        const id = setTimeout(handleNextTurn, BUSTED_PASS_DELAY_MS);
-        return () => {
-            clearTimeout(id);
-        };
-    }, [outcome, phase, handleNextTurn]);
-
     const handleRestart = () => {
         const fresh = createGame(cfg);
         setCards(fresh);
@@ -225,9 +259,13 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
         setEscalation(INITIAL_ESCALATION);
         setSuperActive(false);
         setOutcome(null);
-        setFlipsLeft(null);
+        setFlipsLeft(isLimited ? cfg.flipLimit : null);
         resetPlayers();
-        setPhase(MemoRiskPhase.Pass);
+        setPhase(MemoRiskPhase.Playing);
+        if (isTimed) {
+            resetTimer(cfg.turnSeconds);
+            startTimer();
+        }
     };
 
     const gainedPoints = turnPoints * (superActive ? SUPER_MULTIPLIER : 1);
@@ -244,28 +282,6 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
 
             <div className="flex-1 min-h-0 overflow-y-auto px-4 py-5">
                 <AnimatePresence mode="wait">
-                    {phase === MemoRiskPhase.Pass && (
-                        <motion.div
-                            key="pass"
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -20}}
-                        >
-                            <PassPhase
-                                currentPlayer={currentPlayer}
-                                playerNames={playerNames}
-                                scores={scores}
-                                escalation={escalation}
-                                deckCount={cards.deck.length}
-                                round={round}
-                                onStartTurn={startTurn}
-                                onStopGame={() => {
-                                    setPhase(MemoRiskPhase.GameOver);
-                                }}
-                            />
-                        </motion.div>
-                    )}
-
                     {phase === MemoRiskPhase.Playing && !!round && (
                         <motion.div
                             key="playing"
@@ -278,6 +294,7 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 gridSize={gridSize}
                                 round={round}
                                 currentPlayer={currentPlayer}
+                                totalScore={scores[currentPlayer] ?? 0}
                                 turnPoints={turnPoints}
                                 gainedPoints={gainedPoints}
                                 superActive={superActive}
@@ -288,7 +305,9 @@ export const MemoRiskGame: React.FC<Props> = ({playerNames, onBack}) => {
                                 escalation={escalation}
                                 onFlip={flipCard}
                                 onBank={handleBank}
-                                onNextTurn={handleNextTurn}
+                                onStopGame={() => {
+                                    setPhase(MemoRiskPhase.GameOver);
+                                }}
                             />
                         </motion.div>
                     )}

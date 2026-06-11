@@ -598,11 +598,8 @@ export interface MemoRiskTranslations {
     // MemoRiskGame.tsx
     title: string;             // 'МЕМО-РИСК'
     subtitle: string;          // 'Запомни и рискни'
-    // PassPhase.tsx
-    riskLevel: string;         // 'Уровень риска {{n}}'
-    tapToStart: string;        // 'Нажми, чтобы начать ход'
-    passInstruction: string;   // 'Запоминай поле — открывай только цели'
     // PlayingPhase.tsx
+    riskLevel: string;         // 'Уровень риска {{n}}'
     findLabel: string;         // 'Ищи'
     avoidLabel: string;        // 'Избегай'
     turnPointsLabel: string;   // 'Очки хода'
@@ -619,7 +616,6 @@ export interface MemoRiskTranslations {
     timeoutDesc: string;       // '+{{n}} очков зафиксировано'
     outOfFlipsTitle: string;   // 'ОТКРЫТИЯ КОНЧИЛИСЬ'
     outOfFlipsDesc: string;    // '+{{n}} очков зафиксировано'
-    passTurnBtn: string;       // 'ПЕРЕДАТЬ ХОД'
     // GameOverPhase.tsx
     deckEmpty: string;         // 'Фигуры закончились'
     newGame: string;           // 'НОВАЯ ИГРА'

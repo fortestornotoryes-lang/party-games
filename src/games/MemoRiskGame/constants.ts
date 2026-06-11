@@ -34,8 +34,8 @@ export const SUPER_MULTIPLIER = 2;
 /** Стартовый уровень риска: столько целевых и столько опасных фигур в ходе */
 export const INITIAL_ESCALATION = 1;
 
-/** Пауза перед авто-передачей хода после провала (игрок видит опасную карту) */
-export const BUSTED_PASS_DELAY_MS = 2000;
+/** Пауза перед авто-передачей хода — игроки видят вердикт и открытые карты */
+export const TURN_END_DELAY_MS = 2000;
 
 export interface RarityMeta {
     points: number;
@@ -94,7 +94,7 @@ export const SHAPE_META: Record<MemoShape, {icon: LucideIcon; color: GameTheme}>
     [MemoShape.Circle]: {icon: Circle, color: 'sky'},
     [MemoShape.Square]: {icon: Square, color: 'green'},
     [MemoShape.Triangle]: {icon: Triangle, color: 'indigo'},
-    [MemoShape.Star]: {icon: Star, color: 'yellow'},
+    [MemoShape.Star]: {icon: Star, color: 'red'},
     [MemoShape.Heart]: {icon: Heart, color: 'pink'},
     [MemoShape.Hexagon]: {icon: Hexagon, color: 'purple'},
 };
