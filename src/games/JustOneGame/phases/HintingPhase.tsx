@@ -2,8 +2,9 @@ import {CheckCircle, Send} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useState} from 'react';
 
-
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface HintingPhaseProps {
     word: string;
@@ -22,6 +23,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                                                               onSubmitHint,
                                                               onStartGuessing,
                                                           }) => {
+    const {t} = useTranslation();
     const [localHints, setLocalHints] = useState<Record<string, string>>({});
     const allHinted = Object.keys(hints).length === hinters.length;
 
@@ -35,7 +37,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
         >
             <div className="text-center space-y-2 pt-2">
                 <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-yellow/40">
-                    Загаданное слово
+                    {t(`${NS.JUST_ONE}.secretWord`)}
                 </p>
                 <h2 className="text-5xl font-black italic uppercase text-white tracking-tighter leading-none">
                     {word}
@@ -45,7 +47,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
             <div
                 className="p-4 rounded-premium-md bg-premium-yellow/[0.05] border border-premium-yellow/15 text-center">
                 <p className="text-micro font-black uppercase tracking-[0.3em] text-white/30 mb-1">
-                    Отгадывает
+                    {t(`${NS.JUST_ONE}.guessing`)}
                 </p>
                 <h3 className="text-xl font-black italic uppercase text-premium-yellow">{guesser}</h3>
             </div>
@@ -53,7 +55,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
           <span className="text-micro font-black uppercase tracking-[0.4em] text-white/35">
-            Подсказки
+            {t(`${NS.JUST_ONE}.hintsLabel`)}
           </span>
                     <span
                         className="text-micro font-black px-3 py-1 bg-white/4 rounded-full text-white/30 border border-white/6">
@@ -86,7 +88,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                                             setLocalHints((prev) => ({...prev, [player]: e.target.value}));
                                         }
                                         }
-                                        placeholder="Подсказка..."
+                                        placeholder={t(`${NS.JUST_ONE}.hintPlaceholder`)}
                                         className="flex-1 h-9 bg-white/4 border border-white/8 rounded-premium-sm px-3 text-sm focus:border-premium-yellow/40 outline-none transition-colors"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') onSubmitHint(player, localHints[player] || '');
@@ -110,7 +112,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
             {!!allHinted && (
                 <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}}>
                     <PrimaryButton onClick={onStartGuessing}>
-                        ГОТОВО! ПОКАЗАТЬ {guesser.toUpperCase()}
+                        {t(`${NS.JUST_ONE}.readyShowGuesser`, {guesser})}
                     </PrimaryButton>
                 </motion.div>
             )}

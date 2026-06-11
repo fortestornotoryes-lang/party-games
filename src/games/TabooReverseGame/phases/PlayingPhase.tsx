@@ -6,6 +6,8 @@ import {PlayingHeader} from '@/components/PlayingHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {TimerBar} from '@/components/TimerBar';
 import type {TabooCard} from '@/constants/tabooReverseContent';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {
@@ -38,6 +40,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                                                               onGuessed,
                                                               onSkip,
                                                           }) => {
+    const {t} = useTranslation();
     const timerPct = (timeLeft / cardTimer) * 100;
     const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
 
@@ -74,7 +77,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                 <div
                     className="p-8 rounded-premium-2xl border-2 border-premium-orange/30 bg-premium-orange/5 text-center">
                     <p className="text-micro font-black uppercase tracking-[0.5em] text-premium-orange/50 mb-3">
-                        Загаданное слово
+                        {t(`${NS.TABOO_REVERSE}.secretWord`)}
                     </p>
                     <h2
                         className="font-black italic uppercase tracking-tighter leading-tight text-white wrap-break-word"
@@ -87,7 +90,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                 {/* Required words */}
                 <div>
                     <p className="text-micro font-black uppercase tracking-[0.4em] text-white/30 mb-3 text-center">
-                        Обязательные слова — используй все!
+                        {t(`${NS.TABOO_REVERSE}.requiredWords`)}
                     </p>
                     <div className="flex flex-wrap gap-2 justify-center">
                         {card.required.map((w, i) => (
@@ -110,7 +113,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                                 onClick={onGuessed}
                                 className="flex-1 bg-premium-green! text-white! shadow-premium-green/30"
                             >
-                                УГАДАНО!
+                                {t(`${NS.TABOO_REVERSE}.guessed`)}
                             </PrimaryButton>
                             <button
                                 onClick={onSkip}
@@ -126,12 +129,12 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                             onClick={onGuessed}
                             className="bg-premium-orange text-white! shadow-premium-orange/30"
                         >
-                            СЛОВО УГАДАНО!
+                            {t(`${NS.TABOO_REVERSE}.wordGuessed`)}
                         </PrimaryButton>
                     )}
 
                     <p className="text-center text-micro font-black uppercase tracking-widest text-white/20">
-                        {isBlitz ? 'Пропуск даёт −1 объясняющему' : 'Само слово называть нельзя'}
+                        {isBlitz ? t(`${NS.TABOO_REVERSE}.skipPenaltyHint`) : t(`${NS.TABOO_REVERSE}.noWordAllowed`)}
                     </p>
                 </div>
             </div>

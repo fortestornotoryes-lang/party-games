@@ -18,6 +18,8 @@ import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
 import {useCountdown} from '@/hooks/useCountdown.ts';
 import {usePersistedState} from '@/hooks/usePersistedState';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
 import {sessionService} from '@/services/sessionService';
 import {storageService} from '@/services/storageService.ts';
@@ -36,6 +38,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                                                                         onBack,
                                                                         initialDifficulty,
                                                                     }) => {
+    const {t} = useTranslation();
     const K = GameKey.Telestrations;
     const [shuffledPlayers, setShuffledPlayers] = usePersistedState(K, 'shuffledPlayers', () =>
         shuffle(playerNames)
@@ -139,10 +142,16 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
         setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
     };
 
+    const diffLabel = t(`${NS.TELESTRATIONS}.difficultyLabels.${difficulty}`);
+    const actionLabel = isDrawingRound ? t(`${NS.TELESTRATIONS}.draws`) : t(`${NS.TELESTRATIONS}.guesses`);
     const subtitle =
         phase === TelestrationsPhase.Setup
-            ? `${playerNames.length} игроков`
-            : `${currentRound + 1}/${shuffledPlayers.length} · ${DIFFICULTY_CONFIG[difficulty].label}${phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition ? ` · ${isDrawingRound ? 'рисует' : 'угадывает'}` : ''}`;
+            ? t(`${NS.TELESTRATIONS}.playerCount`, {n: playerNames.length})
+            : `${currentRound + 1}/${shuffledPlayers.length} · ${diffLabel}${
+                  phase === TelestrationsPhase.Action || phase === TelestrationsPhase.Transition
+                      ? ` · ${actionLabel}`
+                      : ''
+              }`;
 
     return (
         <div className="flex flex-col h-screen select-none overflow-hidden">
@@ -204,11 +213,9 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                             <div className="w-full max-w-sm">
                                 <PassPhoneCard
                                     playerName={currentPlayer}
-                                    badge={isDrawingRound ? 'Рисует' : 'Угадывает'}
+                                    badge={isDrawingRound ? t(`${NS.TELESTRATIONS}.draws`) : t(`${NS.TELESTRATIONS}.guesses`)}
                                     badgeColor={isDrawingRound ? 'orange' : 'sky'}
-                                    instruction={
-                                        isDrawingRound ? 'Нажми чтобы увидеть слово' : 'Нажми чтобы увидеть рисунок'
-                                    }
+                                    instruction={isDrawingRound ? t(`${NS.TELESTRATIONS}.tapToSeeWord`) : t(`${NS.TELESTRATIONS}.tapToSeeDrawing`)}
                                     onClick={startAction}
                                 />
                             </div>

@@ -6,6 +6,8 @@ import type {ChoiceType} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 
 interface ActionPhaseProps {
@@ -21,6 +23,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
                                                             content,
                                                             onDone,
                                                         }) => {
+    const {t} = useTranslation();
     const isTruth = choice === 'truth';
 
     return (
@@ -41,7 +44,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
                     }`}
                 >
                     <Typography.Label color={isTruth ? 'sky' : 'red'} as="span">
-                        {isTruth ? 'Правда' : 'Действие'}
+                        {isTruth ? t(`${NS.TRUTH_OR_DARE}.truthBadge`) : t(`${NS.TRUTH_OR_DARE}.dareBadge`)}
                     </Typography.Label>
                 </div>
                 <Typography.Title className="text-center">{currentPlayer}</Typography.Title>
@@ -75,7 +78,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
             </div>
 
             <PrimaryButton onClick={onDone} icon={CheckCircle} variant={isTruth ? 'blue' : 'red'}>
-                ВЫПОЛНЕНО
+                {t(`${NS.TRUTH_OR_DARE}.completed`)}
             </PrimaryButton>
         </motion.div>
     );

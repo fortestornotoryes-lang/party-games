@@ -14,6 +14,8 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
@@ -25,6 +27,7 @@ interface JustOneGameProps {
 }
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const {difficulty} = useGameSettings();
     const guesserIdxState = usePersistedState(GameKey.JustOne, 'guesserIdx', 0);
     const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(
@@ -118,7 +121,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) =
         <div className="flex flex-col h-screen">
             <GameHeader
                 title={GAMES_REGISTRY.just_one.title}
-                subtitle="Пойми намёк"
+                subtitle={t(`${NS.JUST_ONE}.subtitle`)}
                 icon={Lightbulb}
                 theme="yellow"
                 onBack={onBack}

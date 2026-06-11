@@ -14,6 +14,8 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
@@ -26,6 +28,7 @@ interface WavelengthGameProps {
 }
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const {difficulty} = useGameSettings();
     const [phase, setPhase] = usePersistedState<WavelengthPhase>(
         GameKey.Wavelength,
@@ -89,7 +92,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({playerNames, onBa
         <div className="flex flex-col h-screen">
             <GameHeader
                 title={GAMES_REGISTRY.wavelength.title}
-                subtitle="На одной волне"
+                subtitle={t(`${NS.WAVELENGTH}.subtitle`)}
                 icon={Radio}
                 theme="purple"
                 onBack={onBack}

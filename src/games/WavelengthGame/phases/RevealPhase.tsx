@@ -4,6 +4,8 @@ import React from 'react';
 
 import {GameCard} from '@/components/GameCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface RevealPhaseProps {
     currentPair: string[];
@@ -20,6 +22,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                                                             score,
                                                             onNext,
                                                         }) => {
+    const {t} = useTranslation();
     const isGood = score > 0;
 
     return (
@@ -34,7 +37,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             {/* Header */}
             <div className="text-center space-y-2">
                 <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white">
-                    РЕЗУЛЬТАТ
+                    {t(`${NS.WAVELENGTH}.result`)}
                 </h2>
                 <div
                     className="flex items-center justify-center gap-1.5 text-sm font-black uppercase tracking-widest text-white/45">
@@ -71,7 +74,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                             transition={{delay: 0.2, duration: 0.35, type: 'spring', damping: 20}}
                             style={{left: `${guessValue}%`}}
                             className="absolute top-[-50%] -translate-x-1/2 w-1 bg-premium-yellow rounded-full z-20"
-                            aria-label="Ваш ответ"
+                            aria-label={t(`${NS.WAVELENGTH}.answerLabel`)}
                         >
                             <div
                                 className="absolute inset-0 rounded-full"
@@ -85,13 +88,13 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                         <div className="flex items-center gap-1">
                             <div className="w-3 h-0.5 bg-white/70"/>
                             <span className="text-micro font-black uppercase tracking-[0.2em] text-white/45">
-                Цель
+                {t(`${NS.WAVELENGTH}.targetLabel`)}
               </span>
                         </div>
                         <div className="flex items-center gap-1">
                             <div className="w-3 h-0.5 bg-premium-yellow"/>
                             <span className="text-micro font-black uppercase tracking-[0.2em] text-white/45">
-                Ответ
+                {t(`${NS.WAVELENGTH}.answerLabel`)}
               </span>
                         </div>
                     </div>
@@ -100,7 +103,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                 {/* Score display */}
                 <div className="text-center space-y-3 w-full">
                     <div className="text-tag font-black uppercase tracking-[0.4em] text-white/35">
-                        Твои очки
+                        {t(`${NS.WAVELENGTH}.yourScore`)}
                     </div>
                     <motion.div
                         initial={{scale: 0.5, opacity: 0}}
@@ -128,7 +131,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                             <GameCard
                                 className="inline-flex items-center gap-2 px-5 py-2 border border-premium-purple/40 bg-premium-purple/10">
                 <span className="text-sm font-black italic uppercase tracking-widest text-premium-yellow">
-                  ИДЕАЛЬНО!
+                  {t(`${NS.WAVELENGTH}.perfect`)}
                 </span>
                             </GameCard>
                         </motion.div>
@@ -137,7 +140,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
             </div>
 
             <PrimaryButton onClick={onNext} variant="purple" icon={RotateCcw}>
-                СЛЕДУЮЩИЙ РАУНД
+                {t(`${NS.WAVELENGTH}.nextRound`)}
             </PrimaryButton>
         </motion.div>
     );

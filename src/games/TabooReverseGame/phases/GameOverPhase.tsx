@@ -58,7 +58,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                     </p>
                     {teamWinner === -1 ? (
                         <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
-                            Ничья!
+                            {t(`${NS.COMMON}.draw`)}!
                         </h2>
                     ) : (
                         <h2
@@ -66,7 +66,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                                 teamWinner === 0 ? 'text-premium-orange' : 'text-premium-sky'
                             }`}
                         >
-                            Команда {(teamWinner ?? 0) + 1} победила!
+                            {t(`${NS.TABOO_REVERSE}.teamWon`, {n: (teamWinner ?? 0) + 1})}
                         </h2>
                     )}
 
@@ -75,7 +75,6 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                         {([0, 1] as const).map((ti) => {
                             const isWinner = teamWinner === ti;
                             const tscore = ti === 0 ? team1Score : team2Score;
-                            const color = ti === 0 ? 'orange' : 'sky';
                             return (
                                 <div
                                     key={ti}
@@ -92,7 +91,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                                             ti === 0 ? 'text-premium-orange/70' : 'text-premium-sky/70'
                                         }`}
                                     >
-                                        Команда {ti + 1}
+                                        {t(`${NS.TABOO_REVERSE}.teamN`, {n: ti + 1})}
                                     </p>
                                     <p
                                         className={`text-3xl font-black italic tabular-nums ${
@@ -131,15 +130,15 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
                     <Trophy
                         className="w-16 h-16 text-premium-yellow mx-auto mb-4 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]"/>
                     <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
-                        Игра завершена
+                        {t(`${NS.TABOO}.gameEnded`)}
                     </p>
                     {hasWinner ? (
                         <h2 className="text-4xl font-black italic uppercase tracking-tighter text-premium-yellow">
-                            {sorted[0]} победил!
+                            {t(`${NS.TABOO_REVERSE}.playerWon`, {player: sorted[0]})}
                         </h2>
                     ) : (
                         <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white/70">
-                            Ничья!
+                            {t(`${NS.COMMON}.draw`)}!
                         </h2>
                     )}
                 </div>

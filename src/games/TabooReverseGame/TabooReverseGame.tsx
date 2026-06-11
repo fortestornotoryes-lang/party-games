@@ -19,6 +19,8 @@ import type {TabooCard} from '@/constants/tabooReverseContent';
 import {getNextTabooCard, TABOO_REVERSE_CARDS, TABOO_REVERSE_MODES} from '@/constants/tabooReverseContent';
 import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
 import {useTimer} from '@/hooks/useTimer';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {feedbackService, VIBRATE} from '@/services/feedbackService';
 import {storageService} from '@/services/storageService';
 import {GameKey} from '@/types/games';
@@ -30,6 +32,7 @@ interface TabooReverseGameProps {
 }
 
 export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const {difficulty, timerSeconds, mode} = useGameSettings();
     const cardTimer = timerSeconds;
     const isBlitz = mode === TABOO_REVERSE_MODES.BLITZ;
@@ -320,7 +323,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({playerNames, 
         <div className="flex flex-col min-h-screen safe-top safe-bottom">
             <GameHeader
                 title={GAMES_REGISTRY.taboo_reverse.title}
-                subtitle={`Раунд ${roundNum}`}
+                subtitle={t(`${NS.COMMON}.roundN`, {n: roundNum})}
                 icon={ListChecks}
                 theme="orange"
                 onBack={onBack}

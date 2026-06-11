@@ -12,6 +12,8 @@ import {ActionMode, type Pos, type WallGrid} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {usePersistedState} from '@/hooks/usePersistedState';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GameKey} from '@/types/games';
 
 interface Props {
@@ -20,8 +22,9 @@ interface Props {
 }
 
 export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
-    const p1 = playerNames[0] ?? 'Игрок 1';
-    const p2 = playerNames[1] ?? 'Игрок 2';
+    const {t} = useTranslation();
+    const p1 = playerNames[0] ?? t(`${NS.CORRIDOR}.player1`);
+    const p2 = playerNames[1] ?? t(`${NS.CORRIDOR}.player2`);
 
     const K = GameKey.Corridor;
     const [pawns, setPawns] = usePersistedState<{ 1: Pos; 2: Pos }>(K, 'pawns', {
@@ -99,8 +102,8 @@ export const CorridorGame: React.FC<Props> = ({playerNames, onBack}) => {
     return (
         <div className="flex flex-col relative" style={{minHeight: '100dvh'}}>
             <GameHeader
-                title="КОРИДОР"
-                subtitle="Первым пройди на другую сторону"
+                title={t(`${NS.CORRIDOR}.title`)}
+                subtitle={t(`${NS.CORRIDOR}.subtitle`)}
                 icon={Route}
                 theme="teal"
                 onBack={onBack}

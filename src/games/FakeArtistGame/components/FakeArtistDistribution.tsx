@@ -8,6 +8,8 @@ import {DIFFICULTY, type Player} from '../../../types';
 import {useFakeArtistContent} from '../model/useFakeArtistContent';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface Props {
     players: Player[];
@@ -16,6 +18,7 @@ interface Props {
 
 export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => {
     const {difficulty, rounds, timerSeconds} = useGameSettings();
+    const {t} = useTranslation();
     const [word, setWord] = useState('');
     const [category, setCategory] = useState('');
 
@@ -73,7 +76,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                             >
                                 <div>
                                     <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-red/50">
-                                        Секретная роль
+                                        {t(`${NS.FAKE_ARTIST}.secretRole`)}
                                     </p>
                                     <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                                 </div>
@@ -92,19 +95,17 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                                         className="text-5xl font-black italic text-premium-red tracking-tighter leading-none"
                                         style={{textShadow: `0 0 48px ${rgba('red', 0.45)}`}}
                                     >
-                                        САМО&shy;ЗВАНЕЦ
+                                        {t(`${NS.FAKE_ARTIST}.imposter`)}
                                     </h3>
                                     <div
                                         className="px-4 py-2 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                                         <p className="text-micro font-black uppercase text-premium-red/55 mb-0.5">
-                                            Тема
+                                            {t(`${NS.FAKE_ARTIST}.categoryLabel`)}
                                         </p>
                                         <p className="text-sm font-black italic text-white uppercase">{category}</p>
                                     </div>
-                                    <p className="text-white/30 text-tag leading-relaxed">
-                                        Слово неизвестно — рисуй,
-                                        <br/>
-                                        чтобы не выдать себя
+                                    <p className="text-white/30 text-tag leading-relaxed whitespace-pre-line">
+                                        {t(`${NS.FAKE_ARTIST}.imposterHint`)}
                                     </p>
                                 </div>
 
@@ -113,7 +114,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     className="w-full py-4 bg-premium-red rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                                     style={{boxShadow: `0 8px 32px ${rgba('red', 0.35)}`}}
                                 >
-                                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}
+                                    {isLast ? t(`${NS.FAKE_ARTIST}.startGame`) : t(`${NS.FAKE_ARTIST}.gotIt`)}
                                 </button>
                             </motion.div>
                         )}
@@ -127,7 +128,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                             >
                                 <div>
                                     <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-sky/50">
-                                        Художник
+                                        {t(`${NS.FAKE_ARTIST}.artistRole`)}
                                     </p>
                                     <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                                 </div>
@@ -139,7 +140,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     />
                                     <div className="space-y-1">
                                         <p className="text-micro font-black uppercase tracking-[0.35em] text-premium-sky/50">
-                                            Твоё слово
+                                            {t(`${NS.FAKE_ARTIST}.yourWord`)}
                                         </p>
                                         <h3
                                             className="text-5xl font-black italic text-white uppercase tracking-tighter leading-tight"
@@ -151,12 +152,12 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     <div
                                         className="px-4 py-3 bg-premium-sky/10 border border-premium-sky/20 rounded-premium-md">
                                         <p className="text-micro font-black uppercase text-premium-sky/50 tracking-widest mb-1">
-                                            Тема
+                                            {t(`${NS.FAKE_ARTIST}.categoryLabel`)}
                                         </p>
                                         <p className="text-base font-black italic text-white uppercase">{category}</p>
                                     </div>
                                     <p className="text-white/[0.22] text-tag">
-                                        Рисуй, не раскрывая слово напрямую
+                                        {t(`${NS.FAKE_ARTIST}.artistHint`)}
                                     </p>
                                 </div>
 
@@ -165,7 +166,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     className="w-full py-4 bg-premium-sky rounded-premium-md font-black uppercase tracking-[0.2em] text-black active:scale-95 transition-transform"
                                     style={{boxShadow: `0 8px 32px ${rgba('sky', 0.25)}`}}
                                 >
-                                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ПОНЯТНО'}
+                                    {isLast ? t(`${NS.FAKE_ARTIST}.startGame`) : t(`${NS.FAKE_ARTIST}.gotIt`)}
                                 </button>
                             </motion.div>
                         )}

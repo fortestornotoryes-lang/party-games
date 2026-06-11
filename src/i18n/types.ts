@@ -344,6 +344,256 @@ export interface SpyHuntTranslations {
     backToMenu: string;           // 'ВЕРНУТЬСЯ В МЕНЮ'
 }
 
+export interface FakeArtistTranslations {
+    // Distribution
+    secretRole: string;           // 'Секретная роль'
+    imposter: string;             // 'САМОЗВАНЕЦ'
+    categoryLabel: string;        // 'Тема'
+    imposterHint: string;         // 'Слово неизвестно — рисуй, чтобы не выдать себя'
+    startGame: string;            // 'НАЧАТЬ ИГРУ'
+    gotIt: string;                // 'ПОНЯТНО'
+    artistRole: string;           // 'Художник'
+    yourWord: string;             // 'Твоё слово'
+    artistHint: string;           // 'Рисуй, не раскрывая слово напрямую'
+    // Playing phase
+    turnSubtitle: string;         // 'Ход {{current}} / {{total}}'
+    drawingLabel: string;         // 'Рисует'
+    timerSeconds: string;         // '{{n}}с'
+    drawOneLine: string;          // 'Нарисуй одну линию'
+    confirm: string;              // 'ПОДТВЕРДИТЬ'
+    nextPlayer: string;           // 'Следующий игрок'
+    passPhoneInstruction: string; // 'Передайте телефон этому игроку и нажмите кнопку ниже'
+    readyToDraw: string;          // 'Я ГОТОВ РИСОВАТЬ'
+    // Voting
+    voteSimultaneously: string;   // 'Голосуйте одновременно'
+    revealImpostor: string;       // 'Раскрыть самозванца'
+    mainMenu: string;             // 'В ГЛАВНОЕ МЕНЮ'
+}
+
+export interface ResistanceTranslations {
+    // ResistanceGame.tsx
+    missionN: string;             // 'Миссия {{n}}'
+    resistanceLabel: string;      // 'ГРУППА'
+    spiesLabel: string;           // 'ШПИОНЫ'
+    missionLeader: string;        // 'Лидер миссии'
+    selectTeam: string;           // 'Выбери {{n}} чел. для операции'
+    startMission: string;         // 'НАЧАТЬ МИССИЮ'
+    votingBadge: string;          // 'Голосует'
+    tapToVote: string;            // 'Нажми чтобы проголосовать'
+    success: string;              // 'УСПЕХ'
+    fail: string;                 // 'ПРОВАЛ'
+    missionTitle: string;         // 'ОПЕРАЦИЯ'
+    missionFailed: string;        // 'ПРОВАЛЕНА'
+    missionSucceeded: string;     // 'УДАЧНА'
+    finalScore: string;           // 'ФИНАЛЬНЫЙ СЧЕТ'
+    won: string;                  // 'ПОБЕДИЛИ'
+    spyAgents: string;            // 'Агенты шпионажа'
+    restart: string;              // 'ЗАНОВО'
+    // ResistanceDistribution.tsx
+    secretRole: string;           // 'Секретная роль'
+    roleLabel: string;            // 'Роль'
+    spyRole: string;              // 'ШПИОН'
+    resistanceRole: string;       // 'СОПРОТИВЛЕНИЕ' (с мягким переносом ­)
+    allies: string;               // 'Союзники'
+    youAlone: string;             // 'Ты один'
+    spyHint: string;              // 'Срывай миссии, не раскрывая себя'
+    resistanceHint: string;       // 'Выполняй миссии — вычисли шпионов'
+    startGame: string;            // 'НАЧАТЬ ИГРУ'
+    gotIt: string;                // 'ЛАДУШКИ'
+}
+
+export interface TruthOrDareTranslations {
+    // TruthOrDareGame.tsx, PassPhase.tsx
+    subtitle: string;        // 'Правда или Действие'
+    tapToContinue: string;   // 'Нажми чтобы продолжить'
+    // ChoicePhase.tsx
+    choosing: string;        // 'Выбирает'
+    truthTitle: string;      // 'ПРАВДА'
+    truthHint: string;       // 'Ответь честно'
+    dareTitle: string;       // 'ДЕЙСТВИЕ'
+    dareHint: string;        // 'Выполни задание'
+    // ActionPhase.tsx
+    truthBadge: string;      // 'Правда'
+    dareBadge: string;       // 'Действие'
+    completed: string;       // 'ВЫПОЛНЕНО'
+}
+
+export interface CorridorTranslations {
+    // CorridorGame.tsx
+    title: string;           // 'КОРИДОР'
+    subtitle: string;        // 'Первым пройди на другую сторону'
+    player1: string;         // 'Игрок 1'
+    player2: string;         // 'Игрок 2'
+    // PlayerStatusBar.tsx
+    wallsLeft: string;       // 'Стен: {{n}}'
+    turn: string;            // 'ХОД'
+    // ActionControls.tsx
+    moveLabel: string;       // 'Ход'
+    moveHint: string;        // 'передвинь фишку'
+    wallHLabel: string;      // 'Стена ─'
+    wallHHint: string;       // 'горизонт.'
+    wallVLabel: string;      // 'Стена │'
+    wallVHint: string;       // 'вертикал.'
+    // GameOverOverlay.tsx
+    victory: string;         // 'Победа!'
+    reachedFinish: string;   // 'достиг финиша'
+    playAgain: string;       // 'Играть снова'
+    toMenu: string;          // 'В меню'
+}
+
+export interface TabooReverseTranslations {
+    // PassPhase.tsx
+    passInstruction: string;         // 'Только ты должен видеть загаданное слово'
+    // PlayingPhase.tsx
+    secretWord: string;              // 'Загаданное слово'
+    requiredWords: string;           // 'Обязательные слова — используй все!'
+    guessed: string;                 // 'УГАДАНО!'
+    wordGuessed: string;             // 'СЛОВО УГАДАНО!'
+    skipPenaltyHint: string;         // 'Пропуск даёт −1 объясняющему'
+    noWordAllowed: string;           // 'Само слово называть нельзя'
+    // VerdictPhase.tsx
+    timeUp: string;                  // 'Время вышло!'
+    markUsedWords: string;           // 'Отметьте использованные слова'
+    usedCount: string;               // 'Использовано: {{n}}/{{total}}'
+    whoGuessed: string;              // 'Кто угадал?'
+    allWordsUsed: string;            // 'Все слова использованы'
+    wordsUsedOf: string;             // 'Слов использовано: {{n}}/{{total}}'
+    nobodyGuessed: string;           // 'Никто не угадал'
+    explainerSaidWord: string;       // '{{player}} назвал слово'
+    penaltyForExplainer: string;     // 'Штраф объяснявшему'
+    // BlitzVerdictPhase.tsx
+    turnResult: string;              // 'Итог хода'
+    guessedCount: string;            // '✓ {{n}} угадано'
+    skippedCount: string;            // '✗ {{n}} пропущено'
+    noCards: string;                 // 'Ни одной карточки'
+    timeUpBeforeFirst: string;       // 'Время вышло до первого угадывания'
+    skipPenaltyFor: string;          // 'Пропуск — −1 для {{player}}'
+    nobody: string;                  // 'Никто'
+    confirm: string;                 // 'ПОДТВЕРДИТЬ'
+    // GameOverPhase.tsx
+    teamWon: string;                 // 'Команда {{n}} победила!'
+    teamN: string;                   // 'Команда {{n}}'
+    playerWon: string;               // '{{player}} победил!'
+}
+
+export interface ConnectFourTranslations {
+    // ConnectFourGame.tsx
+    title: string;           // 'ЧЕТЫРЕ В РЯД'
+    player1: string;         // 'Игрок 1'
+    player2: string;         // 'Игрок 2'
+    winnerLine: string;      // 'Победил {{player}}!'
+    drawResult: string;      // 'Ничья!'
+    currentTurn: string;     // 'Ход: {{player}}'
+    newGame: string;         // 'НОВАЯ ИГРА'
+    // PopOutToggle.tsx
+    place: string;           // 'ПОСТАВИТЬ'
+    popOut: string;          // 'ВЫТАЩИТЬ'
+    // GameOverBanner.tsx
+    roundResult: string;     // 'Итог раунда'
+}
+
+export interface MafiaTranslations {
+    // MafiaGame.tsx
+    cityFallsAsleep: string;   // 'Город засыпает...'
+    inDevelopment: string;     // 'Этот режим игры находится в разработке...'
+    goBack: string;            // 'Вернуться'
+}
+
+export interface WavelengthTranslations {
+    // WavelengthGame.tsx
+    subtitle: string;              // 'На одной волне'
+    // PassPhase.tsx
+    newRound: string;              // 'Новый раунд'
+    psychicLabel: string;          // 'Телепат'
+    psychicInstruction: string;    // '{{psychic}}, возьми телефон! Только ты должен видеть секретную цель. Убедись, что остальные не смотрят.'
+    iAmReady: string;              // 'Я ГОТОВ'
+    // CluePhase.tsx
+    currentPsychic: string;        // 'Текущий Телепат'
+    onlyYouSeeTarget: string;      // 'Только ты видишь целевую зону на шкале!'
+    giveClueHint: string;          // 'Придумай подсказку, чтобы попали в зону'
+    iGaveClue: string;             // 'Я ДАЛ ПОДСКАЗКУ'
+    // GuessingPhase.tsx
+    adjustWave: string;            // 'НАСТРОЙТЕ ВОЛНУ'
+    valueLabel: string;            // 'Значение'
+    confirmChoice: string;         // 'ПОДТВЕРДИТЬ ВЫБОР'
+    // RevealPhase.tsx
+    result: string;                // 'РЕЗУЛЬТАТ'
+    targetLabel: string;           // 'Цель'
+    answerLabel: string;           // 'Ответ'
+    yourScore: string;             // 'Твои очки'
+    perfect: string;               // 'ИДЕАЛЬНО!'
+    nextRound: string;             // 'СЛЕДУЮЩИЙ РАУНД'
+}
+
+export interface JustOneTranslations {
+    // JustOneGame.tsx
+    subtitle: string;              // 'Пойми намёк'
+    // PassPhase.tsx
+    newRound: string;              // 'Новый раунд'
+    guessing: string;              // 'Отгадывает'
+    passInstruction: string;       // '{{guesser}}, передай телефон остальным. Только они увидят загаданное слово!'
+    weTookPhone: string;           // 'МЫ ВЗЯЛИ ТЕЛЕФОН'
+    // HintingPhase.tsx + ResultPhase.tsx
+    secretWord: string;            // 'Загаданное слово'
+    // HintingPhase.tsx
+    hintsLabel: string;            // 'Подсказки'
+    hintPlaceholder: string;       // 'Подсказка...'
+    readyShowGuesser: string;      // 'ГОТОВО! ПОКАЗАТЬ {{guesser}}'
+    // GuessingPhase.tsx
+    guessInstruction: string;      // 'Угадай слово по подсказкам команды'
+    allHintsClashed: string;       // 'Все подсказки совпали — ни одной не осталось!'
+    guessPlaceholder: string;      // 'Твоя догадка...'
+    submitAnswer: string;          // 'ОТВЕТИТЬ'
+    // ResultPhase.tsx
+    correctDisplay: string;        // 'ПРАВИЛЬНО!'
+    wrongDisplay: string;          // 'ОШИБКА'
+    answerLabel: string;           // 'Ответ:'
+    nextRound: string;             // 'СЛЕДУЮЩИЙ РАУНД'
+}
+
+export interface TelestrationsTranslations {
+    // TelestrationsGame.tsx — subtitle
+    playerCount: string;             // 'Игроков: {{n}}'
+    draws: string;                   // 'Рисует'
+    guesses: string;                 // 'Угадывает'
+    // TelestrationsGame.tsx — Transition phase PassPhoneCard
+    tapToSeeWord: string;            // 'Нажми чтобы увидеть слово'
+    tapToSeeDrawing: string;         // 'Нажми чтобы увидеть рисунок'
+    // TelestrationsSetup.tsx
+    settingsTitle: string;           // 'Настройки'
+    difficultyLabel: string;         // 'Сложность'
+    difficultyLabels: {
+        easy: string;                // 'Легко'
+        medium: string;              // 'Средне'
+        hard: string;                // 'Сложно'
+    };
+    difficultyDescriptions: {
+        easy: string;                // 'Просто'
+        medium: string;              // 'Смешно'
+        hard: string;                // 'Трудно'
+    };
+    timerSeconds: string;            // '{{n}}с'
+    drawingTimerLabel: string;       // 'рисунок'
+    // TelestrationsStart.tsx
+    firstDraws: string;              // 'Первый рисует'
+    rememberAndDraw: string;         // 'Запомни слово и нарисуй его так, чтобы другие поняли'
+    gameOrder: string;               // 'Порядок этой игры'
+    makeSureNoOneWatches: string;    // 'Убедись, что остальные не смотрят'
+    showWord: string;                // 'Показать слово'
+    yourSecretWord: string;          // 'Твоё секретное слово'
+    readyToDraw: string;             // 'Я готов рисовать'
+    // TelestrationsGuess.tsx
+    guessDrawing: string;            // '💬 Угадай рисунок'
+    whatIsDepicted: string;          // 'Что здесь изображено?'
+    writePlaceholder: string;        // 'Напиши ответ...'
+    // TelestrationsGallery.tsx
+    chainEnd: string;                // 'Финал цепочки'
+    seeHowWordChanged: string;       // 'Смотрите, как менялось слово'
+    originalWord: string;            // 'Исходное слово'
+    newGame: string;                 // 'Новая игра'
+    toMenu: string;                  // 'В меню'
+}
+
 /**
  * Корневой тип переводов.
  * При добавлении новой игры — добавь её namespace сюда (optional).
@@ -357,6 +607,16 @@ export interface Translations {
     decrypto?: DecryptoTranslations;
     alias?: AliasTranslations;
     spy_hunt?: SpyHuntTranslations;
+    fake_artist?: FakeArtistTranslations;
+    resistance?: ResistanceTranslations;
+    telestrations?: TelestrationsTranslations;
+    truth_or_dare?: TruthOrDareTranslations;
+    just_one?: JustOneTranslations;
+    wavelength?: WavelengthTranslations;
+    mafia?: MafiaTranslations;
+    connect_four?: ConnectFourTranslations;
+    taboo_reverse?: TabooReverseTranslations;
+    corridor?: CorridorTranslations;
 
     // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
     [gameKey: string]:
@@ -369,5 +629,14 @@ export interface Translations {
         | DecryptoTranslations
         | AliasTranslations
         | SpyHuntTranslations
+        | ResistanceTranslations
+        | TelestrationsTranslations
+        | TruthOrDareTranslations
+        | JustOneTranslations
+        | WavelengthTranslations
+        | MafiaTranslations
+        | ConnectFourTranslations
+        | TabooReverseTranslations
+        | CorridorTranslations
         | undefined;
 }

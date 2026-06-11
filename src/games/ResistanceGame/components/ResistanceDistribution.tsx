@@ -5,6 +5,8 @@ import React from 'react';
 import type {Player} from '../../../types';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface Props {
     players: Player[];
@@ -12,6 +14,7 @@ interface Props {
 }
 
 export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => {
+    const {t} = useTranslation();
     const spyNames = players.filter((p) => p.isSpy).map((p) => p.name);
 
     return (
@@ -62,7 +65,7 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                             >
                                 <div>
                                     <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-red/50">
-                                        Секретная роль
+                                        {t(`${NS.RESISTANCE}.secretRole`)}
                                     </p>
                                     <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                                 </div>
@@ -76,19 +79,19 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                                         className="text-5xl font-black italic text-premium-red tracking-tighter leading-none"
                                         style={{textShadow: '0 0 40px rgba(239,68,68,0.4)'}}
                                     >
-                                        ШПИОН
+                                        {t(`${NS.RESISTANCE}.spyRole`)}
                                     </h3>
                                     <div
                                         className="px-4 py-3 bg-premium-red/10 border border-premium-red/20 rounded-premium-md">
                                         <p className="text-micro font-black uppercase text-premium-red/50 mb-1">
-                                            Союзники
+                                            {t(`${NS.RESISTANCE}.allies`)}
                                         </p>
                                         <p className="text-sm font-black italic text-white">
-                                            {spyNames.filter((n) => n !== player.name).join(', ') || 'Ты один'}
+                                            {spyNames.filter((n) => n !== player.name).join(', ') || t(`${NS.RESISTANCE}.youAlone`)}
                                         </p>
                                     </div>
                                     <p className="text-white/25 text-tag leading-relaxed">
-                                        Срывай миссии, не раскрывая себя
+                                        {t(`${NS.RESISTANCE}.spyHint`)}
                                     </p>
                                 </div>
 
@@ -97,7 +100,7 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     className="w-full py-4 bg-premium-red rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                                     style={{boxShadow: '0 8px 32px rgba(239,68,68,0.35)'}}
                                 >
-                                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                                    {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
                                 </button>
                             </motion.div>
                         ) : (
@@ -108,7 +111,7 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                             >
                                 <div>
                                     <p className="text-micro font-black uppercase tracking-[0.45em] text-premium-blue/50">
-                                        Роль
+                                        {t(`${NS.RESISTANCE}.roleLabel`)}
                                     </p>
                                     <h4 className="text-lg font-black italic text-white/50 mt-0.5">{player.name}</h4>
                                 </div>
@@ -122,10 +125,10 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                                         className="text-5xl font-black italic text-premium-blue tracking-tighter leading-none"
                                         style={{textShadow: '0 0 36px rgba(63,123,255,0.35)'}}
                                     >
-                                        СОПРО&shy;ТИВЛЕНИЕ
+                                        {t(`${NS.RESISTANCE}.resistanceRole`)}
                                     </h3>
                                     <p className="text-white/25 text-tag leading-relaxed">
-                                        Выполняй миссии — вычисли шпионов
+                                        {t(`${NS.RESISTANCE}.resistanceHint`)}
                                     </p>
                                 </div>
 
@@ -134,7 +137,7 @@ export const ResistanceDistribution: React.FC<Props> = ({players, onFinish}) => 
                                     className="w-full py-4 bg-premium-blue rounded-premium-md font-black uppercase tracking-[0.2em] text-white active:scale-95 transition-transform"
                                     style={{boxShadow: '0 8px 32px rgba(63,123,255,0.35)'}}
                                 >
-                                    {isLast ? 'НАЧАТЬ ИГРУ' : 'ЛАДУШКИ'}
+                                    {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
                                 </button>
                             </motion.div>
                         )}

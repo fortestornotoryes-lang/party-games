@@ -1,448 +1,147 @@
 ---
 name: i18n-game
-description: Добавляет i18n (RU/EN) к одной игре Party Hub. Аргумент — GameKey игры (alias, taboo, taboo_reverse, spy_hunt, fake_artist, resistance, telestrations, wavelength, codenames, decrypto, just_one, truth_or_dare, connect_four). При первом вызове автоматически создаёт всю i18n-инфраструктуру.
+description: Добавляет i18n (RU/EN) к одной игре Party Hub. Аргумент — GameKey игры из src/types/games.ts (spy, fake_artist, resistance, alias, just_one, telestrations, wavelength, codenames, decrypto, mafia, truth_or_dare, connect_four, taboo_reverse, taboo, bunker, millionaire, corridor). Инфраструктура i18n уже создана — скилл только переводит конкретную игру.
 ---
 
 Ты добавляешь поддержку двух языков (RU / EN) к одной игре Party Hub. Выполни все шаги по порядку, не пропускай ни один.
 
 ## Аргумент скила
 
-Аргумент — `GameKey` игры в snake_case, например `alias` или `truth_or_dare`.  
+Аргумент — значение `GameKey` из `src/types/games.ts` (enum `GameKey`), например `alias` или `truth_or_dare`.
 Если аргумент не передан — спроси у пользователя.
+
+**Маппинг GameKey → папка игры не всегда очевиден** (например, `spy` → `src/games/SpyHuntGame/`). Найди папку через `GAMES_REGISTRY` в `src/registry/GameRegistry.tsx` или глобом `src/games/*Game`.
 
 ---
 
 ## Шаг 0 — Прочитай память проекта
 
-Прочитай `.claude/memory/MEMORY.md` и оттуда — `project_overview.md`, `design_system.md`, `components_ui.md`. Они нужны для понимания архитектуры.
+Прочитай `.claude/memory/MEMORY.md` и оттуда — `project_overview.md`, `design_system.md`, `components_ui.md`. Они нужны для понимания архитектуры и Typography-компонентов.
 
 ---
 
-## Шаг 1 — Проверь, существует ли инфраструктура i18n
+## Шаг 1 — Инфраструктура i18n (уже существует)
 
-Проверь наличие файла `src/i18n/index.ts`.
+Инфраструктура создана и работает. **Не пересоздавай её.** Убедись, что файлы на месте, и пойми контракт:
 
-- **Если НЕ существует** → выполни Шаг 2 (создание инфраструктуры), затем перейди к Шагу 3.
-- **Если существует** → пропусти Шаг 2, сразу к Шагу 3.
+| Файл | Что в нём |
+|------|-----------|
+| `src/i18n/index.ts` | `LanguageProvider`, хуки `useLanguage()` / `useTranslation()`. Файл `.ts`, поэтому провайдер собран через `React.createElement`, НЕ JSX. Сохранение языка — `storageService.saveSettingsAsync()` |
+| `src/i18n/types.ts` | `Lang`, `CommonTranslations`, интерфейсы игр, корневой `Translations` |
+| `src/i18n/keys.ts` | Объект `NS` — единственное место, где определены строки неймспейсов |
+| `src/i18n/ru.ts` / `en.ts` | Все переводы. Отдельных файлов на игру НЕ бывает |
 
----
+Контракт `t()`:
+- `t('common.back')` — резолв по dot-path; если ключа нет, **возвращается сам путь** (ошибки не будет — опечатки ловятся только глазами и проверкой Шага 4)
+- Интерполяция: `t('common.roundN', { n: 3 })` подставляет в `Раунд {{n}}`
+- `useTranslation()` возвращает `{ t, lang }`; `useLanguage()` — ещё и `setLang`
 
-## Шаг 2 — Создай инфраструктуру i18n (только один раз)
+Уже сделано (не повторять): `language` в `GameSettings`, обёртка `LanguageProvider` в `App.tsx`, переключатель RU/EN в `Settings.tsx`.
 
-### 2.1 `src/i18n/types.ts`
-
-```ts
-export type Lang = 'ru' | 'en';
-
-/** Базовые переводы — common-строки, используемые везде */
-export interface CommonTranslations {
-  back: string;
-  done: string;
-  next: string;
-  start: string;
-  correct: string;
-  skip: string;
-  rematch: string;
-  stopGame: string;
-  round: string;            // "Раунд"
-  roundN: string;           // "Раунд {{n}}"
-  score: string;
-  winner: string;
-  draw: string;
-  player: string;
-  players: string;
-  team: string;
-  teams: string;
-  passPhone: string;        // "Передай телефон"
-  yourTurn: string;
-  gameOver: string;
-  win: string;
-  wins: string;             // "{{n}} побед"
-  vs: string;
-  difficulty: {
-    easy: string;
-    medium: string;
-    hard: string;
-  };
-}
-
-/**
- * Корневой тип переводов.
- * При добавлении новой игры — добавь её namespace сюда (optional).
- */
-export interface Translations {
-  common: CommonTranslations;
-  // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
-  [gameKey: string]: Record<string, unknown> | CommonTranslations;
-}
-```
-
-### 2.2 `src/i18n/ru.ts`
-
-```ts
-import type { Translations } from './types';
-
-export const ru: Translations = {
-  common: {
-    back: 'Назад',
-    done: 'Готово',
-    next: 'Далее',
-    start: 'Старт',
-    correct: 'Правильно',
-    skip: 'Пропустить',
-    rematch: 'Реванш',
-    stopGame: 'Завершить игру',
-    round: 'Раунд',
-    roundN: 'Раунд {{n}}',
-    score: 'Очки',
-    winner: 'Победитель',
-    draw: 'Ничья',
-    player: 'Игрок',
-    players: 'Игроки',
-    team: 'Команда',
-    teams: 'Команды',
-    passPhone: 'Передай телефон',
-    yourTurn: 'Твой ход',
-    gameOver: 'Игра окончена',
-    win: 'Победа',
-    wins: '{{n}} побед',
-    vs: 'vs',
-    difficulty: {
-      easy: 'Легко',
-      medium: 'Нормально',
-      hard: 'Сложно',
-    },
-  },
-};
-```
-
-### 2.3 `src/i18n/en.ts`
-
-```ts
-import type { Translations } from './types';
-
-export const en: Translations = {
-  common: {
-    back: 'Back',
-    done: 'Done',
-    next: 'Next',
-    start: 'Start',
-    correct: 'Correct',
-    skip: 'Skip',
-    rematch: 'Rematch',
-    stopGame: 'End Game',
-    round: 'Round',
-    roundN: 'Round {{n}}',
-    score: 'Score',
-    winner: 'Winner',
-    draw: 'Draw',
-    player: 'Player',
-    players: 'Players',
-    team: 'Team',
-    teams: 'Teams',
-    passPhone: 'Pass the phone',
-    yourTurn: 'Your turn',
-    gameOver: 'Game Over',
-    win: 'Win',
-    wins: '{{n}} wins',
-    vs: 'vs',
-    difficulty: {
-      easy: 'Easy',
-      medium: 'Normal',
-      hard: 'Hard',
-    },
-  },
-};
-```
-
-### 2.4 `src/i18n/index.ts`
-
-```ts
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import type { Lang, Translations } from './types';
-import { ru } from './ru';
-import { en } from './en';
-import { storageService } from '../services/storageService';
-
-const TRANSLATIONS: Record<Lang, Translations> = { ru, en };
-
-// ── Dot-notation path resolver ───────────────────────────────────────────────
-
-function resolve(obj: Record<string, unknown>, path: string): string {
-  const value = path.split('.').reduce<unknown>((acc, key) => {
-    if (acc && typeof acc === 'object') return (acc as Record<string, unknown>)[key];
-    return undefined;
-  }, obj);
-  return typeof value === 'string' ? value : path;
-}
-
-function interpolate(str: string, vars?: Record<string, string | number>): string {
-  if (!vars) return str;
-  return str.replace(/\{\{(\w+)\}\}/g, (_, key) => String(vars[key] ?? ''));
-}
-
-// ── Context ───────────────────────────────────────────────────────────────────
-
-interface LanguageContextValue {
-  lang: Lang;
-  setLang: (lang: Lang) => void;
-  t: (path: string, vars?: Record<string, string | number>) => string;
-}
-
-const LanguageContext = createContext<LanguageContextValue | null>(null);
-
-// ── Provider ──────────────────────────────────────────────────────────────────
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => {
-    return (storageService.getSettings().language as Lang) ?? 'ru';
-  });
-
-  const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    storageService.saveSettings({ language: next });
-  }, []);
-
-  const t = useCallback(
-    (path: string, vars?: Record<string, string | number>) => {
-      const translations = TRANSLATIONS[lang] as unknown as Record<string, unknown>;
-      const str = resolve(translations, path);
-      return interpolate(str, vars);
-    },
-    [lang],
-  );
-
-  return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-// ── Hooks ─────────────────────────────────────────────────────────────────────
-
-/** Используй в компонентах для доступа к t(), lang и setLang */
-export function useLanguage(): LanguageContextValue {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error('useLanguage must be used inside LanguageProvider');
-  return ctx;
-}
-
-/** Алиас — возвращает только t() для компонентов, которым не нужен lang */
-export function useTranslation() {
-  const { t, lang } = useLanguage();
-  return { t, lang };
-}
-```
-
-### 2.5 `src/i18n/keys.ts`
-
-Namespace-константы. Строка неймспейса определена **один раз** — ключи строятся через неё.
-
-```ts
-/**
- * i18n namespace constants.
- * Используй вместо магических строк: t(`${NS.TABOO}.forbiddenWords`)
- * При добавлении новой игры — добавь её в NS.
- */
-export const NS = {
-  COMMON: 'common',
-  // Игры добавляются инкрементально:
-  // TABOO: 'taboo',
-  // ALIAS: 'alias',
-} as const;
-```
-
-### 2.6 Добавь `language` в `storageService.ts`
-
-В интерфейс `GameSettings` добавь поле:
-```ts
-language?: string;
-```
-
-### 2.7 Оберни `AppContent` в `LanguageProvider` (`src/App.tsx`)
-
-```tsx
-// импорт
-import { LanguageProvider } from './i18n';
-
-// обёртка
-export default function App() {
-  return (
-    <GameSettingsProvider>
-      <LanguageProvider>
-        <AppContent />
-      </LanguageProvider>
-    </GameSettingsProvider>
-  );
-}
-```
-
-### 2.8 Добавь переключатель языка в `Settings.tsx`
-
-Прочитай файл. Найди блок с переключателями (vibration, sounds, visualEffects). Добавь аналогичный переключатель для языка рядом с ними:
-
-```tsx
-import { useLanguage } from '../i18n';
-
-// внутри компонента:
-const { lang, setLang } = useLanguage();
-
-// UI — добавь блок переключения RU / EN рядом с другими настройками:
-<div className="flex items-center justify-between py-4 border-b border-white/5">
-  <div>
-    <p className="font-semibold text-white text-sm">Язык / Language</p>
-  </div>
-  <div className="flex gap-2">
-    {(['ru', 'en'] as const).map(l => (
-      <button
-        key={l}
-        onClick={() => setLang(l)}
-        className={`px-4 py-2 rounded-premium-sm text-xs font-black uppercase tracking-wider transition-all ${
-          lang === l
-            ? 'bg-white/15 text-white border border-white/25'
-            : 'bg-white/5 text-white/30 border border-white/5'
-        }`}
-      >
-        {l === 'ru' ? '🇷🇺 RU' : '🇬🇧 EN'}
-      </button>
-    ))}
-  </div>
-</div>
-```
+Если какой-то файл инфраструктуры отсутствует — это аномалия: восстанови из git-истории, не пиши с нуля.
 
 ---
 
-## Шаг 3 — Обработай конкретную игру
+## Шаг 2 — Обработай конкретную игру
 
-### 3.1 Прочитай все файлы игры
+### 2.1 Прочитай все файлы игры
 
-Найди и прочитай:
 - `src/games/<GameName>Game/<GameName>Game.tsx` (основной компонент)
-- `src/games/<GameName>Game/phases/*.tsx` (все фазы)
-- `src/games/<GameName>Game/components/*.tsx` (компоненты, если есть)
+- `src/games/<GameName>Game/phases/*.tsx` и `components/*.tsx`
+- **`constants.ts`, `helpers.ts`, хуки** — UI-строки часто живут и там (например, у Bunker сабтайтлы фаз и названия раундов лежали в константах)
 
-Также прочитай `src/i18n/keys.ts` — чтобы знать, какие неймспейсы уже зарегистрированы.
+Также прочитай `src/i18n/keys.ts` — какие неймспейсы уже зарегистрированы (это же — список уже переведённых игр).
 
-### 3.2 Составь список всех UI-строк
+### 2.2 Составь список всех UI-строк
 
-Пройди по каждому файлу и выпиши **все хардкодированные русские строки** в JSX:
+Выпиши **все хардкодированные русские строки**:
 - Текст внутри тегов: `<p>Передай телефон</p>`, `<span>Раунд {n}</span>`
 - Атрибуты: `placeholder="Игрок 1"`, `aria-label="Назад"`
 - Шаблонные строки: `` `Раунд ${roundNum}` ``
+- UI-строки в `constants.ts` / `helpers.ts` (лейблы фаз, подписи кнопок)
 
 **НЕ трогай:**
-- Игровой контент (слова Alias, карточки Taboo, вопросы Truth or Dare — это strings из `contentService`)
+- Игровой контент (слова Alias, карточки Taboo, вопросы Truth or Dare — данные из `contentService` или контент-константы)
 - Имена игроков (динамические данные)
-- CSS-классы и технические строки
-- Числа и символы
+- `title`/`subtitle`/`description`/`modes` в `GAMES_REGISTRY`
+- CSS-классы, числа, символы
 
-### 3.3 Определи, какие строки уже есть в `common`
+### 2.3 Сопоставь с `common`
 
-Сопоставь найденные строки с ключами `common.*` в `ru.ts`. Если строка уже покрыта `common` — используй `t(\`${NS.COMMON}.back\`)` и т.д. Для строк, специфичных для игры — создай новый namespace.
+Если строка уже покрыта `common.*` в `ru.ts` — используй `t(\`${NS.COMMON}.back\`)` и НЕ дублируй её в неймспейсе игры. Остальное — в новый namespace.
 
-### 3.4 Создай namespace игры в `src/i18n/types.ts`
+### 2.4 Создай namespace игры в `src/i18n/types.ts`
 
-Добавь интерфейс и его в `Translations`. Пример для `alias`:
+Имя неймспейса = значение `GameKey` (например `alias`, `truth_or_dare`). Историческое исключение: игра `spy` уже использует неймспейс `spy_hunt` — не трогай его, но новые делай строго по GameKey.
+
+Добавь интерфейс с комментариями-оригиналами и подключи его в `Translations` **в двух местах** — как optional-поле И в union индекс-сигнатуры:
 
 ```ts
 export interface AliasTranslations {
-  teams: {
-    red: string;   // "Красные"
-    blue: string;  // "Синие"
-  };
-  explainFaster: string;    // "Объясни слово быстрее всех"
-  roundScore: string;       // "За раунд: {{n}}"
-  // ...все остальные строки
+    explainFaster: string;    // 'Объясни слово быстрее всех'
+    roundScore: string;       // 'За раунд: {{n}}'
+    // ...группируй ключи комментариями по файлам-источникам, как в существующих интерфейсах
 }
 
-// В Translations:
-alias?: AliasTranslations;
+export interface Translations {
+    common: CommonTranslations;
+    alias?: AliasTranslations;          // ← 1) optional-поле
+    [gameKey: string]:
+        | Record<string, unknown>
+        | CommonTranslations
+        | AliasTranslations             // ← 2) добавь в union
+        | undefined;
+}
 ```
 
-Важно: делай namespace `optional` (`alias?`) — пока остальные игры не обработаны, их ключей нет.
-
-### 3.5 Зарегистрируй неймспейс в `src/i18n/keys.ts`
-
-Добавь строку неймспейса в объект `NS`:
+### 2.5 Зарегистрируй неймспейс в `src/i18n/keys.ts`
 
 ```ts
 export const NS = {
-  COMMON: 'common',
-  ALIAS: 'alias',   // ← добавлено
+    COMMON: 'common',
+    ALIAS: 'alias',   // ← добавлено
 } as const;
 ```
 
-Неймспейс определяется **один раз** в этом файле. В компонентах используется только через `NS.ALIAS`.
+### 2.6 Добавь переводы в `ru.ts` и `en.ts`
 
-### 3.6 Добавь переводы в `ru.ts` и `en.ts`
-
-Добавь весь namespace в конец объекта в обоих файлах:
-
-```ts
-// ru.ts
-alias: {
-  teams: { red: 'Красные', blue: 'Синие' },
-  explainFaster: 'Объясни слово быстрее всех',
-  roundScore: 'За раунд: {{n}}',
-  // ...
-},
-
-// en.ts
-alias: {
-  teams: { red: 'Red Team', blue: 'Blue Team' },
-  explainFaster: 'Explain the word faster than anyone',
-  roundScore: 'This round: {{n}}',
-  // ...
-},
-```
+Добавь весь namespace в оба файла, ключи в одинаковом порядке.
 
 **Правила переводов:**
-- EN переводы должны быть **реальными**, не транслитерацией
+- EN переводы — **реальные**, не транслитерация
 - Сохраняй тон: UPPERCASE-заголовки → тоже UPPERCASE в EN
-- Строки с переменными: `Раунд {{n}}`, `Ход: {{player}}`
-- Если строка уже есть в `common` — НЕ дублируй в namespace игры
+- Переменные: `Раунд {{n}}`, `Ход: {{player}}` — только `{{varName}}`, без конкатенации
+- **Плюрализации нет.** Не пиши строк, где русское слово должно согласовываться с числом (`{{n}} побед` ломается на n=1,2). Перефразируй: `Побед: {{n}}`, `Раунд {{n}} из {{total}}`
 
-### 3.7 Замени строки в компонентах игры
+### 2.7 Замени строки в компонентах игры
 
-В каждом файле игры:
+В каждом файле:
 
-1. Добавь импорты:
 ```ts
-import { useTranslation } from '@/i18n';
-import { NS } from '@/i18n/keys';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
+
+// в теле компонента, один раз:
+const {t} = useTranslation();
 ```
 
-2. Деструктурируй в компоненте:
-```ts
-const { t } = useTranslation();
-```
+Замены — **неймспейс всегда через `NS`**, никогда строкой:
 
-3. Замени хардкодированные строки — **неймспейс всегда через `NS`**:
 ```tsx
 // Было:
 <p>Передай телефон</p>
-<span>Раунд {roundNum}</span>
-<button>Назад</button>
+subtitle={`Раунд ${roundNum}`}
+<p>Объясни слово быстрее всех</p>
 
 // Стало:
 <p>{t(`${NS.COMMON}.passPhone`)}</p>
-<span>{t(`${NS.COMMON}.roundN`, { n: roundNum })}</span>
-<button>{t(`${NS.COMMON}.back`)}</button>
-```
-
-4. Строки игрового неймспейса:
-```tsx
-// Было:
-<p>Объясни слово быстрее всех</p>
-subtitle={`Раунд ${roundNum}`}
-
-// Стало:
+subtitle={t(`${NS.COMMON}.roundN`, {n: roundNum})}
 <p>{t(`${NS.ALIAS}.explainFaster`)}</p>
-subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
 ```
 
-### 3.8 Замени сырой текст на Typography-компоненты (попутно)
+Если UI-строка лежала в `constants.ts` — перенеси её в переводы, а в константе храни **ключ** (или перенеси текст в компонент через `t()`), чтобы в константах не осталось русского UI-текста.
+
+### 2.8 Замени сырой текст на Typography-компоненты (попутно)
 
 Если в компонентах игры есть сырые `<p>`, `<h2>`, `<span>` с текстом — замени на `<Typography.X>` согласно дизайн-системе:
 
@@ -453,39 +152,45 @@ subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
 | `<span className="text-tag font-black uppercase tracking-...">` | `<Typography.Label>` |
 | `<p className="text-4xl font-black italic uppercase">` | `<Typography.Display>` |
 
-Делай это только там, где Typography подходит по семантике. Не трогай кнопки, badge-элементы, элементы с уникальной стилизацией.
+Только там, где Typography подходит по семантике. Не трогай кнопки, badge-элементы, уникально стилизованные элементы.
 
 ---
 
-## Шаг 4 — Проверка
+## Шаг 3 — Проверка
 
-1. Запусти `npx tsc --noEmit` — нет ошибок.
-2. Убедись, что в `ru.ts` и `en.ts` количество ключей в namespace игры совпадает.
-3. Убедись, что ни одна строка-ключ не дублирует `common.*`.
-4. Убедись, что в компонентах нет магических строк вида `t('taboo.xxx')` — только `t(\`${NS.TABOO}.xxx\`)`.
+1. `npx tsc --noEmit` — нет ошибок.
+2. **Механический поиск пропущенных строк** — кириллица в файлах игры:
+   ```
+   rg -n "[А-Яа-яЁё]" src/games/<GameName>Game --glob '!*content*'
+   ```
+   Каждое совпадение — либо игровой контент / комментарий (ок), либо пропущенная UI-строка (исправь).
+3. Количество и порядок ключей в namespace игры в `ru.ts` и `en.ts` совпадают.
+4. Ни один ключ неймспейса игры не дублирует `common.*`.
+5. В компонентах нет магических строк `t('alias.xxx')` — только `` t(`${NS.ALIAS}.xxx`) ``. Проверь: `rg "t\('" src/games/<GameName>Game`.
 
 ---
 
-## Шаг 5 — Итог
+## Шаг 4 — Итог
 
-Напиши краткий отчёт:
-- Какие файлы изменены / созданы
+Краткий отчёт:
+- Изменённые/созданные файлы
 - Сколько строк заменено на `t()`
-- Новые ключи в namespace (список)
-- Ключи `common.*`, которые использовала эта игра
+- Новые ключи namespace (список)
+- Использованные ключи `common.*`
 - Что пропущено намеренно (игровой контент, имена игроков)
 
 ---
 
 ## Правила которые НЕЛЬЗЯ нарушать
 
-- `import { useTranslation } from '@/i18n'` — всегда такой путь
-- `import { NS } from '@/i18n/keys'` — всегда такой путь
-- Строка неймспейса (`'taboo'`, `'alias'`) определяется **только** в `keys.ts` в объекте `NS` — нигде больше
+- `import {useTranslation} from '@/i18n'` и `import {NS} from '@/i18n/keys'` — всегда такие пути
+- Строка неймспейса определяется **только** в `keys.ts` в объекте `NS` — нигде больше
 - В компонентах всегда шаблонная строка: `` t(`${NS.TABOO}.key`) `` — никогда `t('taboo.key')`
-- Не трогать `contentService` — это игровой контент, не UI
-- Не переводить имена игр в `GAMES_REGISTRY` (только игровые экраны)
+- Имя нового неймспейса = значение `GameKey` (исключение `spy_hunt` — историческое, не повторять)
+- Не трогать `contentService` и контент-константы — это игровой контент, не UI
+- Не переводить `GAMES_REGISTRY` (только игровые экраны)
 - Не создавать отдельные файлы типа `aliasTranslations.ts` — всё в `ru.ts` / `en.ts`
-- Namespace игры в `types.ts` всегда `optional` (`alias?`)
-- Переменные в строках — только через `{{varName}}`, не через конкатенацию
-- При добавлении `useTranslation()` в компонент — один `const { t } = useTranslation()` в теле, не внутри JSX
+- Namespace игры в `types.ts` всегда optional (`alias?`) + добавлен в union индекс-сигнатуры
+- Переменные — только `{{varName}}`; строк, требующих русского склонения по числу, не писать
+- Один `const {t} = useTranslation()` в теле компонента, не внутри JSX
+- Не пересоздавать инфраструктуру `src/i18n/*` — она уже существует

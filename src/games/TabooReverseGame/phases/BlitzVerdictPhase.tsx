@@ -4,8 +4,9 @@ import React, {useState} from 'react';
 
 import type {BlitzResult} from '../types';
 
-
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface BlitzVerdictPhaseProps {
     results: BlitzResult[];
@@ -22,6 +23,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                                                         onConfirm,
                                                                         onStopGame,
                                                                     }) => {
+    const {t} = useTranslation();
     // One slot per result: player name if guessed, null if nobody / skipped
     const [guessers, setGuessers] = useState<(string | null)[]>(() => results.map(() => null));
 
@@ -43,17 +45,19 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
         >
             {/* Header */}
             <div className="text-center pt-2 space-y-1">
-                <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">Итог хода</p>
+                <p className="text-micro font-black uppercase tracking-[0.5em] text-white/30">
+                    {t(`${NS.TABOO_REVERSE}.turnResult`)}
+                </p>
                 <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
                     {currentExplainer}
                 </h2>
                 <div className="flex items-center justify-center gap-4 pt-1">
           <span className="text-sm font-black text-premium-green">
-            ✓ {guessedResults.length} угадано
+            {t(`${NS.TABOO_REVERSE}.guessedCount`, {n: guessedResults.length})}
           </span>
                     {skippedPenalty > 0 && (
                         <span className="text-sm font-black text-premium-red">
-              ✗ {skippedPenalty} пропущено
+              {t(`${NS.TABOO_REVERSE}.skippedCount`, {n: skippedPenalty})}
             </span>
                     )}
                 </div>
@@ -62,9 +66,11 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
             {results.length === 0 ? (
                 <div className="text-center py-8 glass-card rounded-premium-md border border-white/10">
                     <p className="text-white/30 font-black uppercase tracking-widest text-sm">
-                        Ни одной карточки
+                        {t(`${NS.TABOO_REVERSE}.noCards`)}
                     </p>
-                    <p className="text-white/20 text-xs mt-1">Время вышло до первого угадывания</p>
+                    <p className="text-white/20 text-xs mt-1">
+                        {t(`${NS.TABOO_REVERSE}.timeUpBeforeFirst`)}
+                    </p>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -82,7 +88,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                             {result.card.word}
                                         </p>
                                         <p className="text-tag text-premium-red/60 mt-0.5">
-                                            Пропуск — −1 для {currentExplainer}
+                                            {t(`${NS.TABOO_REVERSE}.skipPenaltyFor`, {player: currentExplainer})}
                                         </p>
                                     </div>
                                 </div>
@@ -136,7 +142,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                                                 : 'glass-card border-white/5 text-white/20'
                                         }`}
                                     >
-                                        Никто
+                                        {t(`${NS.TABOO_REVERSE}.nobody`)}
                                     </button>
                                 </div>
                             </div>
@@ -153,7 +159,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
                 }}
                 className="bg-premium-orange text-white! shadow-premium-orange/30"
             >
-                ПОДТВЕРДИТЬ
+                {t(`${NS.TABOO_REVERSE}.confirm`)}
             </PrimaryButton>
 
             <button
@@ -162,7 +168,7 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
             >
                 <StopCircle className="w-4 h-4 text-white/30"/>
                 <span className="font-black uppercase text-sm text-white/30 tracking-widest">
-          Завершить игру
+          {t(`${NS.COMMON}.stopGame`)}
         </span>
             </button>
         </motion.div>

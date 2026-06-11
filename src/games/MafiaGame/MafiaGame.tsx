@@ -1,8 +1,10 @@
-﻿import {Moon, Shield, Sun, Users} from 'lucide-react';
+import {Moon, Shield, Sun, Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface Props {
     playerNames: string[];
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export default function MafiaGame({playerNames, onBack}: Props) {
+    const {t} = useTranslation();
+
     return (
         <div className="min-h-screen p-6 flex flex-col items-center justify-center text-center space-y-8">
             <motion.div
@@ -25,7 +29,7 @@ export default function MafiaGame({playerNames, onBack}: Props) {
                     {GAMES_REGISTRY.mafia.title}
                 </h2>
                 <p className="text-white/30 uppercase tracking-[0.2em] text-tag font-bold">
-                    Город засыпает...
+                    {t(`${NS.MAFIA}.cityFallsAsleep`)}
                 </p>
             </div>
 
@@ -36,8 +40,7 @@ export default function MafiaGame({playerNames, onBack}: Props) {
                     <Shield className="w-6 h-6 text-premium-blue"/>
                 </div>
                 <p className="text-white/40 text-sm leading-relaxed">
-                    Этот режим игры находится в разработке. <br/>
-                    Используйте это приложение как помощника для раздачи ролей или ведения игры.
+                    {t(`${NS.MAFIA}.inDevelopment`)}
                 </p>
             </div>
 
@@ -45,7 +48,7 @@ export default function MafiaGame({playerNames, onBack}: Props) {
                 onClick={onBack}
                 className="px-10 py-4 bg-white text-black rounded-premium-md font-black uppercase tracking-widest active:scale-95 transition-all shadow-xl"
             >
-                Вернуться
+                {t(`${NS.MAFIA}.goBack`)}
             </button>
         </div>
     );

@@ -13,6 +13,8 @@ import {PassPhoneCard} from '@/components/PassPhoneCard';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
 import {usePersistedState} from '@/hooks/usePersistedState';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GameKey} from '@/types/games';
 import type {Player} from '@/types.ts';
 import {initResistance} from '@/utils/gameLogic.ts';
@@ -23,6 +25,7 @@ interface ResistanceGameProps {
 }
 
 export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const K = GameKey.Resistance;
     const [players] = usePersistedState<Player[]>(
         K,
@@ -141,7 +144,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
         <div className="flex flex-col min-h-screen pb-10">
             <GameHeader
                 title={GAMES_REGISTRY.resistance.title}
-                subtitle={`Миссия ${missionIndex + 1}`}
+                subtitle={t(`${NS.RESISTANCE}.missionN`, {n: missionIndex + 1})}
                 icon={Shield}
                 theme="blue"
                 onBack={onBack}
@@ -151,7 +154,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                 <div
                     className="flex justify-between p-4 bg-white/5 rounded-premium-lg border border-white/10 shadow-2xl">
                     <div className="text-center group">
-                        <p className="text-tag text-premium-blue font-black tracking-widest mb-1">ГРУППА</p>
+                        <p className="text-tag text-premium-blue font-black tracking-widest mb-1">{t(`${NS.RESISTANCE}.resistanceLabel`)}</p>
                         <div className="flex items-center gap-2">
                             {[0, 1, 2].map((_, i) => (
                                 <div
@@ -162,7 +165,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                         </div>
                     </div>
                     <div className="text-center group">
-                        <p className="text-tag text-premium-red font-black tracking-widest mb-1">ШПИОНЫ</p>
+                        <p className="text-tag text-premium-red font-black tracking-widest mb-1">{t(`${NS.RESISTANCE}.spiesLabel`)}</p>
                         <div className="flex items-center gap-2 justify-end">
                             {[0, 1, 2].map((_, i) => (
                                 <div
@@ -185,13 +188,13 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                         >
                             <div className="text-center space-y-1">
                                 <p className="text-tag text-white/80 font-black uppercase tracking-widest">
-                                    Лидер миссии
+                                    {t(`${NS.RESISTANCE}.missionLeader`)}
                                 </p>
                                 <h3 className="text-4xl font-black italic text-white uppercase">
                                     {currentLeader.name}
                                 </h3>
                                 <p className="text-xs text-premium-blue font-bold uppercase tracking-wider mt-2">
-                                    Выбери {missionSize} чел. для операции
+                                    {t(`${NS.RESISTANCE}.selectTeam`, {n: missionSize})}
                                 </p>
                             </div>
 
@@ -228,7 +231,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                 className="bg-white !text-black"
                                 icon={ArrowRight}
                             >
-                                НАЧАТЬ МИССИЮ
+                                {t(`${NS.RESISTANCE}.startMission`)}
                             </PrimaryButton>
                         </motion.div>
                     )}
@@ -243,9 +246,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                         >
                             <PassPhoneCard
                                 playerName={currentVoter?.name ?? ''}
-                                badge="Голосует"
+                                badge={t(`${NS.RESISTANCE}.votingBadge`)}
                                 badgeColor="sky"
-                                instruction="Нажми чтобы проголосовать"
+                                instruction={t(`${NS.RESISTANCE}.tapToVote`)}
                                 icon={Fingerprint}
                                 accentColor="sky"
                                 onClick={() => {
@@ -265,7 +268,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                         >
                             <div className="text-center">
                                 <p className="text-tag text-premium-blue font-black uppercase tracking-widest mb-2">
-                                    Голосует
+                                    {t(`${NS.RESISTANCE}.votingBadge`)}
                                 </p>
                                 <h4 className="text-4xl font-black italic text-white uppercase">
                                     {currentVoter?.name}
@@ -282,7 +285,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                     <CheckCircle2 className="w-12 h-12 text-premium-green"/>
                                     <span
                                         className="text-xl font-black italic text-premium-green uppercase tracking-widest">
-                    УСПЕХ
+                    {t(`${NS.RESISTANCE}.success`)}
                   </span>
                                 </button>
                                 <button
@@ -294,7 +297,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                     <XCircle className="w-12 h-12 text-premium-red"/>
                                     <span
                                         className="text-xl font-black italic text-premium-red uppercase tracking-widest">
-                    ПРОВАЛ
+                    {t(`${NS.RESISTANCE}.fail`)}
                   </span>
                                 </button>
                             </div>
@@ -322,13 +325,15 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                 <h3
                                     className={`text-5xl font-black italic uppercase leading-none ${missionVotes.includes(false) ? 'text-premium-red' : 'text-premium-green'}`}
                                 >
-                                    ОПЕРАЦИЯ
+                                    {t(`${NS.RESISTANCE}.missionTitle`)}
                                     <br/>
-                                    {missionVotes.includes(false) ? 'ПРОВАЛЕНА' : 'УДАЧНА'}
+                                    {missionVotes.includes(false)
+                                        ? t(`${NS.RESISTANCE}.missionFailed`)
+                                        : t(`${NS.RESISTANCE}.missionSucceeded`)}
                                 </h3>
                             </div>
                             <PrimaryButton onClick={nextMission} variant="outline" icon={ArrowRight}>
-                                ДАЛЕЕ
+                                {t(`${NS.COMMON}.next`)}
                             </PrimaryButton>
                         </motion.div>
                     )}
@@ -345,20 +350,22 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                                 className={`p-12 rounded-premium-3xl w-full border-4 ${winner === 'resistance' ? 'bg-premium-blue/10 border-premium-blue/60 shadow-[0_0_50px_rgba(59,130,246,0.3)]' : 'bg-premium-red/10 border-premium-red/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]'}`}
                             >
                                 <h2 className="text-tag font-black uppercase tracking-[0.5em] mb-4 opacity-60">
-                                    ФИНАЛЬНЫЙ СЧЕТ
+                                    {t(`${NS.RESISTANCE}.finalScore`)}
                                 </h2>
                                 <h3
                                     className={`text-6xl font-black italic uppercase leading-none ${winner === 'resistance' ? 'text-premium-blue' : 'text-premium-red'}`}
                                 >
-                                    {winner === 'resistance' ? 'ГРУППА' : 'ШПИОНЫ'}
+                                    {winner === 'resistance'
+                                        ? t(`${NS.RESISTANCE}.resistanceLabel`)
+                                        : t(`${NS.RESISTANCE}.spiesLabel`)}
                                     <br/>
-                                    ПОБЕДИЛИ
+                                    {t(`${NS.RESISTANCE}.won`)}
                                 </h3>
                             </div>
 
                             <div className="w-full space-y-3">
                                 <p className="text-tag font-black text-white/20 uppercase tracking-widest">
-                                    Агенты шпионажа
+                                    {t(`${NS.RESISTANCE}.spyAgents`)}
                                 </p>
                                 <div className="grid grid-cols-2 gap-2">
                                     {players
@@ -375,7 +382,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({playerNames, onBa
                             </div>
 
                             <PrimaryButton onClick={onBack} icon={RotateCcw} variant="blue">
-                                ЗАНОВО
+                                {t(`${NS.RESISTANCE}.restart`)}
                             </PrimaryButton>
                         </motion.div>
                     )}

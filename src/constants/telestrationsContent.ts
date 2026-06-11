@@ -8,9 +8,7 @@ export interface TelestrationsInstruction {
 }
 
 export interface DifficultySetting {
-    readonly label: string;
     readonly emoji: string;
-    readonly description: string;
     readonly drawTime: number;
     readonly guessTime: number;
     readonly text: string;
@@ -583,9 +581,7 @@ export const WORDS_BY_DIFFICULTY: TelestrationsDictionary = {
  */
 export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
     easy: {
-        label: 'Легко',
         emoji: '🌱',
-        description: 'Просто',
         drawTime: 90,
         guessTime: 45,
         text: 'text-premium-green',
@@ -593,9 +589,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
         border: 'border-premium-green/30',
     },
     medium: {
-        label: 'Средне',
         emoji: '🔥',
-        description: 'Смешно',
         drawTime: 60,
         guessTime: 30,
         text: 'text-premium-orange',
@@ -603,9 +597,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultySetting> = {
         border: 'border-premium-orange/30',
     },
     hard: {
-        label: 'Сложно',
         emoji: '💀',
-        description: 'Трудно',
         drawTime: 45,
         guessTime: 25,
         text: 'text-premium-red',

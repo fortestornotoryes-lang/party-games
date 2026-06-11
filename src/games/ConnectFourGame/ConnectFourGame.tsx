@@ -14,6 +14,8 @@ import {C4Action, type C4Player, type Cell, type WinResult} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {usePersistedState} from '@/hooks/usePersistedState';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GameKey} from '@/types/games';
 
 interface Props {
@@ -22,10 +24,11 @@ interface Props {
 }
 
 export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const {mode} = useGameSettings();
 
-    const p1 = playerNames[0] ?? 'Игрок 1';
-    const p2 = playerNames[1] ?? 'Игрок 2';
+    const p1 = playerNames[0] ?? t(`${NS.CONNECT_FOUR}.player1`);
+    const p2 = playerNames[1] ?? t(`${NS.CONNECT_FOUR}.player2`);
 
     const {rows: ROWS, cols: COLS, winLen: WIN_LEN, isPopOut} = getBoardConfig(mode);
     // Literal class strings — needed for Tailwind v4 static scan
@@ -122,17 +125,17 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
         setAction(C4Action.Place);
     };
 
+    const subtitle = gameOver
+        ? win
+            ? t(`${NS.CONNECT_FOUR}.winnerLine`, {player: win.player === 1 ? p1 : p2})
+            : t(`${NS.CONNECT_FOUR}.drawResult`)
+        : t(`${NS.CONNECT_FOUR}.currentTurn`, {player: current === 1 ? p1 : p2});
+
     return (
         <div className="flex flex-col min-h-screen pb-10">
             <GameHeader
-                title="ЧЕТЫРЕ В РЯД"
-                subtitle={
-                    gameOver
-                        ? win
-                            ? `Победил ${win.player === 1 ? p1 : p2}!`
-                            : 'Ничья!'
-                        : `Ход: ${current === 1 ? p1 : p2}`
-                }
+                title={t(`${NS.CONNECT_FOUR}.title`)}
+                subtitle={subtitle}
                 icon={LayoutGrid}
                 theme="red"
                 onBack={onBack}
@@ -167,7 +170,7 @@ export const ConnectFourGame: React.FC<Props> = ({playerNames, onBack}) => {
                 <GameOverBanner show={gameOver} win={win} p1={p1} p2={p2}/>
 
                 <PrimaryButton onClick={rematch} icon={RotateCcw} variant={gameOver ? 'white' : 'outline'}>
-                    {gameOver ? 'РЕВАНШ' : 'НОВАЯ ИГРА'}
+                    {gameOver ? t(`${NS.COMMON}.rematch`) : t(`${NS.CONNECT_FOUR}.newGame`)}
                 </PrimaryButton>
             </div>
         </div>

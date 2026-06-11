@@ -17,6 +17,8 @@ import {GameCard} from '@/components/GameCard.tsx';
 import {GameHeader} from '@/components/GameHeader';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {usePersistedState} from '@/hooks/usePersistedState';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GameKey} from '@/types/games';
 
 interface Props {
@@ -25,6 +27,7 @@ interface Props {
 }
 
 export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const K = GameKey.FakeArtist;
     const [players, setPlayers] = usePersistedState<Player[]>(K, 'players', []);
     const [phase, setPhase] = usePersistedState<FakeArtistPhase>(
@@ -214,7 +217,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                     >
                         <GameHeader
                             title={GAMES_REGISTRY.fake_artist.title}
-                            subtitle={`Ход ${turnIndex + 1} / ${players.length * gameState.rounds}`}
+                            subtitle={t(`${NS.FAKE_ARTIST}.turnSubtitle`, {current: turnIndex + 1, total: players.length * gameState.rounds})}
                             icon={Palette}
                             theme="green"
                             onBack={onBack}
@@ -224,7 +227,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                             <div className="w-full flex justify-between items-end">
                                 <div className="space-y-1">
                                     <p className="text-tag text-white/80 font-black uppercase tracking-widest">
-                                        Рисует
+                                        {t(`${NS.FAKE_ARTIST}.drawingLabel`)}
                                     </p>
                                     <div className="flex items-center gap-3">
                                         <div
@@ -241,11 +244,11 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                         <p
                                             className={`text-xl font-black italic mb-1 ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}
                                         >
-                                            {timeLeft}с
+                                            {t(`${NS.FAKE_ARTIST}.timerSeconds`, {n: timeLeft})}
                                         </p>
                                     )}
                                     <p className="text-tag text-white/80 font-black uppercase tracking-widest">
-                                        Тема
+                                        {t(`${NS.FAKE_ARTIST}.categoryLabel`)}
                                     </p>
                                     <h3 className="text-xl font-black italic uppercase text-premium-green leading-none">
                                         {gameState.category}
@@ -302,7 +305,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-60 space-y-4">
                                             <Brush className="w-16 h-16 text-black"/>
                                             <span className="font-black italic text-black uppercase tracking-tighter">
-                        Нарисуй одну линию
+                        {t(`${NS.FAKE_ARTIST}.drawOneLine`)}
                       </span>
                                         </div>
                                     )}
@@ -325,7 +328,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                     onClick={confirm}
                                     className="bg-premium-green !text-black flex-1 font-semibold"
                                 >
-                                    ПОДТВЕРДИТЬ
+                                    {t(`${NS.FAKE_ARTIST}.confirm`)}
                                 </PrimaryButton>
                             </div>
                         </div>
@@ -345,14 +348,14 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                         <Palette className="w-16 h-16 text-premium-green animate-pulse"/>
                                         <div className="text-center space-y-4">
                                             <p className="text-tag text-white/80 font-black uppercase tracking-[0.3em]">
-                                                Следующий игрок
+                                                {t(`${NS.FAKE_ARTIST}.nextPlayer`)}
                                             </p>
                                             <h3 className="text-5xl font-black italic uppercase text-white tracking-tighter">
                                                 {players[turnIndex % players.length].name}
                                             </h3>
                                         </div>
                                         <p className="text-xs text-center text-premium-green px-8">
-                                            Передайте телефон этому игроку и нажмите кнопку ниже
+                                            {t(`${NS.FAKE_ARTIST}.passPhoneInstruction`)}
                                         </p>
                                     </GameCard>
 
@@ -362,7 +365,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                         }}
                                         className="bg-white !text-black"
                                     >
-                                        Я ГОТОВ РИСОВАТЬ
+                                        {t(`${NS.FAKE_ARTIST}.readyToDraw`)}
                                     </PrimaryButton>
                                 </motion.div>
                             )}

@@ -3,6 +3,8 @@ import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
 import type {Player} from '@/types.ts';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface FakeArtistVotingProps {
     players: Player[];
@@ -15,6 +17,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                                                                       canvasImage,
                                                                       onReveal,
                                                                   }) => {
+    const {t} = useTranslation();
     const [revealed, setRevealed] = useState(false);
     const [fullscreen, setFullscreen] = useState(false);
     const spy = players.find((p) => p.isSpy);
@@ -86,7 +89,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                             className="space-y-6"
                         >
                             <div className="text-center italic text-sm text-white/20 uppercase tracking-widest">
-                                Голосуйте одновременно
+                                {t(`${NS.FAKE_ARTIST}.voteSimultaneously`)}
                             </div>
                             <button
                                 onClick={() => {
@@ -94,7 +97,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                                 }}
                                 className="w-full py-6 bg-white text-black rounded-premium-lg font-black uppercase tracking-widest shadow-[0_10px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
                             >
-                                Раскрыть самозванца
+                                {t(`${NS.FAKE_ARTIST}.revealImpostor`)}
                             </button>
                         </motion.div>
                     ) : (
@@ -108,7 +111,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                                 className="p-10 bg-premium-red/10 border border-premium-red/20 rounded-premium-3xl space-y-4">
                                 <Ghost className="w-16 h-16 text-premium-red mx-auto animate-bounce"/>
                                 <h4 className="text-3xl font-black text-premium-red italic uppercase">
-                                    САМОЗВАНЕЦ
+                                    {t(`${NS.FAKE_ARTIST}.imposter`)}
                                 </h4>
                                 <div className="text-4xl font-black text-white">{spy?.name}</div>
                             </div>
@@ -117,7 +120,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                                 onClick={onReveal}
                                 className="w-full py-6 bg-white/10 border border-white/20 text-white rounded-premium-lg font-black uppercase tracking-widest"
                             >
-                                В ГЛАВНОЕ МЕНЮ
+                                {t(`${NS.FAKE_ARTIST}.mainMenu`)}
                             </button>
                         </motion.div>
                     )}

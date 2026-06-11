@@ -13,6 +13,8 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {usePersistedState} from '@/hooks/usePersistedState';
 import {usePlayerCycle} from '@/hooks/usePlayerCycle';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {GameKey} from '@/types/games';
 
@@ -23,6 +25,7 @@ interface TruthOrDareGameProps {
 }
 
 export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({playerNames, onBack}) => {
+    const {t} = useTranslation();
     const {difficulty} = useGameSettings();
     const [phase, setPhase] = usePersistedState<TruthOrDarePhase>(
         GameKey.TruthOrDare,
@@ -56,7 +59,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({playerNames, on
         <div className="flex flex-col h-screen">
             <GameHeader
                 title={GAMES_REGISTRY.truth_or_dare.title}
-                subtitle="Правда или Действие"
+                subtitle={t(`${NS.TRUTH_OR_DARE}.subtitle`)}
                 icon={Flame}
                 theme="red"
                 onBack={onBack}

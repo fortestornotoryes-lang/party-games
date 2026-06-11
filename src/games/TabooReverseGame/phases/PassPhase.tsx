@@ -2,6 +2,8 @@ import {ListChecks} from 'lucide-react';
 import React from 'react';
 
 import {TabooPassPhase} from '@/components/TabooPassPhase';
+import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface PassPhaseProps {
     playerNames: string[];
@@ -11,11 +13,15 @@ interface PassPhaseProps {
     onStart: () => void;
 }
 
-export const PassPhase: React.FC<PassPhaseProps> = (props) => (
-    <TabooPassPhase
-        {...props}
-        accentColor="orange"
-        icon={ListChecks}
-        instruction="Только ты должен видеть загаданное слово"
-    />
-);
+export const PassPhase: React.FC<PassPhaseProps> = (props) => {
+    const {t} = useTranslation();
+
+    return (
+        <TabooPassPhase
+            {...props}
+            accentColor="orange"
+            icon={ListChecks}
+            instruction={t(`${NS.TABOO_REVERSE}.passInstruction`)}
+        />
+    );
+};
