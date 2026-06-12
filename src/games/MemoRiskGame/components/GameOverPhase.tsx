@@ -2,7 +2,7 @@ import confetti from 'canvas-confetti';
 import {Home, RotateCcw, Trophy} from 'lucide-react';
 import React, {useEffect} from 'react';
 
-import {LeaderboardList} from '@/components/LeaderboardList';
+import {LeaderboardList} from '@/entities/player/components/LeaderboardList';
 import {PrimaryButton} from '@/shared/components/PrimaryButton';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';

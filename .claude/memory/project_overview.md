@@ -27,35 +27,45 @@ npm run build    # Сборка в dist/
 
 ## Структура папок
 
-Идёт миграция на FSD (июнь 2026). Слои-заглушки `app/`, `entities/`, `features/`, `pages/`, `widget/` созданы (пустые `index.ts`). Этап 1 выполнен: shared-слой перенесён в `src/shared`, импорты — через alias `@/shared/...` (alias `@/* → src/*` в tsconfig+vite). Баррелей нет — импорты напрямую в модуль.
+Идёт миграция на FSD (июнь 2026). Этапы 1 (shared), 2 (entities) и 3 (app + pages) выполнены. Импорты — через alias `@/...` (alias `@/* → src/*` в tsconfig+vite), баррелей нет — импорты напрямую в модуль. Конвенции слайсов: сегмент `components` (не `ui`), `types.ts` в корне слайса. Слои `features/`, `widget/` пока пустые заглушки.
 
 ```
 src/
-  App.tsx                          # Только провайдеры (GameSettings, Language) + RouterProvider
-  main.tsx
-  index.css                        # Tailwind + кастомные токены + glass-card
+  app/                             # FSD app-слой
+    main.tsx                       # Entry (registerSW + createRoot); index.html указывает на /src/app/main.tsx
+    App.tsx                        # Только провайдеры (GameSettings, Language) + RouterProvider
+    router/routes.tsx              # createBrowserRouter + RootLayout (каркас + Suspense), basename из BASE_URL
+    styles/index.css               # Tailwind + кастомные токены + glass-card
+  pages/                           # FSD pages-слой (route-компоненты)
+    menu/MenuRoute.tsx             # MainMenu + кнопка настроек
+    settings/SettingsRoute.tsx     # Обёртка Settings
+    game/
+      GameLayout.tsx               # /game/:gameKey/* — валидация gameKey + sync c GameSettingsContext
+      GameSetupRoute.tsx           # Setup + UniversalGameSettings, navigate('../play', {state:{playerNames}})
+      GamePlayRoute.tsx            # lazy-импорты всех игр + маппинг GameKey→компонент, fallback игроков
+                                   #   из storage, guard minPlayers
   shared/                          # FSD shared-слой (не знает о доменах игр)
-    components/                    # 12 UI-атомов: Badge, IconButton, PrimaryButton, TextInput, TabButton,
+    components/                    # 13 UI-атомов: Badge, IconButton, PrimaryButton, TextInput, TabButton,
                                    #   SectionLabel, PageWrapper, Pagination, ProgressDots, TimerBar,
-                                   #   Typography, DrawingCanvas
+                                   #   Typography, DrawingCanvas, GameCard (glass-card контейнер)
     hooks/                         # useTimer, useCountdown, usePlayerCycle, usePersistedState
     helpers/random.ts              # shuffle<T>(), pickRandom<T>() — использовать везде вместо inline sort
     i18n/                          # index (LanguageContext, useTranslation), en, ru, keys, types
-    types/index.ts                 # Player, Difficulty, GameMode, GameTheme (бывший src/types.ts)
+    types/index.ts                 # Difficulty, GameTheme, GameModeOption (Player уехал в entities/player)
     services/                      # storageService, feedbackService (VIBRATE), sessionService
+                                   #   gameId/gameKey-параметры — string (shared не знает GameKey)
     theme/colors.ts                # themeConfigs, getTheme, rgba
-  router/
-    routes.tsx                     # createBrowserRouter + RootLayout/MenuRoute/SettingsRoute, basename из BASE_URL
-    GameLayout.tsx                 # /game/:gameKey/* — валидация gameKey + sync c GameSettingsContext
-    GameSetupRoute.tsx             # Setup + UniversalGameSettings, navigate('../play', {state:{playerNames}})
-    GamePlayRoute.tsx              # Маппинг GameKey→компонент, fallback игроков из storage, guard minPlayers
-  types/
-    games.ts                       # GameKey enum, GameMetadata, GameMode, GamesRegistryMap, GameInstructionsMap
-    instructions.ts                # устаревший GameKey enum (не используется в основном коде)
-  registry/
-    GameRegistry.tsx               # GAMES_REGISTRY — реестр всех игр + lazy imports
-  contexts/
-    GameSettingsContext.tsx        # difficulty, mode, rounds, timerSeconds, currentGameId
+  entities/
+    game/
+      types.ts                     # GameKey (const-объект), GameMode, GameMetadata, InstructionItem,
+                                   #   CLASSIC_MODE_ID, GamesRegistryMap, GameInstructionsMap
+      registry.tsx                 # GAMES_REGISTRY — только метаданные (lazy-импорты игр уехали в GamePlayRoute)
+      instructions.ts              # GAME_INSTRUCTIONS (бывший constants/instructions.ts)
+      model/GameSettingsContext.tsx # difficulty, mode, rounds, timerSeconds, currentGameId (бывший contexts/)
+      components/GameMenuCard.tsx  # Карточка игры в главном меню
+    player/
+      types.ts                     # Player, PlayerEntry (черновик игрока на Setup)
+      components/                  # PlayerRow (+DEFAULT_NAMES), PlayerScoreList, LeaderboardList
   components/                      # Остались компоненты со знанием домена (→ entities/widgets на след. этапах)
     MainMenu.tsx                   # Список игр из GAMES_REGISTRY
     Setup.tsx                      # Универсальный экран: имена игроков + настройки
@@ -67,8 +77,6 @@ src/
     PlayingHeader.tsx              # "Игрок объясняет" + таймер
     DistributionFlow.tsx           # Абстрактная основа раздачи ролей (ProgressDots + lock→reveal)
     TabooPassPhase.tsx             # Общая Pass-фаза для Taboo-семейства (PassPhoneCard + PlayerScoreList)
-    PlayerScoreList.tsx            # Список игроков с очками для pass-экранов (auto-sorted)
-    LeaderboardList.tsx            # Ранжированный список победителей для GameOver-экранов
     StopGameButton.tsx             # Кнопка "Завершить игру"
   games/
     AliasGame/AliasGame.tsx
@@ -107,15 +115,19 @@ src/
         VerdictPhase.tsx            # использует StopGameButton
         GameOverPhase.tsx           # использует LeaderboardList
     TruthOrDareGame/TruthOrDareGame.tsx
-  constants/                       # Контент для каждой игры + instructions.ts
+  constants/                       # Контент для каждой игры (instructions.ts уехал в entities/game)
   services/
-    contentService.ts              # единственный не перенесённый сервис — зависит от constants/* (→ entities позже)
+    contentService.ts              # единственный не перенесённый сервис — зависит от constants/* (→ features позже)
   utils/
     gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance (доменная логика, → features позже)
-  app/ entities/ features/ pages/ widget/   # пустые FSD-слои (index.ts-заглушки)
+  features/ widget/                # пустые FSD-слои (index.ts-заглушки)
 ```
 
-**Временное исключение FSD**: `shared/services/{storage,session}Service` и `shared/hooks/usePersistedState` импортируют `type GameKey` из `@/types/games` (слой выше) — исправить на этапе entities.
+**Временные исключения FSD (чинить на этапах features/widgets):**
+- `pages/*` импортируют из нелейерного `@/components/*` (MainMenu, Settings, Setup, UniversalGameSettings) и `@/games/*`;
+- `entities/game/registry.tsx` импортирует `*_MODES` из `@/games/*/constants` и картинки из `@/assets` — games ещё не оформлены как FSD-слой;
+- `services/contentService.ts` и `utils/gameLogic.ts` вне слоёв, импортируют entities;
+- `GameModeOption` в `shared/types` — почти дубликат `GameMode` из `entities/game/types` (используют UniversalGameSettings + GameSetupRoute), кандидат на консолидацию.
 
 ## Архитектура (роутинг)
 
@@ -134,6 +146,6 @@ React Router v7 (`react-router`, `createBrowserRouter`). Карта URL:
 `GAMES_REGISTRY` (объект `{ [gameId]: GameMetadata }`) — единственный источник правды о метаданных игр.
 
 **Как добавить игру:**
-1. Добавить ключ в `GameKey` (types/games.ts)
-2. Добавить запись в `GAMES_REGISTRY` (GameRegistry.tsx) — поля `setupStatus` больше нет
-3. Добавить компонент в `GAME_COMPONENTS` в `src/router/GamePlayRoute.tsx`
+1. Добавить ключ в `GameKey` (src/entities/game/types.ts)
+2. Добавить запись в `GAMES_REGISTRY` (src/entities/game/registry.tsx) — поля `setupStatus` больше нет
+3. Добавить компонент в `GAME_COMPONENTS` в `src/pages/game/GamePlayRoute.tsx`

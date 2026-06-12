@@ -2,14 +2,15 @@ import {EyeOff, Ghost, Palette} from 'lucide-react';
 import {motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
-import {useGameSettings} from '../../../contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 import {useFakeArtistContent} from '../model/useFakeArtistContent';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
+import type {Player} from '@/entities/player/types';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {rgba} from '@/shared/theme/colors';
-import {DIFFICULTY, type Player} from '@/shared/types';
+import {DIFFICULTY} from '@/shared/types';
 
 interface Props {
     players: Player[];

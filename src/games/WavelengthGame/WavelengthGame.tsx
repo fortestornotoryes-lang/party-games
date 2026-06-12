@@ -11,8 +11,9 @@ import {RevealPhase} from './phases/RevealPhase';
 import {WavelengthPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {randomInt} from '@/shared/helpers/random';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
@@ -20,7 +21,6 @@ import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {storageService} from '@/shared/services/storageService';
-import {GameKey} from '@/types/games';
 
 interface WavelengthGameProps {
     playerNames: string[];

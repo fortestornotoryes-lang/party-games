@@ -179,6 +179,71 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
     ],
 
     medium: [
+        // Настольные игры
+        {category: 'Настольные игры', word: 'Шашки'},
+        {category: 'Настольные игры', word: 'Монополия'},
+        {category: 'Настольные игры', word: 'Мафия'},
+        {category: 'Настольные игры', word: 'Дженга'},
+        {category: 'Настольные игры', word: 'Домино'},
+        {category: 'Настольные игры', word: 'Лото'},
+
+// Морская тематика
+        {category: 'Море', word: 'Якорь'},
+        {category: 'Море', word: 'Маяк'},
+        {category: 'Море', word: 'Штурвал'},
+        {category: 'Море', word: 'Буй'},
+        {category: 'Море', word: 'Риф'},
+        {category: 'Море', word: 'Парус'},
+
+
+        // Космос (не пересекается с hard-категорией "Космос")
+        {category: 'Космические объекты', word: 'Спутник'},
+        {category: 'Космические объекты', word: 'Марсоход'},
+        {category: 'Космические объекты', word: 'Луноход'},
+        {category: 'Космические объекты', word: 'Космическая станция'},
+        {category: 'Космические объекты', word: 'Телескоп'},
+        {category: 'Космические объекты', word: 'Скафандр'},
+
+        // Сказки
+        {category: 'Сказки', word: 'Баба-яга'},
+        {category: 'Сказки', word: 'Колобок'},
+        {category: 'Сказки', word: 'Золушка'},
+        {category: 'Сказки', word: 'Красная Шапочка'},
+        {category: 'Сказки', word: 'Джинн'},
+        {category: 'Сказки', word: 'Пиноккио'},
+
+        // Город
+        {category: 'Город', word: 'Светофор'},
+        {category: 'Город', word: 'Фонтан'},
+        {category: 'Город', word: 'Небоскрёб'},
+        {category: 'Город', word: 'Мост'},
+        {category: 'Город', word: 'Пешеходный переход'},
+        {category: 'Город', word: 'Остановка'},
+
+        // Путешествия
+        {category: 'Путешествия', word: 'Паспорт'},
+        {category: 'Путешествия', word: 'Компас'},
+        {category: 'Путешествия', word: 'Карта'},
+        {category: 'Путешествия', word: 'Палатка'},
+        {category: 'Путешествия', word: 'Рюкзак'},
+        {category: 'Путешествия', word: 'Бинокль'},
+
+        // Кино
+        {category: 'Кино', word: 'Попкорн'},
+        {category: 'Кино', word: 'Киноплёнка'},
+        {category: 'Кино', word: 'Режиссёр'},
+        {category: 'Кино', word: 'Каскадёр'},
+        {category: 'Кино', word: 'Сценарий'},
+        {category: 'Кино', word: 'Оскар'},
+
+        // Магия
+        {category: 'Магия', word: 'Волшебная палочка'},
+        {category: 'Магия', word: 'Зелье'},
+        {category: 'Магия', word: 'Заклинание'},
+        {category: 'Магия', word: 'Кристалл'},
+        {category: 'Магия', word: 'Гримуар'},
+        {category: 'Магия', word: 'Амулет'},
+
         {category: 'Профессии', word: 'Повар'},
         {category: 'Профессии', word: 'Пожарный'},
         {category: 'Профессии', word: 'Хирург'},
@@ -318,6 +383,16 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
     ],
 
     hard: [
+        {category: 'Интернет', word: 'Лайк'},
+        {category: 'Интернет', word: 'Селфи'},
+        {category: 'Интернет', word: 'Стример'},
+        {category: 'Интернет', word: 'Мем'},
+        {category: 'Интернет', word: 'Хештег'},
+        {category: 'Интернет', word: 'Подкаст'},
+        {category: 'Интернет', word: 'Блогер'},
+        {category: 'Интернет', word: 'Эмодзи'},
+        {category: 'Интернет', word: 'Вирусное видео'},
+        {category: 'Интернет', word: 'Уведомление'},
         // Эмоции
         {category: 'Эмоции', word: 'Радость'},
         {category: 'Эмоции', word: 'Тревога'},
@@ -452,5 +527,16 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
         {category: 'Экономика', word: 'Дивиденды'},
         {category: 'Экономика', word: 'Акции'},
         {category: 'Экономика', word: 'Налог'},
+
+        {category: 'Мифология', word: 'Минотавр'},
+        {category: 'Мифология', word: 'Медуза Горгона'},
+        {category: 'Мифология', word: 'Кентавр'},
+        {category: 'Мифология', word: 'Гидра'},
+        {category: 'Мифология', word: 'Сфинкс'},
+        {category: 'Мифология', word: 'Цербер'},
+        {category: 'Мифология', word: 'Грифон'},
+        {category: 'Мифология', word: 'Русалка'},
+        {category: 'Мифология', word: 'Пегас'},
+        {category: 'Мифология', word: 'Йети'},
     ],
 };

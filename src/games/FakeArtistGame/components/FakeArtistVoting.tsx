@@ -2,9 +2,9 @@
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
+import type {Player} from '@/entities/player/types';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
-import type {Player} from '@/shared/types';
 
 interface FakeArtistVotingProps {
     players: Player[];

@@ -2,7 +2,7 @@ import {RotateCcw, Trophy} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {LeaderboardList} from '@/components/LeaderboardList.tsx';
+import {LeaderboardList} from '@/entities/player/components/LeaderboardList';
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';

@@ -15,6 +15,7 @@ import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {GameKey} from '@/entities/game/types';
 import {DrawingCanvas} from '@/shared/components/DrawingCanvas';
 import {shuffle} from '@/shared/helpers/random';
 import {useCountdown} from '@/shared/hooks/useCountdown';
@@ -25,7 +26,6 @@ import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {sessionService} from '@/shared/services/sessionService';
 import {storageService} from '@/shared/services/storageService';
 import {DIFFICULTY} from '@/shared/types';
-import {GameKey} from '@/types/games';
 
 interface TelestrationsGameProps {
     playerNames: string[];

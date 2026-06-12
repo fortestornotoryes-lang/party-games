@@ -3,8 +3,8 @@ import {Ban} from 'lucide-react';
 import {AnimatePresence} from 'motion/react';
 import React, {useCallback, useEffect} from 'react';
 
-import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+
 
 import {GameOverPhase} from './phases/GameOverPhase';
 import {PassPhase} from './phases/PassPhase';
@@ -15,13 +15,14 @@ import {TabooPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import type {TabooClassicCard} from '@/constants/tabooContent';
 import {getNextTabooClassicCard, TABOO_CLASSIC_CARDS} from '@/constants/tabooContent';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
 import {useTimer} from '@/shared/hooks/useTimer';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {storageService} from '@/shared/services/storageService';
-import {GameKey} from '@/types/games';
 
 
 interface TabooGameProps {

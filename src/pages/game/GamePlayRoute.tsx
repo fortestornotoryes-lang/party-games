@@ -1,32 +1,70 @@
 import type {ComponentType} from 'react';
+import {lazy} from 'react';
 import {Navigate, useLocation, useNavigate, useParams} from 'react-router';
 
-import {useGameSettings} from '../contexts/GameSettingsContext';
-import {
-    AliasGame,
-    BunkerGame,
-    CodenamesGame,
-    ConnectFourGame,
-    CorridorGame,
-    DecryptoGame,
-    FakeArtistGame,
-    GAMES_REGISTRY,
-    JustOneGame,
-    MafiaGame,
-    MemoRiskGame,
-    MillionaireGame,
-    ResistanceGame,
-    SpyHuntGame,
-    TabooGame,
-    TabooReverseGame,
-    TelestrationsGame,
-    TruthOrDareGame,
-    WavelengthGame,
-} from '../registry/GameRegistry';
-import {GameKey} from '../types/games';
-
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {sessionService} from '@/shared/services/sessionService';
 import {storageService} from '@/shared/services/storageService';
+
+// Lazy load game components
+const SpyHuntGame = lazy(() =>
+    import('@/games/SpyHuntGame/SpyHuntGame').then((m) => ({default: m.SpyHuntGame}))
+);
+const AliasGame = lazy(() =>
+    import('@/games/AliasGame/AliasGame').then((m) => ({default: m.AliasGame}))
+);
+const FakeArtistGame = lazy(() =>
+    import('@/games/FakeArtistGame/FakeArtistGame').then((m) => ({default: m.FakeArtistGame}))
+);
+const ResistanceGame = lazy(() =>
+    import('@/games/ResistanceGame/ResistanceGame').then((m) => ({default: m.ResistanceGame}))
+);
+const WavelengthGame = lazy(() =>
+    import('@/games/WavelengthGame/WavelengthGame').then((m) => ({default: m.WavelengthGame}))
+);
+const TelestrationsGame = lazy(() =>
+    import('@/games/TelestrationsGame/TelestrationsGame').then((m) => ({
+        default: m.TelestrationsGame,
+    }))
+);
+const JustOneGame = lazy(() =>
+    import('@/games/JustOneGame/JustOneGame').then((m) => ({default: m.JustOneGame}))
+);
+const CodenamesGame = lazy(() =>
+    import('@/games/CodenamesGame/CodenamesGame').then((m) => ({default: m.CodenamesGame}))
+);
+const DecryptoGame = lazy(() =>
+    import('@/games/DecryptoGame/DecryptoGame').then((m) => ({default: m.DecryptoGame}))
+);
+const MafiaGame = lazy(() => import('@/games/MafiaGame/MafiaGame'));
+const TruthOrDareGame = lazy(() =>
+    import('@/games/TruthOrDareGame/TruthOrDareGame').then((m) => ({default: m.TruthOrDareGame}))
+);
+const ConnectFourGame = lazy(() =>
+    import('@/games/ConnectFourGame/ConnectFourGame').then((m) => ({default: m.ConnectFourGame}))
+);
+const TabooReverseGame = lazy(() =>
+    import('@/games/TabooReverseGame/TabooReverseGame').then((m) => ({
+        default: m.TabooReverseGame,
+    }))
+);
+const TabooGame = lazy(() =>
+    import('@/games/TabooGame/TabooGame').then((m) => ({default: m.TabooGame}))
+);
+const BunkerGame = lazy(() =>
+    import('@/games/BunkerGame/BunkerGame').then((m) => ({default: m.BunkerGame}))
+);
+const MillionaireGame = lazy(() =>
+    import('@/games/MillionaireGame/MillionaireGame').then((m) => ({default: m.MillionaireGame}))
+);
+const CorridorGame = lazy(() =>
+    import('@/games/CorridorGame/CorridorGame').then((m) => ({default: m.CorridorGame}))
+);
+const MemoRiskGame = lazy(() =>
+    import('@/games/MemoRiskGame/MemoRiskGame').then((m) => ({default: m.MemoRiskGame}))
+);
 
 interface GameProps {
     playerNames: string[];

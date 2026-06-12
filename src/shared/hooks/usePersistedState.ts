@@ -3,7 +3,6 @@ import type {Dispatch, SetStateAction} from 'react';
 
 import {sessionService} from '../services/sessionService';
 
-import type {GameKey} from '@/types/games';
 
 /**
  * Кодек для значений, которые нельзя сериализовать в JSON напрямую
@@ -28,7 +27,7 @@ export interface PersistCodec<T> {
  * @param codec   опциональный кодек для несериализуемых типов
  */
 export function usePersistedState<T>(
-    gameKey: GameKey,
+    gameKey: string,
     field: string,
     initial: T | (() => T),
     codec?: PersistCodec<T>
@@ -63,7 +62,7 @@ export function usePersistedState<T>(
  * с сохранённого значения.
  */
 export function usePersistedTimer(
-    gameKey: GameKey,
+    gameKey: string,
     field: string,
     timer: {timeLeft: number; start: () => void; reset: (newTime?: number) => void},
     resumeRunning: boolean

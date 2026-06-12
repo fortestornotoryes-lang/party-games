@@ -1,12 +1,11 @@
 import {useNavigate, useParams} from 'react-router';
 
-import {Setup} from '../components/Setup';
-import {UniversalGameSettings} from '../components/UniversalGameSettings';
-import {GAME_INSTRUCTIONS} from '../constants/instructions';
-import {useGameSettings} from '../contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '../registry/GameRegistry';
-import type {GameKey} from '../types/games';
-
+import {Setup} from '@/components/Setup';
+import {UniversalGameSettings} from '@/components/UniversalGameSettings';
+import {GAME_INSTRUCTIONS} from '@/entities/game/instructions';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import type {GameKey} from '@/entities/game/types';
 import {sessionService} from '@/shared/services/sessionService';
 import {storageService} from '@/shared/services/storageService';
 import type {GameModeOption} from '@/shared/types';

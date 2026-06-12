@@ -1,8 +1,7 @@
 import type {ReactNode} from 'react';
 import React, {createContext, useContext, useState} from 'react';
 
-import {CLASSIC_MODE_ID, GameKey, type GameMode} from '../types/games';
-
+import {CLASSIC_MODE_ID, GameKey, type GameMode} from '@/entities/game/types';
 import {storageService} from '@/shared/services/storageService';
 import {DIFFICULTY, type Difficulty} from '@/shared/types';
 

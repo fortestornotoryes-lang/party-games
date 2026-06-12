@@ -2,7 +2,7 @@ import {HelpCircle, Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import type {GameMetadata} from '../types/games';
+import type {GameMetadata} from '../types';
 
 import {getTheme} from '@/shared/theme/colors';
 

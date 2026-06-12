@@ -11,10 +11,10 @@ import {canPlaceWall, canReach, emptyWalls, validMoves} from './helpers';
 import {ActionMode, type Pos, type WallGrid} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
+import {GameKey} from '@/entities/game/types';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
-import {GameKey} from '@/types/games';
 
 interface Props {
     playerNames: string[];

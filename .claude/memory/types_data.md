@@ -8,7 +8,7 @@ metadata:
 ---
 
 > ⚠️ **Устарело (2026-06-10):** enum `GameStatus` УДАЛЁН из `src/types.ts`, поле `setupStatus` удалено из `GameMetadata`.
-> Навигация — react-router v7 (`src/router/`), см. [[project-overview]]. Разделы про GameStatus ниже не применять.
+> Навигация — react-router v7 (`src/app/router/` + `src/pages/`), см. [[project-overview]]. Разделы про GameStatus ниже не применять.
 
 ## Player (src/types.ts)
 

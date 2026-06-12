@@ -1,9 +1,9 @@
 import type {SpyDifficulty} from '@/constants/spyHuntContent';
+import {GameKey} from '@/entities/game/types';
 import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 import {pickRandom} from '@/shared/helpers/random';
 import {storageService} from '@/shared/services/storageService';
 import {DIFFICULTY} from '@/shared/types';
-import {GameKey} from '@/types/games';
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useSpyHuntContent(difficulty: string) {

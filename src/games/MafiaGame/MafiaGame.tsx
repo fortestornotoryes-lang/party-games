@@ -2,8 +2,7 @@ import {Moon, Shield, Sun, Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-
+import {GAMES_REGISTRY} from '@/entities/game/registry';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 

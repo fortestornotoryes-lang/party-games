@@ -1,4 +1,3 @@
-import type {GameKey} from '@/types/games';
 
 /**
  * Персистенция состояния текущей партии (сессии) каждой игры.
@@ -22,9 +21,9 @@ interface GameSession {
     fields: Record<string, unknown>;
 }
 
-const keyFor = (gameKey: GameKey) => `${SESSION_PREFIX}${gameKey}`;
+const keyFor = (gameKey: string) => `${SESSION_PREFIX}${gameKey}`;
 
-function load(gameKey: GameKey): GameSession | null {
+function load(gameKey: string): GameSession | null {
     const raw = localStorage.getItem(keyFor(gameKey));
     if (!raw) return null;
     try {
@@ -38,7 +37,7 @@ function load(gameKey: GameKey): GameSession | null {
     }
 }
 
-function save(gameKey: GameKey, session: GameSession) {
+function save(gameKey: string, session: GameSession) {
     try {
         localStorage.setItem(keyFor(gameKey), JSON.stringify(session));
     } catch {
@@ -48,23 +47,23 @@ function save(gameKey: GameKey, session: GameSession) {
 
 export const sessionService = {
     /** Значение сохранённого поля или undefined, если его нет. */
-    getField(gameKey: GameKey, field: string): unknown {
+    getField(gameKey: string, field: string): unknown {
         const session = load(gameKey);
         return session ? session.fields[field] : undefined;
     },
 
-    saveField(gameKey: GameKey, field: string, value: unknown) {
+    saveField(gameKey: string, field: string, value: unknown) {
         const session = load(gameKey) ?? {players: [], fields: {}};
         session.fields[field] = value;
         save(gameKey, session);
     },
 
-    clear(gameKey: GameKey) {
+    clear(gameKey: string) {
         localStorage.removeItem(keyFor(gameKey));
     },
 
     /** Начало новой партии: пустая сессия, подписанная составом игроков. */
-    begin(gameKey: GameKey, players: string[]) {
+    begin(gameKey: string, players: string[]) {
         save(gameKey, {players, fields: {}});
     },
 
@@ -73,7 +72,7 @@ export const sessionService = {
      * сбрасывается, иначе подписывается текущим составом. Вызывается
      * в GamePlayRoute до маунта игры.
      */
-    syncPlayers(gameKey: GameKey, players: string[]) {
+    syncPlayers(gameKey: string, players: string[]) {
         const session = load(gameKey);
         if (!session) return;
         const same =

@@ -4,9 +4,9 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {contentService} from '../services/contentService';
-import {GameKey, type GameMode} from '../types/games';
 
 import {DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
+import {GameKey, type GameMode} from '@/entities/game/types';
 import {ALIAS_DIFFICULTY_CONFIG} from "@/games/AliasGame/constants.ts";
 import {MEMO_RISK_DIFFICULTY_CONFIG} from "@/games/MemoRiskGame/constants.ts";
 import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";

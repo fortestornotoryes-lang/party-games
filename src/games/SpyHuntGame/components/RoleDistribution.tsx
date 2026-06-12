@@ -2,16 +2,17 @@ import {Ghost, MapPin, Shield} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {useGameSettings} from '../../../contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 
 
 import {DistributionFlow} from '@/components/DistributionFlow';
+import type {Player} from '@/entities/player/types';
 import {SPY_HUNT_ROLE_IDS} from "@/games/SpyHuntGame/constants.ts";
 import {Typography} from '@/shared/components/Typography';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {ROLE_TOKENS} from '@/shared/theme/colors';
-import {DIFFICULTY, type Player} from '@/shared/types';
+import {DIFFICULTY} from '@/shared/types';
 
 interface RoleDistributionProps {
     players: Player[];

@@ -2,7 +2,7 @@ import {GripVertical, UserMinus} from "lucide-react";
 import {Reorder, useDragControls} from "motion/react";
 import React from "react";
 
-import type {PlayerEntry} from "@/components/Setup.tsx";
+import type {PlayerEntry} from "@/entities/player/types";
 import {TextInput} from "@/shared/components/TextInput";
 import type {ThemeTokens} from "@/shared/theme/colors";
 

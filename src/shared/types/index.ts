@@ -1,10 +1,3 @@
-export interface Player {
-    id: string;
-    name: string;
-    role: string;
-    isSpy: boolean;
-}
-
 export const DIFFICULTY = {
     EASY: 'easy',
     MEDIUM: 'medium',

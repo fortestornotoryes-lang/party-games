@@ -1,4 +1,3 @@
-import {GameKey} from '../types/games';
 
 
 import {ALIAS_CATEGORIES} from '@/constants/aliasContent';
@@ -11,6 +10,7 @@ import {TABOO_REVERSE_CARDS} from '@/constants/tabooReverseContent';
 import {WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS} from '@/constants/telestrationsContent';
 import {DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY} from '@/constants/truthOrDareContent';
 import {WAVELENGTH_DATA_BY_DIFFICULTY} from '@/constants/wavelengthContent';
+import {GameKey} from '@/entities/game/types';
 import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
 import {storageService} from '@/shared/services/storageService';
 import {DIFFICULTY, type Difficulty} from '@/shared/types';

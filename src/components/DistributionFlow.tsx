@@ -5,8 +5,8 @@ import React, {useState} from 'react';
 
 import {PassPhoneCard} from './PassPhoneCard';
 
+import type {Player} from '@/entities/player/types';
 import {ProgressDots} from '@/shared/components/ProgressDots';
-import type {Player} from '@/shared/types';
 
 type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
 

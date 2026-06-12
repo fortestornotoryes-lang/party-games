@@ -12,9 +12,10 @@ import type {Team} from './types';
 import {AliasPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from "@/games/AliasGame/constants.ts";
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {pickRandom, shuffle} from '@/shared/helpers/random';
 import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
 import {useTimer} from '@/shared/hooks/useTimer';
@@ -22,7 +23,6 @@ import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {storageService} from '@/shared/services/storageService';
-import {GameKey} from '@/types/games';
 
 
 interface AliasGameProps {

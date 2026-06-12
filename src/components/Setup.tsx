@@ -3,11 +3,12 @@ import {ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users,} from 'lucide-rea
 import {motion, Reorder} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
-import {useGameSettings} from '../contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 
 import {InstructionsModal} from './InstructionsModal';
 
-import {DEFAULT_NAMES, PlayerRow} from "@/components/PlayerRow.tsx";
+import {DEFAULT_NAMES, PlayerRow} from "@/entities/player/components/PlayerRow";
+import type {PlayerEntry} from "@/entities/player/types";
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import { Typography } from "@/shared/components/Typography";
 import {shuffle} from '@/shared/helpers/random';
@@ -31,11 +32,6 @@ interface SetupProps {
     minPlayers: number;
     maxPlayers?: number;
     children?: React.ReactNode;
-}
-
-export interface PlayerEntry {
-    id: string;
-    name: string;
 }
 
 let _idCounter = 0;

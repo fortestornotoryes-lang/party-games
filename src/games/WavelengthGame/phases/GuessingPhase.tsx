@@ -1,7 +1,7 @@
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {GameCard} from '@/components/GameCard';
+import {GameCard} from '@/shared/components/GameCard';
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';

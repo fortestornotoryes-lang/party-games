@@ -1,9 +1,9 @@
 import {useEffect} from 'react';
 import {Navigate, Outlet, useParams} from 'react-router';
 
-import {useGameSettings} from '../contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '../registry/GameRegistry';
-import type {GameKey} from '../types/games';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import type {GameKey} from '@/entities/game/types';
 
 const isGameKey = (key: string | undefined): key is GameKey =>
     key !== undefined && key in GAMES_REGISTRY;

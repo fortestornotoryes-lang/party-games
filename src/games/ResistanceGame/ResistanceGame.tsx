@@ -3,20 +3,21 @@ import {Activity, ArrowRight, CheckCircle2, Fingerprint, RotateCcw, Shield, Skul
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-
 import {ResistanceDistribution} from './components/ResistanceDistribution';
 import {ResistancePhase} from './types';
 
+
+
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
+import type {Player} from '@/entities/player/types';
 import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
-import type {Player} from '@/shared/types';
-import {GameKey} from '@/types/games';
 import {initResistance} from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {

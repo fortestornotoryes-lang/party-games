@@ -18,6 +18,7 @@ import {
     type MillionaireQuestion,
     simulateAudienceVote,
 } from '@/constants/millionaireContent';
+import {GameKey} from '@/entities/game/types';
 import {PRIZE_LADDER} from "@/games/MillionaireGame/constants.ts";
 import {shuffle} from '@/shared/helpers/random';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
@@ -25,7 +26,6 @@ import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
-import {GameKey} from '@/types/games';
 
 
 interface MillionaireGameProps {

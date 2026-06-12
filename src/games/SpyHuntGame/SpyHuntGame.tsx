@@ -10,17 +10,18 @@ import {RevealPhase} from './phases/RevealPhase';
 import {SpyHuntPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
+import type {Player} from '@/entities/player/types';
 import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
 import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
 import {useTimer} from '@/shared/hooks/useTimer';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {storageService} from '@/shared/services/storageService';
-import {DIFFICULTY, type Player} from '@/shared/types';
-import {GameKey} from '@/types/games';
+import {DIFFICULTY} from '@/shared/types';
 
 interface GameProps {
     playerNames: string[];

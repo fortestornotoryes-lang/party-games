@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {getHiddenTraits} from '../helpers';
 import {type AttributeEntry, type BunkerCharacter, type TraitKey} from '../types';
 
-import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 import {PrimaryButton} from '@/shared/components/PrimaryButton';
 import {Typography} from '@/shared/components/Typography';
 import {pickRandom} from '@/shared/helpers/random';

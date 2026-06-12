@@ -6,7 +6,7 @@ import {ResourceContribRow} from '../components/ResourceContribRow';
 import {getRevealedResourceContribution, getRevealedTrait} from '../helpers';
 import {type BunkerCharacter, type DifficultyLevel} from '../types';
 
-import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {TimerBar} from '@/shared/components/TimerBar';
 import {Typography} from '@/shared/components/Typography';

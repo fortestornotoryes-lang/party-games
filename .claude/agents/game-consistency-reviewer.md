@@ -64,7 +64,7 @@ You are an architectural consistency reviewer for Party Hub. Scan every game com
 
 1. List all game folders: `src/games/*/`
 2. For each game, read the main `.tsx` file and (if it exists) `types.ts`
-3. Also check the relevant case in `src/App.tsx` (renderGame switch)
+3. Also check the relevant entry in `GAME_COMPONENTS` (`src/pages/game/GamePlayRoute.tsx`)
 4. Apply every rule above
 
 ---

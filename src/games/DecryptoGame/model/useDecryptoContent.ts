@@ -1,8 +1,8 @@
 import {WORDS_BY_DIFFICULTY as DECRYPTO_WORDS} from '@/constants/decryptoWords.ts';
+import {GameKey} from '@/entities/game/types';
 import {shuffle} from '@/shared/helpers/random';
 import {storageService} from '@/shared/services/storageService';
 import type {Difficulty} from '@/shared/types';
-import {GameKey} from '@/types/games';
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
 export function useDecryptoContent(difficulty: Difficulty, count = 4): string[] {

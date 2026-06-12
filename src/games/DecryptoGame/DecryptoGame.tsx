@@ -2,8 +2,8 @@ import {AlertOctagon, Key, KeyRound, Trophy, Users} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
-import {useGameSettings} from '../../contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+
 
 
 import {CaptainCluesPhase} from './components/CaptainCluesPhase';
@@ -17,13 +17,14 @@ import type {TeamColor, TeamState} from './types';
 import {DecryptoPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {randomInt, shuffle} from '@/shared/helpers/random';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
-import {GameKey} from '@/types/games';
 
 interface DecryptoGameProps {
     playerNames: string[];

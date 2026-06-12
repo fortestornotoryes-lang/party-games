@@ -1,15 +1,11 @@
-import {Settings as SettingsIcon} from 'lucide-react';
 import {Suspense} from 'react';
-import {createBrowserRouter, Navigate, Outlet, ScrollRestoration, useNavigate} from 'react-router';
+import {createBrowserRouter, Navigate, Outlet, ScrollRestoration} from 'react-router';
 
-import {MainMenu} from '../components/MainMenu';
-import {Settings} from '../components/Settings';
-import {useGameSettings} from '../contexts/GameSettingsContext';
-import type {GameKey} from '../types/games';
-
-import {GameLayout} from './GameLayout';
-import {GamePlayRoute} from './GamePlayRoute';
-import {GameSetupRoute} from './GameSetupRoute';
+import {GameLayout} from '@/pages/game/GameLayout';
+import {GamePlayRoute} from '@/pages/game/GamePlayRoute';
+import {GameSetupRoute} from '@/pages/game/GameSetupRoute';
+import {MenuRoute} from '@/pages/menu/MenuRoute';
+import {SettingsRoute} from '@/pages/settings/SettingsRoute';
 
 /** Общий каркас приложения (бывшая обёртка из App.tsx) + Suspense для lazy-игр. */
 function RootLayout() {
@@ -31,34 +27,6 @@ function RootLayout() {
             <ScrollRestoration/>
         </div>
     );
-}
-
-function MenuRoute() {
-    const navigate = useNavigate();
-    const {setCurrentGameId} = useGameSettings();
-
-    const handleSelectGame = (gameId: GameKey) => {
-        // Ставим id до навигации, чтобы Setup сразу отрендерился с нужным конфигом
-        setCurrentGameId(gameId);
-        void navigate(`/game/${gameId}/setup`);
-    };
-
-    return (
-        <div className="relative">
-            <MainMenu onSelectGame={handleSelectGame}/>
-            <button
-                onClick={() => void navigate('/settings')}
-                className="fixed bottom-6 right-6 w-14 h-14 glass-card rounded-premium-md flex items-center justify-center text-white/30 active:scale-95 transition-all z-50 hover:text-white/60"
-            >
-                <SettingsIcon className="w-5 h-5"/>
-            </button>
-        </div>
-    );
-}
-
-function SettingsRoute() {
-    const navigate = useNavigate();
-    return <Settings onBack={() => void navigate('/')}/>;
 }
 
 export const router = createBrowserRouter(

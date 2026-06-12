@@ -1,16 +1,16 @@
 ---
 name: i18n-game
-description: Добавляет i18n (RU/EN) к одной игре Party Hub. Аргумент — GameKey игры из src/types/games.ts (spy, fake_artist, resistance, alias, just_one, telestrations, wavelength, codenames, decrypto, mafia, truth_or_dare, connect_four, taboo_reverse, taboo, bunker, millionaire, corridor). Инфраструктура i18n уже создана — скилл только переводит конкретную игру.
+description: Добавляет i18n (RU/EN) к одной игре Party Hub. Аргумент — GameKey игры из src/entities/game/types.ts (spy, fake_artist, resistance, alias, just_one, telestrations, wavelength, codenames, decrypto, mafia, truth_or_dare, connect_four, taboo_reverse, taboo, bunker, millionaire, corridor). Инфраструктура i18n уже создана — скилл только переводит конкретную игру.
 ---
 
 Ты добавляешь поддержку двух языков (RU / EN) к одной игре Party Hub. Выполни все шаги по порядку, не пропускай ни один.
 
 ## Аргумент скила
 
-Аргумент — значение `GameKey` из `src/types/games.ts` (enum `GameKey`), например `alias` или `truth_or_dare`.
+Аргумент — значение `GameKey` из `src/entities/game/types.ts` (enum `GameKey`), например `alias` или `truth_or_dare`.
 Если аргумент не передан — спроси у пользователя.
 
-**Маппинг GameKey → папка игры не всегда очевиден** (например, `spy` → `src/games/SpyHuntGame/`). Найди папку через `GAMES_REGISTRY` в `src/registry/GameRegistry.tsx` или глобом `src/games/*Game`.
+**Маппинг GameKey → папка игры не всегда очевиден** (например, `spy` → `src/games/SpyHuntGame/`). Найди папку через `GAMES_REGISTRY` в `src/entities/game/registry.tsx` или глобом `src/games/*Game`.
 
 ---
 
@@ -26,10 +26,10 @@ description: Добавляет i18n (RU/EN) к одной игре Party Hub. �
 
 | Файл | Что в нём |
 |------|-----------|
-| `src/i18n/index.ts` | `LanguageProvider`, хуки `useLanguage()` / `useTranslation()`. Файл `.ts`, поэтому провайдер собран через `React.createElement`, НЕ JSX. Сохранение языка — `storageService.saveSettingsAsync()` |
-| `src/i18n/types.ts` | `Lang`, `CommonTranslations`, интерфейсы игр, корневой `Translations` |
-| `src/i18n/keys.ts` | Объект `NS` — единственное место, где определены строки неймспейсов |
-| `src/i18n/ru.ts` / `en.ts` | Все переводы. Отдельных файлов на игру НЕ бывает |
+| `src/shared/i18n/index.ts` | `LanguageProvider`, хуки `useLanguage()` / `useTranslation()`. Файл `.ts`, поэтому провайдер собран через `React.createElement`, НЕ JSX. Сохранение языка — `storageService.saveSettingsAsync()` |
+| `src/shared/i18n/types.ts` | `Lang`, `CommonTranslations`, интерфейсы игр, корневой `Translations` |
+| `src/shared/i18n/keys.ts` | Объект `NS` — единственное место, где определены строки неймспейсов |
+| `src/shared/i18n/ru.ts` / `en.ts` | Все переводы. Отдельных файлов на игру НЕ бывает |
 
 Контракт `t()`:
 - `t('common.back')` — резолв по dot-path; если ключа нет, **возвращается сам путь** (ошибки не будет — опечатки ловятся только глазами и проверкой Шага 4)
@@ -50,7 +50,7 @@ description: Добавляет i18n (RU/EN) к одной игре Party Hub. �
 - `src/games/<GameName>Game/phases/*.tsx` и `components/*.tsx`
 - **`constants.ts`, `helpers.ts`, хуки** — UI-строки часто живут и там (например, у Bunker сабтайтлы фаз и названия раундов лежали в константах)
 
-Также прочитай `src/i18n/keys.ts` — какие неймспейсы уже зарегистрированы (это же — список уже переведённых игр).
+Также прочитай `src/shared/i18n/keys.ts` — какие неймспейсы уже зарегистрированы (это же — список уже переведённых игр).
 
 ### 2.2 Составь список всех UI-строк
 
@@ -70,7 +70,7 @@ description: Добавляет i18n (RU/EN) к одной игре Party Hub. �
 
 Если строка уже покрыта `common.*` в `ru.ts` — используй `t(\`${NS.COMMON}.back\`)` и НЕ дублируй её в неймспейсе игры. Остальное — в новый namespace.
 
-### 2.4 Создай namespace игры в `src/i18n/types.ts`
+### 2.4 Создай namespace игры в `src/shared/i18n/types.ts`
 
 Имя неймспейса = значение `GameKey` (например `alias`, `truth_or_dare`). Историческое исключение: игра `spy` уже использует неймспейс `spy_hunt` — не трогай его, но новые делай строго по GameKey.
 
@@ -94,7 +94,7 @@ export interface Translations {
 }
 ```
 
-### 2.5 Зарегистрируй неймспейс в `src/i18n/keys.ts`
+### 2.5 Зарегистрируй неймспейс в `src/shared/i18n/keys.ts`
 
 ```ts
 export const NS = {
@@ -118,8 +118,8 @@ export const NS = {
 В каждом файле:
 
 ```ts
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 // в теле компонента, один раз:
 const {t} = useTranslation();
@@ -183,7 +183,7 @@ subtitle={t(`${NS.COMMON}.roundN`, {n: roundNum})}
 
 ## Правила которые НЕЛЬЗЯ нарушать
 
-- `import {useTranslation} from '@/i18n'` и `import {NS} from '@/i18n/keys'` — всегда такие пути
+- `import {useTranslation} from '@/shared/i18n'` и `import {NS} from '@/shared/i18n/keys'` — всегда такие пути
 - Строка неймспейса определяется **только** в `keys.ts` в объекте `NS` — нигде больше
 - В компонентах всегда шаблонная строка: `` t(`${NS.TABOO}.key`) `` — никогда `t('taboo.key')`
 - Имя нового неймспейса = значение `GameKey` (исключение `spy_hunt` — историческое, не повторять)
@@ -193,4 +193,4 @@ subtitle={t(`${NS.COMMON}.roundN`, {n: roundNum})}
 - Namespace игры в `types.ts` всегда optional (`alias?`) + добавлен в union индекс-сигнатуры
 - Переменные — только `{{varName}}`; строк, требующих русского склонения по числу, не писать
 - Один `const {t} = useTranslation()` в теле компонента, не внутри JSX
-- Не пересоздавать инфраструктуру `src/i18n/*` — она уже существует
+- Не пересоздавать инфраструктуру `src/shared/i18n/*` — она уже существует

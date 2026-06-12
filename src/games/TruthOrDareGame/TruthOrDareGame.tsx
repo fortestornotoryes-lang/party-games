@@ -10,13 +10,13 @@ import type {ChoiceType} from './types';
 import {TruthOrDarePhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
-import {GameKey} from '@/types/games';
 
 
 interface TruthOrDareGameProps {

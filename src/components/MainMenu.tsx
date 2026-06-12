@@ -2,14 +2,14 @@ import {BarChart3, Users, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
-import {useGameSettings} from '../contexts/GameSettingsContext';
+
 import {BunkerBalanceView} from '../debug/BunkerBalanceView';
-import {GAMES_REGISTRY} from '../registry/GameRegistry';
 import {contentService} from '../services/contentService';
-import type {GameKey} from '../types/games';
 
-import {GameMenuCard} from './GameMenuCard';
-
+import {GameMenuCard} from '@/entities/game/components/GameMenuCard';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import type {GameKey} from '@/entities/game/types';
 import {getTheme} from '@/shared/theme/colors';
 import {DIFFICULTY} from '@/shared/types';
 

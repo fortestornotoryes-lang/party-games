@@ -8,7 +8,7 @@ metadata:
 ---
 
 > ⚠️ **Устарело (2026-06-10):** enum `GameStatus` и поле `setupStatus` УДАЛЕНЫ из кода.
-> Роутинг теперь через react-router v7: `src/router/` (`/game/:gameKey/setup|play`), см. [[project-overview]].
+> Роутинг теперь через react-router v7: `src/app/router/` + `src/pages/` (`/game/:gameKey/setup|play`), см. [[project-overview]].
 > Упоминания GameStatus/setupStatus ниже — историческая справка о темах/цепочках фаз, не копировать в код.
 
 ## GameRegistry паттерн

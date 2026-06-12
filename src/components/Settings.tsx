@@ -2,9 +2,7 @@ import {ArrowLeft, Database, Plus, RefreshCw, Search, Trash2} from 'lucide-react
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useMemo, useState} from 'react';
 
-import {GameKey} from '../types/games';
-
-
+import {GameKey} from '@/entities/game/types';
 import {IconButton} from "@/shared/components/IconButton";
 import {PageWrapper} from "@/shared/components/PageWrapper";
 import {Pagination} from '@/shared/components/Pagination';

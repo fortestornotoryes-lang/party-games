@@ -23,12 +23,12 @@ import {
     type RoundShapes,
 } from '../types';
 
-import {useGameSettings} from '@/contexts/GameSettingsContext';
+import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
+import {GameKey} from '@/entities/game/types';
 import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
 import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
 import {useTimer} from '@/shared/hooks/useTimer';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
-import {GameKey} from '@/types/games';
 
 const K = GameKey.MemoRisk;
 

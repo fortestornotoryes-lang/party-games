@@ -3,23 +3,23 @@ import {Brush, Palette, Undo2} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {GAMES_REGISTRY} from '../../registry/GameRegistry';
 import {initFakeArtist} from '../../utils/gameLogic';
 
 import {FakeArtistDistribution} from './components/FakeArtistDistribution';
 import {FakeArtistVoting} from './components/FakeArtistVoting';
 import {FakeArtistPhase} from './types';
 
-import {GameCard} from '@/components/GameCard.tsx';
 import {GameHeader} from '@/components/GameHeader';
+import {GAMES_REGISTRY} from '@/entities/game/registry';
+import {GameKey} from '@/entities/game/types';
+import type {Player} from '@/entities/player/types';
+import {GameCard} from '@/shared/components/GameCard';
 import {PrimaryButton} from "@/shared/components/PrimaryButton";
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {storageService} from '@/shared/services/storageService';
-import type {Player} from '@/shared/types';
-import {GameKey} from '@/types/games';
 
 interface Props {
     playerNames: string[];
