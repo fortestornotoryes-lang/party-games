@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect } from 'react';
 
 import { ResistanceDistribution } from './components/ResistanceDistribution';
+import { initResistance } from './model/initResistance';
 import { ResistancePhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
@@ -25,7 +26,6 @@ import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-import { initResistance } from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {
   playerNames: string[];

@@ -3,10 +3,9 @@ import { Brush, Palette, Undo2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { initFakeArtist } from '../../utils/gameLogic';
-
 import { FakeArtistDistribution } from './components/FakeArtistDistribution';
 import { FakeArtistVoting } from './components/FakeArtistVoting';
+import { initFakeArtist } from './model/initFakeArtist';
 import { FakeArtistPhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';

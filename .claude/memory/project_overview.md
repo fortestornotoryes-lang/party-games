@@ -118,15 +118,13 @@ src/
   constants/                       # Контент для каждой игры (instructions.ts уехал в entities/game)
   services/
     contentService.ts              # единственный не перенесённый сервис — зависит от constants/* (→ features позже)
-  utils/
-    gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance (доменная логика, → features позже)
   features/ widget/                # пустые FSD-слои (index.ts-заглушки)
 ```
 
 **Временные исключения FSD (чинить на этапах features/widgets):**
 - `pages/*` импортируют из нелейерного `@/components/*` (MainMenu, Settings, Setup, UniversalGameSettings) и `@/games/*`;
 - `entities/game/registry.tsx` импортирует `*_MODES` из `@/games/*/constants` и картинки из `@/assets` — games ещё не оформлены как FSD-слой;
-- `services/contentService.ts` и `utils/gameLogic.ts` вне слоёв, импортируют entities;
+- `services/contentService.ts` вне слоёв, импортирует entities (utils/gameLogic.ts расформирован: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр);
 - `GameModeOption` в `shared/types` — почти дубликат `GameMode` из `entities/game/types` (используют UniversalGameSettings + GameSetupRoute), кандидат на консолидацию.
 
 ## Архитектура (роутинг)

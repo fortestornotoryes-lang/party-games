@@ -1,23 +1,6 @@
-import { FAKE_ARTIST_ROLE_IDS } from '../constants/fakeArtistContent';
-import { RESISTANCE_ROLE_IDS } from '../constants/resistanceContent';
-
+import { RESISTANCE_ROLE_IDS } from '@/constants/resistanceContent';
 import type { Player } from '@/entities/player/types';
-import { shuffle } from '@/shared/helpers/random';
-
-export const generateId = () => Math.random().toString(36).slice(2, 11);
-
-export const initFakeArtist = (playerNames: string[]) => {
-  const spyIndex = Math.floor(Math.random() * playerNames.length);
-
-  const players: Player[] = playerNames.map((name, index) => ({
-    id: generateId(),
-    name,
-    role: index === spyIndex ? FAKE_ARTIST_ROLE_IDS.IMPOSTER : FAKE_ARTIST_ROLE_IDS.ARTIST,
-    isSpy: index === spyIndex,
-  }));
-
-  return { players };
-};
+import { generateId, shuffle } from '@/shared/helpers/random';
 
 export const initResistance = (playerNames: string[]) => {
   const pCount = playerNames.length;

@@ -19,3 +19,6 @@ export const pickRandom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr
 /** Случайное целое число в диапазоне [min, max] включительно. */
 export const randomInt = (min: number, max: number): number =>
   Math.floor(Math.random() * (max - min + 1)) + min;
+
+/** Случайный id (base36, 9 символов). */
+export const generateId = () => Math.random().toString(36).slice(2, 11);

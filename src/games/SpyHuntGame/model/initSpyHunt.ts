@@ -2,9 +2,8 @@ import { useSpyHuntContent } from './useSpyHuntContent';
 
 import type { Player } from '@/entities/player/types';
 import { SPY_HUNT_MODES, SPY_HUNT_ROLE_IDS } from '@/games/SpyHuntGame/constants.ts';
-import { shuffle } from '@/shared/helpers/random';
+import { generateId, shuffle } from '@/shared/helpers/random';
 import { DIFFICULTY } from '@/shared/types';
-import { generateId } from '@/utils/gameLogic';
 
 export const initSpyHunt = (
   playerNames: string[],

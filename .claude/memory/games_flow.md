@@ -76,8 +76,8 @@ default:                   → <MainMenu> + Settings-кнопка (fixed bottom-
 
 Все игры получают `playerNames: string[]`. Инициализацию ролей каждая игра делает сама:
 - SpyHunt → `contentService.getSpyHuntLocation()` + role assignment в `initSpyHunt()`
-- FakeArtist → `initFakeArtist()` в gameLogic.ts
-- Resistance → `initResistance()` в gameLogic.ts
+- FakeArtist → `initFakeArtist()` в `games/FakeArtistGame/model/initFakeArtist.ts`
+- Resistance → `initResistance()` в `games/ResistanceGame/model/initResistance.ts`
 - Остальные → слова/контент через contentService, команды — внутри компонента
 
 ---
