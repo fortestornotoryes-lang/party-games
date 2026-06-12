@@ -113,7 +113,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                                 <span className="text-xl w-7 text-center flex-shrink-0">{rev.entry.emoji}</span>
                                 <div className="flex-1 min-w-0">
                                     <div className="text-micro text-white/30 font-black uppercase tracking-widest">
-                                        {char.playerName} · {char.age} л · {char.gender} ·{' '}
+                                        {char.playerName} · {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender} ·{' '}
                                         {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                                     </div>
                                     <div className="text-sm font-bold text-white truncate">{rev.entry.name}</div>
@@ -155,7 +155,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
             {difficulty !== DIFFICULTY.HARD && (
                 <div className="space-y-2">
                     <Typography.Label size="xs" color="muted">
-                        Ресурсный вклад
+                        {t(`${NS.BUNKER}.resourceContribution`)}
                     </Typography.Label>
                     <div className="space-y-1">
                         {characters.map((char) => {

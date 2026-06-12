@@ -263,7 +263,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                     {/* Divider */}
                     <div className="flex items-center gap-3">
                         <div className="flex-1 h-px bg-white/8"/>
-                        <span className="text-tag text-white/20 font-black uppercase tracking-widest">итоги</span>
+                        <span className="text-tag text-white/20 font-black uppercase tracking-widest">{t(`${NS.BUNKER}.summaryTag`)}</span>
                         <div className="flex-1 h-px bg-white/8"/>
                     </div>
 
@@ -312,7 +312,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                         <div className="flex-1 min-w-0">
                                             <div className="text-sm font-black text-white">{char.playerName}</div>
                                             <div className="text-tag text-white/40">
-                                                {char.profession.name} · {char.age} л · {char.gender}
+                                                {char.profession.name} · {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender}
                                             </div>
                                         </div>
                                         <div className="flex gap-1 flex-wrap justify-end">
@@ -361,7 +361,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
                                                     {char.playerName}
                                                 </div>
                                                 <div className="text-tag text-white/30">
-                                                    {char.profession.name} · {char.age} л · {char.gender}
+                                                    {char.profession.name} · {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender}
                                                 </div>
                                             </div>
                                         </div>

@@ -61,7 +61,7 @@ function CharacterCard({
                         {char.playerName}
                     </div>
                     <div className="text-tag text-white/35 truncate">
-                        {char.profession.name} · {char.age} л · {char.gender}
+                        {char.profession.name} · {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender}
                     </div>
                 </div>
             </div>

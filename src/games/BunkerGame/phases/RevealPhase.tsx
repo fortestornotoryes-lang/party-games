@@ -95,7 +95,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="text-micro text-white/30 font-black uppercase tracking-widest">
-                                        {char.playerName} · {char.age} л · {char.gender}
+                                        {char.playerName} · {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender}
                                     </div>
                                     <div
                                         className="text-micro font-bold uppercase tracking-widest mt-0.5"

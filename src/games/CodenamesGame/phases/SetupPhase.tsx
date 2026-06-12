@@ -5,6 +5,7 @@ import React from 'react';
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {Typography} from '@/components/Typography';
 import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface SetupPhaseProps {
     redCaptain: string;
@@ -35,17 +36,17 @@ export const SetupPhase: React.FC<SetupPhaseProps> = ({
                 className="text-2xl font-black text-center mb-6 uppercase tracking-widest"
                 color="green"
             >
-                {t('common.teams')}
+                {t(`${NS.COMMON}.teams`)}
             </Typography.Title>
 
             <div className="flex flex-col justify-center gap-4">
                 <div className="p-4 bg-premium-red/10 text-center border border-premium-red/30 rounded-premium-md">
                     <Typography.Heading className="font-bold mb-2 uppercase text-xs flex items-center gap-2">
-                        <Users className="w-5 h-5 text-premium-red"/> {t('codenames.redTeam')}
+                        <Users className="w-5 h-5 text-premium-red"/> {t(`${NS.CODENAMES}.redTeam`)}
                     </Typography.Heading>
                     <p className="font-bold border-b border-premium-red/20 pb-2 mb-2">
             <span className="text-xs text-premium-red/50 uppercase block">
-              {t('codenames.captain')}
+              {t(`${NS.CODENAMES}.captain`)}
             </span>
                         {redCaptain}
                     </p>
@@ -54,16 +55,16 @@ export const SetupPhase: React.FC<SetupPhaseProps> = ({
 
                 <div
                     className="text-center font-black text-5xl tracking-wider uppercase drop-shadow-[0_4px_6px_rgba(0,0,0,0.8)] text-transparent bg-clip-text bg-linear-to-b from-amber-300 via-orange-500 to-red-600 animate-pulse">
-                    {t('common.vs')}
+                    {t(`${NS.COMMON}.vs`)}
                 </div>
 
                 <div className="p-4 bg-premium-blue/10 text-center border border-premium-blue/30 rounded-premium-md">
                     <Typography.Heading className="font-bold mb-2 uppercase text-xs flex items-center gap-2">
-                        <Users className="w-5 h-5 text-premium-blue"/> {t('codenames.blueTeam')}
+                        <Users className="w-5 h-5 text-premium-blue"/> {t(`${NS.CODENAMES}.blueTeam`)}
                     </Typography.Heading>
                     <p className="font-bold border-b border-premium-blue/20 pb-2 mb-2">
             <span className="text-xs text-premium-blue/50 uppercase block">
-              {t('codenames.captain')}
+              {t(`${NS.CODENAMES}.captain`)}
             </span>
                         {blueCaptain}
                     </p>
@@ -72,7 +73,7 @@ export const SetupPhase: React.FC<SetupPhaseProps> = ({
             </div>
 
             <PrimaryButton onClick={onPlay} variant="emerald" className="mt-8">
-                {t('codenames.play')}
+                {t(`${NS.CODENAMES}.play`)}
             </PrimaryButton>
         </motion.div>
     );

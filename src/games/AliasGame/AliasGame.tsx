@@ -30,10 +30,8 @@ interface AliasGameProps {
     onBack: () => void;
 }
 
-const TEAMS_CONFIG = [
-    {name: 'Красные', color: 'red' as const},
-    {name: 'Синие', color: 'blue' as const},
-] as const;
+// Отображаемые имена команд резолвятся по color через t(alias.teamRed/teamBlue)
+const TEAM_COLORS = ['red', 'blue'] as const;
 
 export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
@@ -79,14 +77,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({playerNames, onBack}) => {
         const mid = Math.ceil(shuffled.length / 2);
         setTeams([
             {
-                name: TEAMS_CONFIG[0].name,
-                color: TEAMS_CONFIG[0].color,
+                color: TEAM_COLORS[0],
                 players: shuffled.slice(0, mid),
                 score: 0,
             },
             {
-                name: TEAMS_CONFIG[1].name,
-                color: TEAMS_CONFIG[1].color,
+                color: TEAM_COLORS[1],
                 players: shuffled.slice(mid),
                 score: 0,
             },

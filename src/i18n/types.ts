@@ -107,8 +107,12 @@ export interface BunkerTranslations {
     };
     revealedThisRound: string;
     revealedBefore: string;
+    resourceContribution: string; // 'Ресурсный вклад'
     toVoting: string;
     nextRoundBtn: string; // 'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})'
+
+    // Character card meta — Reveal/Discussion/Tribunal/Survival/FullReveal
+    ageShort: string; // '{{n}} л'
 
     // VotingPhase
     votingLabel: string;
@@ -148,6 +152,7 @@ export interface BunkerTranslations {
 
     // SurvivalPhase
     survivalLabel: string;
+    summaryTag: string; // 'итоги'
     teamInBunker: string;
     eventsInBunker: string;
     resourcesLabel: string;

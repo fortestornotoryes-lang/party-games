@@ -6,7 +6,6 @@ export enum AliasPhase {
 }
 
 export interface Team {
-    name: string;
     players: string[];
     score: number;
     color: 'red' | 'blue';

@@ -177,7 +177,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                             {char.playerName}
                                         </div>
                                         <div className="text-xs text-white/40 mt-1">
-                                            {char.age} л · {char.gender} · {char.profession.emoji} {char.profession.name}
+                                            {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender} · {char.profession.emoji} {char.profession.name}
                                         </div>
                                     </div>
                                     <div
@@ -367,7 +367,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                                         {char.playerName}
                                     </div>
                                     <div className="text-xs text-white/40 mt-1">
-                                        {char.age} л · {char.gender} · {char.profession.emoji} {char.profession.name}
+                                        {t(`${NS.BUNKER}.ageShort`, {n: char.age})} · {char.gender} · {char.profession.emoji} {char.profession.name}
                                     </div>
                                 </div>
                                 <div

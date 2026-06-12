@@ -29,7 +29,9 @@ interface JustOneGameProps {
 export const JustOneGame: React.FC<JustOneGameProps> = ({playerNames, onBack}) => {
     const {t} = useTranslation();
     const {difficulty} = useGameSettings();
-    const guesserIdxState = usePersistedState(GameKey.JustOne, 'guesserIdx', 0);
+    const guesserIdxState = usePersistedState(GameKey.JustOne, 'guesserIdx', () =>
+        Math.floor(Math.random() * playerNames.length)
+    );
     const {current: guesser, idx: guesserIdx, next: nextGuesser} = usePlayerCycle(
         playerNames,
         guesserIdxState

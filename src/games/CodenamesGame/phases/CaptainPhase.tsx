@@ -6,6 +6,7 @@ import type {Card, Team} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 interface CaptainPhaseProps {
     cards: Card[];
@@ -42,28 +43,28 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                 <p
                     className={`text-sub-heading font-black uppercase tracking-widest ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}
                 >
-                    {t('codenames.captainTurn', {name: currentCaptain})}
+                    {t(`${NS.CODENAMES}.captainTurn`, {name: currentCaptain})}
                 </p>
                 <div
                     className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3 mb-2 text-label font-black uppercase tracking-widest">
                     <div className="flex items-center gap-1">
                         <span className="w-4 h-4 rounded-full border border-premium-red bg-black"></span>
-                        {t('codenames.redTeam')}
+                        {t(`${NS.CODENAMES}.redTeam`)}
                     </div>
                     <div className="flex items-center gap-1">
                         <span className="w-4 h-4 rounded-full border border-premium-blue bg-black"></span>
-                        {t('codenames.blueTeam')}
+                        {t(`${NS.CODENAMES}.blueTeam`)}
                     </div>
                     <div className="flex items-center gap-1">
                         <span className="w-4 h-4 rounded-full border bg-stone-400/50"></span>
-                        {t('codenames.neutralEndTurn')}
+                        {t(`${NS.CODENAMES}.neutralEndTurn`)}
                     </div>
                     <div className="flex items-center gap-1">
                         <span className="w-4 h-4 rounded-full bg-red-900 border border-red-900"></span>
-                        {t('codenames.assassinDeath')}
+                        {t(`${NS.CODENAMES}.assassinDeath`)}
                     </div>
                 </div>
-                <p className="text-xs text-white/40 mt-1">{t('codenames.makeClueHint')}</p>
+                <p className="text-xs text-white/40 mt-1">{t(`${NS.CODENAMES}.makeClueHint`)}</p>
             </div>
 
             <div className="grid grid-cols-5 gap-1.5 mb-4">
@@ -105,7 +106,7 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                         onChange={(e) => {
                             onClueWordChange(e.target.value.replace(/ /g, ''));
                         }}
-                        placeholder={t('codenames.oneWord')}
+                        placeholder={t(`${NS.CODENAMES}.oneWord`)}
                         className="flex-1 bg-white/5 border border-white/10 rounded-premium-sm px-4 py-3 text-center font-bold outline-none focus:border-premium-green/50 transition-colors uppercase"
                         required
                     />
@@ -129,7 +130,7 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                     variant={turn === 'red' ? 'red' : 'blue'}
                     disabled={!clueWord || clueCount <= 0}
                 >
-                    {t('codenames.confirm')}
+                    {t(`${NS.CODENAMES}.confirm`)}
                 </PrimaryButton>
             </form>
         </motion.div>

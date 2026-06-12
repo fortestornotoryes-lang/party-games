@@ -14,7 +14,7 @@ import type {Dispatch, SetStateAction} from 'react';
  * const { current, idx, isLast, next, reset } = usePlayerCycle(playerNames);
  *
  * // С персистенцией:
- * const idxState = usePersistedState(GameKey.JustOne, 'guesserIdx', 0);
+ * const idxState = usePersistedState(GameKey.JustOne, 'guesserIdx', () => Math.floor(Math.random() * playerNames.length));
  * const { current, next } = usePlayerCycle(playerNames, idxState);
  */
 export const usePlayerCycle = <T>(

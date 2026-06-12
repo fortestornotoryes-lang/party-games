@@ -90,8 +90,12 @@ export const en: Translations = {
         },
         revealedThisRound: 'Revealed this round',
         revealedBefore: 'Previously revealed',
+        resourceContribution: 'Resource contribution',
         toVoting: 'TO VOTING',
         nextRoundBtn: 'NEXT ROUND ({{next}}/{{total}})',
+
+        // Character card meta
+        ageShort: '{{n}} y.o.',
 
         // VotingPhase
         votingLabel: 'VOTING',
@@ -131,6 +135,7 @@ export const en: Translations = {
 
         // SurvivalPhase
         survivalLabel: 'SURVIVAL SIMULATION',
+        summaryTag: 'summary',
         teamInBunker: '🏠 Bunker team',
         eventsInBunker: '⚡ Bunker events',
         resourcesLabel: '📊 Bunker resources',

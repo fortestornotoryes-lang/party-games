@@ -90,8 +90,12 @@ export const ru: Translations = {
         },
         revealedThisRound: 'Раскрыто в этом раунде',
         revealedBefore: 'Ранее раскрыто',
+        resourceContribution: 'Ресурсный вклад',
         toVoting: 'К ГОЛОСОВАНИЮ',
         nextRoundBtn: 'СЛЕДУЮЩИЙ РАУНД ({{next}}/{{total}})',
+
+        // Character card meta
+        ageShort: '{{n}} л',
 
         // VotingPhase
         votingLabel: 'ГОЛОСОВАНИЕ',
@@ -131,6 +135,7 @@ export const ru: Translations = {
 
         // SurvivalPhase
         survivalLabel: 'СИМУЛЯЦИЯ ВЫЖИВАНИЯ',
+        summaryTag: 'итоги',
         teamInBunker: '🏠 Команда в бункере',
         eventsInBunker: '⚡ События в бункере',
         resourcesLabel: '📊 Ресурсы бункера',

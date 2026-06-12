@@ -5,6 +5,7 @@ import type {Card, Team} from '../types';
 
 import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 
 
 interface TeamPhaseProps {
@@ -44,14 +45,14 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
                     className={`absolute left-0 top-0 bottom-0 w-2 ${turn === 'red' ? 'bg-premium-red' : 'bg-premium-blue'}`}
                 />
                 <p className="text-tag text-white/40 uppercase tracking-widest font-black mb-1">
-                    {t('codenames.clueLabel')}
+                    {t(`${NS.CODENAMES}.clueLabel`)}
                 </p>
                 <div className="flex items-baseline gap-2">
                     <h3 className="text-2xl font-black uppercase text-white tracking-widest">{clueWord}</h3>
                     <span className="text-xl font-bold text-white/30">{clueCount}</span>
                 </div>
                 <p className="text-xs text-white/30 mt-2">
-                    {t('codenames.guessesLeft', {n: guessesLeft})}
+                    {t(`${NS.CODENAMES}.guessesLeft`, {n: guessesLeft})}
                 </p>
             </div>
 
@@ -70,7 +71,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
                                     {lastActionMsg}
                                 </p>
                                 <p className="text-tag text-white/30 text-center uppercase font-bold mt-2">
-                                    {t('codenames.turnPassing')}
+                                    {t(`${NS.CODENAMES}.turnPassing`)}
                                 </p>
                             </div>
                         </motion.div>
@@ -101,7 +102,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
             </div>
 
             <PrimaryButton onClick={onEndTurn} variant="outline" className="mt-4">
-                {t('codenames.passTurn')}
+                {t(`${NS.CODENAMES}.passTurn`)}
             </PrimaryButton>
         </motion.div>
     );

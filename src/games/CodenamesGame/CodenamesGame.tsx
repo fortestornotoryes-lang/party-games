@@ -18,6 +18,7 @@ import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
 import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
 import {usePersistedState} from '@/hooks/usePersistedState';
 import {useTranslation} from '@/i18n';
+import {NS} from '@/i18n/keys';
 import {GameKey} from '@/types/games';
 import {shuffle} from '@/utils/random.ts';
 
@@ -149,7 +150,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
             const left = guessesLeft - 1;
             setGuessesLeft(left);
             if (left <= 0) {
-                setLastActionMsg(t('codenames.turnEnded'));
+                setLastActionMsg(t(`${NS.CODENAMES}.turnEnded`));
                 setTimeout(() => {
                     setLastActionMsg(null);
                     endTurn();
@@ -157,7 +158,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
             }
         } else {
             setLastActionMsg(
-                cardColor === 'neutral' ? t('codenames.neutralRevealed') : t('codenames.enemyAgent')
+                cardColor === 'neutral' ? t(`${NS.CODENAMES}.neutralRevealed`) : t(`${NS.CODENAMES}.enemyAgent`)
             );
             setTimeout(() => {
                 setLastActionMsg(null);
@@ -169,7 +170,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
     if (playerNames.length < 4) {
         return (
             <div className="text-white flex items-center justify-center min-h-screen text-center p-8">
-                {t('codenames.minPlayers')}
+                {t(`${NS.CODENAMES}.minPlayers`)}
             </div>
         );
     }
@@ -178,7 +179,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
         <div className="flex flex-col min-h-screen text-white pb-20">
             <GameHeader
                 title={GAMES_REGISTRY.codenames.title}
-                subtitle={t('codenames.subtitle')}
+                subtitle={t(`${NS.CODENAMES}.subtitle`)}
                 icon={Grid}
                 theme="green"
                 onBack={onBack}
@@ -202,8 +203,8 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
                         <PassPhoneCard
                             playerName={currentCaptain}
                             badgeColor={turn}
-                            playerLabel={t('codenames.captain')}
-                            instruction={t('codenames.othersNoSee')}
+                            playerLabel={t(`${NS.CODENAMES}.captain`)}
+                            instruction={t(`${NS.CODENAMES}.othersNoSee`)}
                             icon={User}
                             accentColor={turn}
                             onClick={() => {
@@ -227,10 +228,10 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({playerNames, onBack
 
                     {phase === CodenamesPhase.PassTeam && (
                         <PassPhoneCard
-                            playerName={turn === 'red' ? t('codenames.teamRed') : t('codenames.teamBlue')}
+                            playerName={turn === 'red' ? t(`${NS.CODENAMES}.teamRed`) : t(`${NS.CODENAMES}.teamBlue`)}
                             badgeColor={turn}
-                            playerLabel={t('common.team')}
-                            instruction={t('codenames.othersNoSee')}
+                            playerLabel={t(`${NS.COMMON}.team`)}
+                            instruction={t(`${NS.CODENAMES}.othersNoSee`)}
                             icon={User}
                             accentColor={turn}
                             onClick={() => {
