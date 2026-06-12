@@ -5,8 +5,8 @@ import React from 'react';
 import type {Step} from '../types';
 import {STEP_TYPE} from '../types';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface Props {
     initialWord: string;

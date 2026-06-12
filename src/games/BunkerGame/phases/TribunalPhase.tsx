@@ -5,14 +5,14 @@ import React, {useState} from 'react';
 import {getHiddenTraits} from '../helpers';
 import {type AttributeEntry, type BunkerCharacter, type TraitKey} from '../types';
 
-import {PrimaryButton} from '@/components/PrimaryButton.tsx';
-import {Typography} from '@/components/Typography';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {rgba} from '@/theme/colors';
-import {pickRandom} from '@/utils/random';
+import {PrimaryButton} from '@/shared/components/PrimaryButton';
+import {Typography} from '@/shared/components/Typography';
+import {pickRandom} from '@/shared/helpers/random';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {rgba} from '@/shared/theme/colors';
 
 interface TribunalPhaseProps {
     characters: BunkerCharacter[];

@@ -10,13 +10,13 @@ import {ResistancePhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {MISSION_SIZES} from "@/games/ResistanceGame/constants.ts";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import type {Player} from '@/shared/types';
 import {GameKey} from '@/types/games';
-import type {Player} from '@/types.ts';
 import {initResistance} from '@/utils/gameLogic.ts';
 
 interface ResistanceGameProps {

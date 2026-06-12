@@ -1,4 +1,4 @@
-import type {Difficulty} from "@/types.ts";
+import type {Difficulty} from "@/shared/types";
 
 export const ALIAS_DIFFICULTY_CONFIG: Record<Difficulty, { roundTime: number }> = {
     easy: {roundTime: 90},

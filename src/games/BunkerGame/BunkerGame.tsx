@@ -18,12 +18,12 @@ import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from "@/games/BunkerGame/contents";
 import {calculateSurvival, generateCharacter} from "@/games/BunkerGame/helpers.ts";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
+import {pickRandom, shuffle} from '@/shared/helpers/random';
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 import {GameKey} from '@/types/games';
-import {pickRandom, shuffle} from '@/utils/random';
 
 interface BunkerGameProps {
     playerNames: string[];

@@ -27,12 +27,23 @@ npm run build    # Сборка в dist/
 
 ## Структура папок
 
+Идёт миграция на FSD (июнь 2026). Слои-заглушки `app/`, `entities/`, `features/`, `pages/`, `widget/` созданы (пустые `index.ts`). Этап 1 выполнен: shared-слой перенесён в `src/shared`, импорты — через alias `@/shared/...` (alias `@/* → src/*` в tsconfig+vite). Баррелей нет — импорты напрямую в модуль.
+
 ```
 src/
   App.tsx                          # Только провайдеры (GameSettings, Language) + RouterProvider
   main.tsx
   index.css                        # Tailwind + кастомные токены + glass-card
-  types.ts                         # Player, Difficulty, GameMode, GameTheme (GameStatus удалён)
+  shared/                          # FSD shared-слой (не знает о доменах игр)
+    components/                    # 12 UI-атомов: Badge, IconButton, PrimaryButton, TextInput, TabButton,
+                                   #   SectionLabel, PageWrapper, Pagination, ProgressDots, TimerBar,
+                                   #   Typography, DrawingCanvas
+    hooks/                         # useTimer, useCountdown, usePlayerCycle, usePersistedState
+    helpers/random.ts              # shuffle<T>(), pickRandom<T>() — использовать везде вместо inline sort
+    i18n/                          # index (LanguageContext, useTranslation), en, ru, keys, types
+    types/index.ts                 # Player, Difficulty, GameMode, GameTheme (бывший src/types.ts)
+    services/                      # storageService, feedbackService (VIBRATE), sessionService
+    theme/colors.ts                # themeConfigs, getTheme, rgba
   router/
     routes.tsx                     # createBrowserRouter + RootLayout/MenuRoute/SettingsRoute, basename из BASE_URL
     GameLayout.tsx                 # /game/:gameKey/* — валидация gameKey + sync c GameSettingsContext
@@ -45,20 +56,14 @@ src/
     GameRegistry.tsx               # GAMES_REGISTRY — реестр всех игр + lazy imports
   contexts/
     GameSettingsContext.tsx        # difficulty, mode, rounds, timerSeconds, currentGameId
-  components/
+  components/                      # Остались компоненты со знанием домена (→ entities/widgets на след. этапах)
     MainMenu.tsx                   # Список игр из GAMES_REGISTRY
     Setup.tsx                      # Универсальный экран: имена игроков + настройки
     PassPhoneCard.tsx              # Карточка "передай телефон" с анимацией и badge
     UniversalGameSettings.tsx      # Слоты настроек (сложность, режим, раунды, таймер)
     GameHeader.tsx                 # Sticky-хедер с кнопкой назад
-    DrawingCanvas.tsx              # Канвас-компонент (ResizeObserver + DPR)
     InstructionsModal.tsx          # Модалка с правилами игры
     Settings.tsx                   # Экран настроек приложения
-    Result.tsx                     # Экран результата (SPY HUNT)
-    Typography.tsx                 # 7 типографических компонентов (Display/Title/Heading/Label/Body/Caption/Score)
-    # ── Атомарные переиспользуемые компоненты ──
-    TimerBar.tsx                   # Полоска прогресса таймера (pct, color)
-    ProgressDots.tsx               # Точки-индикаторы шагов с motion-анимацией
     PlayingHeader.tsx              # "Игрок объясняет" + таймер
     DistributionFlow.tsx           # Абстрактная основа раздачи ролей (ProgressDots + lock→reveal)
     TabooPassPhase.tsx             # Общая Pass-фаза для Taboo-семейства (PassPhoneCard + PlayerScoreList)
@@ -104,17 +109,13 @@ src/
     TruthOrDareGame/TruthOrDareGame.tsx
   constants/                       # Контент для каждой игры + instructions.ts
   services/
-    storageService.ts              # Кастомные слова, использованные слова, настройки, игроки
-    feedbackService.ts             # Sound + вибрация + VIBRATE константы
-    contentService.ts              # использует shuffle/pickRandom из utils/random
-  hooks/
-    useCountdown.ts                # Telestrations (отдельный, не совпадает с useTimer)
-    useTimer.ts                    # Универсальный таймер с onTimeUp callback
-    usePlayerCycle.ts              # Циклический перебор игроков { current, idx, isLast, next, reset }
+    contentService.ts              # единственный не перенесённый сервис — зависит от constants/* (→ entities позже)
   utils/
-    random.ts                      # shuffle<T>(), pickRandom<T>() — использовать везде вместо inline sort
-    gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance
+    gameLogic.ts                   # initSpyHunt, initFakeArtist, initResistance (доменная логика, → features позже)
+  app/ entities/ features/ pages/ widget/   # пустые FSD-слои (index.ts-заглушки)
 ```
+
+**Временное исключение FSD**: `shared/services/{storage,session}Service` и `shared/hooks/usePersistedState` импортируют `type GameKey` из `@/types/games` (слой выше) — исправить на этапе entities.
 
 ## Архитектура (роутинг)
 

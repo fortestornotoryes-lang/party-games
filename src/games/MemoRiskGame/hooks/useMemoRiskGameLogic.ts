@@ -24,10 +24,10 @@ import {
 } from '../types';
 
 import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {useTimer} from '@/hooks/useTimer';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
+import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
+import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
+import {useTimer} from '@/shared/hooks/useTimer';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
 import {GameKey} from '@/types/games';
 
 const K = GameKey.MemoRisk;
@@ -174,13 +174,13 @@ export const useMemoRiskGameLogic = (playerNames: string[], onBack: () => void) 
     useEffect(() => {
         if (turn.outcome === null || phase !== MemoRiskPhase.Playing) return;
         const id = setTimeout(handleNextTurn, TURN_END_DELAY_MS);
-        return () => clearTimeout(id);
+        return () => { clearTimeout(id); };
     }, [turn.outcome, phase, handleNextTurn]);
 
     const flipCard = useCallback((slot: number) => {
         if (phase !== MemoRiskPhase.Playing || turn.outcome !== null || !round) return;
         const card = cards.board[slot];
-        if (!card || card.state !== MemoCardState.Hidden) return;
+        if (card?.state !== MemoCardState.Hidden) return;
 
         const {targets, dangers} = round;
 
@@ -275,6 +275,6 @@ export const useMemoRiskGameLogic = (playerNames: string[], onBack: () => void) 
         flipCard,
         handleBank,
         handleRestart,
-        stopGame: () => setPhase(MemoRiskPhase.GameOver),
+        stopGame: () => { setPhase(MemoRiskPhase.GameOver); },
     };
 };

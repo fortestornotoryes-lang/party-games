@@ -4,9 +4,9 @@ import React from 'react';
 
 import type {Card, Team} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface CaptainPhaseProps {
     cards: Card[];

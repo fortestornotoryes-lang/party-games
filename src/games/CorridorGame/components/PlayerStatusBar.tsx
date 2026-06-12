@@ -2,8 +2,8 @@ import React from 'react';
 
 import {PLAYER_COLOR} from '../constants';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface Props {
     p1: string;

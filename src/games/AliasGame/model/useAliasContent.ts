@@ -1,6 +1,6 @@
 import {ALIAS_CATEGORIES} from '@/constants/aliasContent';
-import {storageService} from '@/services/storageService';
-import {DIFFICULTY, type Difficulty} from '@/types';
+import {storageService} from '@/shared/services/storageService';
+import {DIFFICULTY, type Difficulty} from '@/shared/types';
 import {GameKey} from '@/types/games';
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)

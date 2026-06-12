@@ -3,8 +3,8 @@ import React from 'react';
 
 import type {WinResult} from '../types';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface Props {
     show: boolean;

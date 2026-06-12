@@ -15,7 +15,7 @@ import {
     type RoundShapes,
 } from './types';
 
-import {shuffle} from '@/utils/random';
+import {shuffle} from '@/shared/helpers/random';
 
 function rollRarity(): MemoRarity {
     const rarities = Object.values(MemoRarity);

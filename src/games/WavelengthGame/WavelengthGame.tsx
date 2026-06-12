@@ -12,15 +12,15 @@ import {WavelengthPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {usePlayerCycle} from '@/hooks/usePlayerCycle';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
+import {randomInt} from '@/shared/helpers/random';
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {usePlayerCycle} from '@/shared/hooks/usePlayerCycle';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
 import {GameKey} from '@/types/games';
-import {randomInt} from '@/utils/random';
 
 interface WavelengthGameProps {
     playerNames: string[];

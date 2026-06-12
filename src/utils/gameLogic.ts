@@ -1,8 +1,9 @@
 import {FAKE_ARTIST_ROLE_IDS} from '../constants/fakeArtistContent';
 import {RESISTANCE_ROLE_IDS} from '../constants/resistanceContent';
-import type {Player} from '../types';
 
-import {shuffle} from './random';
+import {shuffle} from '@/shared/helpers/random';
+import type {Player} from '@/shared/types';
+
 
 export const generateId = () => Math.random().toString(36).slice(2, 11);
 

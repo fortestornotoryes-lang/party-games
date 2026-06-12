@@ -1,9 +1,10 @@
 import type {ReactNode} from 'react';
 import React, {createContext, useContext, useState} from 'react';
 
-import {storageService} from '../services/storageService';
-import {DIFFICULTY, type Difficulty} from '../types';
 import {CLASSIC_MODE_ID, GameKey, type GameMode} from '../types/games';
+
+import {storageService} from '@/shared/services/storageService';
+import {DIFFICULTY, type Difficulty} from '@/shared/types';
 
 const GAME_DEFAULT_ROUNDS: Partial<Record<GameKey, number>> = {
     [GameKey.Bunker]: 5,

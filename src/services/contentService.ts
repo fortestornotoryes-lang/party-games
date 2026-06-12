@@ -1,7 +1,5 @@
-import {DIFFICULTY, type Difficulty} from '../types';
 import {GameKey} from '../types/games';
 
-import {storageService} from './storageService';
 
 import {ALIAS_CATEGORIES} from '@/constants/aliasContent';
 import {WORDS_BY_DIFFICULTY as CODENAMES_WORDS} from '@/constants/codenamesContent';
@@ -14,6 +12,8 @@ import {WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS} from '@/constants/telestrati
 import {DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY} from '@/constants/truthOrDareContent';
 import {WAVELENGTH_DATA_BY_DIFFICULTY} from '@/constants/wavelengthContent';
 import {LOCATIONS_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
+import {storageService} from '@/shared/services/storageService';
+import {DIFFICULTY, type Difficulty} from '@/shared/types';
 
 export const contentService = {
     // TODO: RN — replace with useEffect async load (called synchronously on the UI render path of MainMenu/UniversalGameSettings)

@@ -3,11 +3,11 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {PlayingHeader} from '@/components/PlayingHeader';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {TimerBar} from '@/components/TimerBar';
 import type {TabooCard} from '@/constants/tabooReverseContent';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {TimerBar} from '@/shared/components/TimerBar';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 /** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
 const wordFontSize = (word: string): string => {

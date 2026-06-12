@@ -25,8 +25,8 @@ import {
 } from './types';
 
 import {PROFESSIONS,HOBBIES,ITEMS,TRAITS,PHOBIAS,CATASTROPHE_SCENARIOS,HEALTH_CONDITIONS,SURVIVAL_EVENTS,SPECIAL_FACTS} from "@/games/BunkerGame/contents";
-import {DIFFICULTY} from "@/types";
-import {pickRandom, shuffle} from "@/utils/random.ts";
+import {pickRandom, shuffle} from "@/shared/helpers/random";
+import {DIFFICULTY} from "@/shared/types";
 
 
 export function barColor(val: number): string {

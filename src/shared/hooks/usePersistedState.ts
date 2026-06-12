@@ -2,7 +2,8 @@ import {useEffect, useRef, useState} from 'react';
 import type {Dispatch, SetStateAction} from 'react';
 
 import {sessionService} from '../services/sessionService';
-import type {GameKey} from '../types/games';
+
+import type {GameKey} from '@/types/games';
 
 /**
  * Кодек для значений, которые нельзя сериализовать в JSON напрямую

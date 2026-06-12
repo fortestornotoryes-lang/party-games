@@ -4,7 +4,7 @@ import React, {useEffect} from 'react';
 
 import {useGameSettings} from '../../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-import {randomInt, shuffle} from '../../utils/random';
+
 
 import {CaptainCluesPhase} from './components/CaptainCluesPhase';
 import {EnemyInterceptPhase} from './components/EnemyInterceptPhase';
@@ -17,11 +17,12 @@ import type {TeamColor, TeamState} from './types';
 import {DecryptoPhase} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {DECRYPTO_MODES} from "@/games/DecryptoGame/constants.ts";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {randomInt, shuffle} from '@/shared/helpers/random';
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 import {GameKey} from '@/types/games';
 
 interface DecryptoGameProps {

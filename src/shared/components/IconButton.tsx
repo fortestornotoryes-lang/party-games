@@ -1,7 +1,7 @@
 import type {LucideIcon} from "lucide-react";
 import React from "react";
 
-import {feedbackService, VIBRATE} from "@/services/feedbackService.ts";
+import {feedbackService, VIBRATE} from "@/shared/services/feedbackService";
 
 export const IconButton: React.FC<{
     onClick: () => void;

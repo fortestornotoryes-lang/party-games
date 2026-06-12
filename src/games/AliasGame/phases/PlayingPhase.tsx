@@ -2,8 +2,8 @@ import {CheckCircle, XCircle} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React from 'react';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 const CIRCUMFERENCE = 2 * Math.PI * 28;
 

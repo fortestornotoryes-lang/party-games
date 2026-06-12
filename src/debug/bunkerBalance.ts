@@ -6,8 +6,8 @@ import {
 import {SURVIVAL_EVENTS,CATASTROPHE_SCENARIOS} from "@/games/BunkerGame/contents";
 import {applyBonus, applyBonusScaled, generateCharacter, getAgeBonuses} from "@/games/BunkerGame/helpers.ts";
 import type {BunkerResources, DifficultyLevel, ResourceKey, SurvivalOutcome} from '@/games/BunkerGame/types';
-import {DIFFICULTY} from '@/types';
-import {pickRandom, shuffle} from '@/utils/random';
+import {pickRandom, shuffle} from '@/shared/helpers/random';
+import {DIFFICULTY} from '@/shared/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

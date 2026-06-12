@@ -14,15 +14,15 @@ import {AliasPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {ALIAS_DIFFICULTY_CONFIG, WIN_SCORE} from "@/games/AliasGame/constants.ts";
-import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
-import {useTimer} from '@/hooks/useTimer';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
+import {pickRandom, shuffle} from '@/shared/helpers/random';
+import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
+import {useTimer} from '@/shared/hooks/useTimer';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
 import {GameKey} from '@/types/games';
-import {pickRandom, shuffle} from '@/utils/random';
 
 
 interface AliasGameProps {

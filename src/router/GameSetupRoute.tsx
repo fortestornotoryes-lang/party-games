@@ -5,10 +5,11 @@ import {UniversalGameSettings} from '../components/UniversalGameSettings';
 import {GAME_INSTRUCTIONS} from '../constants/instructions';
 import {useGameSettings} from '../contexts/GameSettingsContext';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
-import {sessionService} from '../services/sessionService';
-import {storageService} from '../services/storageService';
-import type {GameModeOption} from '../types';
 import type {GameKey} from '../types/games';
+
+import {sessionService} from '@/shared/services/sessionService';
+import {storageService} from '@/shared/services/storageService';
+import type {GameModeOption} from '@/shared/types';
 
 /** Экран настройки игры: имена игроков + UniversalGameSettings. */
 export function GameSetupRoute() {

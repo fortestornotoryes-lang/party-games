@@ -2,10 +2,10 @@ import {Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {Typography} from '@/components/Typography';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {Typography} from '@/shared/components/Typography';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface SetupPhaseProps {
     redCaptain: string;

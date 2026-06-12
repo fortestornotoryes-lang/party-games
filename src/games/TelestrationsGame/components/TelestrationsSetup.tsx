@@ -4,9 +4,9 @@ import React from 'react';
 
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {DIFFICULTY} from '@/types';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {DIFFICULTY} from '@/shared/types';
 
 interface Props {
     playerCount: number;

@@ -4,9 +4,9 @@ import React, {useState} from 'react';
 
 import type {BlitzResult} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface BlitzVerdictPhaseProps {
     results: BlitzResult[];

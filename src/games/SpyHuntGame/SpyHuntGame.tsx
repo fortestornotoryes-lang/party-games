@@ -12,14 +12,14 @@ import {SpyHuntPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
 import {GAME_DURATION_BY_DIFFICULTY} from "@/games/SpyHuntGame/constants.ts";
-import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
-import {useTimer} from '@/hooks/useTimer';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
 import {GAMES_REGISTRY} from '@/registry/GameRegistry';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
-import {DIFFICULTY, type Player} from '@/types';
+import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
+import {useTimer} from '@/shared/hooks/useTimer';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
+import {DIFFICULTY, type Player} from '@/shared/types';
 import {GameKey} from '@/types/games';
 
 interface GameProps {

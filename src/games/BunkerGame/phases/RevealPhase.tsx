@@ -5,12 +5,12 @@ import React from 'react';
 import {getRevealedTrait} from '../helpers';
 import {type BunkerCharacter} from '../types';
 
-import {PrimaryButton} from '@/components/PrimaryButton.tsx';
-import {Typography} from '@/components/Typography';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {rgba} from '@/theme/colors';
-import type {GameTheme} from '@/types';
+import {PrimaryButton} from '@/shared/components/PrimaryButton';
+import {Typography} from '@/shared/components/Typography';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {rgba} from '@/shared/theme/colors';
+import type {GameTheme} from '@/shared/types';
 
 interface RevealPhaseProps {
     characters: BunkerCharacter[];

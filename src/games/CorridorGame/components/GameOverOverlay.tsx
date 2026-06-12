@@ -4,9 +4,9 @@ import React from 'react';
 
 import {PLAYER_COLOR} from '../constants';
 
-import {PrimaryButton} from '@/components/PrimaryButton';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from '@/shared/components/PrimaryButton';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface Props {
     winner: 1 | 2 | null;

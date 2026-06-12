@@ -1,6 +1,6 @@
 import type {LucideIcon} from 'lucide-react';
 
-import type {GameTheme} from '../types';
+import type {GameTheme} from '@/shared/types';
 
 export const GameKey = {
     Spy: 'spy',

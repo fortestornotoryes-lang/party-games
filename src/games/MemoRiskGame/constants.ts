@@ -3,7 +3,7 @@ import {Circle, Heart, Hexagon, Square, Star, Triangle} from 'lucide-react';
 
 import {MemoRarity, MemoShape} from './types';
 
-import {DIFFICULTY, type Difficulty, type GameTheme} from '@/types';
+import {DIFFICULTY, type Difficulty, type GameTheme} from '@/shared/types';
 
 export interface MemoRiskDifficultyConfig {
     /** Поле gridSize × gridSize */

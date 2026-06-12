@@ -4,8 +4,8 @@ import React from 'react';
 
 import type {MillionaireQuestion} from '@/constants/millionaireContent';
 import {PRIZE_LADDER, SAFE_CHECKPOINTS} from "@/games/MillionaireGame/constants.ts";
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 const LETTERS = ['A', 'B', 'C', 'D'] as const;
 

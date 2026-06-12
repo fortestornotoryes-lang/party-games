@@ -1,4 +1,4 @@
-import type {GameKey} from '../types/games';
+import type {GameKey} from '@/types/games';
 
 const STORAGE_KEYS = {
     PLAYERS: 'party_app_players',

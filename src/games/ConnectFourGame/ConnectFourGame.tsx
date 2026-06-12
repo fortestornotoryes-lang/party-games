@@ -12,10 +12,10 @@ import {emptyBoard, findDropRow, findWinner, getBoardConfig, isBoardFull, popOut
 import {C4Action, type C4Player, type Cell, type WinResult} from './types';
 
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 import {GameKey} from '@/types/games';
 
 interface Props {

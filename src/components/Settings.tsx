@@ -2,21 +2,21 @@ import {ArrowLeft, Database, Plus, RefreshCw, Search, Trash2} from 'lucide-react
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useMemo, useState} from 'react';
 
-import {feedbackService, VIBRATE} from '../services/feedbackService';
-import type {GameSettings} from '../services/storageService';
-import {storageService} from '../services/storageService';
-import {DIFFICULTY, type Difficulty} from '../types';
 import {GameKey} from '../types/games';
 
-import {Pagination} from './Pagination';
-import {Typography} from './Typography.tsx';
 
-import {IconButton} from "@/components/IconButton.tsx";
-import {PageWrapper} from "@/components/PageWrapper.tsx";
-import {SectionLabel} from "@/components/SectionLabel.tsx";
-import {TabButton} from "@/components/TabButton.tsx";
-import {TextInput} from '@/components/TextInput.tsx';
-import {useLanguage} from '@/i18n';
+import {IconButton} from "@/shared/components/IconButton";
+import {PageWrapper} from "@/shared/components/PageWrapper";
+import {Pagination} from '@/shared/components/Pagination';
+import {SectionLabel} from "@/shared/components/SectionLabel";
+import {TabButton} from "@/shared/components/TabButton";
+import {TextInput} from '@/shared/components/TextInput';
+import {Typography} from '@/shared/components/Typography';
+import {useLanguage} from '@/shared/i18n';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
+import type {GameSettings} from '@/shared/services/storageService';
+import {DIFFICULTY, type Difficulty} from '@/shared/types';
 
 interface SettingsProps {
     onBack: () => void;

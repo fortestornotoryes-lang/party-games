@@ -4,9 +4,9 @@ import React from 'react';
 
 import type {ChoiceType} from '../types';
 
-import {Typography} from '@/components/Typography';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {Typography} from '@/shared/components/Typography';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface ChoicePhaseProps {
     currentPlayer: string;

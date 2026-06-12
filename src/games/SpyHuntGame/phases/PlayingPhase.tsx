@@ -3,11 +3,11 @@ import {motion} from 'motion/react';
 import React, {useState} from 'react';
 
 import {GameCard} from '@/components/GameCard';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
 import {LOCATIONS, QUESTION_IDEAS} from "@/games/SpyHuntGame/constants.ts";
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import type {Player} from '@/types';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import type {Player} from '@/shared/types';
 
 interface PlayingPhaseProps {
     players: Player[];

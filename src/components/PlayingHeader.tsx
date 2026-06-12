@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Typography} from './Typography';
+import {Typography} from '@/shared/components/Typography';
 
 interface PlayingHeaderProps {
     /** Имя объясняющего игрока */

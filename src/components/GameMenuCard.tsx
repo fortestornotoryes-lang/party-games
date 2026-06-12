@@ -2,8 +2,9 @@ import {HelpCircle, Users} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {getTheme} from '../theme/colors';
 import type {GameMetadata} from '../types/games';
+
+import {getTheme} from '@/shared/theme/colors';
 
 interface GameMenuCardProps {
     game: GameMetadata;

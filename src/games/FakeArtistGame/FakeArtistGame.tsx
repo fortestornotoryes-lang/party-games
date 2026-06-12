@@ -4,9 +4,6 @@ import {AnimatePresence, motion} from 'motion/react';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {GAMES_REGISTRY} from '../../registry/GameRegistry';
-import {feedbackService, VIBRATE} from '../../services/feedbackService';
-import {storageService} from '../../services/storageService';
-import type {Player} from '../../types';
 import {initFakeArtist} from '../../utils/gameLogic';
 
 import {FakeArtistDistribution} from './components/FakeArtistDistribution';
@@ -15,10 +12,13 @@ import {FakeArtistPhase} from './types';
 
 import {GameCard} from '@/components/GameCard.tsx';
 import {GameHeader} from '@/components/GameHeader';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
+import type {Player} from '@/shared/types';
 import {GameKey} from '@/types/games';
 
 interface Props {

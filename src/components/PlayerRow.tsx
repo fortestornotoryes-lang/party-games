@@ -3,8 +3,8 @@ import {Reorder, useDragControls} from "motion/react";
 import React from "react";
 
 import type {PlayerEntry} from "@/components/Setup.tsx";
-import {TextInput} from "@/components/TextInput.tsx";
-import type {ThemeTokens} from "@/theme/colors.ts";
+import {TextInput} from "@/shared/components/TextInput";
+import type {ThemeTokens} from "@/shared/theme/colors";
 
 export const DEFAULT_NAMES = ['Дуня', 'Валера', 'Диана', 'Люба', 'Саша'];
 type Config = ThemeTokens;

@@ -2,10 +2,10 @@ import {ArrowLeft} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useEffect} from 'react';
 
-import {getTheme} from '../theme/colors';
-import type {GameTheme} from '../types';
+import {Typography} from '@/shared/components/Typography';
+import {getTheme} from '@/shared/theme/colors';
+import type {GameTheme} from '@/shared/types';
 
-import {Typography} from '@/components/Typography';
 
 type ModalTheme = GameTheme;
 

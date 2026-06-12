@@ -6,12 +6,12 @@ import {ResourceContribRow} from '../components/ResourceContribRow';
 import {getPlayerResourceContribution, getRevealedTrait} from '../helpers';
 import {type BunkerCharacter, type DifficultyLevel} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {Typography} from '@/components/Typography';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {DIFFICULTY} from '@/types';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {Typography} from '@/shared/components/Typography';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {DIFFICULTY} from '@/shared/types';
 
 interface VotingPhaseProps {
     characters: BunkerCharacter[];

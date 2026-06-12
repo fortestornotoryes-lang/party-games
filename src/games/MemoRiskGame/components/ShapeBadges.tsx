@@ -4,9 +4,9 @@ import React from 'react';
 import {SHAPE_META} from '../constants';
 import type {MemoShape, RoundShapes} from '../types';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {getTheme} from '@/theme/colors';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {getTheme} from '@/shared/theme/colors';
 
 const ShapeBadgeRow: React.FC<{label: string; shapes: MemoShape[]; accent: 'green' | 'red'}> = ({
                                                                                                     label,

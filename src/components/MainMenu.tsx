@@ -6,11 +6,13 @@ import {useGameSettings} from '../contexts/GameSettingsContext';
 import {BunkerBalanceView} from '../debug/BunkerBalanceView';
 import {GAMES_REGISTRY} from '../registry/GameRegistry';
 import {contentService} from '../services/contentService';
-import {getTheme} from '../theme/colors';
-import {DIFFICULTY} from '../types';
 import type {GameKey} from '../types/games';
 
 import {GameMenuCard} from './GameMenuCard';
+
+import {getTheme} from '@/shared/theme/colors';
+import {DIFFICULTY} from '@/shared/types';
+
 
 interface MainMenuProps {
     onSelectGame: (gameId: GameKey) => void;

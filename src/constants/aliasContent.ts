@@ -1,4 +1,4 @@
-import type {Difficulty} from "@/types.ts";
+import type {Difficulty} from "@/shared/types";
 
 
 export interface WordCategory {

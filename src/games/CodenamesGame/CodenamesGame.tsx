@@ -16,11 +16,11 @@ import {CodenamesPhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard.tsx';
 import {CODENAMES_MODES} from "@/games/CodenamesGame/constants.ts";
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {shuffle} from '@/shared/helpers/random';
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 import {GameKey} from '@/types/games';
-import {shuffle} from '@/utils/random.ts';
 
 interface CodenamesGameProps {
     playerNames: string[];

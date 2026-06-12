@@ -23,9 +23,10 @@ import {
     TruthOrDareGame,
     WavelengthGame,
 } from '../registry/GameRegistry';
-import {sessionService} from '../services/sessionService';
-import {storageService} from '../services/storageService';
 import {GameKey} from '../types/games';
+
+import {sessionService} from '@/shared/services/sessionService';
+import {storageService} from '@/shared/services/storageService';
 
 interface GameProps {
     playerNames: string[];

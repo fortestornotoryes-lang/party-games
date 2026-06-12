@@ -1,6 +1,6 @@
 import type {TeamColor} from './types';
 
-import {NS} from '@/i18n/keys';
+import {NS} from '@/shared/i18n/keys';
 
 export const tLabel = (c: TeamColor) => (c === 'red' ? 'Красных' : 'Синих');
 

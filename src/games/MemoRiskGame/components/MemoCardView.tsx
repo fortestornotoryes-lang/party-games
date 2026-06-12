@@ -5,7 +5,7 @@ import React from 'react';
 import {RARITY_META, SHAPE_META} from '../constants';
 import {MemoCardState, type MemoCard} from '../types';
 
-import {getTheme, rgba} from '@/theme/colors';
+import {getTheme, rgba} from '@/shared/theme/colors';
 
 interface MemoCardViewProps {
     card: MemoCard;

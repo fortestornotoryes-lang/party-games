@@ -1,4 +1,4 @@
-import type {GameKey} from '../types/games';
+import type {GameKey} from '@/types/games';
 
 /**
  * Персистенция состояния текущей партии (сессии) каждой игры.

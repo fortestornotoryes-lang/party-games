@@ -6,15 +6,15 @@ import {ResourceContribRow} from '../components/ResourceContribRow';
 import {getRevealedResourceContribution, getRevealedTrait} from '../helpers';
 import {type BunkerCharacter, type DifficultyLevel} from '../types';
 
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {TimerBar} from '@/components/TimerBar';
-import {Typography} from '@/components/Typography';
 import {useGameSettings} from '@/contexts/GameSettingsContext';
-import {useTimer} from '@/hooks/useTimer';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {DIFFICULTY} from '@/types';
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {TimerBar} from '@/shared/components/TimerBar';
+import {Typography} from '@/shared/components/Typography';
+import {useTimer} from '@/shared/hooks/useTimer';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {DIFFICULTY} from '@/shared/types';
 
 interface DiscussionPhaseProps {
     characters: BunkerCharacter[];

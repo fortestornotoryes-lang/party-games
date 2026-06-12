@@ -11,21 +11,21 @@ import {useTelestrationsContent} from './model/useTelestrationsContent';
 import type {Step, StepType} from './types';
 import {STEP_TYPE, TelestrationsPhase} from './types';
 
-import {DrawingCanvas} from '@/components/DrawingCanvas';
 import {GameHeader} from '@/components/GameHeader';
 import {PassPhoneCard} from '@/components/PassPhoneCard';
 import type {Difficulty} from '@/constants/telestrationsContent';
 import {DIFFICULTY_CONFIG} from '@/constants/telestrationsContent';
-import {useCountdown} from '@/hooks/useCountdown.ts';
-import {usePersistedState} from '@/hooks/usePersistedState';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {feedbackService, VIBRATE} from '@/services/feedbackService.ts';
-import {sessionService} from '@/services/sessionService';
-import {storageService} from '@/services/storageService.ts';
-import {DIFFICULTY} from '@/types';
+import {DrawingCanvas} from '@/shared/components/DrawingCanvas';
+import {shuffle} from '@/shared/helpers/random';
+import {useCountdown} from '@/shared/hooks/useCountdown';
+import {usePersistedState} from '@/shared/hooks/usePersistedState';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {sessionService} from '@/shared/services/sessionService';
+import {storageService} from '@/shared/services/storageService';
+import {DIFFICULTY} from '@/shared/types';
 import {GameKey} from '@/types/games';
-import {shuffle} from '@/utils/random.ts';
 
 interface TelestrationsGameProps {
     playerNames: string[];

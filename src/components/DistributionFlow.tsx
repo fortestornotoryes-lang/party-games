@@ -4,9 +4,9 @@ import React, {useState} from 'react';
 
 
 import {PassPhoneCard} from './PassPhoneCard';
-import {ProgressDots} from './ProgressDots';
 
-import type {Player} from '@/types';
+import {ProgressDots} from '@/shared/components/ProgressDots';
+import type {Player} from '@/shared/types';
 
 type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
 

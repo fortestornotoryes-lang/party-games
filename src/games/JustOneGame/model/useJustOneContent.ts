@@ -1,8 +1,8 @@
 import {JUST_ONE_DATA_BY_DIFFICULTY} from '@/constants/justOneContent';
-import {storageService} from '@/services/storageService';
-import type {Difficulty} from '@/types';
+import {pickRandom} from '@/shared/helpers/random';
+import {storageService} from '@/shared/services/storageService';
+import type {Difficulty} from '@/shared/types';
 import {GameKey} from '@/types/games';
-import {pickRandom} from '@/utils/random';
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useJustOneContent(difficulty: Difficulty): string {

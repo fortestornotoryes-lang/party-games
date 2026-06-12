@@ -3,8 +3,8 @@ import React from 'react';
 
 import {StopGameButton} from '@/components/StopGameButton';
 import type {TabooClassicCard} from '@/constants/tabooContent';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface VerdictPhaseProps {
     card: TabooClassicCard;

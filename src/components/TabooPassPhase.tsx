@@ -5,8 +5,8 @@ import React from 'react';
 import {PassPhoneCard} from './PassPhoneCard';
 import {PlayerScoreList} from './PlayerScoreList';
 
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 type AccentColor = 'red' | 'orange';
 

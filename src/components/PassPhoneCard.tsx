@@ -2,7 +2,7 @@ import type {LucideIcon} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import {Typography} from '@/components/Typography.tsx';
+import {Typography} from '@/shared/components/Typography';
 
 type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';
 type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';

@@ -3,9 +3,9 @@ import {motion} from 'motion/react';
 import React from 'react';
 
 import {LeaderboardList} from '@/components/LeaderboardList';
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
-import {useTranslation} from "@/i18n";
-import {NS} from "@/i18n/keys.ts";
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import {useTranslation} from "@/shared/i18n";
+import {NS} from "@/shared/i18n/keys";
 
 interface GameOverPhaseProps {
     playerNames: string[];

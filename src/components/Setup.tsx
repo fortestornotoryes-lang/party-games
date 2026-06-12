@@ -4,16 +4,18 @@ import {motion, Reorder} from 'motion/react';
 import React, {useEffect, useState} from 'react';
 
 import {useGameSettings} from '../contexts/GameSettingsContext';
-import {storageService} from '../services/storageService';
-import {getTheme} from '../theme/colors';
-import {DIFFICULTY, type GameTheme} from '../types';
-import {shuffle} from '../utils/random';
 
 import {InstructionsModal} from './InstructionsModal';
-import { Typography } from "./Typography";
 
 import {DEFAULT_NAMES, PlayerRow} from "@/components/PlayerRow.tsx";
-import {PrimaryButton} from "@/components/PrimaryButton.tsx";
+import {PrimaryButton} from "@/shared/components/PrimaryButton";
+import { Typography } from "@/shared/components/Typography";
+import {shuffle} from '@/shared/helpers/random';
+import {storageService} from '@/shared/services/storageService';
+import {getTheme} from '@/shared/theme/colors';
+import {DIFFICULTY, type GameTheme} from '@/shared/types';
+
+
 
 interface SetupProps {
     onStart: (playerNames: string[]) => void;

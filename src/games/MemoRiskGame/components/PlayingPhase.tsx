@@ -7,11 +7,11 @@ import {TurnOutcome, type MemoCard, type RoundShapes} from '../types';
 import {MemoBoard} from './MemoBoard';
 import {ShapeBadges} from './ShapeBadges';
 
-import {PrimaryButton} from '@/components/PrimaryButton';
 import {StopGameButton} from '@/components/StopGameButton';
-import {TimerBar} from '@/components/TimerBar';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {PrimaryButton} from '@/shared/components/PrimaryButton';
+import {TimerBar} from '@/shared/components/TimerBar';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
 
 interface PlayingPhaseProps {
     board: (MemoCard | null)[];

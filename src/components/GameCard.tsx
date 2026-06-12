@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-import {SectionLabel} from "@/components/SectionLabel.tsx";
+import {SectionLabel} from "@/shared/components/SectionLabel";
 
 export const GameCard: React.FC<{
     children: React.ReactNode;

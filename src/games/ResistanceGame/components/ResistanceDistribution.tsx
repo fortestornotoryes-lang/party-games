@@ -2,11 +2,11 @@ import {Shield, Skull} from 'lucide-react';
 import {motion} from 'motion/react';
 import React from 'react';
 
-import type {Player} from '../../../types';
 
 import {DistributionFlow} from '@/components/DistributionFlow';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import type {Player} from '@/shared/types';
 
 interface Props {
     players: Player[];

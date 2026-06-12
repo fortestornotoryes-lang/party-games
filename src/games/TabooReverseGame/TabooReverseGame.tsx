@@ -17,12 +17,12 @@ import {TabooReversePhase} from './types';
 import {GameHeader} from '@/components/GameHeader';
 import type {TabooCard} from '@/constants/tabooReverseContent';
 import {getNextTabooCard, TABOO_REVERSE_CARDS, TABOO_REVERSE_MODES} from '@/constants/tabooReverseContent';
-import {usePersistedState, usePersistedTimer} from '@/hooks/usePersistedState';
-import {useTimer} from '@/hooks/useTimer';
-import {useTranslation} from '@/i18n';
-import {NS} from '@/i18n/keys';
-import {feedbackService, VIBRATE} from '@/services/feedbackService';
-import {storageService} from '@/services/storageService';
+import {usePersistedState, usePersistedTimer} from '@/shared/hooks/usePersistedState';
+import {useTimer} from '@/shared/hooks/useTimer';
+import {useTranslation} from '@/shared/i18n';
+import {NS} from '@/shared/i18n/keys';
+import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
+import {storageService} from '@/shared/services/storageService';
 import {GameKey} from '@/types/games';
 
 

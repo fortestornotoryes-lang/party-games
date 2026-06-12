@@ -2,8 +2,8 @@ import type {LucideIcon} from 'lucide-react';
 import {Home} from 'lucide-react';
 import React from 'react';
 
-import {getTheme} from '../theme/colors';
-import type {GameTheme} from '../types';
+import {getTheme} from '@/shared/theme/colors';
+import type {GameTheme} from '@/shared/types';
 
 
 interface GameHeaderProps {
