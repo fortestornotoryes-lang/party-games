@@ -2,7 +2,6 @@ import confetti from 'canvas-confetti';
 import { LayoutGrid, RotateCcw } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 
 import { Board } from './components/Board';
 import { GameOverBanner } from './components/GameOverBanner';
@@ -19,6 +18,7 @@ import {
 import { C4Action, type C4Player, type Cell, type WinResult } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';

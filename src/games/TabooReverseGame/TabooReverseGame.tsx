@@ -3,7 +3,6 @@ import { ListChecks } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 
 import { BlitzVerdictPhase } from './phases/BlitzVerdictPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
@@ -20,6 +19,7 @@ import {
   TABOO_REVERSE_CARDS,
   TABOO_REVERSE_MODES,
 } from '@/constants/tabooReverseContent';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';

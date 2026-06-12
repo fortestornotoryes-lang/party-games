@@ -2,10 +2,10 @@ import { EyeOff, Ghost, Palette } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { useFakeArtistContent } from '../model/useFakeArtistContent';
 
 import { DistributionFlow } from '@/components/DistributionFlow';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';

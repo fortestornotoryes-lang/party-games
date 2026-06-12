@@ -2,7 +2,6 @@ import { Grid, User } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 
 import { useCodenamesContent } from './model/useCodenamesContent';
 import { CaptainPhase } from './phases/CaptainPhase';
@@ -14,6 +13,7 @@ import { CodenamesPhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
 import { PassPhoneCard } from '@/components/PassPhoneCard.tsx';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';

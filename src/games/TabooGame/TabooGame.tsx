@@ -3,7 +3,6 @@ import { Ban } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -14,6 +13,7 @@ import { TabooPhase } from './types';
 import { GameHeader } from '@/components/GameHeader';
 import type { TabooClassicCard } from '@/constants/tabooContent';
 import { getNextTabooClassicCard, TABOO_CLASSIC_CARDS } from '@/constants/tabooContent';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';

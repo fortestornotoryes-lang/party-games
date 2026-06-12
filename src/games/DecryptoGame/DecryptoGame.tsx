@@ -2,7 +2,6 @@ import { AlertOctagon, Key, KeyRound, Trophy, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 
 import { CaptainCluesPhase } from './components/CaptainCluesPhase';
 import { EnemyInterceptPhase } from './components/EnemyInterceptPhase';
@@ -15,6 +14,7 @@ import type { TeamColor, TeamState } from './types';
 import { DecryptoPhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
