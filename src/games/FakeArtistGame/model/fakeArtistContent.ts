@@ -15,7 +15,7 @@ export function getFakeArtistPool(difficulty: Difficulty): FakeArtistCategory[] 
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useFakeArtistContent(difficulty: Difficulty): { word: string; category: string } {
+export function getFakeArtistWord(difficulty: Difficulty): { word: string; category: string } {
   const pool = getFakeArtistPool(difficulty);
   const used = storageService.getUsedWords(GameKey.FakeArtist);
 

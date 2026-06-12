@@ -3,7 +3,7 @@ import { Radio } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect } from 'react';
 
-import { useWavelengthContent } from './model/useWavelengthContent';
+import { getWavelengthPair } from './model/wavelengthContent';
 import { CluePhase } from './phases/CluePhase';
 import { GuessingPhase } from './phases/GuessingPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -38,7 +38,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   const [currentPair, setCurrentPair] = usePersistedState<string[]>(
     GameKey.Wavelength,
     'currentPair',
-    () => useWavelengthContent(difficulty)
+    () => getWavelengthPair(difficulty)
   );
   const [targetValue, setTargetValue] = usePersistedState(GameKey.Wavelength, 'targetValue', () =>
     randomInt(5, 94)
@@ -49,7 +49,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
   const handleNextRound = () => {
     nextPsychic();
-    setCurrentPair(useWavelengthContent(difficulty));
+    setCurrentPair(getWavelengthPair(difficulty));
     setTargetValue(randomInt(5, 94));
     setGuessValue(50);
     setPhase(WavelengthPhase.Pass);

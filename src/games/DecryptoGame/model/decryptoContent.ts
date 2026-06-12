@@ -12,7 +12,7 @@ export function getDecryptoWordPool(difficulty: Difficulty): string[] {
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
-export function useDecryptoContent(difficulty: Difficulty, count = 4): string[] {
+export function getDecryptoWords(difficulty: Difficulty, count = 4): string[] {
   const all = getDecryptoWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Decrypto);
 

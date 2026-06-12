@@ -3,7 +3,7 @@ import { Lightbulb } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { useJustOneContent } from './model/useJustOneContent';
+import { getJustOneWord } from './model/justOneContent';
 import { GuessingPhase } from './phases/GuessingPhase';
 import { HintingPhase } from './phases/HintingPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -39,7 +39,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   } = usePlayerCycle(playerNames, guesserIdxState);
 
   const [word, setWord] = usePersistedState(GameKey.JustOne, 'word', () =>
-    useJustOneContent(difficulty)
+    getJustOneWord(difficulty)
   );
   const [hints, setHints] = usePersistedState<Record<string, string>>(GameKey.JustOne, 'hints', {});
   const [phase, setPhase] = usePersistedState<JustOnePhase>(
@@ -62,7 +62,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   // TODO: RN — replace with useEffect async load (render-time call incompatible with async)
   if (guesserIdx !== prevGuesserIdx) {
     setPrevGuesserIdx(guesserIdx);
-    setWord(useJustOneContent(difficulty));
+    setWord(getJustOneWord(difficulty));
     setHints({});
     setGuess('');
     setPhase(JustOnePhase.Pass);

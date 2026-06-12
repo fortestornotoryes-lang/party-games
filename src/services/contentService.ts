@@ -1,19 +1,19 @@
 import { GameKey } from '@/entities/game/types';
-import { getAliasWordPool } from '@/games/AliasGame/model/useAliasContent';
-import { getCodenamesWordPool } from '@/games/CodenamesGame/model/useCodenamesContent';
-import { getDecryptoWordPool } from '@/games/DecryptoGame/model/useDecryptoContent';
-import { getFakeArtistPool } from '@/games/FakeArtistGame/model/useFakeArtistContent';
-import { getJustOneWordPool } from '@/games/JustOneGame/model/useJustOneContent';
+import { getAliasWordPool } from '@/games/AliasGame/model/aliasContent';
+import { getCodenamesWordPool } from '@/games/CodenamesGame/model/codenamesContent';
+import { getDecryptoWordPool } from '@/games/DecryptoGame/model/decryptoContent';
+import { getFakeArtistPool } from '@/games/FakeArtistGame/model/fakeArtistContent';
+import { getJustOneWordPool } from '@/games/JustOneGame/model/justOneContent';
 import { getMillionaireQuestionPool } from '@/games/MillionaireGame/model/millionaireContent';
-import { getSpyHuntLocationPool } from '@/games/SpyHuntGame/model/useSpyHuntContent';
+import { getSpyHuntLocationPool } from '@/games/SpyHuntGame/model/spyHuntContent';
 import { getTabooClassicWordPool } from '@/games/TabooGame/content';
 import { getTabooReverseWordPool } from '@/games/TabooReverseGame/content';
-import { getTelestrationsWordPool } from '@/games/TelestrationsGame/model/useTelestrationsContent';
-import { getTruthOrDarePool } from '@/games/TruthOrDareGame/model/useTruthOrDareContent';
+import { getTelestrationsWordPool } from '@/games/TelestrationsGame/model/telestrationsContent';
+import { getTruthOrDarePool } from '@/games/TruthOrDareGame/model/truthOrDareContent';
 import {
   getWavelengthPairPool,
   wavelengthPairKey,
-} from '@/games/WavelengthGame/model/useWavelengthContent';
+} from '@/games/WavelengthGame/model/wavelengthContent';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 

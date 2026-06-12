@@ -20,7 +20,7 @@ export function getAliasWordPool(difficulty: Difficulty): string[] {
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useAliasContent(difficulty: Difficulty): string[] {
+export function getAliasWords(difficulty: Difficulty): string[] {
   const all = getAliasWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Alias);
 

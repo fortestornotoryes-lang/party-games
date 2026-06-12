@@ -2,8 +2,7 @@ import { Grid, User } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-
-import { useCodenamesContent } from './model/useCodenamesContent';
+import { getCodenamesWords } from './model/codenamesContent';
 import { CaptainPhase } from './phases/CaptainPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { SetupPhase } from './phases/SetupPhase';
@@ -63,7 +62,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
   }, [playerNames]);
 
   const initBoard = () => {
-    const shuffledWords = useCodenamesContent(difficulty);
+    const shuffledWords = getCodenamesWords(difficulty);
     let colorAssignment: CardColor[];
 
     if (activeMode === CODENAMES_MODES.DEEP_COVER) {

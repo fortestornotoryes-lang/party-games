@@ -17,22 +17,25 @@ metadata:
 
 ## Архитектура пулов слов (рефакторинг 2026-06-12)
 
-Выбор контента живёт в хуках игр `src/games/<Game>/model/use*Content.ts` (вызываются из хендлеров/инициализаторов, не настоящие React-хуки). Каждый такой файл экспортирует **чистую пул-функцию** `get*Pool(difficulty)` — полный пул used-ключей (пресет + кастомные слова), единый источник для игры и статистики:
+Выбор контента живёт в `src/games/<Game>/model/<game>Content.ts`. Функции выдачи названы `get*` (НЕ `use*` — это не React-хуки, они вызываются из хендлеров/инициализаторов; use-префикс ловил react-hooks/rules-of-hooks). Каждый модуль экспортирует:
 
-| Игра | Пул-функция | Где |
-|------|-------------|-----|
-| Alias | `getAliasWordPool` | `model/useAliasContent.ts` |
-| JustOne | `getJustOneWordPool` | `model/useJustOneContent.ts` |
-| Wavelength | `getWavelengthPairPool` + `wavelengthPairKey` (used-ключ = `pair.join(' - ')`) | `model/useWavelengthContent.ts` |
-| FakeArtist | `getFakeArtistPool` (→ `{word, category}[]`) | `model/useFakeArtistContent.ts` |
-| Telestrations | `getTelestrationsWordPool` | `model/useTelestrationsContent.ts` |
-| Spy | `getSpyHuntLocationPool` (→ локации с ролями) | `model/useSpyHuntContent.ts` |
-| Codenames | `getCodenamesWordPool` | `model/useCodenamesContent.ts` |
-| Decrypto | `getDecryptoWordPool` | `model/useDecryptoContent.ts` |
-| TruthOrDare | `getTruthOrDarePool(type, d)` | `model/useTruthOrDareContent.ts` |
-| Taboo | `getTabooClassicWordPool` | `content.ts` (кастомных слов нет) |
-| TabooReverse | `getTabooReverseWordPool` | `content.ts` (кастомных слов нет) |
-| Millionaire | `getMillionaireQuestionPool` (difficulty игнорируется — внутренние уровни easy/medium/hard) + `getMillionaireQuestions()` с трекингом used по `q.text` | `model/millionaireContent.ts` |
+1. **выдающую функцию** (фильтр по used + авто-сброс + markWordAsUsed),
+2. **чистую пул-функцию** `get*Pool(difficulty)` — полный пул used-ключей (пресет + кастомные слова), единый источник для игры и статистики.
+
+| Игра | Выдача | Пул-функция | Где |
+|------|--------|-------------|-----|
+| Alias | `getAliasWords` | `getAliasWordPool` | `model/aliasContent.ts` |
+| JustOne | `getJustOneWord` | `getJustOneWordPool` | `model/justOneContent.ts` |
+| Wavelength | `getWavelengthPair` | `getWavelengthPairPool` + `wavelengthPairKey` (used-ключ = `pair.join(' - ')`) | `model/wavelengthContent.ts` |
+| FakeArtist | `getFakeArtistWord` | `getFakeArtistPool` (→ `{word, category}[]`) | `model/fakeArtistContent.ts` |
+| Telestrations | `getTelestrationsWord` | `getTelestrationsWordPool` | `model/telestrationsContent.ts` |
+| Spy | `getSpyHuntLocation` | `getSpyHuntLocationPool` (→ локации с ролями) | `model/spyHuntContent.ts` |
+| Codenames | `getCodenamesWords` | `getCodenamesWordPool` | `model/codenamesContent.ts` |
+| Decrypto | `getDecryptoWords` | `getDecryptoWordPool` | `model/decryptoContent.ts` |
+| TruthOrDare | `getTruthOrDareQuestion` | `getTruthOrDarePool(type, d)` | `model/truthOrDareContent.ts` |
+| Taboo | inline в `TabooGame.tsx` (карточки по id) | `getTabooClassicWordPool` | `content.ts` (кастомных слов нет) |
+| TabooReverse | inline в `TabooReverseGame.tsx` | `getTabooReverseWordPool` | `content.ts` (кастомных слов нет) |
+| Millionaire | `getMillionaireQuestions()` (трекинг used по `q.text`) | `getMillionaireQuestionPool` (difficulty игнорируется — внутренние уровни easy/medium/hard) | `model/millionaireContent.ts` |
 
 `src/services/contentService.ts` (НЕ в shared — иначе shared зависел бы от games) держит реестр `WORD_POOLS: Partial<Record<GameKey, (d) => readonly string[]>>` и единственный метод `getWordStats(gameId, difficulty)` → `{total, remaining}`. Игры без расходуемого пула (mafia, resistance, corridor, connect_four, bunker, memo_risk) в реестре отсутствуют → `{0, 0}`.
 

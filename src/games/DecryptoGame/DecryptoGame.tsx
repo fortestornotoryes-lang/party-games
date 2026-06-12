@@ -2,14 +2,13 @@ import { AlertOctagon, Key, KeyRound, Trophy, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect } from 'react';
 
-
 import { CaptainCluesPhase } from './components/CaptainCluesPhase';
 import { EnemyInterceptPhase } from './components/EnemyInterceptPhase';
 import { PassScreen } from './components/PassScreen';
 import { ScoreRow } from './components/ScoreRow';
 import { TeamGuessPhase } from './components/TeamGuessPhase';
 import { tBadge, tBg, teamLabel, tText } from './helpers';
-import { useDecryptoContent } from './model/useDecryptoContent';
+import { getDecryptoWords } from './model/decryptoContent';
 import type { TeamColor, TeamState } from './types';
 import { DecryptoPhase } from './types';
 
@@ -73,7 +72,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     const shuffled = shuffle([...playerNames]);
     const half = Math.ceil(shuffled.length / 2);
     setRedState({
-      words: useDecryptoContent(difficulty, wordCount),
+      words: getDecryptoWords(difficulty, wordCount),
       players: shuffled.slice(0, half),
       interceptions: 0,
       fails: 0,
@@ -81,7 +80,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
       captainIndex: randomInt(0, half - 1),
     });
     setBlueState({
-      words: useDecryptoContent(difficulty, wordCount),
+      words: getDecryptoWords(difficulty, wordCount),
       players: shuffled.slice(half),
       interceptions: 0,
       fails: 0,

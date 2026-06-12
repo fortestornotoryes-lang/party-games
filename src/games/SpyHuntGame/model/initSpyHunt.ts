@@ -1,4 +1,4 @@
-import { useSpyHuntContent } from './useSpyHuntContent';
+import { getSpyHuntLocation } from './spyHuntContent';
 
 import type { Player } from '@/entities/player/types';
 import { SPY_HUNT_MODES, SPY_HUNT_ROLE_IDS } from '@/games/SpyHuntGame/constants.ts';
@@ -10,7 +10,7 @@ export const initSpyHunt = (
   difficulty = DIFFICULTY.MEDIUM as string,
   mode = SPY_HUNT_MODES.CLASSIC as string
 ) => {
-  const locationObj = useSpyHuntContent(difficulty);
+  const locationObj = getSpyHuntLocation(difficulty);
 
   // Mode logic
   const indices = Array.from({ length: playerNames.length }, (_, i) => i);

@@ -3,7 +3,7 @@ import { Brain } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect } from 'react';
 
-import { useAliasContent } from './model/useAliasContent';
+import { getAliasWords } from './model/aliasContent';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
 import { RoundEndPhase } from './phases/RoundEndPhase';
@@ -82,7 +82,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   }, [playerNames]);
 
   const nextWord = () => {
-    const available = useAliasContent(difficulty);
+    const available = getAliasWords(difficulty);
     const word = pickRandom(available);
     setCurrentWord(word);
     storageService.markWordAsUsed(GameKey.Alias, word);

@@ -12,7 +12,7 @@ export function getCodenamesWordPool(difficulty: Difficulty): string[] {
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useCodenamesContent(difficulty: Difficulty): string[] {
+export function getCodenamesWords(difficulty: Difficulty): string[] {
   const all = getCodenamesWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Codenames);
 

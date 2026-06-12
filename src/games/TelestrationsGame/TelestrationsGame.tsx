@@ -8,7 +8,7 @@ import { TelestrationsGuess } from './components/TelestrationsGuess';
 import { TelestrationsSetup } from './components/TelestrationsSetup';
 import { TelestrationsStart } from './components/TelestrationsStart';
 import { DIFFICULTY_CONFIG } from './constants';
-import { useTelestrationsContent } from './model/useTelestrationsContent';
+import { getTelestrationsWord } from './model/telestrationsContent';
 import type { Step, StepType } from './types';
 import { STEP_TYPE, TelestrationsPhase } from './types';
 
@@ -49,7 +49,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     if (!initialDifficulty) return null;
     // Слово уже восстановлено из сессии — не тратим новое из пула.
     if (sessionService.getField(K, 'initialWord') !== undefined) return null;
-    const word = useTelestrationsContent(initialDifficulty);
+    const word = getTelestrationsWord(initialDifficulty);
     return { word, difficulty: initialDifficulty };
   });
 
@@ -111,7 +111,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
   });
 
   const handleStartGame = () => {
-    const word = useTelestrationsContent(difficulty);
+    const word = getTelestrationsWord(difficulty);
     setInitialWord(word);
     setCurrentWord(word);
     setShuffledPlayers(shuffle(playerNames));

@@ -15,7 +15,7 @@ export function getTruthOrDarePool(type: TruthOrDareType, difficulty: Difficulty
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useTruthOrDareContent(type: TruthOrDareType, difficulty: Difficulty): string {
+export function getTruthOrDareQuestion(type: TruthOrDareType, difficulty: Difficulty): string {
   const all = getTruthOrDarePool(type, difficulty);
   const used = storageService.getUsedWords(GameKey.TruthOrDare);
 

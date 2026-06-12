@@ -12,7 +12,7 @@ export function getTelestrationsWordPool(difficulty: Difficulty): string[] {
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useTelestrationsContent(difficulty: Difficulty): string {
+export function getTelestrationsWord(difficulty: Difficulty): string {
   const all = getTelestrationsWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Telestrations);
 

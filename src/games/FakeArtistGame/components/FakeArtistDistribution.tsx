@@ -2,7 +2,7 @@ import { EyeOff, Ghost, Palette } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { useFakeArtistContent } from '../model/useFakeArtistContent';
+import { getFakeArtistWord } from '../model/fakeArtistContent';
 
 import { DistributionFlow } from '@/components/DistributionFlow';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
@@ -25,7 +25,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
 
   useEffect(() => {
     const diff = difficulty || DIFFICULTY.EASY;
-    const item = useFakeArtistContent(diff);
+    const item = getFakeArtistWord(diff);
     setWord(item.word);
     setCategory(item.category);
   }, [difficulty]);
@@ -43,14 +43,14 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
         className: 'aspect-3/4',
         style: {
           border: `1.5px solid ${rgba('sky', 0.25)}`,
-          boxShadow: `0 0 80px ${rgba('sky', 0.22)}, var(--shadow-card), inset 0 1px 0 ${rgba('sky', 0.12)}`
+          boxShadow: `0 0 80px ${rgba('sky', 0.22)}, var(--shadow-card), inset 0 1px 0 ${rgba('sky', 0.12)}`,
         },
       })}
       renderCard={(player, isLast, onNext) => (
         <>
           {/* Gradient bg */}
           <div
-            className={`absolute inset-0  from-black/40 via-premium-green/25 bg-linear-to-b to-black/40`}
+            className={`via-premium-green/25 absolute inset-0 bg-linear-to-b from-black/40 to-black/40`}
           />
 
           {/* Top glow */}
@@ -68,10 +68,10 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                 className="flex w-full flex-1 flex-col items-center justify-between"
               >
                 <div>
-                  <p className="text-micro  font-black tracking-[0.45em] uppercase">
+                  <p className="text-micro font-black tracking-[0.45em] uppercase">
                     {t(`${NS.FAKE_ARTIST}.secretRole`)}
                   </p>
-                  <h4 className="mt-0.5 text-heading font-black italic">{player.name}</h4>
+                  <h4 className="text-heading mt-0.5 font-black italic">{player.name}</h4>
                 </div>
 
                 <div className="space-y-3">
@@ -79,13 +79,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                     animate={{ scale: [1, 1.06, 1] }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   >
-                    <Ghost
-                      className="text-premium-red mx-auto h-[88px] w-[88px]"
-                    />
+                    <Ghost className="text-premium-red mx-auto h-[88px] w-[88px]" />
                   </motion.div>
-                  <h3
-                    className="text-3xl leading-none font-black tracking-tighter italic"
-                  >
+                  <h3 className="text-3xl leading-none font-black tracking-tighter italic">
                     {t(`${NS.FAKE_ARTIST}.imposter`)}
                   </h3>
                   <div className="bg-premium-red/10 border-premium-red/20 rounded-premium-md border px-4 py-2">

@@ -12,7 +12,7 @@ export function getJustOneWordPool(difficulty: Difficulty): string[] {
 }
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useJustOneContent(difficulty: Difficulty): string {
+export function getJustOneWord(difficulty: Difficulty): string {
   const all = getJustOneWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.JustOne);
 

@@ -2,7 +2,7 @@ import { Flame } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React from 'react';
 
-import { useTruthOrDareContent } from './model/useTruthOrDareContent';
+import { getTruthOrDareQuestion } from './model/truthOrDareContent';
 import { ActionPhase } from './phases/ActionPhase';
 import { ChoicePhase } from './phases/ChoicePhase';
 import { PassPhase } from './phases/PassPhase';
@@ -41,7 +41,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
   const [content, setContent] = usePersistedState(GameKey.TruthOrDare, 'content', '');
 
   const handleChoice = (type: ChoiceType) => {
-    const text = useTruthOrDareContent(type, difficulty);
+    const text = getTruthOrDareQuestion(type, difficulty);
     setChoice(type);
     setContent(text);
     setPhase(TruthOrDarePhase.Action);
