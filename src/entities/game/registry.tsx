@@ -97,6 +97,97 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 4,
     backgroundImage: FakeArtistImage,
   },
+  [GameKey.Bunker]: {
+    id: GameKey.Bunker,
+    title: 'БУНКЕР',
+    subtitle: 'Кто заслуживает выжить?',
+    icon: Siren,
+    theme: 'orange',
+    placeholder: 'Выживший',
+    players: '4–10',
+    description:
+        'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
+    minPlayers: 4,
+    backgroundImage: hopperImage,
+    modes: [
+      {
+        id: BUNKER_MODES.CLASSIC,
+        name: 'Классика',
+        description: 'Раунды раскрытия по очереди, честное голосование',
+        icon: Target,
+      },
+      {
+        id: BUNKER_MODES.DICTATOR,
+        name: 'Диктатор',
+        description: 'Один игрок — директор бункера, его место гарантировано',
+        icon: Crown,
+      },
+      {
+        id: BUNKER_MODES.TRIBUNAL,
+        name: 'Трибунал',
+        description: 'После голосования один исключённый может раскрыть скрытую черту',
+        icon: Scale,
+      },
+    ],
+  },
+  [GameKey.Corridor]: {
+    id: GameKey.Corridor,
+    title: 'КОРИДОР',
+    subtitle: 'Дойди первым до другой стороны',
+    icon: Route,
+    theme: 'teal',
+    placeholder: 'Игрок',
+    players: '2',
+    description:
+        'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
+    minPlayers: 2,
+  },
+  [GameKey.MemoRisk]: {
+    id: GameKey.MemoRisk,
+    title: 'МЕМО-РИСК',
+    subtitle: 'Запомни и рискни',
+    icon: Shapes,
+    theme: 'pink',
+    placeholder: 'Игрок',
+    players: '2+',
+    description:
+        'Открывай карты, запоминай поле и собирай целевые фигуры. Наткнёшься на опасную — очки хода сгорят. Рискни ещё раз или забери очки.',
+    minPlayers: 2,
+    backgroundImage: MemoryImage,
+
+    modes: [
+      {
+        id: MEMO_RISK_MODES.CLASSIC,
+        name: 'Классика',
+        description: 'Открывай без ограничений, пока сам не решишь остановиться',
+        icon: Grid,
+      },
+      {
+        id: MEMO_RISK_MODES.TIMED,
+        name: 'На время',
+        description: 'Ограниченное время на ход — решай быстрее',
+        icon: Timer,
+      },
+      {
+        id: MEMO_RISK_MODES.LIMITED,
+        name: 'Ограниченные ходы',
+        description: 'Фиксированное число открытий за ход',
+        icon: ListChecks,
+      },
+    ],
+  },
+  [GameKey.Millionaire]: {
+    id: GameKey.Millionaire,
+    title: 'МИЛЛИОНЕР',
+    subtitle: 'Кто хочет стать миллионером',
+    icon: Trophy,
+    theme: 'yellow',
+    placeholder: 'Игрок',
+    players: '2+',
+    description:
+        'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
+    minPlayers: 1,
+  },
   [GameKey.TruthOrDare]: {
     id: GameKey.TruthOrDare,
     title: 'ПРАВДА ИЛИ ДЕЙСТВИЕ',
@@ -296,7 +387,6 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 6,
     backgroundImage: mafia2,
   },
-
   [GameKey.ConnectFour]: {
     id: GameKey.ConnectFour,
     title: 'ЧЕТЫРЕ В РЯД',
@@ -336,98 +426,4 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     ],
   },
 
-  [GameKey.Bunker]: {
-    id: GameKey.Bunker,
-    title: 'БУНКЕР',
-    subtitle: 'Кто заслуживает выжить?',
-    icon: Siren,
-    theme: 'orange',
-    placeholder: 'Выживший',
-    players: '4–10',
-    description:
-      'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
-    minPlayers: 4,
-    backgroundImage: hopperImage,
-    modes: [
-      {
-        id: BUNKER_MODES.CLASSIC,
-        name: 'Классика',
-        description: 'Раунды раскрытия по очереди, честное голосование',
-        icon: Target,
-      },
-      {
-        id: BUNKER_MODES.DICTATOR,
-        name: 'Диктатор',
-        description: 'Один игрок — директор бункера, его место гарантировано',
-        icon: Crown,
-      },
-      {
-        id: BUNKER_MODES.TRIBUNAL,
-        name: 'Трибунал',
-        description: 'После голосования один исключённый может раскрыть скрытую черту',
-        icon: Scale,
-      },
-    ],
-  },
-
-  [GameKey.Corridor]: {
-    id: GameKey.Corridor,
-    title: 'КОРИДОР',
-    subtitle: 'Дойди первым до другой стороны',
-    icon: Route,
-    theme: 'teal',
-    placeholder: 'Игрок',
-    players: '2',
-    description:
-      'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
-    minPlayers: 2,
-  },
-
-  [GameKey.MemoRisk]: {
-    id: GameKey.MemoRisk,
-    title: 'МЕМО-РИСК',
-    subtitle: 'Запомни и рискни',
-    icon: Shapes,
-    theme: 'pink',
-    placeholder: 'Игрок',
-    players: '2+',
-    description:
-      'Открывай карты, запоминай поле и собирай целевые фигуры. Наткнёшься на опасную — очки хода сгорят. Рискни ещё раз или забери очки.',
-    minPlayers: 2,
-    backgroundImage: MemoryImage,
-
-    modes: [
-      {
-        id: MEMO_RISK_MODES.CLASSIC,
-        name: 'Классика',
-        description: 'Открывай без ограничений, пока сам не решишь остановиться',
-        icon: Grid,
-      },
-      {
-        id: MEMO_RISK_MODES.TIMED,
-        name: 'На время',
-        description: 'Ограниченное время на ход — решай быстрее',
-        icon: Timer,
-      },
-      {
-        id: MEMO_RISK_MODES.LIMITED,
-        name: 'Ограниченные ходы',
-        description: 'Фиксированное число открытий за ход',
-        icon: ListChecks,
-      },
-    ],
-  },
-
-  [GameKey.Millionaire]: {
-    id: GameKey.Millionaire,
-    title: 'МИЛЛИОНЕР',
-    subtitle: 'Кто хочет стать миллионером',
-    icon: Trophy,
-    theme: 'yellow',
-    placeholder: 'Игрок',
-    players: '2+',
-    description:
-      'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
-    minPlayers: 1,
-  },
 } as const;
