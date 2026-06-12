@@ -7,8 +7,8 @@ import { TurnOutcome, type MemoCard, type RoundShapes } from '../types';
 import { MemoBoard } from './MemoBoard';
 import { ShapeBadges } from './ShapeBadges';
 
-import { StopGameButton } from '@/components/StopGameButton';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
+import { StopGameButton } from '@/shared/components/StopGameButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';

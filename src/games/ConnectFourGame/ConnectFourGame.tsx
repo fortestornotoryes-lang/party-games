@@ -17,9 +17,9 @@ import {
 } from './helpers';
 import { C4Action, type C4Player, type Cell, type WinResult } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';

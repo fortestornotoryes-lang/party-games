@@ -2,7 +2,7 @@ import { Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { PassPhoneCard } from '@/components/PassPhoneCard';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 

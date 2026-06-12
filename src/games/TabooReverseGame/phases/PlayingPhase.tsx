@@ -4,7 +4,7 @@ import React from 'react';
 
 import type { TabooCard } from '../content';
 
-import { PlayingHeader } from '@/components/PlayingHeader';
+import { PlayingHeader } from '@/shared/components/PlayingHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';

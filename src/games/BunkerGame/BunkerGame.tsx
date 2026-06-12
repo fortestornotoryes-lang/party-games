@@ -20,12 +20,12 @@ import type {
 } from './types';
 import { BunkerPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS } from '@/games/BunkerGame/contents';
 import { calculateSurvival, generateCharacter } from '@/games/BunkerGame/helpers.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { pickRandom, shuffle } from '@/shared/helpers/random';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';

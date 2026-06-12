@@ -3,11 +3,10 @@ import { ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users } from 'lucide-re
 import { motion, Reorder } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { InstructionsModal } from './InstructionsModal';
-
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { DEFAULT_NAMES, PlayerRow } from '@/entities/player/components/PlayerRow';
 import type { PlayerEntry } from '@/entities/player/types';
+import { InstructionsModal } from '@/shared/components/InstructionsModal';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
 import { shuffle } from '@/shared/helpers/random';

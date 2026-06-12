@@ -8,11 +8,11 @@ import {FakeArtistVoting} from './components/FakeArtistVoting';
 import {initFakeArtist} from './model/initFakeArtist';
 import {FakeArtistPhase} from './types';
 
-import {GameHeader} from '@/components/GameHeader';
 import {GAMES_REGISTRY} from '@/entities/game/registry';
 import {GameKey} from '@/entities/game/types';
 import type {Player} from '@/entities/player/types';
 import {GameCard} from '@/shared/components/GameCard';
+import {GameHeader} from '@/shared/components/GameHeader';
 import {PrimaryButton} from '@/shared/components/PrimaryButton';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';

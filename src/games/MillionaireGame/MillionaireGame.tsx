@@ -11,9 +11,9 @@ import { QuestionPhase } from './phases/QuestionPhase';
 import { WinPhase } from './phases/WinPhase';
 import { MillionairePhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { GameKey } from '@/entities/game/types';
 import { PRIZE_LADDER } from '@/games/MillionaireGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { shuffle } from '@/shared/helpers/random';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { usePlayerCycle } from '@/shared/hooks/usePlayerCycle';

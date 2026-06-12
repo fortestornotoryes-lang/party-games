@@ -16,12 +16,12 @@ import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { initResistance } from './model/initResistance';
 import { ResistancePhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
-import { PassPhoneCard } from '@/components/PassPhoneCard';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { MISSION_SIZES } from '@/games/ResistanceGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';

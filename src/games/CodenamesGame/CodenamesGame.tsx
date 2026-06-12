@@ -10,12 +10,12 @@ import { TeamPhase } from './phases/TeamPhase';
 import type { Card, CardColor, Team } from './types';
 import { CodenamesPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
-import { PassPhoneCard } from '@/components/PassPhoneCard.tsx';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard.tsx';
 import { shuffle } from '@/shared/helpers/random';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';

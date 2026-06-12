@@ -9,12 +9,12 @@ import { PlayingPhase } from './phases/PlayingPhase';
 import { RevealPhase } from './phases/RevealPhase';
 import { SpyHuntPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { GAME_DURATION_BY_DIFFICULTY } from '@/games/SpyHuntGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';

@@ -2,9 +2,8 @@ import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { PassPhoneCard } from './PassPhoneCard';
-
 import { PlayerScoreList } from '@/entities/player/components/PlayerScoreList';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 

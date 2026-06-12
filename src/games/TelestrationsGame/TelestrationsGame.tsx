@@ -12,10 +12,10 @@ import { getTelestrationsWord } from './model/telestrationsContent';
 import type { Step, StepType } from './types';
 import { STEP_TYPE, TelestrationsPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
-import { PassPhoneCard } from '@/components/PassPhoneCard';
 import { GameKey } from '@/entities/game/types';
 import { DrawingCanvas } from '@/shared/components/DrawingCanvas';
+import { GameHeader } from '@/shared/components/GameHeader';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { shuffle } from '@/shared/helpers/random';
 import { useCountdown } from '@/shared/hooks/useCountdown';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';

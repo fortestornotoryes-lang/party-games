@@ -12,11 +12,11 @@ import { getDecryptoWords } from './model/decryptoContent';
 import type { TeamColor, TeamState } from './types';
 import { DecryptoPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { randomInt, shuffle } from '@/shared/helpers/random';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';

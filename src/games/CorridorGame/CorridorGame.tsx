@@ -10,8 +10,8 @@ import { PLAYER_COLOR, WALLS_INIT } from './constants';
 import { canPlaceWall, canReach, emptyWalls, validMoves } from './helpers';
 import { ActionMode, type Pos, type WallGrid } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { GameKey } from '@/entities/game/types';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';

@@ -15,10 +15,10 @@ import { VerdictPhase } from './phases/VerdictPhase';
 import type { BlitzResult } from './types';
 import { TabooReversePhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';

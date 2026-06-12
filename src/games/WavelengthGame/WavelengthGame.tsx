@@ -10,10 +10,10 @@ import { PassPhase } from './phases/PassPhase';
 import { RevealPhase } from './phases/RevealPhase';
 import { WavelengthPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { randomInt } from '@/shared/helpers/random';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { usePlayerCycle } from '@/shared/hooks/usePlayerCycle';

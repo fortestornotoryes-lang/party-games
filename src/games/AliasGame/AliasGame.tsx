@@ -11,11 +11,11 @@ import { StartPhase } from './phases/StartPhase';
 import type { Team } from './types';
 import { AliasPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/games/AliasGame/constants.ts';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { pickRandom, shuffle } from '@/shared/helpers/random';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';

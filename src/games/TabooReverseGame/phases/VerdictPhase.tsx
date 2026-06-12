@@ -3,7 +3,7 @@ import React from 'react';
 
 import type { TabooCard } from '../content';
 
-import { StopGameButton } from '@/components/StopGameButton';
+import { StopGameButton } from '@/shared/components/StopGameButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 

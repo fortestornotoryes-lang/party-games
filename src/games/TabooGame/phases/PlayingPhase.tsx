@@ -3,7 +3,7 @@ import React from 'react';
 
 import type { TabooClassicCard } from '../content.ts';
 
-import { PlayingHeader } from '@/components/PlayingHeader.tsx';
+import { PlayingHeader } from '@/shared/components/PlayingHeader.tsx';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';

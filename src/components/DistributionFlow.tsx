@@ -2,9 +2,8 @@ import type { LucideIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useState } from 'react';
 
-import { PassPhoneCard } from './PassPhoneCard';
-
 import type { Player } from '@/entities/player/types';
+import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { ProgressDots } from '@/shared/components/ProgressDots';
 
 type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';

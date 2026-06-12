@@ -7,7 +7,7 @@ import { PlayingPhase } from './components/PlayingPhase';
 import { useMemoRiskGameLogic } from './hooks/useMemoRiskGameLogic';
 import { MemoRiskPhase } from './types';
 
-import { GameHeader } from '@/components/GameHeader';
+import { GameHeader } from '@/shared/components/GameHeader';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
