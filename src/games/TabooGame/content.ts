@@ -484,6 +484,11 @@ const HARD: TabooClassicCard[] = [
 
 export const TABOO_CLASSIC_CARDS: readonly TabooClassicCard[] = [...EASY, ...MEDIUM, ...HARD];
 
+/** Все слова колоды данной сложности — общий источник для игры и contentService.getWordStats. */
+export function getTabooClassicWordPool(difficulty: Difficulty): string[] {
+  return TABOO_CLASSIC_CARDS.filter((c) => c.difficulty === difficulty).map((c) => c.word);
+}
+
 /** Pick a random unused card of the given difficulty. */
 export function getNextTabooClassicCard(
   difficulty: Difficulty,

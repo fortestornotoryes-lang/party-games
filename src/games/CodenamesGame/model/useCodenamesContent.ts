@@ -5,16 +5,16 @@ import { shuffle } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
+/** Полный пул слов (пресет + кастомные) — общий источник для игры и contentService.getWordStats. */
+export function getCodenamesWordPool(difficulty: Difficulty): string[] {
+  const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
+  return [...pool, ...storageService.getAllCustomWords(GameKey.Codenames, difficulty)];
+}
+
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useCodenamesContent(difficulty: Difficulty): string[] {
-  const pool = CODENAMES_WORDS[difficulty] || CODENAMES_WORDS.medium;
-  // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
-  const custom = [
-    ...storageService.getCustomWords(GameKey.Codenames),
-    ...storageService.getCustomWordsByKey(`${GameKey.Codenames}_${difficulty}`),
-  ];
+  const all = getCodenamesWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Codenames);
-  const all = [...pool, ...custom];
 
   let available = all.filter((w) => !used.includes(w));
   if (available.length < 25) {

@@ -2398,6 +2398,11 @@ export const TABOO_REVERSE_CARDS: readonly TabooCard[] = [
   },
 ];
 
+/** Все слова колоды данной сложности — общий источник для игры и contentService.getWordStats. */
+export function getTabooReverseWordPool(difficulty: Difficulty): string[] {
+  return TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty).map((c) => c.word);
+}
+
 export function getNextTabooCard(difficulty: Difficulty, usedIds: ReadonlySet<number>): TabooCard {
   const pool = TABOO_REVERSE_CARDS.filter((c) => c.difficulty === difficulty && !usedIds.has(c.id));
   const src =

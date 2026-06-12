@@ -117,6 +117,17 @@ export const storageService = {
     storageService.removeCustomWord(gameId, word);
   },
 
+  // Полный список кастомных слов игры: общие + привязанные к сложности
+  getAllCustomWords: (gameId: string, difficulty: string): string[] => {
+    return [
+      ...storageService.getCustomWords(gameId),
+      ...storageService.getCustomWordsByKey(`${gameId}_${difficulty}`),
+    ];
+  },
+  getAllCustomWordsAsync: (gameId: string, difficulty: string): Promise<string[]> => {
+    return Promise.resolve(storageService.getAllCustomWords(gameId, difficulty));
+  },
+
   // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
   getCustomWordsByKey: (key: string): string[] => {
     const store = safeParseJson<Record<string, string[]>>(

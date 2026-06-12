@@ -2,14 +2,8 @@ import { Trophy } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
 
-import {
-  EASY_QUESTIONS,
-  getGuaranteedAmount,
-  HARD_QUESTIONS,
-  MEDIUM_QUESTIONS,
-  type MillionaireQuestion,
-  simulateAudienceVote,
-} from './content';
+import { getGuaranteedAmount, type MillionaireQuestion, simulateAudienceVote } from './content';
+import { getMillionaireQuestions } from './model/millionaireContent';
 import { BetweenPhase } from './phases/BetweenPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -78,10 +72,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   );
 
   const initQuestionsForPlayer = useCallback(() => {
-    const easy = shuffle([...EASY_QUESTIONS]).slice(0, 5);
-    const medium = shuffle([...MEDIUM_QUESTIONS]).slice(0, 5);
-    const hard = shuffle([...HARD_QUESTIONS]).slice(0, 5);
-    setCurrentQuestions([...easy, ...medium, ...hard]);
+    setCurrentQuestions(getMillionaireQuestions());
   }, []);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 ---
 name: storage-wordlogic
-description: "storageService gameId-ключи, паттерн дублирования логики слов в играх, исправленные difficulty-баги"
+description: "storageService gameId-ключи, архитектура пулов слов (get*Pool + contentService.getWordStats), исправленные difficulty-баги"
 metadata: 
   node_type: memory
   type: project
@@ -9,51 +9,42 @@ metadata:
 
 ## storageService — gameId-ключи
 
-Используемые строки-ключи (должны совпадать везде):
-`'spy'`, `'alias'`, `'just_one'`, `'fake_artist'`, `'wavelength'`, `'telestrations'`, `'codenames'`, `'decrypto'`
+Ключи = значения `GameKey` (`'spy'`, `'alias'`, `'just_one'`, `'fake_artist'`, `'wavelength'`, `'telestrations'`, `'codenames'`, `'decrypto'`, `'truth_or_dare'`, `'taboo'`, `'taboo_reverse'`, `'millionaire'`).
 
-Хранилища: `PLAYERS`, `USED_WORDS`, `CUSTOM_WORDS`, `SETTINGS`, `SETTINGS_{gameId}` (game config).
+Хранилища: `PLAYERS`, `USED_WORDS`, `CUSTOM_WORDS`, `CUSTOM_KEYED`, `SETTINGS`, `SETTINGS_{gameId}` (game config), `HISTORY`.
 
-## Паттерн: все игры используют contentService
+`storageService.getAllCustomWords(gameId, difficulty)` — общие кастомные слова + слова по ключу `{gameId}_{difficulty}`. Исключение — TruthOrDare: только keyed-слова `tod_{truth|dare}_{difficulty}`.
 
-Все игры делегируют выбор слов/контента в `contentService`. Inline-логика выбора слов в игровых компонентах — антипаттерн, миграция завершена.
+## Архитектура пулов слов (рефакторинг 2026-06-12)
 
-| Игра | Метод contentService |
-|------|---------------------|
-| AliasGame | `getAliasWords(difficulty)` → возвращает filtered array, маркировка через `markWordAsUsed` вручную в игре |
-| JustOneGame | `getJustOneWord(difficulty)` → одно слово, авто-маркировка |
-| WavelengthGame | `getWavelengthPair(difficulty)` → пара строк, авто-маркировка |
-| FakeArtistDistribution | `getFakeArtistWord(difficulty)` → `{word, category}`, авто-маркировка |
-| TelestrationsGame | `getTelestrationsWord(difficulty)` → одно слово, авто-маркировка |
-| CodenamesGame | `getCodenamesWords(difficulty)` → 25 слов, авто-маркировка всех 25 |
-| DecryptoGame | `getDecryptoWords(difficulty, count)` → N слов, авто-маркировка |
-| SpyHuntGame | `getSpyHuntLocation(difficulty)` → `LocationInfo {name, roles}`, авто-маркировка |
+Выбор контента живёт в хуках игр `src/games/<Game>/model/use*Content.ts` (вызываются из хендлеров/инициализаторов, не настоящие React-хуки). Каждый такой файл экспортирует **чистую пул-функцию** `get*Pool(difficulty)` — полный пул used-ключей (пресет + кастомные слова), единый источник для игры и статистики:
 
-**How to apply:** при изменении логики слов для любой игры — редактировать метод в `contentService.ts`. Не добавлять inline-логику в компоненты.
+| Игра | Пул-функция | Где |
+|------|-------------|-----|
+| Alias | `getAliasWordPool` | `model/useAliasContent.ts` |
+| JustOne | `getJustOneWordPool` | `model/useJustOneContent.ts` |
+| Wavelength | `getWavelengthPairPool` + `wavelengthPairKey` (used-ключ = `pair.join(' - ')`) | `model/useWavelengthContent.ts` |
+| FakeArtist | `getFakeArtistPool` (→ `{word, category}[]`) | `model/useFakeArtistContent.ts` |
+| Telestrations | `getTelestrationsWordPool` | `model/useTelestrationsContent.ts` |
+| Spy | `getSpyHuntLocationPool` (→ локации с ролями) | `model/useSpyHuntContent.ts` |
+| Codenames | `getCodenamesWordPool` | `model/useCodenamesContent.ts` |
+| Decrypto | `getDecryptoWordPool` | `model/useDecryptoContent.ts` |
+| TruthOrDare | `getTruthOrDarePool(type, d)` | `model/useTruthOrDareContent.ts` |
+| Taboo | `getTabooClassicWordPool` | `content.ts` (кастомных слов нет) |
+| TabooReverse | `getTabooReverseWordPool` | `content.ts` (кастомных слов нет) |
+| Millionaire | `getMillionaireQuestionPool` (difficulty игнорируется — внутренние уровни easy/medium/hard) + `getMillionaireQuestions()` с трекингом used по `q.text` | `model/millionaireContent.ts` |
 
-## Отображение оставшихся слов в UniversalGameSettings (2026-05-16)
+`src/services/contentService.ts` (НЕ в shared — иначе shared зависел бы от games) держит реестр `WORD_POOLS: Partial<Record<GameKey, (d) => readonly string[]>>` и единственный метод `getWordStats(gameId, difficulty)` → `{total, remaining}`. Игры без расходуемого пула (mafia, resistance, corridor, connect_four, bunker, memo_risk) в реестре отсутствуют → `{0, 0}`.
 
-`UniversalGameSettings` показывает кол-во свободных слов прямо в кнопках сложности (sublabel):
+**How to apply:** меняя логику пула игры — править её `get*Pool`; статистика подтянется сама. Новая игра со словами → экспортировать пул-функцию и добавить строку в `WORD_POOLS`. Не дублировать сборку пула в contentService или компонентах.
 
-- **spy**: `"10 мин · 8"` — таймер + кол-во незыгранных локаций в пуле этой сложности
-- **fake_artist**: `"100 сл"` — кол-во незыгранных слов в пуле этой сложности
+## Отображение оставшихся слов
 
-Расчёт происходит инлайн в `UniversalGameSettings.tsx` через `getRemainingWords(d: Difficulty)`:
-```ts
-// spy
-const used = storageService.getUsedWords('spy');
-return LOCATIONS_BY_DIFFICULTY[d].filter(l => !used.includes(l.name)).length;
-
-// fake_artist
-const used = storageService.getUsedWords('fake_artist');
-return FAKE_ARTIST_DATA_BY_DIFFICULTY[d].filter(w => !used.includes(w.word)).length;
-```
-
-Кастомные слова (getCustomWords) в этот счёт **не включены** — только пресет-пул.
-Счётчик обновляется при каждом открытии настроек (нет useState/useEffect — чистый расчёт при рендере).
+- `MainMenu.tsx` — бейдж со статистикой: `contentService.getWordStats(gameId, MEDIUM)`, показывается если `total > 0`.
+- `UniversalGameSettings.tsx` — sublabel кнопок сложности через `getWordStats(currentGameId, d)` (инлайн-расчётов больше нет). У Millionaire/Corridor/ConnectFour выбор сложности скрыт (`hideDifficulty`).
 
 ## Исправленные баги (2026-05-16)
 
-AliasGame, JustOneGame, WavelengthGame игнорировали `difficulty` при выборе слов — брали все сложности вместе. Исправлено: каждая игра теперь фильтрует по `useGameSettings().difficulty`.
+AliasGame, JustOneGame, WavelengthGame игнорировали `difficulty` при выборе слов — брали все сложности вместе. Исправлено: фильтрация по `useGameSettings().difficulty`.
 
-`contentService.getRemainingWordsCount` для `'spy'` использовал `LOCATIONS.length` (все сложности) вместо `LOCATIONS_BY_DIFFICULTY[difficulty].length`. Исправлено.
+Spy-статистика использовала `LOCATIONS.length` (все сложности) вместо пула своей сложности. Исправлено.

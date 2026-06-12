@@ -5,16 +5,16 @@ import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
+/** Полный пул слов (пресет + кастомные) — общий источник для игры и contentService.getWordStats. */
+export function getJustOneWordPool(difficulty: Difficulty): string[] {
+  const pool = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
+  return [...pool, ...storageService.getAllCustomWords(GameKey.JustOne, difficulty)];
+}
+
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useJustOneContent(difficulty: Difficulty): string {
-  const pool = JUST_ONE_DATA_BY_DIFFICULTY[difficulty] || JUST_ONE_DATA_BY_DIFFICULTY.medium;
-  // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
-  const custom = [
-    ...storageService.getCustomWords(GameKey.JustOne),
-    ...storageService.getCustomWordsByKey(`${GameKey.JustOne}_${difficulty}`),
-  ];
+  const all = getJustOneWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.JustOne);
-  const all = [...pool, ...custom];
 
   let available = all.filter((w) => !used.includes(w));
   if (available.length === 0) {

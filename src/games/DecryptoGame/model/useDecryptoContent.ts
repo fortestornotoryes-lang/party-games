@@ -5,16 +5,16 @@ import { shuffle } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
+/** Полный пул слов (пресет + кастомные) — общий источник для игры и contentService.getWordStats. */
+export function getDecryptoWordPool(difficulty: Difficulty): string[] {
+  const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
+  return [...pool, ...storageService.getAllCustomWords(GameKey.Decrypto, difficulty)];
+}
+
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
 export function useDecryptoContent(difficulty: Difficulty, count = 4): string[] {
-  const pool = DECRYPTO_WORDS[difficulty] || DECRYPTO_WORDS.medium;
-  // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
-  const custom = [
-    ...storageService.getCustomWords(GameKey.Decrypto),
-    ...storageService.getCustomWordsByKey(`${GameKey.Decrypto}_${difficulty}`),
-  ];
+  const all = getDecryptoWordPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Decrypto);
-  const all = [...pool, ...custom];
 
   let available = all.filter((w) => !used.includes(w));
   if (available.length < count) {

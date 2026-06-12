@@ -5,14 +5,19 @@ import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
-export function useTruthOrDareContent(type: 'truth' | 'dare', difficulty: Difficulty): string {
+export type TruthOrDareType = 'truth' | 'dare';
+
+/** Полный пул вопросов одного типа (пресет + кастомные) — общий источник для игры и contentService.getWordStats. */
+export function getTruthOrDarePool(type: TruthOrDareType, difficulty: Difficulty): string[] {
   const staticPool =
     type === 'truth' ? TRUTHS_BY_DIFFICULTY[difficulty] : DARES_BY_DIFFICULTY[difficulty];
-  // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
-  const custom = storageService.getCustomWordsByKey(`tod_${type}_${difficulty}`);
+  return [...staticPool, ...storageService.getCustomWordsByKey(`tod_${type}_${difficulty}`)];
+}
+
+// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
+export function useTruthOrDareContent(type: TruthOrDareType, difficulty: Difficulty): string {
+  const all = getTruthOrDarePool(type, difficulty);
   const used = storageService.getUsedWords(GameKey.TruthOrDare);
-  const all = [...staticPool, ...custom];
 
   let available = all.filter((q) => !used.includes(q));
   if (available.length === 0) {

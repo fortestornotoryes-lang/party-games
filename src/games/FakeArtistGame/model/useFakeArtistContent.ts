@@ -1,21 +1,23 @@
-import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '../content';
+import { FAKE_ARTIST_DATA_BY_DIFFICULTY, type FakeArtistCategory } from '../content';
 
 import { GameKey } from '@/entities/game/types';
 import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
+/** Полный пул слов (пресет + кастомные) — общий источник для игры и contentService.getWordStats. */
+export function getFakeArtistPool(difficulty: Difficulty): FakeArtistCategory[] {
+  const custom = storageService.getAllCustomWords(GameKey.FakeArtist, difficulty);
+  return [
+    ...FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty],
+    ...custom.map((w) => ({ word: w, category: 'Своё' })),
+  ];
+}
+
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function useFakeArtistContent(difficulty: Difficulty): { word: string; category: string } {
-  const staticPool = FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty];
-  // TODO: extract to shared/lib — custom-words + used-words deduplication duplicated across game content hooks
-  const custom = [
-    ...storageService.getCustomWords(GameKey.FakeArtist),
-    ...storageService.getCustomWordsByKey(`${GameKey.FakeArtist}_${difficulty}`),
-  ];
+  const pool = getFakeArtistPool(difficulty);
   const used = storageService.getUsedWords(GameKey.FakeArtist);
-
-  const pool = [...staticPool, ...custom.map((w) => ({ word: w, category: 'Своё' }))];
 
   let available = pool.filter((item) => !used.includes(item.word));
   if (available.length === 0) {
