@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-import type { GameTheme } from '@/shared/types';
+import type { Difficulty, GameTheme } from '@/shared/types';
 
 export const GameKey = {
   Spy: 'spy',
@@ -40,6 +40,26 @@ export interface GameMode {
 // Общий для всех игр id режима по умолчанию
 export const CLASSIC_MODE_ID = 'classic';
 
+// ─── Декларативные настройки игры (рендерятся в UniversalGameSettings) ────────
+
+export type GameSettingKey = 'rounds' | 'timerSeconds' | 'countHiddenTraits';
+
+export type GameSettingValue = number | boolean;
+
+export interface GameSettingOption {
+  readonly value: GameSettingValue;
+  readonly label: string;
+  readonly sublabel?: string;
+}
+
+export interface GameSettingDef {
+  readonly key: GameSettingKey;
+  readonly label: string;
+  readonly icon: LucideIcon;
+  readonly color?: GameTheme;
+  readonly options: readonly GameSettingOption[];
+}
+
 export interface GameMetadata {
   readonly id: GameKey;
   readonly title: string;
@@ -50,8 +70,16 @@ export interface GameMetadata {
   readonly description: string;
   readonly players: string;
   readonly minPlayers: number;
+  /** Верхний предел числа игроков (по умолчанию 12 в Setup) */
+  readonly maxPlayers?: number;
   readonly modes?: readonly GameMode[];
   readonly backgroundImage?: string;
+  /** Дополнительные настройки игры (раунды, таймер и т.п.) */
+  readonly settings?: readonly GameSettingDef[];
+  /** false — у игры нет выбора сложности (по умолчанию есть) */
+  readonly hasDifficulty?: boolean;
+  /** Подпись под кнопкой сложности; remainingWords — остаток слов в пуле игры */
+  readonly difficultySublabel?: (d: Difficulty, remainingWords?: number) => string | undefined;
 }
 
 export type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;

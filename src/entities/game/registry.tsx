@@ -2,6 +2,7 @@ import {
   ArrowDown,
   Ban,
   Brain,
+  Clock,
   Crown,
   Flame,
   Grid,
@@ -42,13 +43,24 @@ import TabyImage from '@/assets/tabyImage2.JPG';
 import telestrationsImg from '@/assets/telephone.png';
 import TruthOrDareImage from '@/assets/TruthOrDare.png';
 import WavelengthImage from '@/assets/WavelengthImage.JPG';
+import { ALIAS_DIFFICULTY_CONFIG } from '@/games/AliasGame/constants.ts';
 import { BUNKER_MODES } from '@/games/BunkerGame/constants.ts';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
 import { CONNECT_FOUR_MODES } from '@/games/ConnectFourGame/constants.ts';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
+import { MEMO_RISK_DIFFICULTY_CONFIG } from '@/games/MemoRiskGame/constants.ts';
 import { MEMO_RISK_MODES } from '@/games/MemoRiskGame/types.ts';
-import { SPY_HUNT_MODES } from '@/games/SpyHuntGame/constants.ts';
+import { GAME_DURATION_BY_DIFFICULTY, SPY_HUNT_MODES } from '@/games/SpyHuntGame/constants.ts';
 import { TABOO_REVERSE_MODES } from '@/games/TabooReverseGame/constants.ts';
+import { DIFFICULTY_CONFIG as TELESTRATIONS_DIFFICULTY_CONFIG } from '@/games/TelestrationsGame/constants.ts';
+import type { Difficulty } from '@/shared/types';
+
+// Подписи под кнопками сложности: остаток контента в пуле игры
+const cardsLeft = (_d: Difficulty, remaining?: number) =>
+  remaining !== undefined ? `${remaining} карт` : undefined;
+
+const wordsLeft = (_d: Difficulty, remaining?: number) =>
+  remaining !== undefined ? `${remaining} сл` : undefined;
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
   [GameKey.Spy]: {
@@ -62,6 +74,11 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       'Один игрок не знает локацию. Остальные задают вопросы и отвечают так, чтобы не выдать место, но помочь найти шпиона.',
     players: '3–7',
     minPlayers: 3,
+    maxPlayers: 7,
+    difficultySublabel: (d, remaining) => {
+      const mins = Math.floor(GAME_DURATION_BY_DIFFICULTY[d] / 60);
+      return remaining !== undefined ? `${mins} мин · ${remaining}` : `${mins} мин`;
+    },
     modes: [
       {
         id: SPY_HUNT_MODES.CLASSIC,
@@ -95,7 +112,32 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       'Все рисуют одно и то же, но один игрок не знает слово и пытается подстроиться под остальных, не выдав себя.',
     players: '4–7',
     minPlayers: 4,
+    maxPlayers: 7,
     backgroundImage: FakeArtistImage,
+    difficultySublabel: wordsLeft,
+    settings: [
+      {
+        key: 'rounds',
+        label: 'Раунды',
+        icon: Shield,
+        color: 'green',
+        options: [1, 2, 3].map((r) => ({
+          value: r,
+          label: `${r} ${r === 1 ? 'КРУГ' : 'КРУГА'}`,
+        })),
+      },
+      {
+        key: 'timerSeconds',
+        label: 'Таймер хода',
+        icon: Zap,
+        color: 'green',
+        options: [
+          { value: 0, label: '∞' },
+          { value: 15, label: '15 СЕК' },
+          { value: 30, label: '30 СЕК' },
+        ],
+      },
+    ],
   },
   [GameKey.Bunker]: {
     id: GameKey.Bunker,
@@ -108,7 +150,31 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
         'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
     minPlayers: 4,
+    maxPlayers: 10,
     backgroundImage: hopperImage,
+    settings: [
+      {
+        key: 'rounds',
+        label: 'Раунды раскрытия',
+        icon: Shield,
+        color: 'orange',
+        options: [
+          { value: 3, label: '3 РАУНДА', sublabel: 'быстро' },
+          { value: 5, label: '5 РАУНДОВ', sublabel: 'стандарт' },
+          { value: 7, label: '7 РАУНДОВ', sublabel: 'полная' },
+        ],
+      },
+      {
+        key: 'countHiddenTraits',
+        label: 'Расчёт выживания',
+        icon: Target,
+        color: 'orange',
+        options: [
+          { value: true, label: 'ВСЕ ЧЕРТЫ', sublabel: 'включая скрытые' },
+          { value: false, label: 'РАСКРЫТЫЕ', sublabel: 'только показанные' },
+        ],
+      },
+    ],
     modes: [
       {
         id: BUNKER_MODES.CLASSIC,
@@ -141,6 +207,8 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
         'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
     minPlayers: 2,
+    maxPlayers: 2,
+    hasDifficulty: false,
   },
   [GameKey.MemoRisk]: {
     id: GameKey.MemoRisk,
@@ -154,7 +222,10 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
         'Открывай карты, запоминай поле и собирай целевые фигуры. Наткнёшься на опасную — очки хода сгорят. Рискни ещё раз или забери очки.',
     minPlayers: 2,
     backgroundImage: MemoryImage,
-
+    difficultySublabel: (d) => {
+      const { gridSize, shapeCount } = MEMO_RISK_DIFFICULTY_CONFIG[d];
+      return `${gridSize}×${gridSize} · ${shapeCount} фиг.`;
+    },
     modes: [
       {
         id: MEMO_RISK_MODES.CLASSIC,
@@ -187,6 +258,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
         'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
     minPlayers: 1,
+    hasDifficulty: false,
   },
   [GameKey.TruthOrDare]: {
     id: GameKey.TruthOrDare,
@@ -200,6 +272,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       'Задавайте неудобные вопросы, выполняйте смелые задания и проверяйте, кто готов рискнуть ради веселья.',
     minPlayers: 2,
     backgroundImage: TruthOrDareImage,
+    difficultySublabel: cardsLeft,
   },
   [GameKey.Taboo]: {
     id: GameKey.Taboo,
@@ -212,7 +285,23 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
       'Нужно объяснить слово команде, не используя самые очевидные и запрещённые подсказки с карточки.',
     minPlayers: 4,
+    maxPlayers: 10,
     backgroundImage: TabyImage,
+    difficultySublabel: cardsLeft,
+    settings: [
+      {
+        key: 'timerSeconds',
+        label: 'Время раунда',
+        icon: Clock,
+        color: 'red',
+        options: [
+          { value: 30, label: '30 СЕК' },
+          { value: 45, label: '45 СЕК' },
+          { value: 60, label: '60 СЕК' },
+          { value: 90, label: '90 СЕК' },
+        ],
+      },
+    ],
   },
   [GameKey.TabooReverse]: {
     id: GameKey.TabooReverse,
@@ -225,7 +314,23 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
       'Объясняй слово только через запрещённые ассоциации, но не произноси сам ответ. Чем точнее намёк, тем быстрее угадают.',
     minPlayers: 4,
+    maxPlayers: 10,
     backgroundImage: TabyImage,
+    difficultySublabel: cardsLeft,
+    settings: [
+      {
+        key: 'timerSeconds',
+        label: 'Время раунда',
+        icon: Clock,
+        color: 'orange',
+        options: [
+          { value: 30, label: '30 СЕК' },
+          { value: 45, label: '45 СЕК' },
+          { value: 60, label: '60 СЕК' },
+          { value: 90, label: '90 СЕК' },
+        ],
+      },
+    ],
     modes: [
       {
         id: TABOO_REVERSE_MODES.CLASSIC,
@@ -258,7 +363,13 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
       'Передавайте слова и рисунки по цепочке, а потом смотрите, как исходная идея смешно меняется на каждом ходе.',
     minPlayers: 4,
+    maxPlayers: 12,
     backgroundImage: telestrationsImg,
+    difficultySublabel: (d, remaining) => {
+      const cfg = TELESTRATIONS_DIFFICULTY_CONFIG[d];
+      const timeStr = `${cfg.drawTime}с / ${cfg.guessTime}с`;
+      return remaining !== undefined ? `${timeStr} · ${remaining}` : timeStr;
+    },
   },
   [GameKey.Codenames]: {
     id: GameKey.Codenames,
@@ -270,6 +381,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '4+',
     description: 'Битва двух команд шпионов',
     minPlayers: 4,
+    difficultySublabel: wordsLeft,
     modes: [
       {
         id: CODENAMES_MODES.CLASSIC,
@@ -303,6 +415,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description:
       'Шифруйте числовые коды для своей команды так, чтобы союзники поняли намёк, а соперники не смогли его перехватить.',
     minPlayers: 4,
+    difficultySublabel: wordsLeft,
     modes: [
       {
         id: DECRYPTO_MODES.CLASSIC,
@@ -337,6 +450,10 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       'За ограниченное время объясняйте как можно больше слов, не используя однокоренные формы и прямые подсказки.',
     minPlayers: 4,
     backgroundImage: alieaImage,
+    difficultySublabel: (d, remaining) => {
+      const { roundTime } = ALIAS_DIFFICULTY_CONFIG[d];
+      return remaining !== undefined ? `${roundTime} сек · ${remaining}` : `${roundTime} сек`;
+    },
   },
   [GameKey.Resistance]: {
     id: GameKey.Resistance,
@@ -349,6 +466,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       'Группа сопротивления пытается выполнить миссии, в то время как шпионы пытаются их саботировать.',
     placeholder: 'Игрок',
     minPlayers: 5,
+    maxPlayers: 10,
     backgroundImage: ResistanceImage,
   },
   [GameKey.Wavelength]: {
@@ -362,6 +480,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     description: 'Настройся на одну частоту',
     minPlayers: 2,
     backgroundImage: WavelengthImage,
+    difficultySublabel: wordsLeft,
   },
   [GameKey.JustOne]: {
     id: GameKey.JustOne,
@@ -373,7 +492,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '3–12',
     description: 'Одно слово — одна подсказка',
     minPlayers: 3,
+    maxPlayers: 12,
     backgroundImage: JustOneImage,
+    difficultySublabel: wordsLeft,
   },
   [GameKey.Mafia]: {
     id: GameKey.Mafia,
@@ -385,6 +506,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '6–12',
     description: 'Город засыпает...',
     minPlayers: 6,
+    maxPlayers: 12,
     backgroundImage: mafia2,
   },
   [GameKey.ConnectFour]: {
@@ -397,7 +519,9 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '2',
     description: 'Первым собери 4 фишки в ряд — по горизонтали, вертикали или диагонали.',
     minPlayers: 2,
+    maxPlayers: 2,
     backgroundImage: ConnectFourImage,
+    hasDifficulty: false,
     modes: [
       {
         id: CONNECT_FOUR_MODES.CLASSIC,

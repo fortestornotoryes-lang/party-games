@@ -61,6 +61,7 @@ export function GameSetupRoute() {
       }
       description={config.description}
       minPlayers={config.minPlayers}
+      maxPlayers={config.maxPlayers}
     >
       <UniversalGameSettings
         difficulty={difficulty}
@@ -68,13 +69,13 @@ export function GameSetupRoute() {
         currentGameId={currentGameKey}
         mode={config.modes ? mode : undefined}
         setMode={config.modes ? setMode : undefined}
-        rounds={rounds}
-        setRounds={setRounds}
-        timerSeconds={timerSeconds}
-        setTimerSeconds={setTimerSeconds}
-        countHiddenTraits={countHiddenTraits}
-        setCountHiddenTraits={setCountHiddenTraits}
         modes={config.modes as GameModeOption[]}
+        settingValues={{ rounds, timerSeconds, countHiddenTraits }}
+        onSettingChange={(key, value) => {
+          if (key === 'rounds') setRounds(value as number);
+          else if (key === 'timerSeconds') setTimerSeconds(value as number);
+          else setCountHiddenTraits(value as boolean);
+        }}
       />
     </Setup>
   );
