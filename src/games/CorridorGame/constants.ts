@@ -7,4 +7,4 @@ export const WALLS_INIT = 10;
 
 export const P1_COLOR = '#14b8a6'; // teal  – moves bottom → top
 export const P2_COLOR = '#ff8a1f'; // orange – moves top → bottom
-export const PLAYER_COLOR: Record<1 | 2, string> = {1: P1_COLOR, 2: P2_COLOR};
+export const PLAYER_COLOR: Record<1 | 2, string> = { 1: P1_COLOR, 2: P2_COLOR };

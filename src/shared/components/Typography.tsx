@@ -12,64 +12,64 @@ import React from 'react';
  * dimmer — white/15 (декоративные метки)
  */
 export type TypoColor =
-    | 'white'
-    | 'body'
-    | 'muted'
-    | 'faint'
-    | 'dimmer'
-    | 'red'
-    | 'blue'
-    | 'green'
-    | 'sky'
-    | 'orange'
-    | 'yellow'
-    | 'purple';
+  | 'white'
+  | 'body'
+  | 'muted'
+  | 'faint'
+  | 'dimmer'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'sky'
+  | 'orange'
+  | 'yellow'
+  | 'purple';
 
 export type AsElement = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div';
 
 export type TypoAlign = 'left' | 'center' | 'right';
 
 const COLOR: Record<TypoColor, string> = {
-    white: 'text-white',
-    body: 'text-white/80',
-    muted: 'text-white/50',
-    faint: 'text-white/25',
-    dimmer: 'text-white/15',
-    red: 'text-premium-red',
-    blue: 'text-premium-blue',
-    green: 'text-premium-green',
-    sky: 'text-premium-sky',
-    orange: 'text-premium-orange',
-    yellow: 'text-premium-yellow',
-    purple: 'text-premium-purple',
+  white: 'text-white',
+  body: 'text-white/80',
+  muted: 'text-white/50',
+  faint: 'text-white/25',
+  dimmer: 'text-white/15',
+  red: 'text-premium-red',
+  blue: 'text-premium-blue',
+  green: 'text-premium-green',
+  sky: 'text-premium-sky',
+  orange: 'text-premium-orange',
+  yellow: 'text-premium-yellow',
+  purple: 'text-premium-purple',
 };
 
 /** textShadow-глоу для цветного текста */
 const GLOW: Partial<Record<TypoColor, string>> = {
-    white: '0 0 30px rgba(255,255,255,0.40)',
-    red: '0 0 30px rgba(255,46,77,0.55)',
-    blue: '0 0 30px rgba(63,123,255,0.55)',
-    green: '0 0 30px rgba(0,216,138,0.55)',
-    sky: '0 0 30px rgba(31,182,255,0.55)',
-    orange: '0 0 30px rgba(255,138,31,0.55)',
-    yellow: '0 0 30px rgba(255,204,31,0.55)',
-    purple: '0 0 30px rgba(199,123,255,0.55)',
+  white: '0 0 30px rgba(255,255,255,0.40)',
+  red: '0 0 30px rgba(255,46,77,0.55)',
+  blue: '0 0 30px rgba(63,123,255,0.55)',
+  green: '0 0 30px rgba(0,216,138,0.55)',
+  sky: '0 0 30px rgba(31,182,255,0.55)',
+  orange: '0 0 30px rgba(255,138,31,0.55)',
+  yellow: '0 0 30px rgba(255,204,31,0.55)',
+  purple: '0 0 30px rgba(199,123,255,0.55)',
 };
 
 const ALIGN: Record<TypoAlign, string> = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right',
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
 };
 
 // ─── Базовые пропсы ──────────────────────────────────────────────────────────
 
 interface BaseProps {
-    color?: TypoColor;
-    align?: TypoAlign;
-    as?: AsElement;
-    children: React.ReactNode;
-    className?: string;
+  color?: TypoColor;
+  align?: TypoAlign;
+  as?: AsElement;
+  children: React.ReactNode;
+  className?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -92,42 +92,42 @@ interface BaseProps {
  * @prop glow — добавляет textShadow-свечение цветом color
  */
 const Display = ({
-                     size = 'md',
-                     color = 'body',
-                     align,
-                     glow,
-                     as: Tag = 'div',
-                     children,
-                     className,
-                 }: BaseProps & {
-    size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-    glow?: boolean;
+  size = 'md',
+  color = 'body',
+  align,
+  glow,
+  as: Tag = 'div',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  glow?: boolean;
 }) => {
-    const SIZES = {
-        sm: 'text-4xl',
-        md: 'text-5xl',
-        lg: 'text-6xl',
-        xl: 'text-display-xl',
-        '2xl': 'text-display-2xl',
-    } as const;
+  const SIZES = {
+    sm: 'text-4xl',
+    md: 'text-5xl',
+    lg: 'text-6xl',
+    xl: 'text-display-xl',
+    '2xl': 'text-display-2xl',
+  } as const;
 
-    const glowValue = color ? GLOW[color] : undefined;
-    const style = glow && glowValue ? {textShadow: glowValue} : undefined;
+  const glowValue = color ? GLOW[color] : undefined;
+  const style = glow && glowValue ? { textShadow: glowValue } : undefined;
 
-    return (
-        <Tag
-            className={[
-                'font-black italic uppercase tracking-tighter leading-none',
-                SIZES[size],
-                COLOR[color] ?? '',
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-            style={style}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'leading-none font-black tracking-tighter uppercase italic',
+        SIZES[size],
+        COLOR[color] ?? '',
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+      style={style}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -147,35 +147,35 @@ const Display = ({
  * | xl   | 36px  |
  */
 const Title = ({
-                   size = 'md',
-                   color = 'body',
-                   align,
-                   as: Tag = 'h1',
-                   children,
-                   className,
-               }: BaseProps & {
-    size?: 'sm' | 'md' | 'lg' | 'xl';
+  size = 'md',
+  color = 'body',
+  align,
+  as: Tag = 'h1',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }) => {
-    const SIZES = {
-        sm: 'text-xl',
-        md: 'text-heading leading-[0.75]',
-        lg: 'text-3xl',
-        xl: 'text-4xl',
-    } as const;
+  const SIZES = {
+    sm: 'text-xl',
+    md: 'text-heading leading-[0.75]',
+    lg: 'text-3xl',
+    xl: 'text-4xl',
+  } as const;
 
-    return (
-        <Tag
-            className={[
-                'font-black uppercase italic tracking-tighter',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'font-black tracking-tighter uppercase italic',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -195,35 +195,35 @@ const Title = ({
  * | lg   | text-3xl  |
  */
 const Heading = ({
-                     size = 'md',
-                     color = 'body',
-                     align,
-                     as: Tag = 'h2',
-                     children,
-                     className,
-                 }: BaseProps & {
-    size?: 'xs' | 'sm' | 'md' | 'lg';
+  size = 'md',
+  color = 'body',
+  align,
+  as: Tag = 'h2',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 }) => {
-    const SIZES = {
-        xs: 'text-base',
-        sm: 'text-lg',
-        md: 'text-2xl',
-        lg: 'text-3xl',
-    } as const;
+  const SIZES = {
+    xs: 'text-base',
+    sm: 'text-lg',
+    md: 'text-2xl',
+    lg: 'text-3xl',
+  } as const;
 
-    return (
-        <Tag
-            className={[
-                'font-black italic uppercase tracking-tighter',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'font-black tracking-tighter uppercase italic',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -245,34 +245,34 @@ const Heading = ({
  * Для акцентных меток через opacity: `className="opacity-50"`
  */
 const Label = ({
-                   size = 'xs',
-                   color = 'muted',
-                   align,
-                   as: Tag = 'p',
-                   children,
-                   className,
-               }: BaseProps & {
-    size?: 'xs' | 'sm' | 'md';
+  size = 'xs',
+  color = 'muted',
+  align,
+  as: Tag = 'p',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'xs' | 'sm' | 'md';
 }) => {
-    const SIZES = {
-        xs: 'text-tag tracking-[0.4em]',
-        sm: 'text-label tracking-[0.3em]',
-        md: 'text-xs tracking-[0.2em]',
-    } as const;
+  const SIZES = {
+    xs: 'text-tag tracking-[0.4em]',
+    sm: 'text-label tracking-[0.3em]',
+    md: 'text-xs tracking-[0.2em]',
+  } as const;
 
-    return (
-        <Tag
-            className={[
-                'font-black uppercase',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'font-black uppercase',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -291,34 +291,34 @@ const Label = ({
  * Цвет по умолчанию: body (white/80)
  */
 const Body = ({
-                  size = 'sm',
-                  color = 'body',
-                  align,
-                  as: Tag = 'p',
-                  children,
-                  className,
-              }: BaseProps & {
-    size?: 'xs' | 'sm' | 'base';
+  size = 'sm',
+  color = 'body',
+  align,
+  as: Tag = 'p',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'xs' | 'sm' | 'base';
 }) => {
-    const SIZES = {
-        xs: 'text-xs',
-        sm: 'text-sm',
-        base: 'text-base',
-    } as const;
+  const SIZES = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    base: 'text-base',
+  } as const;
 
-    return (
-        <Tag
-            className={[
-                'leading-relaxed font-medium',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'leading-relaxed font-medium',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -337,33 +337,33 @@ const Body = ({
  * Для цветных меток с opacity: `color="red" className="opacity-50"`
  */
 const Caption = ({
-                     size = 'sm',
-                     color = 'faint',
-                     align,
-                     as: Tag = 'p',
-                     children,
-                     className,
-                 }: BaseProps & {
-    size?: 'xs' | 'sm';
+  size = 'sm',
+  color = 'faint',
+  align,
+  as: Tag = 'p',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'xs' | 'sm';
 }) => {
-    const SIZES = {
-        xs: 'text-micro tracking-[0.35em]',
-        sm: 'text-micro tracking-[0.3em]',
-    } as const;
+  const SIZES = {
+    xs: 'text-micro tracking-[0.35em]',
+    sm: 'text-micro tracking-[0.3em]',
+  } as const;
 
-    return (
-        <Tag
-            className={[
-                'font-black uppercase',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'font-black uppercase',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -385,57 +385,57 @@ const Caption = ({
  * @prop glow — добавляет textShadow-свечение
  */
 const Score = ({
-                   size = 'md',
-                   color = 'white',
-                   align,
-                   glow,
-                   as: Tag = 'span',
-                   children,
-                   className,
-               }: BaseProps & {
-    size?: 'sm' | 'md' | 'lg' | 'xl';
-    glow?: boolean;
+  size = 'md',
+  color = 'white',
+  align,
+  glow,
+  as: Tag = 'span',
+  children,
+  className,
+}: BaseProps & {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  glow?: boolean;
 }) => {
-    const SIZES = {
-        sm: 'text-3xl',
-        md: 'text-4xl',
-        lg: 'text-5xl',
-        xl: 'text-6xl',
-    } as const;
+  const SIZES = {
+    sm: 'text-3xl',
+    md: 'text-4xl',
+    lg: 'text-5xl',
+    xl: 'text-6xl',
+  } as const;
 
-    const style = glow && GLOW[color] ? {textShadow: GLOW[color]} : undefined;
+  const style = glow && GLOW[color] ? { textShadow: GLOW[color] } : undefined;
 
-    return (
-        <Tag
-            className={[
-                'font-black italic tabular-nums',
-                SIZES[size],
-                COLOR[color],
-                align ? ALIGN[align] : '',
-                className,
-            ].join(' ')}
-            style={style}
-        >
-            {children}
-        </Tag>
-    );
+  return (
+    <Tag
+      className={[
+        'font-black italic tabular-nums',
+        SIZES[size],
+        COLOR[color],
+        align ? ALIGN[align] : '',
+        className,
+      ].join(' ')}
+      style={style}
+    >
+      {children}
+    </Tag>
+  );
 };
 
 // ─── Экспорт ─────────────────────────────────────────────────────────────────
 
 export const Typography = {
-    /** Hero-текст: имена, роли, победители. font-black italic uppercase */
-    Display,
-    /** Заголовок экрана / секции. h1-уровень */
-    Title,
-    /** Подзаголовок / название блока. h2–h3 уровень */
-    Heading,
-    /** Мелкий uppercase-тег: роли, метки, категории */
-    Label,
-    /** Читаемый текст: инструкции, описания */
-    Body,
-    /** Минимальный хинт: подсказки, вторичные метки */
-    Caption,
-    /** Числовой дисплей: очки, таймер, счёт. tabular-nums */
-    Score,
+  /** Hero-текст: имена, роли, победители. font-black italic uppercase */
+  Display,
+  /** Заголовок экрана / секции. h1-уровень */
+  Title,
+  /** Подзаголовок / название блока. h2–h3 уровень */
+  Heading,
+  /** Мелкий uppercase-тег: роли, метки, категории */
+  Label,
+  /** Читаемый текст: инструкции, описания */
+  Body,
+  /** Минимальный хинт: подсказки, вторичные метки */
+  Caption,
+  /** Числовой дисплей: очки, таймер, счёт. tabular-nums */
+  Score,
 };

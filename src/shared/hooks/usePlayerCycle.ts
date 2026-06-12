@@ -1,5 +1,5 @@
-import {useCallback, useState} from 'react';
-import type {Dispatch, SetStateAction} from 'react';
+import { useCallback, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 
 /**
  * Хук для циклического перебора игроков/команд.
@@ -18,21 +18,21 @@ import type {Dispatch, SetStateAction} from 'react';
  * const { current, next } = usePlayerCycle(playerNames, idxState);
  */
 export const usePlayerCycle = <T>(
-    items: T[],
-    state?: [number, Dispatch<SetStateAction<number>>]
+  items: T[],
+  state?: [number, Dispatch<SetStateAction<number>>]
 ) => {
-    const internal = useState(0);
-    const [idx, setIdx] = state ?? internal;
+  const internal = useState(0);
+  const [idx, setIdx] = state ?? internal;
 
-    const current = items[idx];
-    const isLast = idx === items.length - 1;
+  const current = items[idx];
+  const isLast = idx === items.length - 1;
 
-    const next = useCallback(() => {
-        setIdx((i) => (i + 1) % items.length);
-    }, [items.length, setIdx]);
-    const reset = useCallback(() => {
-        setIdx(0);
-    }, [setIdx]);
+  const next = useCallback(() => {
+    setIdx((i) => (i + 1) % items.length);
+  }, [items.length, setIdx]);
+  const reset = useCallback(() => {
+    setIdx(0);
+  }, [setIdx]);
 
-    return {current, idx, isLast, next, reset};
+  return { current, idx, isLast, next, reset };
 };

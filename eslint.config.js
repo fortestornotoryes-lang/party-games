@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import react from 'eslint-plugin-react'
 import importPlugin from 'eslint-plugin-import-x'
+import eslintConfigPrettier from 'eslint-config-prettier'
 import { fixupPluginRules } from '@eslint/compat' // Official compatibility utility
 
 export default tseslint.config(
@@ -71,4 +72,5 @@ export default tseslint.config(
             'eqeqeq': ['warn', 'always', { null: 'ignore' }],
         },
     },
+    eslintConfigPrettier
 )

@@ -1,55 +1,53 @@
-import {Moon, Shield, Sun, Users} from 'lucide-react';
-import {motion} from 'motion/react';
+import { Moon, Shield, Sun, Users } from 'lucide-react';
+import { motion } from 'motion/react';
 import React from 'react';
 
-import {GAMES_REGISTRY} from '@/entities/game/registry';
-import {useTranslation} from '@/shared/i18n';
-import {NS} from '@/shared/i18n/keys';
+import { GAMES_REGISTRY } from '@/entities/game/registry';
+import { useTranslation } from '@/shared/i18n';
+import { NS } from '@/shared/i18n/keys';
 
 interface Props {
-    playerNames: string[];
-    onBack: () => void;
+  playerNames: string[];
+  onBack: () => void;
 }
 
-export default function MafiaGame({playerNames, onBack}: Props) {
-    const {t} = useTranslation();
+export default function MafiaGame({ playerNames, onBack }: Props) {
+  const { t } = useTranslation();
 
-    return (
-        <div className="min-h-screen p-6 flex flex-col items-center justify-center text-center space-y-8">
-            <motion.div
-                initial={{scale: 0.9, opacity: 0}}
-                animate={{scale: 1, opacity: 1}}
-                className="w-20 h-20 rounded-premium-lg bg-premium-orange/20 border border-premium-orange/40 flex items-center justify-center text-premium-orange shadow-2xl"
-            >
-                <Users className="w-10 h-10"/>
-            </motion.div>
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center space-y-8 p-6 text-center">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="rounded-premium-lg bg-premium-orange/20 border-premium-orange/40 text-premium-orange flex h-20 w-20 items-center justify-center border shadow-2xl"
+      >
+        <Users className="h-10 w-10" />
+      </motion.div>
 
-            <div className="space-y-2">
-                <h2 className="text-3xl font-black italic uppercase tracking-tighter">
-                    {GAMES_REGISTRY.mafia.title}
-                </h2>
-                <p className="text-white/30 uppercase tracking-[0.2em] text-tag font-bold">
-                    {t(`${NS.MAFIA}.cityFallsAsleep`)}
-                </p>
-            </div>
+      <div className="space-y-2">
+        <h2 className="text-3xl font-black tracking-tighter uppercase italic">
+          {GAMES_REGISTRY.mafia.title}
+        </h2>
+        <p className="text-tag font-bold tracking-[0.2em] text-white/30 uppercase">
+          {t(`${NS.MAFIA}.cityFallsAsleep`)}
+        </p>
+      </div>
 
-            <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-premium-lg p-8 space-y-6">
-                <div className="flex justify-center gap-4">
-                    <Sun className="w-6 h-6 text-premium-yellow"/>
-                    <Moon className="w-6 h-6 text-premium-purple"/>
-                    <Shield className="w-6 h-6 text-premium-blue"/>
-                </div>
-                <p className="text-white/40 text-sm leading-relaxed">
-                    {t(`${NS.MAFIA}.inDevelopment`)}
-                </p>
-            </div>
-
-            <button
-                onClick={onBack}
-                className="px-10 py-4 bg-white text-black rounded-premium-md font-black uppercase tracking-widest active:scale-95 transition-all shadow-xl"
-            >
-                {t(`${NS.MAFIA}.goBack`)}
-            </button>
+      <div className="rounded-premium-lg w-full max-w-sm space-y-6 border border-white/10 bg-white/5 p-8">
+        <div className="flex justify-center gap-4">
+          <Sun className="text-premium-yellow h-6 w-6" />
+          <Moon className="text-premium-purple h-6 w-6" />
+          <Shield className="text-premium-blue h-6 w-6" />
         </div>
-    );
+        <p className="text-sm leading-relaxed text-white/40">{t(`${NS.MAFIA}.inDevelopment`)}</p>
+      </div>
+
+      <button
+        onClick={onBack}
+        className="rounded-premium-md bg-white px-10 py-4 font-black tracking-widest text-black uppercase shadow-xl transition-all active:scale-95"
+      >
+        {t(`${NS.MAFIA}.goBack`)}
+      </button>
+    </div>
+  );
 }

@@ -1,126 +1,125 @@
-import {ChevronRight, Sparkles} from 'lucide-react';
-import {motion} from 'motion/react';
+import { ChevronRight, Sparkles } from 'lucide-react';
+import { motion } from 'motion/react';
 import React from 'react';
 
-import {GameCard} from '@/shared/components/GameCard';
-import {PrimaryButton} from "@/shared/components/PrimaryButton";
-import {useTranslation} from '@/shared/i18n';
-import {NS} from '@/shared/i18n/keys';
+import { GameCard } from '@/shared/components/GameCard';
+import { PrimaryButton } from '@/shared/components/PrimaryButton';
+import { useTranslation } from '@/shared/i18n';
+import { NS } from '@/shared/i18n/keys';
 
 interface CluePhaseProps {
-    psychic: string;
-    currentPair: string[];
-    targetValue: number;
-    onDone: () => void;
+  psychic: string;
+  currentPair: string[];
+  targetValue: number;
+  onDone: () => void;
 }
 
 export const CluePhase: React.FC<CluePhaseProps> = ({
-                                                        psychic,
-                                                        currentPair,
-                                                        targetValue,
-                                                        onDone,
-                                                    }) => {
-    const {t} = useTranslation();
+  psychic,
+  currentPair,
+  targetValue,
+  onDone,
+}) => {
+  const { t } = useTranslation();
 
-    return (
-        <motion.div
-            key="clue"
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: -20}}
-            transition={{type: 'spring', damping: 25, stiffness: 200}}
-            className="h-full flex flex-col space-y-6"
-        >
-            {/* Psychic identity */}
-            <div className="text-center space-y-2">
-                <div className="text-tag font-black uppercase tracking-[0.4em] text-white/35">
-                    {t(`${NS.WAVELENGTH}.currentPsychic`)}
-                </div>
-                <h3 className="text-4xl font-black italic text-premium-purple tracking-tighter uppercase">
-                    {psychic}
-                </h3>
-                <p className="text-sm text-white/50 font-medium max-w-xs mx-auto">
-                    {t(`${NS.WAVELENGTH}.onlyYouSeeTarget`)}
-                </p>
+  return (
+    <motion.div
+      key="clue"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      className="flex h-full flex-col space-y-6"
+    >
+      {/* Psychic identity */}
+      <div className="space-y-2 text-center">
+        <div className="text-tag font-black tracking-[0.4em] text-white/35 uppercase">
+          {t(`${NS.WAVELENGTH}.currentPsychic`)}
+        </div>
+        <h3 className="text-premium-purple text-4xl font-black tracking-tighter uppercase italic">
+          {psychic}
+        </h3>
+        <p className="mx-auto max-w-xs text-sm font-medium text-white/50">
+          {t(`${NS.WAVELENGTH}.onlyYouSeeTarget`)}
+        </p>
+      </div>
+
+      {/* Scale card */}
+      <div className="flex flex-1 flex-col items-center justify-center space-y-6">
+        <GameCard className="relative w-full overflow-hidden">
+          {/* Top accent line */}
+          <div
+            className="absolute top-0 right-0 left-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, rgba(199,123,255,0.4) 50%, transparent 100%)',
+            }}
+          />
+
+          <div className="pointer-events-none relative w-full px-8 py-8">
+            {/* Scale track */}
+            <div className="relative h-5 w-full overflow-visible rounded-full border border-white/8 bg-black/40">
+              {/* Purple target zone */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                style={{ left: `${Math.max(0, targetValue - 5)}%`, width: '10%' }}
+                className="bg-premium-purple/70 rounded-premium-xs absolute top-0 h-full"
+                aria-hidden="true"
+              >
+                {/* Glow */}
+                <div
+                  className="rounded-premium-xs absolute inset-0"
+                  style={{ boxShadow: '0 0 18px 4px rgba(199,123,255,0.45)' }}
+                />
+              </motion.div>
+
+              {/* Center tick */}
+              <motion.div
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ delay: 0.45, duration: 0.25 }}
+                style={{ left: `${targetValue}%` }}
+                className="absolute top-1/2 z-10 h-8 w-0.5 -translate-x-1/2 -translate-y-1/2 bg-white/70"
+              />
             </div>
 
-            {/* Scale card */}
-            <div className="flex-1 flex flex-col items-center justify-center space-y-6">
-                <GameCard className="relative w-full overflow-hidden">
-                    {/* Top accent line */}
-                    <div
-                        className="absolute top-0 left-0 right-0 h-px"
-                        style={{
-                            background:
-                                'linear-gradient(90deg, transparent 0%, rgba(199,123,255,0.4) 50%, transparent 100%)',
-                        }}
-                    />
+            {/* Pair labels */}
+            <div className="mt-3 flex justify-between">
+              <span className="text-tag text-premium-purple/80 font-black tracking-[0.2em] uppercase">
+                {currentPair[0]}
+              </span>
+              <span className="text-tag text-premium-purple/80 font-black tracking-[0.2em] uppercase">
+                {currentPair[1]}
+              </span>
+            </div>
+          </div>
+        </GameCard>
 
-                    <div className="relative w-full px-8 py-8 pointer-events-none">
-                        {/* Scale track */}
-                        <div
-                            className="h-5 w-full bg-black/40 rounded-full relative overflow-visible border border-white/8">
-                            {/* Purple target zone */}
-                            <motion.div
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                transition={{delay: 0.3, duration: 0.4}}
-                                style={{left: `${Math.max(0, targetValue - 5)}%`, width: '10%'}}
-                                className="absolute top-0 h-full bg-premium-purple/70 rounded-premium-xs"
-                                aria-hidden="true"
-                            >
-                                {/* Glow */}
-                                <div
-                                    className="absolute inset-0 rounded-premium-xs"
-                                    style={{boxShadow: '0 0 18px 4px rgba(199,123,255,0.45)'}}
-                                />
-                            </motion.div>
+        {/* Clue instruction */}
+        <div className="w-full space-y-3 text-center">
+          <div className="flex items-center justify-center gap-2 text-sm font-medium text-white/35">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>{t(`${NS.WAVELENGTH}.giveClueHint`)}</span>
+          </div>
 
-                            {/* Center tick */}
-                            <motion.div
-                                initial={{scaleY: 0}}
-                                animate={{scaleY: 1}}
-                                transition={{delay: 0.45, duration: 0.25}}
-                                style={{left: `${targetValue}%`}}
-                                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-0.5 h-8 bg-white/70 z-10"
-                            />
-                        </div>
-
-                        {/* Pair labels */}
-                        <div className="flex justify-between mt-3">
-            <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple/80">
+          {/* Pair display */}
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-base font-black tracking-tight text-white/50 uppercase italic">
               {currentPair[0]}
             </span>
-                            <span className="text-tag font-black uppercase tracking-[0.2em] text-premium-purple/80">
+            <ChevronRight className="text-premium-purple h-4 w-4" />
+            <span className="text-base font-black tracking-tight text-white uppercase italic">
               {currentPair[1]}
             </span>
-                        </div>
-                    </div>
-                </GameCard>
+          </div>
+        </div>
+      </div>
 
-                {/* Clue instruction */}
-                <div className="space-y-3 text-center w-full">
-                    <div className="flex items-center justify-center gap-2 text-white/35 text-sm font-medium">
-                        <Sparkles className="w-3.5 h-3.5"/>
-                        <span>{t(`${NS.WAVELENGTH}.giveClueHint`)}</span>
-                    </div>
-
-                    {/* Pair display */}
-                    <div className="flex items-center justify-center gap-2">
-          <span className="text-base font-black italic uppercase tracking-tight text-white/50">
-            {currentPair[0]}
-          </span>
-                        <ChevronRight className="w-4 h-4 text-premium-purple"/>
-                        <span className="text-base font-black italic uppercase tracking-tight text-white">
-            {currentPair[1]}
-          </span>
-                    </div>
-                </div>
-            </div>
-
-            <PrimaryButton onClick={onDone} variant="purple">
-                {t(`${NS.WAVELENGTH}.iGaveClue`)}
-            </PrimaryButton>
-        </motion.div>
-    );
+      <PrimaryButton onClick={onDone} variant="purple">
+        {t(`${NS.WAVELENGTH}.iGaveClue`)}
+      </PrimaryButton>
+    </motion.div>
+  );
 };
