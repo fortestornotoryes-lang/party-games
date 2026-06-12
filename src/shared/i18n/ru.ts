@@ -349,7 +349,7 @@ export const ru: Translations = {
     confirm: 'ПОДТВЕРДИТЬ',
     nextPlayer: 'Следующий игрок',
     passPhoneInstruction: 'Передайте телефон этому игроку и нажмите кнопку ниже',
-    readyToDraw: 'Я ГОТОВ РИСОВАТЬ',
+    readyToDraw: 'Я готов рисовать',
     voteSimultaneously: 'Голосуйте одновременно',
     revealImpostor: 'Раскрыть самозванца',
     mainMenu: 'В ГЛАВНОЕ МЕНЮ',
