@@ -1,4 +1,5 @@
-import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '@/constants/codenamesContent';
+import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { shuffle } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';

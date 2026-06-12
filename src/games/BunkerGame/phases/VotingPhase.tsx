@@ -166,12 +166,12 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                         background: isSelected ? 'rgba(255,46,77,0.8)' : 'transparent',
                       }}
                     >
-                      {!!isSelected && <Check className="h-3 w-3 text-white" />}
+                      {isSelected && <Check className="h-3 w-3 text-white" />}
                     </div>
                     <span className="text-lg leading-none font-black text-white uppercase italic">
                       {char.playerName}
                     </span>
-                    {!!isSelected && (
+                    {isSelected && (
                       <div className="flex items-center gap-1">
                         <UserX className="text-premium-red h-3.5 w-3.5" />
                         <span className="text-tag text-premium-red font-black tracking-wider uppercase">

@@ -1,4 +1,5 @@
-import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '@/constants/fakeArtistContent';
+import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';

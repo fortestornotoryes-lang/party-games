@@ -22,7 +22,7 @@ metadata:
 
 | Файл | Описание |
 |------|---------|
-| `src/constants/truthOrDareContent.ts` | Массивы правд и действий по сложностям (easy/medium/hard) |
+| `src/games/TruthOrDareGame/content.ts` | Массивы правд и действий по сложностям (easy/medium/hard) |
 | `src/games/TruthOrDareGame/types.ts` | `TruthOrDarePhase` enum |
 | `src/games/TruthOrDareGame/TruthOrDareGame.tsx` | Основной компонент |
 
@@ -34,7 +34,7 @@ metadata:
 | `src/types/games.ts` | `TruthOrDare = 'truth_or_dare'` в `GameKey` |
 | `src/registry/GameRegistry.tsx` | lazy import + запись в `GAMES_REGISTRY` + экспорт |
 | `src/App.tsx` | `case GameStatus.TruthOrDarePlaying` в `renderGame()` |
-| `src/constants/instructions.ts` | Инструкции для `GameKey.TruthOrDare` |
+| `src/entities/game/instructions.ts` | Инструкции для `GameKey.TruthOrDare` |
 
 ## Игровой поток (фазы)
 

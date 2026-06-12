@@ -1,4 +1,5 @@
-import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '@/constants/telestrationsContent';
+import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';

@@ -1,5 +1,6 @@
-import type { LocationInfo } from '@/constants/spyHuntContent.ts';
-import { LOCATIONS_DATA } from '@/constants/spyHuntContent.ts';
+import type { LocationInfo } from './content.ts';
+import { LOCATIONS_DATA } from './content.ts';
+
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
 export const SPY_HUNT_ROLE_IDS = {

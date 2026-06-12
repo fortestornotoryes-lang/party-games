@@ -4,6 +4,8 @@ import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
 
 
+import type { TabooClassicCard } from './content';
+import { getNextTabooClassicCard, TABOO_CLASSIC_CARDS } from './content';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
@@ -11,8 +13,6 @@ import { VerdictPhase } from './phases/VerdictPhase';
 import { TabooPhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
-import type { TabooClassicCard } from '@/constants/tabooContent';
-import { getNextTabooClassicCard, TABOO_CLASSIC_CARDS } from '@/constants/tabooContent';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';

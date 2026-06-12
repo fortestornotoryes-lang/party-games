@@ -2,6 +2,14 @@ import { Trophy } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
 
+import {
+  EASY_QUESTIONS,
+  getGuaranteedAmount,
+  HARD_QUESTIONS,
+  MEDIUM_QUESTIONS,
+  type MillionaireQuestion,
+  simulateAudienceVote,
+} from './content';
 import { BetweenPhase } from './phases/BetweenPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -10,14 +18,6 @@ import { WinPhase } from './phases/WinPhase';
 import { MillionairePhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
-import {
-  EASY_QUESTIONS,
-  getGuaranteedAmount,
-  HARD_QUESTIONS,
-  MEDIUM_QUESTIONS,
-  type MillionaireQuestion,
-  simulateAudienceVote,
-} from '@/constants/millionaireContent';
 import { GameKey } from '@/entities/game/types';
 import { PRIZE_LADDER } from '@/games/MillionaireGame/constants.ts';
 import { shuffle } from '@/shared/helpers/random';

@@ -42,13 +42,13 @@ import TabyImage from '@/assets/tabyImage2.JPG';
 import telestrationsImg from '@/assets/telephone.png';
 import TruthOrDareImage from '@/assets/TruthOrDare.png';
 import WavelengthImage from '@/assets/WavelengthImage.JPG';
-import { TABOO_REVERSE_MODES } from '@/constants/tabooReverseContent';
 import { BUNKER_MODES } from '@/games/BunkerGame/constants.ts';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
 import { CONNECT_FOUR_MODES } from '@/games/ConnectFourGame/constants.ts';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
 import { MEMO_RISK_MODES } from '@/games/MemoRiskGame/types.ts';
 import { SPY_HUNT_MODES } from '@/games/SpyHuntGame/constants.ts';
+import { TABOO_REVERSE_MODES } from '@/games/TabooReverseGame/constants.ts';
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
   [GameKey.Spy]: {

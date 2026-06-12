@@ -1,4 +1,4 @@
-import { PRIZE_LADDER } from '@/games/MillionaireGame/constants.ts';
+import { PRIZE_LADDER } from './constants.ts';
 
 export interface MillionaireQuestion {
   text: string;

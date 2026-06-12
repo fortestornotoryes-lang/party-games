@@ -27,7 +27,7 @@ npm run build    # Сборка в dist/
 
 ## Структура папок
 
-Идёт миграция на FSD (июнь 2026). Этапы 1 (shared), 2 (entities) и 3 (app + pages) выполнены. Импорты — через alias `@/...` (alias `@/* → src/*` в tsconfig+vite), баррелей нет — импорты напрямую в модуль. Конвенции слайсов: сегмент `components` (не `ui`), `types.ts` в корне слайса. Слои `features/`, `widget/` пока пустые заглушки.
+Идёт миграция на FSD (июнь 2026). Этапы 1 (shared), 2 (entities), 3 (app + pages) и 4 (constants → слайсы игр) выполнены. Импорты — через alias `@/...` (alias `@/* → src/*` в tsconfig+vite), баррелей нет — импорты напрямую в модуль. Конвенции слайсов: сегмент `components` (не `ui`), `types.ts` в корне слайса; в играх объёмный контент (слова/карточки/вопросы) — `content.ts` в корне слайса, конфиг, нужный снаружи (`*_MODES`, `*_DIFFICULTY_CONFIG`, `*_ROLE_IDS`), — `constants.ts` (исключение: BunkerGame держит контент в папке `contents/`). Слои `features/`, `widget/` пока пустые заглушки.
 
 ```
 src/
@@ -115,16 +115,15 @@ src/
         VerdictPhase.tsx            # использует StopGameButton
         GameOverPhase.tsx           # использует LeaderboardList
     TruthOrDareGame/TruthOrDareGame.tsx
-  constants/                       # Контент для каждой игры (instructions.ts уехал в entities/game)
   services/
-    contentService.ts              # единственный не перенесённый сервис — зависит от constants/* (→ features позже)
+    contentService.ts              # единственный не перенесённый сервис — зависит от @/games/*/content (→ features позже)
   features/ widget/                # пустые FSD-слои (index.ts-заглушки)
 ```
 
 **Временные исключения FSD (чинить на этапах features/widgets):**
 - `pages/*` импортируют из нелейерного `@/components/*` (MainMenu, Settings, Setup, UniversalGameSettings) и `@/games/*`;
 - `entities/game/registry.tsx` импортирует `*_MODES` из `@/games/*/constants` и картинки из `@/assets` — games ещё не оформлены как FSD-слой;
-- `services/contentService.ts` вне слоёв, импортирует entities (utils/gameLogic.ts расформирован: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр);
+- `services/contentService.ts` вне слоёв, импортирует entities и `@/games/*/content.ts` (utils/gameLogic.ts расформирован: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр);
 - `GameModeOption` в `shared/types` — почти дубликат `GameMode` из `entities/game/types` (используют UniversalGameSettings + GameSetupRoute), кандидат на консолидацию.
 
 ## Архитектура (роутинг)

@@ -1,4 +1,5 @@
-import type { SpyDifficulty } from '@/constants/spyHuntContent';
+import type { SpyDifficulty } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { LOCATIONS_BY_DIFFICULTY } from '@/games/SpyHuntGame/constants.ts';
 import { pickRandom } from '@/shared/helpers/random';

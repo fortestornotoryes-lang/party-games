@@ -4,6 +4,9 @@ import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 
+import { TABOO_REVERSE_MODES } from './constants';
+import type { TabooCard } from './content';
+import { getNextTabooCard, TABOO_REVERSE_CARDS } from './content';
 import { BlitzVerdictPhase } from './phases/BlitzVerdictPhase';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
@@ -13,12 +16,6 @@ import type { BlitzResult } from './types';
 import { TabooReversePhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
-import type { TabooCard } from '@/constants/tabooReverseContent';
-import {
-  getNextTabooCard,
-  TABOO_REVERSE_CARDS,
-  TABOO_REVERSE_MODES,
-} from '@/constants/tabooReverseContent';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';

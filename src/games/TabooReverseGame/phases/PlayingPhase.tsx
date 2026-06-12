@@ -2,8 +2,9 @@ import { SkipForward } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
+import type { TabooCard } from '../content';
+
 import { PlayingHeader } from '@/components/PlayingHeader';
-import type { TabooCard } from '@/constants/tabooReverseContent';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';

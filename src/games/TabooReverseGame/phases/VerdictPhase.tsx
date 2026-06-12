@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import React from 'react';
 
+import type { TabooCard } from '../content';
+
 import { StopGameButton } from '@/components/StopGameButton';
-import type { TabooCard } from '@/constants/tabooReverseContent';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -39,7 +40,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     >
       {/* Word reveal */}
       <div className="space-y-2 pt-2 text-center">
-        {!!timedOut && (
+        {timedOut && (
           <p className="text-micro text-premium-red/70 font-black tracking-widest uppercase">
             {t(`${NS.TABOO_REVERSE}.timeUp`)}
           </p>

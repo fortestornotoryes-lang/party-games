@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import React from 'react';
 
+import type { TabooClassicCard } from '../content';
+
 import { StopGameButton } from '@/components/StopGameButton';
-import type { TabooClassicCard } from '@/constants/tabooContent';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 

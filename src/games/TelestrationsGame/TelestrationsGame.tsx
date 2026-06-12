@@ -7,14 +7,13 @@ import { TelestrationsGallery } from './components/TelestrationsGallery';
 import { TelestrationsGuess } from './components/TelestrationsGuess';
 import { TelestrationsSetup } from './components/TelestrationsSetup';
 import { TelestrationsStart } from './components/TelestrationsStart';
+import { DIFFICULTY_CONFIG } from './constants';
 import { useTelestrationsContent } from './model/useTelestrationsContent';
 import type { Step, StepType } from './types';
 import { STEP_TYPE, TelestrationsPhase } from './types';
 
 import { GameHeader } from '@/components/GameHeader';
 import { PassPhoneCard } from '@/components/PassPhoneCard';
-import type { Difficulty } from '@/constants/telestrationsContent';
-import { DIFFICULTY_CONFIG } from '@/constants/telestrationsContent';
 import { GameKey } from '@/entities/game/types';
 import { DrawingCanvas } from '@/shared/components/DrawingCanvas';
 import { shuffle } from '@/shared/helpers/random';
@@ -25,7 +24,7 @@ import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 import { sessionService } from '@/shared/services/sessionService';
 import { storageService } from '@/shared/services/storageService';
-import { DIFFICULTY } from '@/shared/types';
+import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
 interface TelestrationsGameProps {
   playerNames: string[];

@@ -1,4 +1,5 @@
-import { DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY } from '@/constants/truthOrDareContent';
+import { DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';

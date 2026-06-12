@@ -119,20 +119,26 @@ type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
 { currentGameId, setCurrentGameId }  // GameKey | null
 ```
 
-## Контентные файлы (src/constants/)
+## Контентные файлы (в слайсах игр, этап 4 FSD)
+
+Контент каждой игры лежит в `src/games/<X>Game/content.ts`; конфиг, нужный снаружи игры (`*_MODES`, `*_DIFFICULTY_CONFIG`, `*_ROLE_IDS`), — в `constants.ts` слайса.
 
 | Файл | Экспорт |
 |------|---------|
-| spyHuntContent.ts | `LOCATIONS_BY_DIFFICULTY`, `LocationInfo`, `SpyDifficulty` |
-| fakeArtistContent.ts | `FAKE_ARTIST_DATA_BY_DIFFICULTY` |
-| resistanceContent.ts | `RESISTANCE_INSTRUCTIONS`, `MISSION_SIZES` |
-| aliasContent.ts | `ALIAS_CATEGORIES`, `ALIAS_DIFFICULTY_CONFIG`, `WIN_SCORE = 30`, `TROPHY_THRESHOLD = 20` |
-| wavelengthContent.ts | `WAVELENGTH_DATA_BY_DIFFICULTY` |
-| telestrationsContent.ts | `WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS` |
-| justOneContent.ts | `JUST_ONE_DATA_BY_DIFFICULTY` |
-| codenamesContent.ts | `WORDS_BY_DIFFICULTY as CODENAMES_WORDS` |
-| decryptoWords.ts | `WORDS_BY_DIFFICULTY as DECRYPTO_WORDS` |
-| instructions.ts | `GAME_INSTRUCTIONS: GameInstructionsMap` — инструкции для Setup |
+| SpyHuntGame/content.ts | `LOCATIONS_DATA`, `LocationInfo`, `SpyDifficulty` (`LOCATIONS_BY_DIFFICULTY` — в constants.ts) |
+| FakeArtistGame/content.ts | `FAKE_ARTIST_DATA_BY_DIFFICULTY`, `FAKE_ARTIST_ROLE_IDS` |
+| ResistanceGame/constants.ts | `RESISTANCE_ROLE_IDS`, `MISSION_SIZES` (отдельного content.ts нет) |
+| AliasGame/content.ts | `ALIAS_CATEGORIES` (`ALIAS_DIFFICULTY_CONFIG` — в constants.ts) |
+| WavelengthGame/content.ts | `WAVELENGTH_DATA_BY_DIFFICULTY` |
+| TelestrationsGame/content.ts | `WORDS_BY_DIFFICULTY` (`DIFFICULTY_CONFIG` — в constants.ts) |
+| JustOneGame/content.ts | `JUST_ONE_DATA_BY_DIFFICULTY` |
+| CodenamesGame/content.ts | `WORDS_BY_DIFFICULTY` |
+| DecryptoGame/content.ts | `WORDS_BY_DIFFICULTY` |
+| TabooGame/content.ts | `TABOO_CLASSIC_CARDS`, `getNextTabooClassicCard`, `TabooClassicCard` |
+| TabooReverseGame/content.ts | `TABOO_REVERSE_CARDS`, `getNextTabooCard`, `TabooCard` (`TABOO_REVERSE_MODES` — в constants.ts) |
+| TruthOrDareGame/content.ts | `TRUTHS_BY_DIFFICULTY`, `DARES_BY_DIFFICULTY` |
+| MillionaireGame/content.ts | `EASY/MEDIUM/HARD_QUESTIONS`, `MillionaireQuestion`, `getGuaranteedAmount`, `simulateAudienceVote` |
+| entities/game/instructions.ts | `GAME_INSTRUCTIONS: GameInstructionsMap` — инструкции для Setup |
 
 ## storageService
 

@@ -8,7 +8,7 @@ You are adding content to Party Hub. You know the exact TypeScript structure of 
 ## Step 1 — Ask the user
 
 Ask:
-1. **Which game?** (Alias / SpyHunt / FakeArtist / TruthOrDare / Wavelength / Codenames / Decrypto / JustOne / Telestrations / Resistance)
+1. **Which game?** (Alias / SpyHunt / FakeArtist / TruthOrDare / Wavelength / Codenames / Decrypto / JustOne / Telestrations / Resistance / Taboo / TabooReverse / Millionaire / Bunker)
 2. **What to add?** (words, locations+roles, category+words, truths, dares, opposites, etc.)
 3. **Difficulty / category** — if the target structure is split by difficulty (`easy` / `medium` / `hard`) ask which one(s); if by category ask the category name
 4. **The items themselves** — user provides a list, OR say "generate N" and you generate them in Russian matching the existing tone
@@ -21,16 +21,20 @@ Then proceed without further prompts.
 
 | Game | File | Structure |
 |------|------|-----------|
-| **Alias** | `src/constants/aliasContent.ts` | `ALIAS_CATEGORIES: WordCategory[]` — each entry has `{ id, name, description, difficulty: 'easy'\|'medium'\|'hard', words: string[] }`. Append to `words` of the matching difficulty entry. |
-| **Codenames** | `src/constants/codenamesContent.ts` | `WORDS_BY_DIFFICULTY: { easy: string[], medium: string[], hard: string[] }`. Append to the matching array. |
-| **SpyHunt** | `src/constants/spyHuntContent.ts` | `LOCATIONS_DATA: readonly LocationInfo[]` — each entry is `{ difficulty: 'easy'\|'medium'\|'hard', name: string, roles: string[] }`. Add new objects to the array, grouped by difficulty. |
-| **FakeArtist** | `src/constants/fakeArtistContent.ts` | `FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<FakeArtistDifficulty, FakeArtistCategory[]>` — each item is `{ category: string, word: string }`. Append to the correct difficulty array. |
-| **TruthOrDare** | `src/constants/truthOrDareContent.ts` | `TRUTHS_BY_DIFFICULTY: Record<Difficulty, string[]>` and `DARES_BY_DIFFICULTY: Record<Difficulty, string[]>`. Append strings to the correct difficulty array. |
-| **Wavelength** | `src/constants/wavelengthContent.ts` | `WAVELENGTH_DATA_BY_DIFFICULTY: { easy: string[][], medium: string[][], hard: string[][] }` — each item is a 2-element array `["Полюс А", "Полюс Б"]`. Append to the correct difficulty array. |
-| **Decrypto** | `src/constants/decryptoWords.ts` | Read the file first to confirm structure, then append accordingly. |
-| **JustOne** | `src/constants/justOneContent.ts` | Read the file first to confirm structure, then append accordingly. |
-| **Telestrations** | `src/constants/telestrationsContent.ts` | Read the file first to confirm structure, then append accordingly. |
-| **Resistance** | `src/constants/resistanceContent.ts` | Read the file first to confirm structure, then append accordingly. |
+| **Alias** | `src/games/AliasGame/content.ts` | `ALIAS_CATEGORIES: WordCategory[]` — each entry has `{ id, name, description, difficulty: 'easy'\|'medium'\|'hard', words: string[] }`. Append to `words` of the matching difficulty entry. |
+| **Codenames** | `src/games/CodenamesGame/content.ts` | `WORDS_BY_DIFFICULTY: { easy: string[], medium: string[], hard: string[] }`. Append to the matching array. |
+| **SpyHunt** | `src/games/SpyHuntGame/content.ts` | `LOCATIONS_DATA: readonly LocationInfo[]` — each entry is `{ difficulty: 'easy'\|'medium'\|'hard', name: string, roles: string[] }`. Add new objects to the array, grouped by difficulty. |
+| **FakeArtist** | `src/games/FakeArtistGame/content.ts` | `FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<FakeArtistDifficulty, FakeArtistCategory[]>` — each item is `{ category: string, word: string }`. Append to the correct difficulty array. |
+| **TruthOrDare** | `src/games/TruthOrDareGame/content.ts` | `TRUTHS_BY_DIFFICULTY: Record<Difficulty, string[]>` and `DARES_BY_DIFFICULTY: Record<Difficulty, string[]>`. Append strings to the correct difficulty array. |
+| **Wavelength** | `src/games/WavelengthGame/content.ts` | `WAVELENGTH_DATA_BY_DIFFICULTY: { easy: string[][], medium: string[][], hard: string[][] }` — each item is a 2-element array `["Полюс А", "Полюс Б"]`. Append to the correct difficulty array. |
+| **Decrypto** | `src/games/DecryptoGame/content.ts` | Read the file first to confirm structure, then append accordingly. |
+| **JustOne** | `src/games/JustOneGame/content.ts` | Read the file first to confirm structure, then append accordingly. |
+| **Telestrations** | `src/games/TelestrationsGame/content.ts` | Read the file first to confirm structure, then append accordingly. |
+| **Resistance** | `src/games/ResistanceGame/constants.ts` | Only `RESISTANCE_ROLE_IDS` and `MISSION_SIZES` (no word content). Read the file first to confirm structure, then append accordingly. |
+| **Taboo** | `src/games/TabooGame/content.ts` | `TABOO_CLASSIC_CARDS: readonly TabooClassicCard[]` — each entry is `{ id, difficulty, word, forbidden: string[] }`. Read the file first to confirm, keep ids unique and grouped by difficulty. |
+| **TabooReverse** | `src/games/TabooReverseGame/content.ts` | `TABOO_REVERSE_CARDS: readonly TabooCard[]` — each entry is `{ id, difficulty, word, required: string[] }`. Keep ids unique and grouped by difficulty. |
+| **Millionaire** | `src/games/MillionaireGame/content.ts` | `EASY_QUESTIONS` / `MEDIUM_QUESTIONS` / `HARD_QUESTIONS: MillionaireQuestion[]`. Read the file first to confirm structure. |
+| **Bunker** | `src/games/BunkerGame/contents/` | One file per constant (PROFESSIONS, HOBBIES, TRAITS, …) + index.ts. Append to the matching array in its file. |
 
 ---
 
@@ -64,7 +68,7 @@ Run `npm run lint` (runs `tsc --noEmit`). Fix any type errors.
 
 Output a summary:
 ```
-✅ Added to src/constants/<file>.ts
+✅ Added to src/games/<Game>/<file>.ts
    Game: <Name>
    Difficulty/Category: <value>
    Items added: <N>

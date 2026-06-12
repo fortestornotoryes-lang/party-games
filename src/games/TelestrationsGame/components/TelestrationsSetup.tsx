@@ -2,11 +2,11 @@ import { ArrowRight, Pencil } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import type { Difficulty } from '@/constants/telestrationsContent';
-import { DIFFICULTY_CONFIG } from '@/constants/telestrationsContent';
+import { DIFFICULTY_CONFIG } from '../constants';
+
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-import { DIFFICULTY } from '@/shared/types';
+import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
 interface Props {
   playerCount: number;

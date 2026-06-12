@@ -1,11 +1,5 @@
 import type { Difficulty } from '@/shared/types';
 
-export const TABOO_REVERSE_MODES = {
-  CLASSIC: 'classic',
-  BLITZ: 'blitz',
-  TEAM: 'team',
-} as const;
-
 export interface TabooCard {
   id: number;
   word: string;

@@ -1,4 +1,5 @@
-import { FAKE_ARTIST_ROLE_IDS } from '@/constants/fakeArtistContent';
+import { FAKE_ARTIST_ROLE_IDS } from '../content';
+
 import type { Player } from '@/entities/player/types';
 import { generateId } from '@/shared/helpers/random';
 

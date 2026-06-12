@@ -1,4 +1,5 @@
-import { RESISTANCE_ROLE_IDS } from '@/constants/resistanceContent';
+import { RESISTANCE_ROLE_IDS } from '../constants';
+
 import type { Player } from '@/entities/player/types';
 import { generateId, shuffle } from '@/shared/helpers/random';
 

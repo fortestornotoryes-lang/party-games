@@ -46,7 +46,7 @@ export const Board: React.FC<Props> = ({
         return (
           <div key={c} className="flex aspect-square items-center justify-center">
             <AnimatePresence>
-              {!!showGhost && (
+              {showGhost && (
                 <motion.div
                   key="ghost"
                   initial={{ opacity: 0, scale: 0.4 }}
@@ -56,7 +56,7 @@ export const Board: React.FC<Props> = ({
                   className={`aspect-square w-[68%] rounded-full ${current === 1 ? 'bg-premium-red' : 'bg-premium-yellow'}`}
                 />
               )}
-              {!!showPopDot && (
+              {showPopDot && (
                 <motion.div
                   key="pop-dot"
                   initial={{ opacity: 0, scale: 0.4 }}

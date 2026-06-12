@@ -21,7 +21,7 @@ const AliasGame = lazy(() => import('../games/AliasGame/AliasGame').then(m => ({
 ```
 App.tsx оборачивает `renderGame()` в `<Suspense fallback={...}>`.
 
-Инструкции вынесены в `src/constants/instructions.ts` как `GAME_INSTRUCTIONS: GameInstructionsMap`.
+Инструкции вынесены в `src/entities/game/instructions.ts` как `GAME_INSTRUCTIONS: GameInstructionsMap`.
 
 ---
 

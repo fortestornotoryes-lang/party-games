@@ -1,15 +1,15 @@
-import { ALIAS_CATEGORIES } from '@/constants/aliasContent';
-import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '@/constants/codenamesContent';
-import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '@/constants/decryptoWords.ts';
-import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '@/constants/fakeArtistContent';
-import { JUST_ONE_DATA_BY_DIFFICULTY } from '@/constants/justOneContent';
-import { TABOO_CLASSIC_CARDS } from '@/constants/tabooContent';
-import { TABOO_REVERSE_CARDS } from '@/constants/tabooReverseContent';
-import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '@/constants/telestrationsContent';
-import { DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY } from '@/constants/truthOrDareContent';
-import { WAVELENGTH_DATA_BY_DIFFICULTY } from '@/constants/wavelengthContent';
 import { GameKey } from '@/entities/game/types';
+import { ALIAS_CATEGORIES } from '@/games/AliasGame/content.ts';
+import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '@/games/CodenamesGame/content.ts';
+import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '@/games/DecryptoGame/content.ts';
+import { FAKE_ARTIST_DATA_BY_DIFFICULTY } from '@/games/FakeArtistGame/content.ts';
+import { JUST_ONE_DATA_BY_DIFFICULTY } from '@/games/JustOneGame/content.ts';
 import { LOCATIONS_BY_DIFFICULTY } from '@/games/SpyHuntGame/constants.ts';
+import { TABOO_CLASSIC_CARDS } from '@/games/TabooGame/content.ts';
+import { TABOO_REVERSE_CARDS } from '@/games/TabooReverseGame/content.ts';
+import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '@/games/TelestrationsGame/content.ts';
+import { DARES_BY_DIFFICULTY, TRUTHS_BY_DIFFICULTY } from '@/games/TruthOrDareGame/content.ts';
+import { WAVELENGTH_DATA_BY_DIFFICULTY } from '@/games/WavelengthGame/content.ts';
 import { storageService } from '@/shared/services/storageService';
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
 

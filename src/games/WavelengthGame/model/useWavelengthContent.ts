@@ -1,4 +1,5 @@
-import { WAVELENGTH_DATA_BY_DIFFICULTY } from '@/constants/wavelengthContent';
+import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { pickRandom } from '@/shared/helpers/random';
 import { storageService } from '@/shared/services/storageService';

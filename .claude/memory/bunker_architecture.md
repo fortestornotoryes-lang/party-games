@@ -26,7 +26,7 @@ src/games/BunkerGame/
     ResourceContribRow.tsx
 ```
 
-Контент (катастрофы, профессии, хобби и пр.) — в `src/constants/bunkerContent.ts`.
+Контент (катастрофы, профессии, хобби и пр.) — в `src/games/BunkerGame/contents/` (по файлу на константу + index.ts).
 
 ---
 
@@ -108,5 +108,5 @@ ALL_TRAIT_KEYS        // readonly TraitKey[]
 ```ts
 import {CAPACITY_PCT} from './constants';
 import {calculateSurvival, generateCharacter} from '@/games/BunkerGame/helpers.ts';
-import {BUNKER_MODES, CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from '@/constants/bunkerContent';
+import {CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS} from '@/games/BunkerGame/contents';
 ```

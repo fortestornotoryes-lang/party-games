@@ -2,7 +2,8 @@ import { MessageSquare, Percent, Phone, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React from 'react';
 
-import type { MillionaireQuestion } from '@/constants/millionaireContent';
+import type { MillionaireQuestion } from '../content';
+
 import { PRIZE_LADDER, SAFE_CHECKPOINTS } from '@/games/MillionaireGame/constants.ts';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';

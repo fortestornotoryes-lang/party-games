@@ -428,7 +428,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
                 ? t(`${NS.BUNKER}.playerPardonedTitle`, { player: appellant?.playerName ?? '' })
                 : t(`${NS.BUNKER}.playerExcludedTitle`, { player: appellant?.playerName ?? '' })}
             </Typography.Display>
-            {!!pardoned && !!swapTarget && (
+            {pardoned && !!swapTarget && (
               <Typography.Body size="sm" color="muted" align="center">
                 {t(`${NS.BUNKER}.spotFreedBy`, { player: swapTarget })}
               </Typography.Body>

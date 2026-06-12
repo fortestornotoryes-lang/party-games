@@ -1,4 +1,5 @@
-import { ALIAS_CATEGORIES } from '@/constants/aliasContent';
+import { ALIAS_CATEGORIES } from '../content';
+
 import { GameKey } from '@/entities/game/types';
 import { storageService } from '@/shared/services/storageService';
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
