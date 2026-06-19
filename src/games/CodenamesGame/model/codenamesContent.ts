@@ -1,7 +1,7 @@
 import { WORDS_BY_DIFFICULTY as CODENAMES_WORDS } from '../content';
 
 import { GameKey } from '@/entities/game/types';
-import { shuffle } from '@/shared/helpers/random';
+import { drawBatchFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
@@ -13,18 +13,5 @@ export function getCodenamesWordPool(difficulty: Difficulty): string[] {
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getCodenamesWords(difficulty: Difficulty): string[] {
-  const all = getCodenamesWordPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Codenames);
-
-  let available = all.filter((w) => !used.includes(w));
-  if (available.length < 25) {
-    storageService.resetUsedWords(GameKey.Codenames);
-    available = all;
-  }
-
-  const selected = shuffle(available).slice(0, 25);
-  selected.forEach((w) => {
-    storageService.markWordAsUsed(GameKey.Codenames, w);
-  });
-  return selected;
+  return drawBatchFromPool(GameKey.Codenames, getCodenamesWordPool(difficulty), 25);
 }

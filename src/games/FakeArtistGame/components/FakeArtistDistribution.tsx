@@ -4,9 +4,14 @@ import React, { useEffect, useState } from 'react';
 
 import { getFakeArtistWord } from '../model/fakeArtistContent';
 
-import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
+import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
+import {
+  RoleRevealButton,
+  RoleRevealCard,
+  RoleRevealPanel,
+} from '@/features/role-distribution/components/RoleRevealCard';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { rgba } from '@/shared/theme/colors';
@@ -47,27 +52,15 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
         },
       })}
       renderCard={(player, isLast, onNext) => (
-        <>
-          {/* Gradient bg */}
-          <div
-            className={`via-premium-green/25 absolute inset-0 bg-linear-to-b from-black/40 to-black/40`}
-          />
-
-          {/* Top glow */}
-          <div
-            className="pointer-events-none absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full opacity-40 blur-3xl"
-            style={{ background: player.isSpy ? rgba('red', 0.55) : rgba('sky', 0.55) }}
-          />
-
-          <div className="relative z-10 flex flex-1 flex-col items-center p-7 text-center">
-            {/* ── SPY ── */}
-            {player.isSpy && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex w-full flex-1 flex-col items-center justify-between"
-              >
-                <div>
+        <RoleRevealCard
+          gradientClassName="via-premium-green/25 bg-linear-to-b from-black/40 to-black/40"
+          glowClassName="top-24 opacity-40"
+          glowColor={player.isSpy ? rgba('red', 0.55) : rgba('sky', 0.55)}
+        >
+          {/* ── SPY ── */}
+          {!!player.isSpy && (
+              <RoleRevealPanel>
+              <div>
                   <p className="text-micro font-black tracking-[0.45em] uppercase">
                     {t(`${NS.FAKE_ARTIST}.secretRole`)}
                   </p>
@@ -95,22 +88,15 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                   </p>
                 </div>
 
-                <button
-                  onClick={onNext}
-                  className="bg-premium-green rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-white uppercase transition-transform active:scale-95"
-                >
+                <RoleRevealButton onClick={onNext} colorClassName="bg-premium-green text-white">
                   {isLast ? t(`${NS.FAKE_ARTIST}.startGame`) : t(`${NS.FAKE_ARTIST}.gotIt`)}
-                </button>
-              </motion.div>
+                </RoleRevealButton>
+              </RoleRevealPanel>
             )}
 
             {/* ── ARTIST ── */}
             {!player.isSpy && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex w-full flex-1 flex-col items-center justify-between"
-              >
+              <RoleRevealPanel>
                 <div>
                   <p className="text-micro text-premium-sky/50 font-black tracking-[0.45em] uppercase">
                     {t(`${NS.FAKE_ARTIST}.artistRole`)}
@@ -143,17 +129,16 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                   <p className="text-tag text-white/22">{t(`${NS.FAKE_ARTIST}.artistHint`)}</p>
                 </div>
 
-                <button
+                <RoleRevealButton
                   onClick={onNext}
-                  className="bg-premium-sky rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-black uppercase transition-transform active:scale-95"
+                  colorClassName="bg-premium-sky text-black"
                   style={{ boxShadow: `0 8px 32px ${rgba('sky', 0.25)}` }}
                 >
                   {isLast ? t(`${NS.FAKE_ARTIST}.startGame`) : t(`${NS.FAKE_ARTIST}.gotIt`)}
-                </button>
-              </motion.div>
+                </RoleRevealButton>
+              </RoleRevealPanel>
             )}
-          </div>
-        </>
+        </RoleRevealCard>
       )}
     />
   );

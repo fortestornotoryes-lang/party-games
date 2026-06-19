@@ -151,8 +151,8 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
         </div>
       )}
 
-      {/* Resource contribution per player (revealed traits only, hidden on hard) */}
-      {difficulty !== DIFFICULTY.HARD && (
+      {/* Resource contribution per player (revealed traits only, hidden on hard and medium) */}
+      {difficulty === DIFFICULTY.EASY && (
         <div className="space-y-2">
           <Typography.Label size="xs" color="muted">
             {t(`${NS.BUNKER}.resourceContribution`)}

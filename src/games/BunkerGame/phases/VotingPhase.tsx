@@ -139,7 +139,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
             .map((r) => getRevealedTrait(char, r))
             .filter(Boolean) as { label: string; entry: { emoji: string; name: string } }[];
           const contrib =
-            difficulty !== DIFFICULTY.HARD ? getPlayerResourceContribution(char) : null;
+            difficulty === DIFFICULTY.EASY ? getPlayerResourceContribution(char) : null;
 
           return (
             <motion.button

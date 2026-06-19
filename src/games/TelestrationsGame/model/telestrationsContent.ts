@@ -1,7 +1,7 @@
 import { WORDS_BY_DIFFICULTY as TELESTRATIONS_WORDS } from '../content';
 
 import { GameKey } from '@/entities/game/types';
-import { pickRandom } from '@/shared/helpers/random';
+import { drawFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
@@ -13,16 +13,5 @@ export function getTelestrationsWordPool(difficulty: Difficulty): string[] {
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getTelestrationsWord(difficulty: Difficulty): string {
-  const all = getTelestrationsWordPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Telestrations);
-
-  let available = all.filter((w) => !used.includes(w));
-  if (available.length === 0) {
-    storageService.resetUsedWords(GameKey.Telestrations);
-    available = all;
-  }
-
-  const word = pickRandom(available);
-  storageService.markWordAsUsed(GameKey.Telestrations, word);
-  return word;
+  return drawFromPool(GameKey.Telestrations, getTelestrationsWordPool(difficulty));
 }

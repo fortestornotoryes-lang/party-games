@@ -1,9 +1,13 @@
 import { Shield, Skull } from 'lucide-react';
-import { motion } from 'motion/react';
 import React from 'react';
 
-import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import type { Player } from '@/entities/player/types';
+import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
+import {
+  RoleRevealButton,
+  RoleRevealCard,
+  RoleRevealPanel,
+} from '@/features/role-distribution/components/RoleRevealCard';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -37,32 +41,18 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
             },
       })}
       renderCard={(player, isLast, onNext) => (
-        <>
-          {/* Gradient bg */}
-          <div
-            className={`absolute inset-0 ${
-              player.isSpy
-                ? 'from-premium-red/[0.20] via-premium-red/[0.05] bg-gradient-to-b to-black/70'
-                : 'from-premium-blue/[0.18] via-premium-blue/[0.05] bg-gradient-to-b to-black/70'
-            }`}
-          />
-
-          {/* Top glow */}
-          <div
-            className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full opacity-50 blur-3xl"
-            style={{
-              background: player.isSpy ? 'rgba(239,68,68,0.25)' : 'rgba(63,123,255,0.2)',
-            }}
-          />
-
-          <div className="relative z-10 flex flex-1 flex-col items-center p-7 text-center">
-            {player.isSpy ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex w-full flex-1 flex-col items-center justify-between"
-              >
-                <div>
+        <RoleRevealCard
+          gradientClassName={
+            player.isSpy
+              ? 'from-premium-red/[0.20] via-premium-red/[0.05] bg-gradient-to-b to-black/70'
+              : 'from-premium-blue/[0.18] via-premium-blue/[0.05] bg-gradient-to-b to-black/70'
+          }
+          glowClassName="-top-24 opacity-50"
+          glowColor={player.isSpy ? 'rgba(239,68,68,0.25)' : 'rgba(63,123,255,0.2)'}
+        >
+          {player.isSpy ? (
+            <RoleRevealPanel>
+              <div>
                   <p className="text-micro text-premium-red/50 font-black tracking-[0.45em] uppercase">
                     {t(`${NS.RESISTANCE}.secretRole`)}
                   </p>
@@ -94,20 +84,16 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                   </p>
                 </div>
 
-                <button
+                <RoleRevealButton
                   onClick={onNext}
-                  className="bg-premium-red rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-white uppercase transition-transform active:scale-95"
+                  colorClassName="bg-premium-red text-white"
                   style={{ boxShadow: '0 8px 32px rgba(239,68,68,0.35)' }}
                 >
                   {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
-                </button>
-              </motion.div>
+                </RoleRevealButton>
+              </RoleRevealPanel>
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex w-full flex-1 flex-col items-center justify-between"
-              >
+              <RoleRevealPanel>
                 <div>
                   <p className="text-micro text-premium-blue/50 font-black tracking-[0.45em] uppercase">
                     {t(`${NS.RESISTANCE}.roleLabel`)}
@@ -131,17 +117,16 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
                   </p>
                 </div>
 
-                <button
+                <RoleRevealButton
                   onClick={onNext}
-                  className="bg-premium-blue rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-white uppercase transition-transform active:scale-95"
+                  colorClassName="bg-premium-blue text-white"
                   style={{ boxShadow: '0 8px 32px rgba(63,123,255,0.35)' }}
                 >
                   {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
-                </button>
-              </motion.div>
+                </RoleRevealButton>
+              </RoleRevealPanel>
             )}
-          </div>
-        </>
+        </RoleRevealCard>
       )}
     />
   );

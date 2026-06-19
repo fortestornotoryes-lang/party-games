@@ -1,7 +1,7 @@
 import { FAKE_ARTIST_DATA_BY_DIFFICULTY, type FakeArtistCategory } from '../content';
 
 import { GameKey } from '@/entities/game/types';
-import { pickRandom } from '@/shared/helpers/random';
+import { drawFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
@@ -16,16 +16,7 @@ export function getFakeArtistPool(difficulty: Difficulty): FakeArtistCategory[] 
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getFakeArtistWord(difficulty: Difficulty): { word: string; category: string } {
-  const pool = getFakeArtistPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.FakeArtist);
-
-  let available = pool.filter((item) => !used.includes(item.word));
-  if (available.length === 0) {
-    storageService.resetUsedWords(GameKey.FakeArtist);
-    available = pool;
-  }
-
-  const item = pickRandom(available);
-  storageService.markWordAsUsed(GameKey.FakeArtist, item.word);
-  return item;
+  return drawFromPool(GameKey.FakeArtist, getFakeArtistPool(difficulty), {
+    keyOf: (item) => item.word,
+  });
 }

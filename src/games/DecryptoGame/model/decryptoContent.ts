@@ -1,7 +1,7 @@
 import { WORDS_BY_DIFFICULTY as DECRYPTO_WORDS } from '../content.ts';
 
 import { GameKey } from '@/entities/game/types';
-import { shuffle } from '@/shared/helpers/random';
+import { drawBatchFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
@@ -13,18 +13,5 @@ export function getDecryptoWordPool(difficulty: Difficulty): string[] {
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
 export function getDecryptoWords(difficulty: Difficulty, count = 4): string[] {
-  const all = getDecryptoWordPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Decrypto);
-
-  let available = all.filter((w) => !used.includes(w));
-  if (available.length < count) {
-    storageService.resetUsedWords(GameKey.Decrypto);
-    available = all;
-  }
-
-  const selected = shuffle(available).slice(0, count);
-  selected.forEach((w) => {
-    storageService.markWordAsUsed(GameKey.Decrypto, w);
-  });
-  return selected;
+  return drawBatchFromPool(GameKey.Decrypto, getDecryptoWordPool(difficulty), count);
 }

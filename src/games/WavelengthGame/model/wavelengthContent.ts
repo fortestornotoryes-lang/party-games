@@ -1,7 +1,7 @@
 import { WAVELENGTH_DATA_BY_DIFFICULTY } from '../content';
 
 import { GameKey } from '@/entities/game/types';
-import { pickRandom } from '@/shared/helpers/random';
+import { drawFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import type { Difficulty } from '@/shared/types';
 
@@ -26,16 +26,7 @@ export function getWavelengthPairPool(difficulty: Difficulty): string[][] {
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getWavelengthPair(difficulty: Difficulty): string[] {
-  const all = getWavelengthPairPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Wavelength);
-
-  let available = all.filter((pair) => !used.includes(wavelengthPairKey(pair)));
-  if (available.length === 0) {
-    storageService.resetUsedWords(GameKey.Wavelength);
-    available = all;
-  }
-
-  const pair = pickRandom(available);
-  storageService.markWordAsUsed(GameKey.Wavelength, wavelengthPairKey(pair));
-  return pair;
+  return drawFromPool(GameKey.Wavelength, getWavelengthPairPool(difficulty), {
+    keyOf: wavelengthPairKey,
+  });
 }

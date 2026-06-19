@@ -16,6 +16,7 @@ import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
+import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -47,16 +48,8 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   const [roundNum, setRoundNum] = usePersistedState(GameKey.Taboo, 'roundNum', 1);
 
   // ── Card ───────────────────────────────────────────────────────────────────
-  const buildUsedIds = (): Set<number> => {
-    const usedWords = storageService.getUsedWords(GameKey.Taboo);
-    if (usedWords.length === 0) return new Set<number>();
-    const usedSet = new Set(usedWords);
-    return new Set(
-      TABOO_CLASSIC_CARDS.filter((c) => c.difficulty === difficulty && usedSet.has(c.word)).map(
-        (c) => c.id
-      )
-    );
-  };
+  const buildUsedIds = (): Set<number> =>
+    buildUsedCardIds(GameKey.Taboo, TABOO_CLASSIC_CARDS, difficulty);
 
   const [usedCardIds, setUsedCardIds] = usePersistedState<ReadonlySet<number>>(
     GameKey.Taboo,
@@ -142,16 +135,13 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
       }
 
       // Mark card as used, auto-reset deck when exhausted
-      const afterUsed = new Set([...usedCardIds, card.id]);
-      const totalForDiff = TABOO_CLASSIC_CARDS.filter((c) => c.difficulty === difficulty).length;
-      let effectiveUsed: ReadonlySet<number>;
-      if (afterUsed.size >= totalForDiff) {
-        storageService.resetUsedWords(GameKey.Taboo);
-        effectiveUsed = new Set<number>();
-      } else {
-        storageService.markWordAsUsed(GameKey.Taboo, card.word);
-        effectiveUsed = afterUsed;
-      }
+      const effectiveUsed = advanceUsedDeck(
+        GameKey.Taboo,
+        TABOO_CLASSIC_CARDS,
+        difficulty,
+        usedCardIds,
+        card
+      );
 
       setUsedCardIds(effectiveUsed);
       setScores(newScores);

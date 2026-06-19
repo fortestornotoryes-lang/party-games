@@ -5,6 +5,11 @@ import React from 'react';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
+import {
+  RoleRevealButton,
+  RoleRevealCard,
+  RoleRevealPanel,
+} from '@/features/role-distribution/components/RoleRevealCard';
 import { SPY_HUNT_ROLE_IDS } from '@/games/SpyHuntGame/constants.ts';
 import { Typography } from '@/shared/components/Typography';
 import { useTranslation } from '@/shared/i18n';
@@ -47,25 +52,15 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
             ? 'traitor'
             : 'agent';
         return (
-          <>
-            {/* Gradient bg */}
-            <div className="from-premium-green/[0.15] via-premium-green/[0.05] absolute inset-0 bg-gradient-to-b to-black/70" />
-
-            {/* Top glow */}
-            <div
-              className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full opacity-60 blur-3xl"
-              style={{ background: ROLE_TOKENS.agent.topGlow }}
-            />
-
-            <div className="relative z-10 flex flex-1 flex-col items-center p-7 text-center">
-              {/* ── SPY ── */}
-              {roleType === 'spy' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex w-full flex-1 flex-col items-center justify-between"
-                >
-                  <div className="text-center">
+          <RoleRevealCard
+            gradientClassName="from-premium-green/[0.15] via-premium-green/[0.05] bg-gradient-to-b to-black/70"
+            glowClassName="-top-24 opacity-60"
+            glowColor={ROLE_TOKENS.agent.topGlow}
+          >
+            {/* ── SPY ── */}
+            {roleType === 'spy' && (
+              <RoleRevealPanel>
+                <div className="text-center">
                     <Typography.Caption color="green" className="tracking-[0.45em] opacity-50">
                       {t(`${NS.SPY_HUNT}.secretRole`)}
                     </Typography.Caption>
@@ -104,24 +99,20 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     )}
                   </div>
 
-                  <button
-                    onClick={onNext}
-                    className="bg-premium-green rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-black uppercase transition-transform active:scale-95"
-                    style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
-                  >
-                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
-                  </button>
-                </motion.div>
-              )}
-
-              {/* ── TRAITOR ── */}
-              {roleType === 'traitor' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex w-full flex-1 flex-col items-center justify-between"
+                <RoleRevealButton
+                  onClick={onNext}
+                  colorClassName="bg-premium-green text-black"
+                  style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
                 >
-                  <div className="text-center">
+                  {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
+                </RoleRevealButton>
+              </RoleRevealPanel>
+            )}
+
+            {/* ── TRAITOR ── */}
+            {roleType === 'traitor' && (
+              <RoleRevealPanel>
+                <div className="text-center">
                     <Typography.Caption color="green" className="tracking-[0.45em] opacity-50">
                       {t(`${NS.SPY_HUNT}.secretRole`)}
                     </Typography.Caption>
@@ -151,24 +142,20 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     </Typography.Caption>
                   </div>
 
-                  <button
-                    onClick={onNext}
-                    className="bg-premium-green rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-black uppercase transition-transform active:scale-95"
-                    style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
-                  >
-                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
-                  </button>
-                </motion.div>
-              )}
-
-              {/* ── AGENT ── */}
-              {roleType === 'agent' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex w-full flex-1 flex-col items-center justify-between"
+                <RoleRevealButton
+                  onClick={onNext}
+                  colorClassName="bg-premium-green text-black"
+                  style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
                 >
-                  <div className="text-center">
+                  {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
+                </RoleRevealButton>
+              </RoleRevealPanel>
+            )}
+
+            {/* ── AGENT ── */}
+            {roleType === 'agent' && (
+              <RoleRevealPanel>
+                <div className="text-center">
                     <Typography.Caption color="green" className="tracking-[0.45em] opacity-50">
                       {t(`${NS.SPY_HUNT}.agentLabel`)}
                     </Typography.Caption>
@@ -209,17 +196,16 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     </Typography.Caption>
                   </div>
 
-                  <button
-                    onClick={onNext}
-                    className="bg-premium-green rounded-premium-md w-full py-4 font-black tracking-[0.2em] text-black uppercase transition-transform active:scale-95"
-                    style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
-                  >
-                    {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
-                  </button>
-                </motion.div>
-              )}
-            </div>
-          </>
+                <RoleRevealButton
+                  onClick={onNext}
+                  colorClassName="bg-premium-green text-black"
+                  style={{ boxShadow: ROLE_TOKENS.agent.btnShadow }}
+                >
+                  {isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`)}
+                </RoleRevealButton>
+              </RoleRevealPanel>
+            )}
+          </RoleRevealCard>
         );
       }}
     />

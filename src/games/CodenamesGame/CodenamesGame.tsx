@@ -17,6 +17,7 @@ import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard.tsx';
 import { shuffle } from '@/shared/helpers/random';
+import { splitInHalf } from '@/shared/helpers/teams';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -53,10 +54,9 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     const shuffled = shuffle(playerNames);
     setRedCaptain(shuffled[0]);
     setBlueCaptain(shuffled[1]);
-    const rest = shuffled.slice(2);
-    const half = Math.ceil(rest.length / 2);
-    setRedTeam(rest.slice(0, half));
-    setBlueTeam(rest.slice(half));
+    const [redTeam, blueTeam] = splitInHalf(shuffled.slice(2));
+    setRedTeam(redTeam);
+    setBlueTeam(blueTeam);
     initBoard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerNames]);

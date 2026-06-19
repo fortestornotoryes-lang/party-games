@@ -1,6 +1,7 @@
 import { ALIAS_CATEGORIES } from '../content';
 
 import { GameKey } from '@/entities/game/types';
+import { availableFromPool } from '@/shared/helpers/contentPool';
 import { storageService } from '@/shared/services/storageService';
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
@@ -21,13 +22,5 @@ export function getAliasWordPool(difficulty: Difficulty): string[] {
 
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getAliasWords(difficulty: Difficulty): string[] {
-  const all = getAliasWordPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Alias);
-
-  let available = all.filter((w) => !used.includes(w));
-  if (available.length === 0) {
-    storageService.resetUsedWords(GameKey.Alias);
-    available = all;
-  }
-  return available;
+  return availableFromPool(GameKey.Alias, getAliasWordPool(difficulty));
 }

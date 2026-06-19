@@ -19,6 +19,7 @@ import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { randomInt, shuffle } from '@/shared/helpers/random';
+import { splitInHalf } from '@/shared/helpers/teams';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -69,23 +70,22 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
   };
 
   const initGame = () => {
-    const shuffled = shuffle([...playerNames]);
-    const half = Math.ceil(shuffled.length / 2);
+    const [redPlayers, bluePlayers] = splitInHalf(shuffle([...playerNames]));
     setRedState({
       words: getDecryptoWords(difficulty, wordCount),
-      players: shuffled.slice(0, half),
+      players: redPlayers,
       interceptions: 0,
       fails: 0,
       history: [],
-      captainIndex: randomInt(0, half - 1),
+      captainIndex: randomInt(0, redPlayers.length - 1),
     });
     setBlueState({
       words: getDecryptoWords(difficulty, wordCount),
-      players: shuffled.slice(half),
+      players: bluePlayers,
       interceptions: 0,
       fails: 0,
       history: [],
-      captainIndex: randomInt(0, shuffled.length - half - 1),
+      captainIndex: randomInt(0, bluePlayers.length - 1),
     });
     setRound(1);
     setActiveTeam('red');

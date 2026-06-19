@@ -17,6 +17,7 @@ import { GameKey } from '@/entities/game/types';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/games/AliasGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { pickRandom, shuffle } from '@/shared/helpers/random';
+import { splitInHalf } from '@/shared/helpers/teams';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -64,19 +65,10 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   useEffect(() => {
     // Команды уже восстановлены из сессии — не перетасовываем заново.
     if (teams.length > 0) return;
-    const shuffled = shuffle(playerNames);
-    const mid = Math.ceil(shuffled.length / 2);
+    const [teamA, teamB] = splitInHalf(shuffle(playerNames));
     setTeams([
-      {
-        color: TEAM_COLORS[0],
-        players: shuffled.slice(0, mid),
-        score: 0,
-      },
-      {
-        color: TEAM_COLORS[1],
-        players: shuffled.slice(mid),
-        score: 0,
-      },
+      { color: TEAM_COLORS[0], players: teamA, score: 0 },
+      { color: TEAM_COLORS[1], players: teamB, score: 0 },
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerNames]);

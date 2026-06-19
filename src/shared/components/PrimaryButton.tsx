@@ -6,7 +6,7 @@ import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 export type ButtonVariant = 'white' | 'premium' | 'red' | 'blue' | 'emerald' | 'purple' | 'outline';
 const buttonVariants: Record<ButtonVariant, string> = {
   white: 'bg-white text-black font-display',
-  premium: 'glass-card text-white hover:bg-white/[0.08] font-display border-white/10',
+  premium: 'glass-card text-white  font-display border-white/10',
   red: 'bg-premium-red text-white shadow-[0_20px_50px_rgba(255,46,77,0.3)]',
   blue: 'bg-premium-blue text-white shadow-[0_20px_50px_rgba(63,123,255,0.3)]',
   emerald: 'bg-premium-green text-white shadow-[0_20px_50px_rgba(0,216,138,0.3)]',
