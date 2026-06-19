@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { getFakeArtistWord } from '../model/fakeArtistContent';
 
-import { DistributionFlow } from '@/components/DistributionFlow';
+import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { useTranslation } from '@/shared/i18n';

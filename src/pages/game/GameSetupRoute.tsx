@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router';
 
-import { Setup } from '@/components/Setup';
-import { UniversalGameSettings } from '@/components/UniversalGameSettings';
+import { Setup } from '@/widget/setup/components/Setup';
+import { UniversalGameSettings } from '@/features/game-settings/components/UniversalGameSettings';
 import { GAME_INSTRUCTIONS } from '@/entities/game/instructions';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';

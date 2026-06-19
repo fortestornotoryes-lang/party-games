@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import { Settings } from '@/components/Settings';
+import { Settings } from '@/widget/settings/components/Settings';
 
 export function SettingsRoute() {
   const navigate = useNavigate();

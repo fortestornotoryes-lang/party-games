@@ -27,7 +27,7 @@ npm run build    # Сборка в dist/
 
 ## Структура папок
 
-Идёт миграция на FSD (июнь 2026). Этапы 1 (shared), 2 (entities), 3 (app + pages) и 4 (constants → слайсы игр) выполнены. Импорты — через alias `@/...` (alias `@/* → src/*` в tsconfig+vite), баррелей нет — импорты напрямую в модуль. Конвенции слайсов: сегмент `components` (не `ui`), `types.ts` в корне слайса; в играх объёмный контент (слова/карточки/вопросы) — `content.ts` в корне слайса, конфиг, нужный снаружи (`*_MODES`, `*_DIFFICULTY_CONFIG`, `*_ROLE_IDS`), — `constants.ts` (исключение: BunkerGame держит контент в папке `contents/`). Слои `features/`, `widget/` пока пустые заглушки.
+Идёт миграция на FSD (июнь 2026). Этапы 1 (shared), 2 (entities), 3 (app + pages), 4 (constants → слайсы игр) и 5 (features + widget, `src/components/` удалён) выполнены. Импорты — через alias `@/...` (alias `@/* → src/*` в tsconfig+vite), баррелей нет — импорты напрямую в модуль (заглушек `index.ts` в features/widget больше нет). Конвенции слайсов: сегмент `components` (не `ui`), `types.ts` в корне слайса; слайс на компонент — папка `<slice>/components/<Component>.tsx`; в играх объёмный контент (слова/карточки/вопросы) — `content.ts` в корне слайса, конфиг, нужный снаружи (`*_MODES`, `*_DIFFICULTY_CONFIG`, `*_ROLE_IDS`), — `constants.ts` (исключение: BunkerGame держит контент в папке `contents/`).
 
 ```
 src/
@@ -66,18 +66,14 @@ src/
     player/
       types.ts                     # Player, PlayerEntry (черновик игрока на Setup)
       components/                  # PlayerRow (+DEFAULT_NAMES), PlayerScoreList, LeaderboardList
-  components/                      # Остались компоненты со знанием домена (→ entities/widgets на след. этапах)
-    MainMenu.tsx                   # Список игр из GAMES_REGISTRY
-    Setup.tsx                      # Универсальный экран: имена игроков + настройки
-    PassPhoneCard.tsx              # Карточка "передай телефон" с анимацией и badge
-    UniversalGameSettings.tsx      # Слоты настроек (сложность, режим, раунды, таймер)
-    GameHeader.tsx                 # Sticky-хедер с кнопкой назад
-    InstructionsModal.tsx          # Модалка с правилами игры
-    Settings.tsx                   # Экран настроек приложения
-    PlayingHeader.tsx              # "Игрок объясняет" + таймер
-    DistributionFlow.tsx           # Абстрактная основа раздачи ролей (ProgressDots + lock→reveal)
-    TabooPassPhase.tsx             # Общая Pass-фаза для Taboo-семейства (PassPhoneCard + PlayerScoreList)
-    StopGameButton.tsx             # Кнопка "Завершить игру"
+  widget/                          # FSD widget-слой (композиции страниц)
+    main-menu/components/MainMenu.tsx      # Список игр из GAMES_REGISTRY + bottom-sheet описания
+    setup/components/Setup.tsx             # Универсальный экран: имена игроков + настройки
+    settings/components/Settings.tsx       # Экран настроек приложения (общие + слова)
+  features/                        # FSD feature-слой (переиспользуемые продуктовые фичи)
+    game-settings/components/UniversalGameSettings.tsx  # Слоты настроек (сложность, режим, раунды, таймер)
+    role-distribution/components/DistributionFlow.tsx   # Абстрактная раздача ролей (ProgressDots + lock→reveal)
+    taboo-pass/components/TabooPassPhase.tsx             # Общая Pass-фаза Taboo-семейства (PassPhoneCard + PlayerScoreList)
   games/
     AliasGame/AliasGame.tsx
     CodenamesGame/CodenamesGame.tsx
@@ -117,12 +113,12 @@ src/
     TruthOrDareGame/TruthOrDareGame.tsx
   services/
     contentService.ts              # единственный не перенесённый сервис — зависит от @/games/*/content (→ features позже)
-  features/ widget/                # пустые FSD-слои (index.ts-заглушки)
 ```
 
-**Временные исключения FSD (чинить на этапах features/widgets):**
-- `pages/*` импортируют из нелейерного `@/components/*` (MainMenu, Settings, Setup, UniversalGameSettings) и `@/games/*`;
+**Временные исключения FSD (ещё не вычищены):**
+- `pages/*` и `widget/*` импортируют из `@/games/*` напрямую (games ещё не оформлены как FSD-слой);
 - `entities/game/registry.tsx` импортирует `*_MODES` из `@/games/*/constants` и картинки из `@/assets` — games ещё не оформлены как FSD-слой;
+- `widget/main-menu` и `features/game-settings` импортируют нелейерный `@/services/contentService`;
 - `services/contentService.ts` вне слоёв, импортирует entities и `@/games/*/content.ts` (utils/gameLogic.ts расформирован: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр);
 - `GameModeOption` в `shared/types` — почти дубликат `GameMode` из `entities/game/types` (используют UniversalGameSettings + GameSetupRoute), кандидат на консолидацию.
 

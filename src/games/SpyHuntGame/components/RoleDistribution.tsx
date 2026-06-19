@@ -2,7 +2,7 @@ import { Ghost, MapPin, Shield } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { DistributionFlow } from '@/components/DistributionFlow';
+import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { SPY_HUNT_ROLE_IDS } from '@/games/SpyHuntGame/constants.ts';

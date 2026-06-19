@@ -3,10 +3,9 @@ import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { contentService } from '../services/contentService';
-
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey, GameMode, GameSettingKey, GameSettingValue } from '@/entities/game/types';
+import { contentService } from '@/services/contentService';
 import { getTheme } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
 import { DIFFICULTY, type Difficulty, type GameModeOption } from '@/shared/types';

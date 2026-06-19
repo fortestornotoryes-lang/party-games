@@ -2,7 +2,7 @@ import { Shield, Skull } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { DistributionFlow } from '@/components/DistributionFlow';
+import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import type { Player } from '@/entities/player/types';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
