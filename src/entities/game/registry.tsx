@@ -41,7 +41,7 @@ import ResistanceImage from '@/assets/ResistanceImage.png';
 import SpyHuntImage from '@/assets/SpyHuntImage.png';
 import TabyImage from '@/assets/tabyImage2.JPG';
 import telestrationsImg from '@/assets/telephone.png';
-import TruthOrDareImage from '@/assets/TruthOrDare.png';
+import TruthOrDareImage from '@/assets/TruthOrDare123.png';
 import WavelengthImage from '@/assets/WavelengthImage.JPG';
 import { ALIAS_DIFFICULTY_CONFIG } from '@/games/AliasGame/constants.ts';
 import { BUNKER_MODES } from '@/games/BunkerGame/constants.ts';
