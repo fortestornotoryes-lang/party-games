@@ -1,3 +1,8 @@
+# Workflow
+
+1. **Before starting work:** if the task is ambiguous or has decisions the user should make (scope, approach, design), ask clarifying questions FIRST — before writing any code. If the task is clear, proceed without asking.
+2. **After completing changes:** check whether the memory bank in `.claude/memory/` needs updating (new conventions, changed architecture, discovered gotchas, stale facts). Update it in the same turn — don't ask for permission, just mention what was updated.
+
 # Project Memory Bank
 
 At the start of every session, read the memory bank located in `.claude/memory/`:
