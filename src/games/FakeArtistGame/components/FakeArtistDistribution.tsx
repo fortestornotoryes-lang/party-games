@@ -53,7 +53,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
           glowColor={player.isSpy ? rgba('red', 0.55) : rgba('sky', 0.55)}
         >
           {/* ── SPY ── */}
-          {!!player.isSpy && (
+          {player?.isSpy && (
             <RoleRevealPanel>
               <div>
                 <p className="text-micro font-black tracking-[0.45em] uppercase">

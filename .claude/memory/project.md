@@ -48,6 +48,8 @@ src/
 
 ## Чек-лист новой игры
 
+Оформлен как скилл `/new-game` (`.claude/skills/new-game/SKILL.md`) — при добавлении игры вызывать его; при смене чек-листа обновлять и скилл, и этот раздел.
+
 1. Папка `src/games/<Name>Game/`: `types.ts` (фазы — см. conventions.md), `constants.ts`, `content.ts`/`contents/` (если есть контент), `helpers.ts`, компонент `<Name>Game.tsx` с пропсами `{ playerNames, onBack }`, фазы в `phases/` или `components/`
 2. `GameKey` в `entities/game/types.ts`
 3. Запись в `GAMES_REGISTRY` (registry.tsx) — иконка, тема, описание, режимы/настройки

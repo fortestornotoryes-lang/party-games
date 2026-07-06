@@ -102,7 +102,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
       {/* Balance view overlay */}
       <AnimatePresence>
-        {!!showBalance && (
+        {showBalance && (
           <BunkerBalanceView
             key="balance"
             onClose={() => {

@@ -309,7 +309,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
             {/* Transition overlay — rendered on top, canvas stays mounted underneath */}
             <AnimatePresence>
-              {!!isTransitioning && (
+              {isTransitioning && (
                 <motion.div
                   key="transition"
                   initial={{ opacity: 0 }}
