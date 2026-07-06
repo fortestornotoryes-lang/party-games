@@ -1,20 +1,16 @@
 # Memory Index
 
-> Memory bank lives in `.claude/memory/` inside the project. Read this index at the start of every session.
+> Банк памяти проекта. Читается в начале каждой сессии (см. CLAUDE.md).
 
-- [Project Overview](project_overview.md) — стек, запуск, структура папок, архитектура, GameRegistry
-- [Games & Flow](games_flow.md) — игры, темы, инициализация игроков (GameStatus удалён — роутинг через react-router, см. Project Overview)
-- [Design System](design_system.md) — premium-цвета, glass-card, типографика, border-radius, themeConfigs
-- [Animation Rules](animation_rules.md) — motion/react, AnimatePresence, spring, flip, stagger
-- [Types & Data](types_data.md) — Player, GameSettingsContext, контент-константы (GameStatus enum удалён)
-- [Mobile Fixes](mobile_fixes.md) — canvas ResizeObserver+DPR, touch-action none, flex-1 min-h-0
-- [Performance Rules](performance_rules.md) — вложенные backdrop-filter убивают скроллинг, что безопасно
-- [UI Components](components_ui.md) — Setup (до игры, инструкции+игроки), GameHeader (во время игры), PassPhoneCard, DrawingCanvas, UI.tsx
-- [Storage & Word Logic](storage_wordlogic.md) — storageService gameId-ключи; пул-функции get*Pool в model/use*Content + реестр WORD_POOLS в contentService.getWordStats; исправленные difficulty-баги
-- [Phase Enum Pattern](phase_enum_pattern.md) — фазы игры = const-объект + производный тип в `./types.ts` (НЕ enum, НЕ литералы); встреченные enum'ы переписывать
-- [Hooks & Patterns](hooks_and_patterns.md) — usePlayerCycle, useTimer, VIBRATE, shuffle/pickRandom, DistributionFlow; таблица антипаттернов → замен
-- [Bunker Architecture](bunker_architecture.md) — constants.ts / helpers.ts / types.ts BunkerGame; SurvivalPhase карточка катастрофы; таблица всех экспортов
-- [Corridor Game](corridor_game.md) — SVG-доска Quoridor; механика hWalls/vWalls; isBlocked; BFS-валидация; ActionMode (move/wall_h/wall_v)
-- [Memo Risk Game](memo_risk_game.md) — memory push-your-luck (memo_risk): эскалация риска, супер-карта ×2, режимы classic/timed/limited, endTurn с явными значениями
-- [Session Persistence](session_persistence.md) — восстановление партии после перезагрузки: sessionService, usePersistedState/usePersistedTimer, guard'ы init-эффектов
-- [Code Style](code_style.md) — без магических литералов и БЕЗ enum: const-объект + производный тип (DIFFICULTY-паттерн), DEFAULT_GAME_CONFIG для дефолтов; встреченные enum'ы переписывать
+- [project.md](project.md) — стек, команды, структура папок, роутинг, GameRegistry, чек-лист добавления новой игры
+- [conventions.md](conventions.md) — const-объект вместо enum, фазы игр, настройки и их персистенция, сессии партий, контент-пулы, i18n
+- [ui.md](ui.md) — темы и цвета (PREMIUM_RGB ↔ @theme), glass-card, общие компоненты, анимации
+- [gotchas.md](gotchas.md) — грабли: canvas/DPR, backdrop-filter, мобильные фиксы
+
+## Правила поддержки банка
+
+1. **4 файла, не больше.** Новый факт → в подходящий существующий файл. Новый файл — только для действительно новой темы, с добавлением строки сюда.
+2. **Указатели вместо копий.** Не дублировать код и списки, которые можно прочитать из одного файла — давать путь (`src/entities/game/registry.tsx`). В памяти хранить только то, что из кода не очевидно: правила, связи между модулями, грабли.
+3. **Без пер-игровых файлов.** Детали конкретной игры живут в её папке `src/games/<Game>/` — код там самодокументирован (types.ts, constants.ts, helpers.ts).
+4. **Устарело → удалить сразу.** Неактуальная память вреднее отсутствующей.
+5. Дата последней ревизии внизу каждого файла; при правке — обновлять.
