@@ -42,6 +42,10 @@ src/
 
 Детальный план — `docs/react-native-migration.md`. Принятые решения (2026-07-06): Expo (dev build, не Expo Go), **отдельный RN-проект** `party-games-native` (не монорепо), iOS + Android, NativeWind, MMKV вместо localStorage, Skia для рисования. Пока веб жив — контент-правки дублировать в оба проекта.
 
+## Субагенты
+
+В `.claude/agents/`: `logic-test-writer` (vitest-тесты для чистой логики helpers; vitest ставит сам при первом запуске) и `content-reviewer` (read-only ревью контент-пулов). При смене конвенций контента/тестов — обновлять их промпты.
+
 ## Чек-лист новой игры
 
 1. Папка `src/games/<Name>Game/`: `types.ts` (фазы — см. conventions.md), `constants.ts`, `content.ts`/`contents/` (если есть контент), `helpers.ts`, компонент `<Name>Game.tsx` с пропсами `{ playerNames, onBack }`, фазы в `phases/` или `components/`
