@@ -47,6 +47,43 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
   const [winner, setWinner] = usePersistedState<Team | null>(K, 'winner', null);
   const [lastActionMsg, setLastActionMsg] = useState<string | null>(null);
 
+  const initBoard = () => {
+    const shuffledWords = getCodenamesWords(difficulty);
+    let colorAssignment: CardColor[];
+
+    if (activeMode === CODENAMES_MODES.DEEP_COVER) {
+      colorAssignment = [
+        ...Array<CardColor>(8).fill('red'),
+        ...Array<CardColor>(8).fill('blue'),
+        ...Array<CardColor>(7).fill('neutral'),
+        ...Array<CardColor>(2).fill('assassin'),
+      ];
+    } else if (activeMode === CODENAMES_MODES.DOUBLE_AGENT) {
+      colorAssignment = [
+        ...Array<CardColor>(8).fill('red'),
+        ...Array<CardColor>(8).fill('blue'),
+        ...Array<CardColor>(7).fill('neutral'),
+        'assassin',
+        'double_agent',
+      ];
+    } else {
+      colorAssignment = [
+        ...Array<CardColor>(9).fill('red'),
+        ...Array<CardColor>(8).fill('blue'),
+        ...Array<CardColor>(7).fill('neutral'),
+        'assassin',
+      ];
+    }
+
+    colorAssignment = shuffle(colorAssignment);
+    setCards(
+      shuffledWords.map((word, i) => ({ id: i, word, color: colorAssignment[i], revealed: false }))
+    );
+    setTurn(activeMode === CODENAMES_MODES.CLASSIC ? 'red' : Math.random() > 0.5 ? 'red' : 'blue');
+    setPhase(CodenamesPhase.Setup);
+    setWinner(null);
+  };
+
   useEffect(() => {
     if (playerNames.length < 4) return;
     // Доска и команды уже восстановлены из сессии — не пересоздаём.
@@ -61,46 +98,9 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerNames]);
 
-  const initBoard = () => {
-    const shuffledWords = getCodenamesWords(difficulty);
-    let colorAssignment: CardColor[];
-
-    if (activeMode === CODENAMES_MODES.DEEP_COVER) {
-      colorAssignment = [
-        ...Array(8).fill('red'),
-        ...Array(8).fill('blue'),
-        ...Array(7).fill('neutral'),
-        ...Array(2).fill('assassin'),
-      ];
-    } else if (activeMode === CODENAMES_MODES.DOUBLE_AGENT) {
-      colorAssignment = [
-        ...Array(8).fill('red'),
-        ...Array(8).fill('blue'),
-        ...Array(7).fill('neutral'),
-        'assassin',
-        'double_agent',
-      ];
-    } else {
-      colorAssignment = [
-        ...Array(9).fill('red'),
-        ...Array(8).fill('blue'),
-        ...Array(7).fill('neutral'),
-        'assassin',
-      ];
-    }
-
-    colorAssignment = shuffle(colorAssignment);
-    setCards(
-      shuffledWords.map((word, i) => ({ id: i, word, color: colorAssignment[i], revealed: false }))
-    );
-    setTurn(activeMode === CODENAMES_MODES.CLASSIC ? 'red' : Math.random() > 0.5 ? 'red' : 'blue');
-    setPhase(CodenamesPhase.Setup);
-    setWinner(null);
-  };
-
   const currentCaptain = turn === 'red' ? redCaptain : blueCaptain;
 
-  const handleSubmitClue = (e: React.FormEvent) => {
+  const handleSubmitClue = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!clueWord || clueCount < 0) return;
     setGuessesLeft(clueCount + 1);

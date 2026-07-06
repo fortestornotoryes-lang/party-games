@@ -57,13 +57,6 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
   ]);
   const [winner, setWinner] = usePersistedState<TeamColor | null>(K, 'winner', null);
 
-  useEffect(() => {
-    // Состояние команд уже восстановлено из сессии — не пересоздаём партию.
-    if (redState !== null) return;
-    initGame();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerNames]);
-
   const generateCode = (): number[] => {
     const nums = Array.from({ length: wordCount }, (_, i) => i + 1);
     return shuffle(nums).slice(0, 3);
@@ -92,6 +85,13 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
     setPhase(DecryptoPhase.Setup);
     setWinner(null);
   };
+
+  useEffect(() => {
+    // Состояние команд уже восстановлено из сессии — не пересоздаём партию.
+    if (redState !== null) return;
+    initGame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerNames]);
 
   const startRound = () => {
     setCurrentCode(generateCode());

@@ -55,7 +55,7 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
   const cardMeta = getCardStyle?.(currentPlayer) ?? {};
 
   return (
-    <div className="flex flex-col items-center justify-center overflow-y-auto p-6 select-none min-h-screen">
+    <div className="flex min-h-screen flex-col items-center justify-center overflow-y-auto p-6 select-none">
       <ProgressDots
         count={players.length}
         current={currentIndex}

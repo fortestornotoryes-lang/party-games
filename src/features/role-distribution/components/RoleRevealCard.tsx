@@ -33,7 +33,9 @@ export const RoleRevealCard: React.FC<RoleRevealCardProps> = ({
       style={{ background: glowColor }}
     />
 
-    <div className="relative z-10 flex flex-1 flex-col items-center p-7 text-center">{children}</div>
+    <div className="relative z-10 flex flex-1 flex-col items-center p-7 text-center">
+      {children}
+    </div>
   </>
 );
 

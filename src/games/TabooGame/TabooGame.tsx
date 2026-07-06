@@ -2,7 +2,6 @@ import { Ban } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
 
-
 import type { TabooClassicCard } from './content';
 import { getNextTabooClassicCard, TABOO_CLASSIC_CARDS } from './content';
 import { GameOverPhase } from './phases/GameOverPhase';

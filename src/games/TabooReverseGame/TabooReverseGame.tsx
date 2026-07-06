@@ -2,7 +2,6 @@ import { ListChecks } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-
 import { TABOO_REVERSE_MODES } from './constants';
 import type { TabooCard } from './content';
 import { getNextTabooCard, TABOO_REVERSE_CARDS } from './content';
@@ -192,7 +191,11 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   const handleToggleWord = useCallback((i: number) => {
     setUsedWordIdxs((prev) => {
       const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
+      if (next.has(i)) {
+        next.delete(i);
+      } else {
+        next.add(i);
+      }
       return next;
     });
   }, []);

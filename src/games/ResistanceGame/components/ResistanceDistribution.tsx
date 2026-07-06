@@ -53,79 +53,79 @@ export const ResistanceDistribution: React.FC<Props> = ({ players, onFinish }) =
           {player.isSpy ? (
             <RoleRevealPanel>
               <div>
-                  <p className="text-micro text-premium-red/50 font-black tracking-[0.45em] uppercase">
-                    {t(`${NS.RESISTANCE}.secretRole`)}
-                  </p>
-                  <h4 className="mt-0.5 text-lg font-black text-white/50 italic">{player.name}</h4>
-                </div>
+                <p className="text-micro text-premium-red/50 font-black tracking-[0.45em] uppercase">
+                  {t(`${NS.RESISTANCE}.secretRole`)}
+                </p>
+                <h4 className="mt-0.5 text-lg font-black text-white/50 italic">{player.name}</h4>
+              </div>
 
-                <div className="space-y-4 text-center">
-                  <Skull
-                    className="text-premium-red mx-auto h-[72px] w-[72px]"
-                    style={{ filter: 'drop-shadow(0 0 18px rgba(239,68,68,0.5))' }}
-                  />
-                  <h3
-                    className="text-premium-red text-5xl leading-none font-black tracking-tighter italic"
-                    style={{ textShadow: '0 0 40px rgba(239,68,68,0.4)' }}
-                  >
-                    {t(`${NS.RESISTANCE}.spyRole`)}
-                  </h3>
-                  <div className="bg-premium-red/10 border-premium-red/20 rounded-premium-md border px-4 py-3">
-                    <p className="text-micro text-premium-red/50 mb-1 font-black uppercase">
-                      {t(`${NS.RESISTANCE}.allies`)}
-                    </p>
-                    <p className="text-sm font-black text-white italic">
-                      {spyNames.filter((n) => n !== player.name).join(', ') ||
-                        t(`${NS.RESISTANCE}.youAlone`)}
-                    </p>
-                  </div>
-                  <p className="text-tag leading-relaxed text-white/25">
-                    {t(`${NS.RESISTANCE}.spyHint`)}
-                  </p>
-                </div>
-
-                <RoleRevealButton
-                  onClick={onNext}
-                  colorClassName="bg-premium-red text-white"
-                  style={{ boxShadow: '0 8px 32px rgba(239,68,68,0.35)' }}
+              <div className="space-y-4 text-center">
+                <Skull
+                  className="text-premium-red mx-auto h-[72px] w-[72px]"
+                  style={{ filter: 'drop-shadow(0 0 18px rgba(239,68,68,0.5))' }}
+                />
+                <h3
+                  className="text-premium-red text-5xl leading-none font-black tracking-tighter italic"
+                  style={{ textShadow: '0 0 40px rgba(239,68,68,0.4)' }}
                 >
-                  {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
-                </RoleRevealButton>
-              </RoleRevealPanel>
-            ) : (
-              <RoleRevealPanel>
-                <div>
-                  <p className="text-micro text-premium-blue/50 font-black tracking-[0.45em] uppercase">
-                    {t(`${NS.RESISTANCE}.roleLabel`)}
+                  {t(`${NS.RESISTANCE}.spyRole`)}
+                </h3>
+                <div className="bg-premium-red/10 border-premium-red/20 rounded-premium-md border px-4 py-3">
+                  <p className="text-micro text-premium-red/50 mb-1 font-black uppercase">
+                    {t(`${NS.RESISTANCE}.allies`)}
                   </p>
-                  <h4 className="mt-0.5 text-lg font-black text-white/50 italic">{player.name}</h4>
-                </div>
-
-                <div className="space-y-4 text-center">
-                  <Shield
-                    className="text-premium-blue mx-auto h-[72px] w-[72px]"
-                    style={{ filter: 'drop-shadow(0 0 16px rgba(63,123,255,0.5))' }}
-                  />
-                  <h3
-                    className="text-premium-blue text-5xl leading-none font-black tracking-tighter italic"
-                    style={{ textShadow: '0 0 36px rgba(63,123,255,0.35)' }}
-                  >
-                    {t(`${NS.RESISTANCE}.resistanceRole`)}
-                  </h3>
-                  <p className="text-tag leading-relaxed text-white/25">
-                    {t(`${NS.RESISTANCE}.resistanceHint`)}
+                  <p className="text-sm font-black text-white italic">
+                    {spyNames.filter((n) => n !== player.name).join(', ') ||
+                      t(`${NS.RESISTANCE}.youAlone`)}
                   </p>
                 </div>
+                <p className="text-tag leading-relaxed text-white/25">
+                  {t(`${NS.RESISTANCE}.spyHint`)}
+                </p>
+              </div>
 
-                <RoleRevealButton
-                  onClick={onNext}
-                  colorClassName="bg-premium-blue text-white"
-                  style={{ boxShadow: '0 8px 32px rgba(63,123,255,0.35)' }}
+              <RoleRevealButton
+                onClick={onNext}
+                colorClassName="bg-premium-red text-white"
+                style={{ boxShadow: '0 8px 32px rgba(239,68,68,0.35)' }}
+              >
+                {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
+              </RoleRevealButton>
+            </RoleRevealPanel>
+          ) : (
+            <RoleRevealPanel>
+              <div>
+                <p className="text-micro text-premium-blue/50 font-black tracking-[0.45em] uppercase">
+                  {t(`${NS.RESISTANCE}.roleLabel`)}
+                </p>
+                <h4 className="mt-0.5 text-lg font-black text-white/50 italic">{player.name}</h4>
+              </div>
+
+              <div className="space-y-4 text-center">
+                <Shield
+                  className="text-premium-blue mx-auto h-[72px] w-[72px]"
+                  style={{ filter: 'drop-shadow(0 0 16px rgba(63,123,255,0.5))' }}
+                />
+                <h3
+                  className="text-premium-blue text-5xl leading-none font-black tracking-tighter italic"
+                  style={{ textShadow: '0 0 36px rgba(63,123,255,0.35)' }}
                 >
-                  {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
-                </RoleRevealButton>
-              </RoleRevealPanel>
-            )}
+                  {t(`${NS.RESISTANCE}.resistanceRole`)}
+                </h3>
+                <p className="text-tag leading-relaxed text-white/25">
+                  {t(`${NS.RESISTANCE}.resistanceHint`)}
+                </p>
+              </div>
+
+              <RoleRevealButton
+                onClick={onNext}
+                colorClassName="bg-premium-blue text-white"
+                style={{ boxShadow: '0 8px 32px rgba(63,123,255,0.35)' }}
+              >
+                {isLast ? t(`${NS.RESISTANCE}.startGame`) : t(`${NS.RESISTANCE}.gotIt`)}
+              </RoleRevealButton>
+            </RoleRevealPanel>
+          )}
         </RoleRevealCard>
       )}
     />

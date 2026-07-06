@@ -1,7 +1,6 @@
 import { LayoutGrid, RotateCcw } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-
 import { Board } from './components/Board';
 import { GameOverBanner } from './components/GameOverBanner';
 import { PopOutToggle } from './components/PopOutToggle';
@@ -55,7 +54,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const [hoverCol, setHoverCol] = useState<number | null>(null);
   const [action, setAction] = usePersistedState<C4Action>(K, 'action', C4Action.Place);
 
-  const gameOver = !!(win || isDraw);
+  const gameOver = win !== null || isDraw;
   const showPopToggle = isPopOut && !gameOver;
 
   // Reset when mode changes (user returned to setup and changed mode).

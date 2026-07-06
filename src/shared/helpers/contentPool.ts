@@ -43,7 +43,10 @@ export function drawBatchFromPool<T>(
   opts: PoolOptions<T> = {}
 ): T[] {
   const keyOf = opts.keyOf ?? ((x: T) => String(x));
-  const available = availableFromPool(gameId, pool, { keyOf, minRemaining: opts.minRemaining ?? count });
+  const available = availableFromPool(gameId, pool, {
+    keyOf,
+    minRemaining: opts.minRemaining ?? count,
+  });
   const selected = shuffle(available).slice(0, count);
   selected.forEach((item) => {
     storageService.markWordAsUsed(gameId, keyOf(item));

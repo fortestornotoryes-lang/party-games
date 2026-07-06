@@ -1,9 +1,9 @@
 import { Settings as SettingsIcon } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-import { MainMenu } from '@/widget/main-menu/components/MainMenu';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import type { GameKey } from '@/entities/game/types';
+import { MainMenu } from '@/widget/main-menu/components/MainMenu';
 
 export function MenuRoute() {
   const navigate = useNavigate();

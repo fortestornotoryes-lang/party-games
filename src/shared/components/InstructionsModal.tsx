@@ -37,7 +37,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
 
   return (
     <AnimatePresence>
-      {open && (
+      {!!open && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

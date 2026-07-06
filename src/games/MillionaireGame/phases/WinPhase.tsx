@@ -25,7 +25,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
 
   useEffect(() => {
     if (isMillion) {
-      const shoot = () =>
+      const shoot = () => {
         feedbackService.celebrate('top', {
           particleCount: 120,
           spread: 110,
@@ -33,6 +33,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           colors: ['#FFCC1F', '#FFD700', '#fff', '#FFA500'],
           gravity: 0.9,
         });
+      };
       shoot();
       const t1 = setTimeout(shoot, 400);
       const t2 = setTimeout(shoot, 800);
@@ -81,7 +82,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
 
           {/* Expanding rings for million */}
           {!!isMillion &&
-            [...Array(4)].map((_, i) => (
+            Array.from({ length: 4 }).map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ scale: 1, opacity: 0.5 }}

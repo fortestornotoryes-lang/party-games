@@ -16,7 +16,7 @@ interface CaptainPhaseProps {
   clueCount: number;
   onClueWordChange: (word: string) => void;
   onClueCountChange: (count: number) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.SyntheticEvent<HTMLFormElement>) => void;
 }
 
 export const CaptainPhase: React.FC<CaptainPhaseProps> = ({

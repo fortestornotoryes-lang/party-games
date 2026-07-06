@@ -48,12 +48,14 @@ let _audioCtx: AudioContext | null = null;
 
 function getAudioCtx(): AudioContext | null {
   if (_audioCtx && _audioCtx.state !== 'closed') return _audioCtx;
-  const Ctor =
-    (typeof window !== 'undefined'
-      ? ((window as any)?.AudioContext ?? (window as any)?.webkitAudioContext)
-      : null) ?? null;
+  if (typeof window === 'undefined') return null;
+  const w = window as unknown as {
+    AudioContext?: typeof AudioContext;
+    webkitAudioContext?: typeof AudioContext;
+  };
+  const Ctor = w.AudioContext ?? w.webkitAudioContext;
   if (!Ctor) return null;
-  _audioCtx = new Ctor() as AudioContext;
+  _audioCtx = new Ctor();
   return _audioCtx;
 }
 
