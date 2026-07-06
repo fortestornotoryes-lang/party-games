@@ -96,7 +96,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
               <span className={`truncate font-black ${isActive ? ac.text : 'text-white/70'}`}>
                 {player}
               </span>
-              {!!isActive && (
+              {isActive && (
                 <span
                   className={`text-micro shrink-0 rounded-full px-2 py-0.5 font-black tracking-widest uppercase ${ac.badge}`}
                 >

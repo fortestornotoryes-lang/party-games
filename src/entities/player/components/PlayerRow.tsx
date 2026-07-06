@@ -66,7 +66,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         />
       </div>
 
-      {!!canRemove && (
+      {canRemove && (
         <button
           onClick={() => {
             onRemove(player.id);

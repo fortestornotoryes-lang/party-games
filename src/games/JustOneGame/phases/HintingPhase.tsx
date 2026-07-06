@@ -106,7 +106,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
         </div>
       </div>
 
-      {!!allHinted && (
+      {allHinted && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <PrimaryButton onClick={onStartGuessing}>
             {t(`${NS.JUST_ONE}.readyShowGuesser`, { guesser })}

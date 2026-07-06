@@ -138,7 +138,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
         )}
       </div>
 
-      {!!isRevealed && (
+      {isRevealed && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

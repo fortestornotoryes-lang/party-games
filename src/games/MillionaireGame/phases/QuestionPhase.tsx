@@ -80,7 +80,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
             <span className="text-micro rounded-full bg-white/5 px-1.5 py-0.5 font-black tracking-wider text-white/25 uppercase">
               {tier}
             </span>
-            {!!isCheckpoint && (
+            {isCheckpoint && (
               <span className="text-micro bg-premium-yellow/15 border-premium-yellow/30 text-premium-yellow rounded-full border px-1.5 py-0.5 font-black tracking-widest uppercase">
                 {t(`${NS.MILLIONAIRE}.checkpoint`)}
               </span>
@@ -147,7 +147,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
 
         {/* Burning-fuse countdown during reveal */}
         <AnimatePresence>
-          {!!isRevealing && (
+          {isRevealing && (
             <motion.div
               key="fuse"
               initial={{ scaleX: 1 }}
@@ -355,7 +355,7 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({ letter, text, state, disabl
       }
       transition={{ duration: 0.4 }}
       onClick={!disabled ? onClick : undefined}
-      disabled={!!disabled && state !== 'correct' && state !== 'wrong'}
+      disabled={disabled && state !== 'correct' && state !== 'wrong'}
       className={`rounded-premium-md relative flex min-h-[4.5rem] items-stretch overflow-hidden border text-left transition-all duration-300 ${s.wrapper}`}
     >
       {/* Letter column */}

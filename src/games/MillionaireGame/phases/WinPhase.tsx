@@ -116,7 +116,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           >
             {prize}
           </p>
-          {!!isMillion && (
+          {isMillion && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

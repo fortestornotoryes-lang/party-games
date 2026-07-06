@@ -80,7 +80,7 @@ export const CorridorBoard: React.FC<Props> = ({
                 }}
                 style={{ cursor: isValidMove ? 'pointer' : 'default' }}
               />
-              {!!isValidMove && (
+              {isValidMove && (
                 <rect
                   x={x + 4}
                   y={y + 4}
