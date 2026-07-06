@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { ChevronRight, Star, Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect } from 'react';
@@ -6,6 +5,7 @@ import React, { useEffect } from 'react';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { feedbackService } from '@/shared/services/feedbackService';
 
 interface WinPhaseProps {
   currentPlayer: string;
@@ -26,7 +26,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
   useEffect(() => {
     if (isMillion) {
       const shoot = () =>
-        confetti({
+        feedbackService.celebrate('top', {
           particleCount: 120,
           spread: 110,
           origin: { y: 0.2 },
@@ -41,13 +41,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
         clearTimeout(t2);
       };
     } else {
-      confetti({
-        particleCount: 70,
-        spread: 60,
-        origin: { y: 0.25 },
-        colors: ['#00D88A', '#FFCC1F', '#fff'],
-        gravity: 1.1,
-      });
+      feedbackService.celebrate('top', { colors: ['#00D88A', '#FFCC1F', '#fff'] });
     }
   }, [isMillion]);
 

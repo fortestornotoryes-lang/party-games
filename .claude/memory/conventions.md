@@ -32,6 +32,10 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 - Кастомные слова: общие (`getCustomWords(gameId)`) + привязанные к сложности через keyed-хранилище (`getCustomWordsByKey('<gameId>_<difficulty>')`); объединение — `getAllCustomWords`
 - Контент игры — `content.ts` или `contents/` в папке игры, разбит по `Difficulty`
 
+## Эффекты (звук / вибрация / конфетти)
+
+Только через `feedbackService` (`shared/services/`): `playSound`, `vibrate` (паттерны `VIBRATE`), `celebrate(preset, overrides?)` (пресеты `CONFETTI`), `fireworks(colors?)` (возвращает cancel — вернуть из useEffect). Не импортировать `canvas-confetti` напрямую и не проверять `settings.visualEffects` в callsite'ах — сервис делает это сам.
+
 ## i18n
 
 `shared/i18n/` — контекст с ru/en словарями (`ru.ts`, `en.ts`, ключи в `keys.ts`), интерполяция `{{var}}`. Язык хранится в настройках (`storageService`). Часть игрового контента и UI-строк пока захардкожена по-русски — при рефакторинге переносить в словари.

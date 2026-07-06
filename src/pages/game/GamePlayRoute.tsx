@@ -4,7 +4,7 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
-import { GameKey } from '@/entities/game/types';
+import { GameKey, type GameComponentProps } from '@/entities/game/types';
 import { sessionService } from '@/shared/services/sessionService';
 import { storageService } from '@/shared/services/storageService';
 
@@ -66,18 +66,13 @@ const MemoRiskGame = lazy(() =>
   import('@/games/MemoRiskGame/MemoRiskGame').then((m) => ({ default: m.MemoRiskGame }))
 );
 
-interface GameProps {
-  playerNames: string[];
-  onBack: () => void;
-}
-
-// Bunker (onRestart) и Telestrations (initialDifficulty) рендерятся отдельно —
-// у них дополнительные пропсы, см. GamePlayRoute ниже.
-const GAME_COMPONENTS: Record<
-  Exclude<GameKey, typeof GameKey.Bunker | typeof GameKey.Telestrations>,
-  ComponentType<GameProps>
-> = {
+// Все игры получают единый набор пропсов GameComponentProps;
+// каждая объявляет нужное ей подмножество (onRestart — Bunker,
+// initialDifficulty — Telestrations, остальные — playerNames + onBack).
+const GAME_COMPONENTS: Record<GameKey, ComponentType<GameComponentProps>> = {
   [GameKey.Spy]: SpyHuntGame,
+  [GameKey.Bunker]: BunkerGame,
+  [GameKey.Telestrations]: TelestrationsGame,
   [GameKey.FakeArtist]: FakeArtistGame,
   [GameKey.Resistance]: ResistanceGame,
   [GameKey.Alias]: AliasGame,
@@ -118,24 +113,13 @@ export function GamePlayRoute() {
   // с другим составом игроков — сбрасываем её до маунта игры. Идемпотентно.
   sessionService.syncPlayers(currentGameKey, playerNames);
 
-  const onBack = () => void navigate('/');
-
-  if (currentGameKey === GameKey.Telestrations) {
-    return (
-      <TelestrationsGame playerNames={playerNames} onBack={onBack} initialDifficulty={difficulty} />
-    );
-  }
-
-  if (currentGameKey === GameKey.Bunker) {
-    return (
-      <BunkerGame
-        playerNames={playerNames}
-        onBack={onBack}
-        onRestart={() => void navigate(`/game/${currentGameKey}/setup`)}
-      />
-    );
-  }
-
   const Game = GAME_COMPONENTS[currentGameKey];
-  return <Game playerNames={playerNames} onBack={onBack} />;
+  return (
+    <Game
+      playerNames={playerNames}
+      onBack={() => void navigate('/')}
+      onRestart={() => void navigate(`/game/${currentGameKey}/setup`)}
+      initialDifficulty={difficulty}
+    />
+  );
 }

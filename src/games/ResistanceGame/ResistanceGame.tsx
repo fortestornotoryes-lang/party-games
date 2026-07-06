@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import {
   Activity,
   ArrowRight,
@@ -26,6 +25,7 @@ import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { feedbackService } from '@/shared/services/feedbackService';
 
 interface ResistanceGameProps {
   playerNames: string[];
@@ -56,38 +56,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
   useEffect(() => {
     if (phase === ResistancePhase.GameOver && winner) {
       const colors = winner === 'resistance' ? ['#3b82f6', '#ffffff'] : ['#ef4444', '#000000'];
-      const duration = 3 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-      const interval = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          return;
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-        void confetti({
-          ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-          colors,
-        });
-        void confetti({
-          ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-          colors,
-        });
-      }, 250);
-
-      return () => {
-        clearInterval(interval);
-      };
+      return feedbackService.fireworks(colors);
     }
   }, [phase, winner]);
 

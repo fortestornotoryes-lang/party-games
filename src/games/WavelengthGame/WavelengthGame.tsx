@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Radio } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect } from 'react';
@@ -66,20 +65,15 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
 
   useEffect(() => {
     if (phase !== WavelengthPhase.Reveal) return;
-    const settings = storageService.getSettings();
 
     if (score >= 3) {
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.correct);
-      if (settings.visualEffects) {
-        const colors = score === 4 ? ['#a855f7', '#ffffff', '#eab308'] : ['#a855f7', '#ffffff'];
-        confetti({
-          particleCount: score === 4 ? 200 : 100,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors,
-        });
-      }
+      feedbackService.celebrate('success', {
+        particleCount: score === 4 ? 200 : 100,
+        spread: 80,
+        colors: score === 4 ? ['#a855f7', '#ffffff', '#eab308'] : ['#a855f7', '#ffffff'],
+      });
     } else if (score === 0) {
       feedbackService.playSound('error');
       feedbackService.vibrate(VIBRATE.error);

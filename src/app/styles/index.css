@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+/* Палитра premium-акцентов генерируется из PREMIUM_RGB (shared/theme/colors.ts) */
+@import './premium-colors.css';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PARTY HUB — DESIGN TOKENS  (Tailwind v4 CSS-first config)
@@ -23,18 +25,8 @@
 
   /* ─── Premium accent palette ─────────────────────────────────────────── */
   /* Usage: text-premium-red, bg-premium-blue/20, border-premium-green/30   */
-  --color-premium-red: #ff2e4d;
-  --color-premium-green: #00d88a;
-  --color-premium-sky: #1fb6ff;
-  --color-premium-blue: #3f7bff;
-  --color-premium-orange: #ff8a1f;
-  --color-premium-yellow: #ffcc1f;
-  --color-premium-purple: #c77bff;
-  --color-premium-pink: #ff2eb4;
-  --color-premium-cyan: #00e5ff;
-  --color-premium-lime: #84cc16;
-  --color-premium-teal: #14b8a6;
-  --color-premium-indigo: #6366f1;
+  /* Токены --color-premium-* живут в premium-colors.css (генерируется из   */
+  /* PREMIUM_RGB в shared/theme/colors.ts — единственный источник цветов).  */
 
   /* ─── Border radius ──────────────────────────────────────────────────── */
   /* Usage: rounded-premium-xl, rounded-premium-md, etc.                    */

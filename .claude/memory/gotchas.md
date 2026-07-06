@@ -4,7 +4,7 @@
 
 ## Canvas / рисование
 
-- Не писать raw-canvas: `shared/components/DrawingCanvas.tsx` уже решает масштабирование под `devicePixelRatio` и ресайз через `ResizeObserver`. Без этого рисунок мылится/смещается на мобильных.
+- Не писать raw-canvas: DPR-масштабирование, ресайз (`ResizeObserver`) и маппинг координат живут в хуке `shared/hooks/useCanvasSurface.ts` — на нём построены `DrawingCanvas` и канвас FakeArtist. Без этого рисунок мылится/смещается на мобильных.
 - На элементах с жестами рисования/перетаскивания нужен `touch-action: none`, иначе браузер перехватывает скролл.
 
 ## Производительность

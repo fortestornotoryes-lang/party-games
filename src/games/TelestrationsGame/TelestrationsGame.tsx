@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Pencil } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useState } from 'react';
@@ -81,21 +80,13 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
   const isDrawingRound = currentRound % 2 === 0;
 
   const finishAction = (content: string, type: StepType) => {
-    const settings = storageService.getSettings();
     if (type === STEP_TYPE.Guess) setCurrentWord(content);
     const newSteps: Step[] = [...steps, { type, content, author: currentPlayer }];
     setSteps(newSteps);
     if (currentRound === shuffledPlayers.length - 1) {
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.celebrate);
-      if (settings.visualEffects) {
-        void confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#f97316', '#ffffff'],
-        });
-      }
+      feedbackService.celebrate('success', { colors: ['#f97316', '#ffffff'] });
       setPhase(TelestrationsPhase.Gallery);
     } else {
       feedbackService.playSound('click');

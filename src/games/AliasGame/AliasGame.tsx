@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Brain } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect } from 'react';
@@ -117,17 +116,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
   useEffect(() => {
     if (phase !== AliasPhase.GameOver) return;
-    const settings = storageService.getSettings();
     feedbackService.playSound('win');
     feedbackService.vibrate(VIBRATE.win);
-    if (settings.visualEffects) {
-      confetti({
-        particleCount: 200,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: currentTeamIdx === 0 ? ['#FF2E4D', '#ffffff'] : ['#3F7BFF', '#ffffff'],
-      });
-    }
+    feedbackService.celebrate('win', {
+      origin: { y: 0.6 },
+      colors: currentTeamIdx === 0 ? ['#FF2E4D', '#ffffff'] : ['#3F7BFF', '#ffffff'],
+    });
   }, [phase, currentTeamIdx]);
 
   if (teams.length === 0) return null;

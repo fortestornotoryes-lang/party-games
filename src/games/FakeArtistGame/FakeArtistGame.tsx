@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import {Brush, Palette, Undo2} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -14,15 +13,27 @@ import type {Player} from '@/entities/player/types';
 import {GameCard} from '@/shared/components/GameCard';
 import {GameHeader} from '@/shared/components/GameHeader';
 import {PrimaryButton} from '@/shared/components/PrimaryButton';
+import {useCanvasSurface} from '@/shared/hooks/useCanvasSurface';
+import {useCountdown} from '@/shared/hooks/useCountdown';
 import {usePersistedState} from '@/shared/hooks/usePersistedState';
 import {useTranslation} from '@/shared/i18n';
 import {NS} from '@/shared/i18n/keys';
 import {feedbackService, VIBRATE} from '@/shared/services/feedbackService';
-import {storageService} from '@/shared/services/storageService';
 
 interface Props {
     playerNames: string[];
     onBack: () => void;
+}
+
+interface Point {
+    x: number;
+    y: number;
+}
+
+/** Один штрих: игрок рисует ровно одну линию за ход. Координаты — в CSS-пикселях. */
+interface Stroke {
+    points: Point[];
+    color: string;
 }
 
 export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
@@ -43,15 +54,13 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
     });
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
     const drawAllRef = useRef<() => void>(() => undefined);
     const [turnIndex, setTurnIndex] = usePersistedState(K, 'turnIndex', 0);
     const [isDrawing, setIsDrawing] = useState(false);
     const [hasDrawn, setHasDrawn] = usePersistedState(K, 'hasDrawn', false);
-    const [strokes, setStrokes] = usePersistedState<any[]>(K, 'strokes', []);
-    const [currentStroke, setCurrentStroke] = useState<any>(null);
+    const [strokes, setStrokes] = usePersistedState<Stroke[]>(K, 'strokes', []);
+    const [currentStroke, setCurrentStroke] = useState<Point[] | null>(null);
     const [isTransitioning, setIsTransitioning] = usePersistedState(K, 'isTransitioning', true);
-    const [timeLeft, setTimeLeft] = useState(0);
 
     useEffect(() => {
         // Роли уже восстановлены из сессии — не раздаём заново.
@@ -65,52 +74,46 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
     turnIndex % (players.length || 1)
         ];
 
-    useEffect(() => {
-        if (gameState.timerSeconds > 0 && !isTransitioning && phase === FakeArtistPhase.Playing) {
-            setTimeLeft(gameState.timerSeconds);
-            const timer = setInterval(() => {
-                setTimeLeft((prev) => {
-                    if (prev <= 1) {
-                        confirm();
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-            return () => {
-                clearInterval(timer);
-            };
+    const confirm = () => {
+        if (turnIndex === players.length * gameState.rounds - 1) {
+            feedbackService.playSound('success');
+            feedbackService.vibrate(VIBRATE.correct);
+            feedbackService.celebrate('success', {
+                particleCount: 100,
+                colors: ['#10b981', '#ffffff'],
+            });
+            setGameState((prev) => ({...prev, canvasImage: canvasRef.current?.toDataURL() ?? ''}));
+            setPhase(FakeArtistPhase.Voting);
+        } else {
+            feedbackService.playSound('click');
+            setTurnIndex(turnIndex + 1);
+            setHasDrawn(false);
+            setIsTransitioning(true);
         }
-    }, [turnIndex, isTransitioning, gameState.timerSeconds, phase]);
+    };
 
+    const timerActive =
+        gameState.timerSeconds > 0 && !isTransitioning && phase === FakeArtistPhase.Playing;
+    const [timeLeft, setTimeLeft] = useCountdown(timerActive, gameState.timerSeconds, () => {
+        confirm();
+    });
+
+    // Новый ход — перезапускаем отсчёт
     useEffect(() => {
-        if (phase !== FakeArtistPhase.Playing) return;
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        if (!canvas || !container) return;
+        if (timerActive) setTimeLeft(gameState.timerSeconds);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [turnIndex, timerActive, gameState.timerSeconds]);
 
-        const initCanvas = () => {
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) return;
-            const dpr = window.devicePixelRatio || 2;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            canvas.width = Math.round(rect.width * dpr);
-            canvas.height = Math.round(rect.height * dpr);
+    const {getCssPos} = useCanvasSurface(canvasRef, {
+        active: phase === FakeArtistPhase.Playing,
+        onResize: (ctx) => {
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.lineWidth = 4;
             // Пересоздание битмапа стирает рисунок — восстанавливаем штрихи
             drawAllRef.current();
-        };
-
-        const ro = new ResizeObserver(initCanvas);
-        ro.observe(canvas);
-        initCanvas();
-        return () => {
-            ro.disconnect();
-        };
-    }, [phase]);
+        },
+    });
 
     const drawAll = useCallback(() => {
         const canvas = canvasRef.current;
@@ -129,7 +132,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
             ctx.beginPath();
             ctx.strokeStyle = s.color;
             ctx.moveTo(s.points[0].x, s.points[0].y);
-            s.points.forEach((p: any) => {
+            s.points.forEach((p) => {
                 ctx.lineTo(p.x, p.y);
             });
             ctx.stroke();
@@ -138,7 +141,7 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
             ctx.beginPath();
             ctx.strokeStyle = playerColor;
             ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-            currentStroke.forEach((p: any) => {
+            currentStroke.forEach((p) => {
                 ctx.lineTo(p.x, p.y);
             });
             ctx.stroke();
@@ -152,38 +155,6 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
     useEffect(() => {
         if (phase === FakeArtistPhase.Playing) drawAll();
     }, [drawAll, phase]);
-
-    const getPos = (e: any) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return {x: 0, y: 0};
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {x: clientX - rect.left, y: clientY - rect.top};
-    };
-
-    const confirm = () => {
-        const settings = storageService.getSettings();
-        if (turnIndex === players.length * gameState.rounds - 1) {
-            feedbackService.playSound('success');
-            feedbackService.vibrate(VIBRATE.correct);
-            if (settings.visualEffects) {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: {y: 0.6},
-                    colors: ['#10b981', '#ffffff'],
-                });
-            }
-            setGameState((prev) => ({...prev, canvasImage: canvasRef.current?.toDataURL() ?? ''}));
-            setPhase(FakeArtistPhase.Voting);
-        } else {
-            feedbackService.playSound('click');
-            setTurnIndex(turnIndex + 1);
-            setHasDrawn(false);
-            setIsTransitioning(true);
-        }
-    };
 
     if (players.length === 0) return null;
 
@@ -260,20 +231,20 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
 
                             <GameCard className="border-premium-green/20 relative w-full flex-1 overflow-hidden !p-0">
                                 <div
-                                    ref={containerRef}
                                     className="h-full w-full"
                                     style={{touchAction: 'none'}}
                                     onMouseDown={(e) => {
                                         if (!hasDrawn) {
                                             setIsDrawing(true);
-                                            setCurrentStroke([getPos(e)]);
+                                            setCurrentStroke([getCssPos(e)]);
                                         }
                                     }}
                                     onMouseMove={(e) => {
-                                        if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]);
+                                        if (isDrawing && currentStroke)
+                                            setCurrentStroke([...currentStroke, getCssPos(e)]);
                                     }}
                                     onMouseUp={() => {
-                                        if (isDrawing) {
+                                        if (isDrawing && currentStroke) {
                                             setStrokes([...strokes, {points: currentStroke, color: playerColor}]);
                                             setIsDrawing(false);
                                             setCurrentStroke(null);
@@ -283,14 +254,15 @@ export const FakeArtistGame: React.FC<Props> = ({playerNames, onBack}) => {
                                     onTouchStart={(e) => {
                                         if (!hasDrawn) {
                                             setIsDrawing(true);
-                                            setCurrentStroke([getPos(e)]);
+                                            setCurrentStroke([getCssPos(e)]);
                                         }
                                     }}
                                     onTouchMove={(e) => {
-                                        if (isDrawing) setCurrentStroke([...currentStroke, getPos(e)]);
+                                        if (isDrawing && currentStroke)
+                                            setCurrentStroke([...currentStroke, getCssPos(e)]);
                                     }}
                                     onTouchEnd={() => {
-                                        if (isDrawing) {
+                                        if (isDrawing && currentStroke) {
                                             setStrokes([...strokes, {points: currentStroke, color: playerColor}]);
                                             setIsDrawing(false);
                                             setCurrentStroke(null);

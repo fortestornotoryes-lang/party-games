@@ -2,6 +2,8 @@ import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
+
 const BRUSH_COLORS = [
   '#ffffff',
   '#ef4444',
@@ -45,81 +47,35 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     prevTimeLeftRef.current = timeLeft;
   }, [timeLeft, onFinish]);
 
-  // Canvas resize observer
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const updateCanvasSize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      const newW = Math.round(rect.width * dpr);
-      const newH = Math.round(rect.height * dpr);
-      if (canvas.width !== newW || canvas.height !== newH) {
-        let saved: ImageData | undefined;
-        // Only save content if the canvas was already properly initialized —
-        // the HTML default (300×150) is transparent and must not be restored.
-        if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
-          try {
-            saved = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          } catch {}
-        }
-        canvas.width = newW;
-        canvas.height = newH;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.fillStyle = '#120a0a';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if (saved) {
-          try {
-            ctx.putImageData(saved, 0, 0);
-          } catch {}
-        }
-        isCanvasReady.current = true;
+  // Raster-подход: содержимое сохраняем снапшотом перед пересозданием битмапа
+  const savedImage = useRef<ImageData | undefined>(undefined);
+  const { getBitmapPos: getCoords } = useCanvasSurface(canvasRef, {
+    observeParent: true,
+    onBeforeResize: (ctx, canvas) => {
+      savedImage.current = undefined;
+      // Only save content if the canvas was already properly initialized —
+      // the HTML default (300×150) is transparent and must not be restored.
+      if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
+        try {
+          savedImage.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        } catch {}
       }
-    };
-
-    const ro = new ResizeObserver(updateCanvasSize);
-    if (canvas.parentElement) ro.observe(canvas.parentElement);
-    updateCanvasSize();
-    return () => {
-      ro.disconnect();
-    };
-  }, []);
-
-  const getCoords = (e: React.MouseEvent | React.TouchEvent) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
-
-    // For mouse events, native offsetX/Y is more robust against some layout styles
-    if ('nativeEvent' in e && (e.nativeEvent as MouseEvent).offsetX !== undefined) {
-      const mouseEvent = e.nativeEvent as MouseEvent;
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      return {
-        x: mouseEvent.offsetX * scaleX,
-        y: mouseEvent.offsetY * scaleY,
-      };
-    }
-
-    // Fallback for touch events
-    const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    return {
-      x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY,
-    };
-  };
+    },
+    onResize: (ctx, canvas) => {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.fillStyle = '#120a0a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (savedImage.current) {
+        try {
+          ctx.putImageData(savedImage.current, 0, 0);
+        } catch {}
+      }
+      isCanvasReady.current = true;
+    },
+  });
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     // Prevent default to avoid scrolling/gestures interfering

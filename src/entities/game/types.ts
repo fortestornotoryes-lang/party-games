@@ -82,5 +82,19 @@ export interface GameMetadata {
   readonly difficultySublabel?: (d: Difficulty, remainingWords?: number) => string | undefined;
 }
 
+/**
+ * Пропсы, которые GamePlayRoute передаёт каждому компоненту игры.
+ * Компонент игры объявляет нужное ему подмножество — единый контракт
+ * позволяет рендерить все игры одним маппингом без особых веток.
+ */
+export interface GameComponentProps {
+  playerNames: string[];
+  onBack: () => void;
+  /** Перезапуск партии — переход на setup текущей игры (использует Bunker) */
+  onRestart?: () => void;
+  /** Сложность из настроек на момент старта (использует Telestrations) */
+  initialDifficulty?: Difficulty;
+}
+
 export type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
 export type GamesRegistryMap = Record<GameKey, GameMetadata>;

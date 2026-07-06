@@ -1,4 +1,27 @@
+import confetti from 'canvas-confetti';
+
 import { storageService } from './storageService';
+
+/**
+ * Пресеты конфетти — базовые залпы по смыслу события.
+ * Использовать через feedbackService.celebrate(), не импортировать canvas-confetti напрямую:
+ * сервис сам проверяет настройку visualEffects, а при порте на другую платформу
+ * меняется только этот файл.
+ */
+export const CONFETTI = {
+  /** Победа / конец игры — большой залп из центра */
+  win: { particleCount: 200, spread: 80, origin: { y: 0.5 } },
+  /** Успех в раунде — залп снизу по центру */
+  success: { particleCount: 150, spread: 70, origin: { y: 0.6 } },
+  /** Небольшой залп — очко, мелкое достижение */
+  small: { particleCount: 80, spread: 60, origin: { y: 0.6 } },
+  /** Залп по центру игровой доски */
+  board: { particleCount: 130, spread: 75, origin: { y: 0.45 } },
+  /** Залп сверху — призовая лестница и т.п. */
+  top: { particleCount: 70, spread: 60, origin: { y: 0.25 }, gravity: 1.1 },
+} as const satisfies Record<string, confetti.Options>;
+
+export type ConfettiPreset = keyof typeof CONFETTI;
 
 /**
  * Стандартные вибропаттерны для единообразного UX.
@@ -38,6 +61,58 @@ function getAudioCtx(): AudioContext | null {
  * Feedback Service for Haptics and Sound Effects
  */
 export const feedbackService = {
+  /**
+   * Залп конфетти по пресету; overrides мержатся поверх пресета.
+   * Настройка visualEffects проверяется внутри — в callsite'ах guard не нужен.
+   */
+  celebrate: (preset: ConfettiPreset, overrides?: confetti.Options) => {
+    if (!storageService.getSettings().visualEffects) return;
+    try {
+      void confetti({ ...CONFETTI[preset], ...overrides });
+    } catch (e) {
+      // Ignore confetti errors
+    }
+  },
+
+  /**
+   * Фейерверк из боковых пушек в течение durationMs (финал игры).
+   * Возвращает функцию отмены — вернуть её из useEffect как cleanup.
+   */
+  fireworks: (colors?: string[], durationMs = 3000): (() => void) => {
+    if (!storageService.getSettings().visualEffects) return () => {};
+
+    const animationEnd = Date.now() + durationMs;
+    const defaults: confetti.Options = { startVelocity: 30, spread: 360, ticks: 60, colors };
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        return;
+      }
+      const particleCount = 50 * (timeLeft / durationMs);
+      try {
+        void confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        });
+        void confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        });
+      } catch (e) {
+        // Ignore confetti errors
+      }
+    }, 250);
+
+    return () => {
+      clearInterval(interval);
+    };
+  },
+
   // Haptic Feedback (Vibration)
   vibrate: (pattern: number | number[] = 10) => {
     void storageService.getSettingsAsync().then(({ vibration }) => {

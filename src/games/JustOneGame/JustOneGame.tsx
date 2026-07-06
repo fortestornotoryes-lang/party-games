@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Lightbulb } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -89,19 +88,11 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   const handleGuess = useCallback(() => {
     const correct = guess.trim().toLowerCase() === word.toLowerCase();
     setIsCorrect(correct);
-    const settings = storageService.getSettings();
 
     if (correct) {
       feedbackService.playSound('success');
       feedbackService.vibrate(VIBRATE.correct);
-      if (settings.visualEffects) {
-        void confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#FFCC1F', '#ffffff'],
-        });
-      }
+      feedbackService.celebrate('success', { colors: ['#FFCC1F', '#ffffff'] });
     } else {
       feedbackService.playSound('error');
       feedbackService.vibrate(VIBRATE.error);

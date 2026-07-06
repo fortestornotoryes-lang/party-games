@@ -1,7 +1,9 @@
 import type { GameTheme } from '../types';
 
-// RGB channel strings — single source of truth matching @theme tokens in index.css
-// If a hex changes in index.css, update the corresponding entry here.
+// RGB-каналы — ЕДИНСТВЕННЫЙ источник цветов палитры. @theme-токены
+// (--color-premium-*) генерируются отсюда скриптом scripts/generateThemeColors.ts
+// в src/app/styles/premium-colors.css (автоматически перед dev и build,
+// вручную — npm run theme:gen). Менять цвет — только здесь.
 export const PREMIUM_RGB = {
   red: '255,46,77',
   green: '0,216,138',

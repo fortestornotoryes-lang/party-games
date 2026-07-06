@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Home, RotateCcw, Trophy } from 'lucide-react';
 import React, { useEffect } from 'react';
 
@@ -6,6 +5,7 @@ import { LeaderboardList } from '@/entities/player/components/LeaderboardList';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { feedbackService } from '@/shared/services/feedbackService';
 
 interface GameOverPhaseProps {
   playerNames: string[];
@@ -23,12 +23,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    void confetti({
-      particleCount: 130,
-      spread: 75,
-      origin: { y: 0.45 },
-      colors: ['#ff2eb4', '#c77bff', '#ffcc1f', '#ffffff'],
-    });
+    feedbackService.celebrate('board', { colors: ['#ff2eb4', '#c77bff', '#ffcc1f', '#ffffff'] });
   }, []);
 
   return (

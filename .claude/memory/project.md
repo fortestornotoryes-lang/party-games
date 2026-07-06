@@ -36,7 +36,7 @@ src/
 - `src/entities/game/types.ts` — `GameKey` (const-объект), `GameMetadata` (title, theme, min/maxPlayers, `modes`, декларативные `settings`, `hasDifficulty`, `difficultySublabel`)
 - `src/entities/game/registry.tsx` — `GAMES_REGISTRY`: метаданные всех игр (карточка меню, Setup, настройки рендерятся из него)
 - `src/entities/game/instructions.ts` — инструкции по играм
-- `src/pages/game/GamePlayRoute.tsx` — lazy-импорты + `GAME_COMPONENTS` (пропсы `{ playerNames, onBack }`; исключения: Bunker (`onRestart`), Telestrations (`initialDifficulty`) рендерятся отдельно)
+- `src/pages/game/GamePlayRoute.tsx` — lazy-импорты + `GAME_COMPONENTS`: все игры рендерятся одним маппингом с общим контрактом `GameComponentProps` (`entities/game/types.ts`) — `playerNames`, `onBack` + опциональные `onRestart` (Bunker), `initialDifficulty` (Telestrations); особых веток нет
 
 ## Перенос на React Native (план, работа не начата)
 

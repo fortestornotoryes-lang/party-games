@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { LayoutGrid, RotateCcw } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
@@ -24,6 +23,7 @@ import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { feedbackService } from '@/shared/services/feedbackService';
 
 interface Props {
   playerNames: string[];
@@ -78,7 +78,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const fireConfetti = (player: C4Player) => {
     const colors =
       player === 1 ? ['#FF2E4D', '#FF5066', '#ffffff'] : ['#FFCC1F', '#FFE066', '#ffffff'];
-    confetti({ particleCount: 130, spread: 75, origin: { y: 0.45 }, colors });
+    feedbackService.celebrate('board', { colors });
   };
 
   const applyResult = (next: Cell[][], nextCurrent: C4Player) => {

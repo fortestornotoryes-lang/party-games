@@ -4,7 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "theme:gen": "tsx scripts/generateThemeColors.ts",
+    "predev": "npm run theme:gen",
     "dev": "vite --port=3333 --host=0.0.0.0",
+    "prebuild": "npm run theme:gen",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",

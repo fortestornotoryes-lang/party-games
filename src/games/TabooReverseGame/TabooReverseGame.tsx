@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { ListChecks } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -156,10 +155,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     if (phase === TabooReversePhase.GameOver) {
       feedbackService.playSound('win');
       feedbackService.vibrate(VIBRATE.win);
-      const settings = storageService.getSettings();
-      if (settings.visualEffects) {
-        confetti({ particleCount: 200, spread: 80, origin: { y: 0.5 } });
-      }
+      feedbackService.celebrate('win');
     }
   }, [phase]);
 
@@ -215,15 +211,10 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
         const points = allWordsUsed ? 2 : 1;
         newScores[guesser] = (newScores[guesser] ?? 0) + points;
         feedbackService.playSound('success');
-        const settings = storageService.getSettings();
-        if (settings.visualEffects) {
-          confetti({
-            particleCount: allWordsUsed ? 150 : 70,
-            spread: 60,
-            origin: { y: 0.6 },
-            colors: ['#f97316', '#ffffff'],
-          });
-        }
+        feedbackService.celebrate('small', {
+          particleCount: allWordsUsed ? 150 : 70,
+          colors: ['#f97316', '#ffffff'],
+        });
       }
 
       const effectiveUsed = advanceUsedDeck(
@@ -266,15 +257,10 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
       if (anySuccess) {
         feedbackService.playSound('success');
-        const settings = storageService.getSettings();
-        if (settings.visualEffects) {
-          confetti({
-            particleCount: 100,
-            spread: 60,
-            origin: { y: 0.6 },
-            colors: ['#f97316', '#ffffff'],
-          });
-        }
+        feedbackService.celebrate('small', {
+          particleCount: 100,
+          colors: ['#f97316', '#ffffff'],
+        });
       }
 
       setScores(newScores);

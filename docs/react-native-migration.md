@@ -72,11 +72,11 @@ party-games-native/
 
 Цель: сузить «платформенную поверхность» до shared-слоя, чтобы при копировании кода в RN менялись только сервисы/компоненты, а не игры. По убыванию ценности:
 
-1. **Обернуть canvas-confetti в feedbackService.** Сейчас `import confetti from 'canvas-confetti'` в 13 файлах игр, опции (`particleCount/spread/origin/colors`) дублируются в каждом callsite. Сделать `feedbackService.celebrate(preset, colors?)` с 3–4 пресетами (win, roundWin, sideCannons как в Resistance) — тогда в RN конфетти меняется в одном файле, а не в тринадцати.
-2. **FakeArtistGame перевести на shared DrawingCanvas.** `FakeArtistGame.tsx` держит собственную raw-canvas реализацию (свой DPR/ResizeObserver/drawAll, ~100 строк — дубль логики DrawingCanvas и нарушение правила из gotchas.md). После рефакторинга Skia-порт нужен ровно одному компоненту.
-3. **Убрать raw `setInterval`-таймеры из игр.** FakeArtistGame и ResistanceGame крутят собственные интервалы вместо `useTimer`/`useCountdown`. Перевести на shared-хуки — при порте таймеры вообще не трогаются.
-4. **Унифицировать пропсы игр.** Bunker (`onRestart`) и Telestrations (`initialDifficulty`) рендерятся отдельными ветками в GamePlayRoute. Сделать оба пропса опциональной частью общего `GameProps` и убрать исключения — RN-роут `play` станет тривиальным маппингом.
-5. **Схлопнуть двойной источник цветов.** Генерировать значения `@theme` из `PREMIUM_RGB` (`colors.ts` — единственный источник) ещё в вебе; в RN тогда копируется один файл, и tailwind.config.js генерируется из него же.
+1. ✅ **Обёрнуто: canvas-confetti → feedbackService.** `feedbackService.celebrate(preset, overrides?)` с пресетами `CONFETTI` (win/success/small/board/top) + `fireworks(colors?)` для боковых пушек Resistance. Прямых импортов canvas-confetti в играх не осталось; проверка `visualEffects` теперь внутри сервиса.
+2. ✅ **Сделано: общий canvas-слой.** DPR/ResizeObserver/маппинг координат вынесены в хук `shared/hooks/useCanvasSurface.ts`; на нём работают и `DrawingCanvas` (raster), и канвас FakeArtist (vector-штрихи). Skia-порт нужен ровно одному модулю — хуку.
+3. ✅ **Сделано: raw-таймеры убраны.** FakeArtist — на `useCountdown`; интервал Resistance ушёл вместе с конфетти в `fireworks`.
+4. ✅ **Сделано: пропсы унифицированы.** Общий контракт `GameComponentProps` в `entities/game/types.ts` (`onRestart`/`initialDifficulty` опциональны), GamePlayRoute рендерит все 18 игр одним маппингом без особых веток.
+5. ✅ **Сделано: один источник цветов.** `PREMIUM_RGB` (`colors.ts`) — единственный источник; `scripts/generateThemeColors.ts` генерирует `src/app/styles/premium-colors.css` с `@theme`-токенами (npm `theme:gen`, вшит в predev/prebuild). В RN по тому же принципу из `colors.ts` генерируется tailwind.config.js для NativeWind.
 
 Мелочь: scroll-lock через `document.body.style.overflow` встречается не только в InstructionsModal, но и inline в `FakeArtistVoting.tsx` — заменить на переиспользуемый хук/модалку, чтобы прямых обращений к `document` вне shared не осталось.
 

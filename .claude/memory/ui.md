@@ -3,7 +3,7 @@
 ## Темы и цвета
 
 - 12 тем `GameTheme` (`shared/types/index.ts`); у каждой игры тема задана в реестре
-- **Два источника, которые надо синхронизировать вручную:** hex-токены `@theme` в `src/app/styles/index.css` ↔ `PREMIUM_RGB` в `src/shared/theme/colors.ts` (комментарий в файле напоминает). Меняешь цвет — правь оба.
+- **Единственный источник цветов — `PREMIUM_RGB`** (`src/shared/theme/colors.ts`). `@theme`-токены `--color-premium-*` генерируются из него скриптом `scripts/generateThemeColors.ts` в `src/app/styles/premium-colors.css` (автоматически в predev/prebuild, вручную `npm run theme:gen`). Сгенерированный css руками не править. Хардкод-оттенки в `ARBITRARY` (hover-цвета кнопок) — отдельные, подобраны вручную.
 - `rgba(color, alpha)` из colors.ts — только для inline style (boxShadow, filter, background), не для className
 - `ThemeTokens` (там же) — готовые наборы классов по теме: text, bg, border, кнопка, градиент, активная опция. Новые тематические стили добавлять туда, а не собирать классы на месте
 

@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Banknote, CheckCircle, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect } from 'react';
@@ -7,6 +6,7 @@ import { PRIZE_LADDER } from '@/games/MillionaireGame/constants.ts';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { feedbackService } from '@/shared/services/feedbackService';
 
 interface BetweenPhaseProps {
   currentPlayer: string;
@@ -27,10 +27,9 @@ export const BetweenPhase: React.FC<BetweenPhaseProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      confetti({
+      feedbackService.celebrate('top', {
         particleCount: 55,
         spread: 50,
-        origin: { y: 0.25 },
         colors: ['#FFCC1F', '#FFD700', '#FFA500', '#fff'],
         gravity: 1.2,
       });

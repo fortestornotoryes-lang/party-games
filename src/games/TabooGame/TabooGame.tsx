@@ -1,4 +1,3 @@
-import confetti from 'canvas-confetti';
 import { Ban } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect } from 'react';
@@ -93,10 +92,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     if (phase === TabooPhase.GameOver) {
       feedbackService.playSound('win');
       feedbackService.vibrate(VIBRATE.win);
-      const settings = storageService.getSettings();
-      if (settings.visualEffects) {
-        confetti({ particleCount: 200, spread: 80, origin: { y: 0.5 } });
-      }
+      feedbackService.celebrate('win');
     }
   }, [phase]);
 
@@ -123,15 +119,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
       } else if (guesser) {
         newScores[guesser] = (newScores[guesser] ?? 0) + 1;
         feedbackService.playSound('success');
-        const settings = storageService.getSettings();
-        if (settings.visualEffects) {
-          confetti({
-            particleCount: 80,
-            spread: 60,
-            origin: { y: 0.6 },
-            colors: ['#ef4444', '#ffffff'],
-          });
-        }
+        feedbackService.celebrate('small', { colors: ['#ef4444', '#ffffff'] });
       }
 
       // Mark card as used, auto-reset deck when exhausted
