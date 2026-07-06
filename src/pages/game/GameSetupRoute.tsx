@@ -7,7 +7,6 @@ import type {GameKey} from '@/entities/game/types';
 import {UniversalGameSettings} from '@/features/game-settings/components/UniversalGameSettings';
 import {sessionService} from '@/shared/services/sessionService';
 import {storageService} from '@/shared/services/storageService';
-import type {GameModeOption} from '@/shared/types';
 import {Setup} from '@/widget/setup/components/Setup';
 
 /** Экран настройки игры: имена игроков + UniversalGameSettings. */
@@ -69,7 +68,7 @@ export function GameSetupRoute() {
                 currentGameId={currentGameKey}
                 mode={config.modes ? mode : undefined}
                 setMode={config.modes ? setMode : undefined}
-                modes={config.modes as GameModeOption[]}
+                modes={config.modes}
                 settingValues={{rounds, timerSeconds, countHiddenTraits}}
                 onSettingChange={(key, value) => {
                     if (key === 'rounds') setRounds(value as number);

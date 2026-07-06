@@ -7,7 +7,7 @@ import {GameMenuCard} from '@/entities/game/components/GameMenuCard';
 import {useGameSettings} from '@/entities/game/model/GameSettingsContext';
 import {GAMES_REGISTRY} from '@/entities/game/registry';
 import type {GameKey} from '@/entities/game/types';
-import {contentService} from '@/services/contentService';
+import {contentService} from '@/features/word-stats/model/contentService';
 import {getTheme} from '@/shared/theme/colors';
 import {DIFFICULTY} from '@/shared/types';
 

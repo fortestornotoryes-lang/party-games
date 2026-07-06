@@ -5,10 +5,10 @@ import React from 'react';
 
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey, GameMode, GameSettingKey, GameSettingValue } from '@/entities/game/types';
-import { contentService } from '@/services/contentService';
+import { contentService } from '@/features/word-stats/model/contentService';
 import { getTheme } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
-import { DIFFICULTY, type Difficulty, type GameModeOption } from '@/shared/types';
+import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
 // ─── universal setting row ────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ interface UniversalGameSettingsProps {
   currentGameId?: GameKey;
   mode?: GameMode['id'];
   setMode?: (m: GameMode['id']) => void;
-  modes?: GameModeOption[];
+  modes?: readonly GameMode[];
   /** Текущие значения настроек из схемы игры (GameMetadata.settings) */
   settingValues?: Partial<Record<GameSettingKey, GameSettingValue>>;
   onSettingChange?: (key: GameSettingKey, value: GameSettingValue) => void;
@@ -96,7 +96,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
   currentGameId,
   mode,
   setMode,
-  modes = [] as GameModeOption[],
+  modes = [],
   settingValues,
   onSettingChange,
 }) => {

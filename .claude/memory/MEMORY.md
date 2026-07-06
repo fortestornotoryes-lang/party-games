@@ -12,7 +12,6 @@
 - [UI Components](components_ui.md) — Setup (до игры, инструкции+игроки), GameHeader (во время игры), PassPhoneCard, DrawingCanvas, UI.tsx
 - [Storage & Word Logic](storage_wordlogic.md) — storageService gameId-ключи; пул-функции get*Pool в model/use*Content + реестр WORD_POOLS в contentService.getWordStats; исправленные difficulty-баги
 - [Phase Enum Pattern](phase_enum_pattern.md) — фазы игры = const-объект + производный тип в `./types.ts` (НЕ enum, НЕ литералы); встреченные enum'ы переписывать
-- [Truth or Dare Plan](truth_or_dare_plan.md) — архитектура незавершённой игры «Правда или Действие» (GameKey, файлы, фазы, контент)
 - [Hooks & Patterns](hooks_and_patterns.md) — usePlayerCycle, useTimer, VIBRATE, shuffle/pickRandom, DistributionFlow; таблица антипаттернов → замен
 - [Bunker Architecture](bunker_architecture.md) — constants.ts / helpers.ts / types.ts BunkerGame; SurvivalPhase карточка катастрофы; таблица всех экспортов
 - [Corridor Game](corridor_game.md) — SVG-доска Quoridor; механика hWalls/vWalls; isBlocked; BFS-валидация; ActionMode (move/wall_h/wall_v)

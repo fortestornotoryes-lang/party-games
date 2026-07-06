@@ -19,10 +19,3 @@ export type GameTheme =
   | 'lime'
   | 'teal'
   | 'indigo';
-
-export interface GameModeOption {
-  id: string;
-  name: string;
-  description: string;
-  icon: any; // Using any for icon component as they are from lucide-react
-}

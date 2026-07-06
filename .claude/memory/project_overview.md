@@ -74,6 +74,7 @@ src/
     game-settings/components/UniversalGameSettings.tsx  # Слоты настроек (сложность, режим, раунды, таймер)
     role-distribution/components/DistributionFlow.tsx   # Абстрактная раздача ролей (ProgressDots + lock→reveal)
     taboo-pass/components/TabooPassPhase.tsx             # Общая Pass-фаза Taboo-семейства (PassPhoneCard + PlayerScoreList)
+    word-stats/model/contentService.ts                   # Реестр WORD_POOLS + getWordStats (зависит от @/games/*/content)
   games/
     AliasGame/AliasGame.tsx
     CodenamesGame/CodenamesGame.tsx
@@ -111,16 +112,14 @@ src/
         VerdictPhase.tsx            # использует StopGameButton
         GameOverPhase.tsx           # использует LeaderboardList
     TruthOrDareGame/TruthOrDareGame.tsx
-  services/
-    contentService.ts              # единственный не перенесённый сервис — зависит от @/games/*/content (→ features позже)
 ```
 
 **Временные исключения FSD (ещё не вычищены):**
 - `pages/*` и `widget/*` импортируют из `@/games/*` напрямую (games ещё не оформлены как FSD-слой);
 - `entities/game/registry.tsx` импортирует `*_MODES` из `@/games/*/constants` и картинки из `@/assets` — games ещё не оформлены как FSD-слой;
-- `widget/main-menu` и `features/game-settings` импортируют нелейерный `@/services/contentService`;
-- `services/contentService.ts` вне слоёв, импортирует entities и `@/games/*/content.ts` (utils/gameLogic.ts расформирован: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр);
-- `GameModeOption` в `shared/types` — почти дубликат `GameMode` из `entities/game/types` (используют UniversalGameSettings + GameSetupRoute), кандидат на консолидацию.
+- `features/word-stats` импортирует `@/games/*/content` (по той же причине), а `features/game-settings` и `widget/main-menu` импортируют `features/word-stats` (для widget это легально, для features — кросс-импорт внутри слоя).
+
+Устранено (2026-07-06): `src/services/` удалён — contentService переехал в `features/word-stats/model/contentService.ts`; `GameModeOption` из `shared/types` удалён — UniversalGameSettings и GameSetupRoute используют `readonly GameMode[]` из `entities/game/types` (utils/gameLogic.ts расформирован ранее: generateId → shared/helpers/random.ts, init-функции → model/-сегменты игр).
 
 ## Архитектура (роутинг)
 

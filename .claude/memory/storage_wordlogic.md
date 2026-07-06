@@ -37,7 +37,7 @@ metadata:
 | TabooReverse | inline в `TabooReverseGame.tsx` | `getTabooReverseWordPool` | `content.ts` (кастомных слов нет) |
 | Millionaire | `getMillionaireQuestions()` (трекинг used по `q.text`) | `getMillionaireQuestionPool` (difficulty игнорируется — внутренние уровни easy/medium/hard) | `model/millionaireContent.ts` |
 
-`src/services/contentService.ts` (НЕ в shared — иначе shared зависел бы от games) держит реестр `WORD_POOLS: Partial<Record<GameKey, (d) => readonly string[]>>` и единственный метод `getWordStats(gameId, difficulty)` → `{total, remaining}`. Игры без расходуемого пула (mafia, resistance, corridor, connect_four, bunker, memo_risk) в реестре отсутствуют → `{0, 0}`.
+`src/features/word-stats/model/contentService.ts` (НЕ в shared — иначе shared зависел бы от games) держит реестр `WORD_POOLS: Partial<Record<GameKey, (d) => readonly string[]>>` и единственный метод `getWordStats(gameId, difficulty)` → `{total, remaining}`. Игры без расходуемого пула (mafia, resistance, corridor, connect_four, bunker, memo_risk) в реестре отсутствуют → `{0, 0}`.
 
 **How to apply:** меняя логику пула игры — править её `get*Pool`; статистика подтянется сама. Новая игра со словами → экспортировать пул-функцию и добавить строку в `WORD_POOLS`. Не дублировать сборку пула в contentService или компонентах.
 
