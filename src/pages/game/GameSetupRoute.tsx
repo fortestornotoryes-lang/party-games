@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from 'react-router';
 
-import { GAME_INSTRUCTIONS } from '@/entities/game/instructions';
+import { getGameInstructions } from '@/entities/game/instructions';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey } from '@/entities/game/types';
+import { useLocalizedGame } from '@/entities/game/useLocalizedGame';
 import { UniversalGameSettings } from '@/features/game-settings/components/UniversalGameSettings';
+import { useLanguage } from '@/shared/i18n';
 import { sessionService } from '@/shared/services/sessionService';
 import { storageService } from '@/shared/services/storageService';
 import { Setup } from '@/widget/setup/components/Setup';
@@ -28,11 +29,12 @@ export function GameSetupRoute() {
   } = useGameSettings();
 
   const currentGameKey = gameKey as GameKey;
-  const config = GAMES_REGISTRY[currentGameKey];
+  const { t, lang } = useLanguage();
+  const config = useLocalizedGame(currentGameKey);
 
   // GameLayout синхронизирует currentGameId с URL; до этого не рендерим,
   // чтобы не показать настройки предыдущей игры (раньше тут был if (!currentGameId)).
-  if (currentGameId !== currentGameKey) return null;
+  if (currentGameId !== currentGameKey || !config) return null;
 
   const startGame = (playerNames: string[]) => {
     // Новая партия всегда начинается с чистого листа — сохранённая
@@ -51,9 +53,9 @@ export function GameSetupRoute() {
       icon={config.icon}
       themeColor={config.theme}
       playerPlaceholder={config.placeholder}
-      addPlayerLabel="Добавить"
+      addPlayerLabel={t('common.add')}
       instructions={
-        (GAME_INSTRUCTIONS[currentGameKey] ?? []) as {
+        getGameInstructions(currentGameKey, lang) as {
           title: string;
           content: string;
         }[]

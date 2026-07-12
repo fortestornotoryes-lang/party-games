@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect } from 'react';
 
 import { Typography } from '@/shared/components/Typography';
+import { useTranslation } from '@/shared/i18n';
 import { getTheme } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
 
@@ -25,6 +26,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
   theme,
   description,
 }) => {
+  const { t } = useTranslation();
   const themeConfig = getTheme(theme);
 
   useEffect(() => {
@@ -91,7 +93,9 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                 onClick={onClose}
                 className={`glass-card rounded-premium-md flex h-18 w-full items-center justify-center border-none text-white transition-all hover:bg-white/5 active:scale-[0.98]`}
               >
-                <span className="text-xl font-black tracking-tighter uppercase italic">СТАРТ</span>
+                <span className="text-xl font-black tracking-tighter uppercase italic">
+                  {t('common.start')}
+                </span>
               </button>
             </div>
           </div>

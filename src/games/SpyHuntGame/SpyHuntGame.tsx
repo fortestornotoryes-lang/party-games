@@ -9,7 +9,6 @@ import { RevealPhase } from './phases/RevealPhase';
 import { SpyHuntPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { GAME_DURATION_BY_DIFFICULTY } from '@/games/SpyHuntGame/constants.ts';
@@ -82,7 +81,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   return (
     <div className="flex min-h-screen flex-col pb-10">
       <GameHeader
-        title={GAMES_REGISTRY.spy.title}
+        title={t('registry.games.spy.title')}
         subtitle={subtitle}
         icon={Skull}
         theme="red"

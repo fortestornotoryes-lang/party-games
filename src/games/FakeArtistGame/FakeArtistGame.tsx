@@ -7,7 +7,6 @@ import { FakeArtistVoting } from './components/FakeArtistVoting';
 import { initFakeArtist } from './model/initFakeArtist';
 import { FakeArtistPhase } from './types';
 
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { GameCard } from '@/shared/components/GameCard';
@@ -186,7 +185,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
             className="flex flex-1 flex-col"
           >
             <GameHeader
-              title={GAMES_REGISTRY.fake_artist.title}
+              title={t('registry.games.fake_artist.title')}
               subtitle={t(`${NS.FAKE_ARTIST}.turnSubtitle`, {
                 current: turnIndex + 1,
                 total: players.length * gameState.rounds,

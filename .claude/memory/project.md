@@ -33,9 +33,9 @@ src/
 
 ## GameRegistry — единая точка описания игр
 
-- `src/entities/game/types.ts` — `GameKey` (const-объект), `GameMetadata` (title, theme, min/maxPlayers, `modes`, декларативные `settings`, `hasDifficulty`, `difficultySublabel`)
-- `src/entities/game/registry.tsx` — `GAMES_REGISTRY`: метаданные всех игр (карточка меню, Setup, настройки рендерятся из него)
-- `src/entities/game/instructions.ts` — инструкции по играм
+- `src/entities/game/types.ts` — `GameKey` (const-объект), `GameMetadataDef` (структура: theme, min/maxPlayers, `modes`, `settings`, `hasDifficulty`, `difficultySublabel(d, remaining, t)`) и `GameMetadata` (+ локализованные title/subtitle/description/placeholder)
+- `src/entities/game/registry.tsx` — `GAMES_REGISTRY`: только структура; все тексты — в словарях i18n `registry.games.<gameKey>`; локализация — `useLocalizedGame(s)` (`entities/game/useLocalizedGame.ts`)
+- `src/entities/game/instructions.ts` — инструкции ru + en, выбор через `getGameInstructions(gameKey, lang)`
 - `src/pages/game/GamePlayRoute.tsx` — lazy-импорты + `GAME_COMPONENTS`: все игры рендерятся одним маппингом с общим контрактом `GameComponentProps` (`entities/game/types.ts`) — `playerNames`, `onBack` + опциональные `onRestart` (Bunker), `initialDifficulty` (Telestrations); особых веток нет
 
 ## Перенос на React Native (план, работа не начата)
@@ -52,9 +52,10 @@ src/
 
 1. Папка `src/games/<Name>Game/`: `types.ts` (фазы — см. conventions.md), `constants.ts`, `content.ts`/`contents/` (если есть контент), `helpers.ts`, компонент `<Name>Game.tsx` с пропсами `{ playerNames, onBack }`, фазы в `phases/` или `components/`
 2. `GameKey` в `entities/game/types.ts`
-3. Запись в `GAMES_REGISTRY` (registry.tsx) — иконка, тема, описание, режимы/настройки
-4. Инструкции в `entities/game/instructions.ts`
-5. Lazy-импорт + запись в `GAME_COMPONENTS` в `GamePlayRoute.tsx`
-6. Персистенция партии через `usePersistedState` (см. conventions.md), контент через пул-хелперы
+3. Запись в `GAMES_REGISTRY` (registry.tsx) — только структура: иконка, тема, лимиты, режимы/настройки (id + иконки)
+4. Тексты игры в словари i18n: `registry.games.<gameKey>` (title/subtitle/description/placeholder/modes/settings) в `ru.ts` **и** `en.ts` + неймспейс игры для внутриигровых строк
+5. Инструкции в `entities/game/instructions.ts` — в оба словаря: `GAME_INSTRUCTIONS` (ru) и `GAME_INSTRUCTIONS_EN`
+6. Lazy-импорт + запись в `GAME_COMPONENTS` в `GamePlayRoute.tsx`
+7. Персистенция партии через `usePersistedState` (см. conventions.md), контент через пул-хелперы
 
-_Ревизия: 2026-07-06_
+_Ревизия: 2026-07-12_

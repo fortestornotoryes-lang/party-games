@@ -30,6 +30,312 @@ export const en: Translations = {
       medium: 'Normal',
       hard: 'Hard',
     },
+    difficultyShort: {
+      easy: 'Easy',
+      medium: 'Normal',
+      hard: 'Pro',
+    },
+    loading: 'Loading...',
+    add: 'Add',
+    participants: 'Players',
+    difficultyLabel: 'Difficulty',
+    modeLabel: 'Mode',
+    explains: '{{player}} is explaining',
+    secondsShort: '{{n}}s',
+    scoreTable: 'Score',
+    teamN: 'Team {{n}}',
+    youDraw: 'Drawing',
+  },
+  menu: {
+    tagline: '{{n}} games · Let the party begin',
+    playersCount: '{{players}} players',
+    play: 'Play',
+    balanceDebug: 'Balance · Bunker',
+  },
+  settingsPage: {
+    title: 'Settings',
+    tabGeneral: 'General',
+    tabWords: 'Words',
+    effectsSection: 'Effects & Feedback',
+    visualEffects: 'Visual effects',
+    visualEffectsDesc: 'Confetti and animations',
+    vibration: 'Vibration',
+    vibrationDesc: 'Haptic feedback',
+    sounds: 'Sounds',
+    soundsDesc: 'Sound effects',
+    storageSection: 'Storage',
+    storageActive: 'Active',
+    storageDesc: 'Players, used questions and custom words are stored locally in your browser.',
+    aboutSection: 'About',
+    aboutText: 'Version 1.1.0-beta · Slapped together with love, like everything else',
+    truth: 'Truth',
+    dare: 'Dare',
+    todShort: 'T/Dare',
+    progress: 'Progress',
+    usedCount: '{{n}} used',
+    noUsed: 'Nothing used yet',
+    reset: 'Reset',
+    confirmReset: 'Reset progress for this game?',
+    addSection: 'Add',
+    addTo: 'Add to:',
+    errMinLetters: 'At least 3 letters',
+    errDuplicate: 'Already added',
+    customTruths: 'My truths',
+    customDares: 'My dares',
+    customWords: 'My words',
+    nothingAdded: 'Nothing added yet',
+    searchPlaceholder: 'Search...',
+    nothingFound: 'Nothing found',
+  },
+  registry: {
+    sublabels: {
+      cardsLeft: '{{n}} cards',
+      wordsLeft: '{{n}} wds',
+      minutes: '{{n}} min',
+      seconds: '{{n}} sec',
+      shapes: '{{n}} shp',
+    },
+    games: {
+      spy: {
+        title: 'SPY HUNT',
+        subtitle: 'Find the spy among your own',
+        placeholder: 'Player',
+        description:
+          "One player doesn't know the location. The others ask questions and answer without giving the place away — while trying to expose the spy.",
+        modes: {
+          classic: { name: 'Classic', description: '1 spy, everyone else knows the location' },
+          double_agent: { name: 'Double Agent', description: '2 spies (5+ players)' },
+          mole: { name: 'Traitor', description: '1 spy and 1 accomplice (5+ players)' },
+        },
+      },
+      fake_artist: {
+        title: 'FAKE ARTIST',
+        subtitle: 'Spot the one drawing blind',
+        placeholder: 'Player',
+        description:
+          "Everyone draws the same thing, but one player doesn't know the word and tries to blend in without getting caught.",
+        settings: {
+          rounds: {
+            label: 'Rounds',
+            options: {
+              '1': { label: '1 ROUND' },
+              '2': { label: '2 ROUNDS' },
+              '3': { label: '3 ROUNDS' },
+            },
+          },
+          timerSeconds: {
+            label: 'Turn timer',
+            options: {
+              '0': { label: '∞' },
+              '15': { label: '15 SEC' },
+              '30': { label: '30 SEC' },
+            },
+          },
+        },
+      },
+      bunker: {
+        title: 'BUNKER',
+        subtitle: 'Who deserves to survive?',
+        placeholder: 'Survivor',
+        description:
+          'Catastrophe has struck. The bunker fits only half the group. Everyone gets a random character — and fights for a spot inside.',
+        settings: {
+          rounds: {
+            label: 'Reveal rounds',
+            options: {
+              '3': { label: '3 ROUNDS', sublabel: 'quick' },
+              '5': { label: '5 ROUNDS', sublabel: 'standard' },
+              '7': { label: '7 ROUNDS', sublabel: 'full' },
+            },
+          },
+          countHiddenTraits: {
+            label: 'Survival calculation',
+            options: {
+              true: { label: 'ALL TRAITS', sublabel: 'including hidden' },
+              false: { label: 'REVEALED', sublabel: 'only shown' },
+            },
+          },
+        },
+        modes: {
+          classic: {
+            name: 'Classic',
+            description: 'Reveal rounds in turn order, fair voting',
+          },
+          dictator: {
+            name: 'Dictator',
+            description: 'One player is the bunker director with a guaranteed spot',
+          },
+          tribunal: {
+            name: 'Tribunal',
+            description: 'After the vote, one eliminated player may reveal a hidden trait',
+          },
+        },
+      },
+      corridor: {
+        title: 'CORRIDOR',
+        subtitle: 'Be the first to cross',
+        placeholder: 'Player',
+        description:
+          "Move your pawn to the opposite edge or place walls to block your opponent. You can't wall them in completely — a path must always remain.",
+      },
+      memo_risk: {
+        title: 'MEMO RISK',
+        subtitle: 'Memorize and push your luck',
+        placeholder: 'Player',
+        description:
+          'Flip cards, memorize the board and collect target shapes. Hit a dangerous one — your turn points burn. Risk again or bank your points.',
+        modes: {
+          classic: {
+            name: 'Classic',
+            description: 'Flip freely until you decide to stop',
+          },
+          timed: { name: 'Timed', description: 'Limited time per turn — decide faster' },
+          limited: {
+            name: 'Limited flips',
+            description: 'Fixed number of flips per turn',
+          },
+        },
+      },
+      millionaire: {
+        title: 'MILLIONAIRE',
+        subtitle: 'Who Wants to Be a Millionaire',
+        placeholder: 'Player',
+        description:
+          'Take turns in the hot seat answering 15 questions of rising difficulty. Three lifelines, two safe checkpoints — and a shot at the million.',
+      },
+      truth_or_dare: {
+        title: 'TRUTH OR DARE',
+        subtitle: 'Choose: confession or challenge',
+        placeholder: 'Player',
+        description:
+          "Ask awkward questions, take on bold challenges and find out who's ready to risk it all for fun.",
+      },
+      taboo: {
+        title: 'TABOO',
+        subtitle: 'Explain without the obvious',
+        placeholder: 'Player',
+        description:
+          'Explain the word to your team without using the most obvious, forbidden clues on the card.',
+        settings: {
+          timerSeconds: {
+            label: 'Round time',
+            options: {
+              '30': { label: '30 SEC' },
+              '45': { label: '45 SEC' },
+              '60': { label: '60 SEC' },
+              '90': { label: '90 SEC' },
+            },
+          },
+        },
+      },
+      taboo_reverse: {
+        title: 'TABOO REVERSED',
+        subtitle: 'Forbidden clues — not anymore',
+        placeholder: 'Player',
+        description:
+          "Explain the word using only the forbidden associations, but never say the answer itself. The sharper the hint, the faster they'll guess.",
+        settings: {
+          timerSeconds: {
+            label: 'Round time',
+            options: {
+              '30': { label: '30 SEC' },
+              '45': { label: '45 SEC' },
+              '60': { label: '60 SEC' },
+              '90': { label: '90 SEC' },
+            },
+          },
+        },
+        modes: {
+          classic: {
+            name: 'Classic',
+            description: 'One card per turn — whoever guesses gets the points',
+          },
+          blitz: {
+            name: 'Blitz',
+            description: 'Multiple cards per turn — guessed one, grab the next',
+          },
+          team: { name: 'Team', description: 'Two teams — only your own team guesses' },
+        },
+      },
+      telestrations: {
+        title: 'TELESTRATIONS',
+        subtitle: 'A drawing descends into chaos',
+        placeholder: 'Player',
+        description:
+          'Pass words and drawings down the chain, then watch how hilariously the original idea mutates at every step.',
+      },
+      codenames: {
+        title: 'CODENAMES',
+        subtitle: 'Battle of spies',
+        placeholder: 'Agent',
+        description: 'A battle between two teams of spies',
+        modes: {
+          classic: { name: 'Classic', description: '9 yours, 8 enemy, 1 assassin' },
+          deep_cover: { name: 'Deep Cover', description: '8 yours, 8 enemy, 2 assassins' },
+          double_agent: {
+            name: 'Double Agent',
+            description: '8 yours, 8 enemy, 1 shared agent (first to find it)',
+          },
+        },
+      },
+      decrypto: {
+        title: 'DECRYPTO',
+        subtitle: 'Codes & interceptions',
+        placeholder: 'Encryptor',
+        description:
+          "Encrypt numeric codes for your team so allies get the hint — and opponents can't intercept it.",
+        modes: {
+          classic: { name: 'Classic', description: '4 words, 3-digit code' },
+          extended_5: { name: 'Wide Code', description: '5 words, 3-digit code' },
+          extended_6: { name: 'Super Cipher', description: '6 words, 3-digit code' },
+        },
+      },
+      alias: {
+        title: 'ALIAS',
+        subtitle: 'Explain faster than anyone',
+        placeholder: 'Player',
+        description:
+          'Explain as many words as you can before time runs out — no same-root words, no direct hints.',
+      },
+      resistance: {
+        title: 'RESISTANCE',
+        subtitle: 'Overthrow the tyranny',
+        placeholder: 'Player',
+        description:
+          'The resistance tries to complete missions while hidden spies do everything to sabotage them.',
+      },
+      wavelength: {
+        title: 'WAVELENGTH',
+        subtitle: 'On the same wavelength',
+        placeholder: 'Player',
+        description: 'Tune in to the same frequency',
+      },
+      just_one: {
+        title: 'JUST ONE',
+        subtitle: "Catch your team's hint",
+        placeholder: 'Player',
+        description: 'One word — one clue',
+      },
+      mafia: {
+        title: 'MAFIA',
+        subtitle: 'The city falls asleep...',
+        placeholder: 'Citizen',
+        description: 'The city falls asleep...',
+      },
+      connect_four: {
+        title: 'CONNECT FOUR',
+        subtitle: 'Connect Four',
+        placeholder: 'Player',
+        description:
+          'Be the first to line up 4 discs — horizontally, vertically or diagonally.',
+        modes: {
+          classic: { name: 'Classic', description: '7×6 — connect 4 discs in a row' },
+          large: { name: 'Big Board', description: '9×7 — more room for tactics' },
+          connect_five: { name: 'Five in a Row', description: '9×7 — connect 5 discs in a row' },
+          pop_out: { name: 'Pop Out', description: '7×6 — pop the bottom disc out of a column' },
+        },
+      },
+    },
   },
   bunker: {
     // BunkerGame.tsx — subtitles

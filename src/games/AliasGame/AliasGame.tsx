@@ -11,7 +11,6 @@ import type { Team } from './types';
 import { AliasPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/games/AliasGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
@@ -131,7 +130,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   return (
     <div className="flex h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY.alias.title}
+        title={t('registry.games.alias.title')}
         subtitle={t(`${NS.ALIAS}.subtitle`)}
         icon={Brain}
         theme="blue"

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
+import { useTranslation } from '@/shared/i18n';
 
 const BRUSH_COLORS = [
   '#ffffff',
@@ -31,6 +32,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   currentRound,
   onFinish,
 }) => {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawHistory = useRef<ImageData[]>([]);
   const prevTimeLeftRef = useRef(timeLeft);
@@ -155,7 +157,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       <div className="flex flex-shrink-0 items-center justify-between px-1">
         <div>
           <p className="text-micro font-black tracking-widest text-white/30 uppercase">
-            ✏️ Рисуешь
+            ✏️ {t('common.youDraw')}
           </p>
           <motion.p
             initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
@@ -169,7 +171,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           <span
             className={`min-w-[2rem] text-right text-sm font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/35'}`}
           >
-            {timeLeft}с
+            {t('common.secondsShort', { n: timeLeft })}
           </span>
           <button
             onClick={undoDrawing}

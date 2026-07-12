@@ -64,16 +64,17 @@ const ALL_WORD_GAMES = [
     activeCls: 'bg-premium-purple/10 border-premium-purple/30 text-premium-purple',
   },
   {
+    // short резолвится через t('settingsPage.todShort') в рендере
     id: GameKey.TruthOrDare,
-    short: 'П/Действие',
+    short: null,
     activeCls: 'bg-premium-red/10    border-premium-red/30    text-premium-red',
   },
 ] as const;
 
-const DIFFICULTIES: { id: Difficulty; label: string }[] = [
-  { id: DIFFICULTY.EASY, label: 'Легко' },
-  { id: DIFFICULTY.MEDIUM, label: 'Норма' },
-  { id: DIFFICULTY.HARD, label: 'Профи' },
+const DIFFICULTIES: { id: Difficulty; labelKey: string }[] = [
+  { id: DIFFICULTY.EASY, labelKey: 'common.difficultyShort.easy' },
+  { id: DIFFICULTY.MEDIUM, labelKey: 'common.difficultyShort.medium' },
+  { id: DIFFICULTY.HARD, labelKey: 'common.difficultyShort.hard' },
 ];
 
 function todKey(type: 'truth' | 'dare', diff: Difficulty) {
@@ -111,7 +112,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'words'>('general');
   // TODO: RN — replace with useEffect async load (useState lazy initializer incompatible with async)
   const [settings, setSettings] = useState<GameSettings>(storageService.getSettings());
-  const { lang, setLang } = useLanguage();
+  const { t, lang, setLang } = useLanguage();
 
   // Words tab state
   const [alsoAdd, setAlsoAdd] = useState<Set<GameKey>>(new Set([GameKey.JustOne]));
@@ -217,7 +218,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
     const word = newWord.trim();
 
     if (word.length < 3) {
-      setValidationError('Минимум 3 буквы');
+      setValidationError(t('settingsPage.errMinLetters'));
       return;
     }
 
@@ -235,7 +236,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
         ).some((words) => words.some((w) => w.toLowerCase() === wordLower));
 
     if (isDuplicate) {
-      setValidationError('Уже добавлено');
+      setValidationError(t('settingsPage.errDuplicate'));
       return;
     }
 
@@ -265,7 +266,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
   };
 
   const handleReset = async () => {
-    if (!confirm('Сбросить прогресс для этой игры?')) return;
+    if (!confirm(t('settingsPage.confirmReset'))) return;
     await storageService.resetUsedWordsAsync(selectedGame);
     refresh();
   };
@@ -277,7 +278,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <IconButton icon={ArrowLeft} onClick={onBack} />
-        <Typography.Heading>Настройки</Typography.Heading>
+        <Typography.Heading>{t('settingsPage.title')}</Typography.Heading>
         <div className="w-12" />
       </div>
 
@@ -289,7 +290,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             setActiveTab('general');
           }}
         >
-          Общие
+          {t('settingsPage.tabGeneral')}
         </TabButton>
         <TabButton
           active={activeTab === 'words'}
@@ -297,7 +298,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             setActiveTab('words');
           }}
         >
-          Слова
+          {t('settingsPage.tabWords')}
         </TabButton>
       </div>
 
@@ -312,27 +313,27 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             className="space-y-6"
           >
             <div className="glass-card rounded-premium-xl space-y-1 border border-white/5 p-6">
-              <SectionLabel className="mb-5">Эффекты и отклик</SectionLabel>
+              <SectionLabel className="mb-5">{t('settingsPage.effectsSection')}</SectionLabel>
               <div className="divide-y divide-white/5">
                 <SettingToggle
-                  label="Визуальные эффекты"
-                  description="Конфетти и анимации"
+                  label={t('settingsPage.visualEffects')}
+                  description={t('settingsPage.visualEffectsDesc')}
                   value={!!settings.visualEffects}
                   onToggle={() => {
                     toggleSetting('visualEffects');
                   }}
                 />
                 <SettingToggle
-                  label="Вибрация"
-                  description="Тактильный отклик"
+                  label={t('settingsPage.vibration')}
+                  description={t('settingsPage.vibrationDesc')}
                   value={!!settings.vibration}
                   onToggle={() => {
                     toggleSetting('vibration');
                   }}
                 />
                 <SettingToggle
-                  label="Звуки"
-                  description="Звуковые эффекты"
+                  label={t('settingsPage.sounds')}
+                  description={t('settingsPage.soundsDesc')}
                   value={!!settings.sounds}
                   onToggle={() => {
                     toggleSetting('sounds');
@@ -363,7 +364,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             </div>
 
             <div className="glass-card rounded-premium-xl border border-white/5 p-6">
-              <SectionLabel className="mb-4">Хранилище</SectionLabel>
+              <SectionLabel className="mb-4">{t('settingsPage.storageSection')}</SectionLabel>
               <div className="mb-3 flex items-center gap-3">
                 <div className="bg-premium-green/10 rounded-premium-sm border-premium-green/20 flex h-10 w-10 items-center justify-center border">
                   <Database className="text-premium-green h-5 w-5" />
@@ -371,20 +372,18 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                 <div>
                   <p className="text-sm font-bold text-white/80">LocalStorage</p>
                   <p className="text-tag text-premium-green font-black tracking-widest uppercase">
-                    Активно
+                    {t('settingsPage.storageActive')}
                   </p>
                 </div>
               </div>
               <p className="text-xs leading-relaxed text-white/30">
-                Игроки, пройденные вопросы и свои слова хранятся локально в браузере.
+                {t('settingsPage.storageDesc')}
               </p>
             </div>
 
             <div className="glass-card rounded-premium-xl border border-white/5 p-6">
-              <SectionLabel className="mb-2">О приложении</SectionLabel>
-              <p className="text-xs leading-relaxed text-white/30">
-                Версия 1.1.0-beta · Я писал это на отьебись, как и всё остальное
-              </p>
+              <SectionLabel className="mb-2">{t('settingsPage.aboutSection')}</SectionLabel>
+              <p className="text-xs leading-relaxed text-white/30">{t('settingsPage.aboutText')}</p>
             </div>
           </motion.div>
         )}
@@ -409,21 +408,21 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   className="space-y-3"
                 >
                   <div className="grid grid-cols-2 gap-2">
-                    {(['truth', 'dare'] as const).map((t) => (
+                    {(['truth', 'dare'] as const).map((type) => (
                       <button
-                        key={t}
+                        key={type}
                         onClick={() => {
-                          handleSetTodType(t);
+                          handleSetTodType(type);
                         }}
                         className={`rounded-premium-md text-tag border py-3 font-black tracking-widest uppercase transition-all ${
-                          todType === t
-                            ? t === 'truth'
+                          todType === type
+                            ? type === 'truth'
                               ? 'bg-premium-sky/10 border-premium-sky/30 text-premium-sky'
                               : 'bg-premium-red/10 border-premium-red/30 text-premium-red'
                             : 'border-white/8 text-white/20'
                         }`}
                       >
-                        {t === 'truth' ? 'Правда' : 'Действие'}
+                        {type === 'truth' ? t('settingsPage.truth') : t('settingsPage.dare')}
                       </button>
                     ))}
                   </div>
@@ -444,7 +443,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                             : 'border-white/8 text-white/20'
                         }`}
                       >
-                        {d.label}
+                        {t(d.labelKey)}
                       </button>
                     ))}
                   </div>
@@ -456,10 +455,12 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <div className="flex items-center justify-between py-1">
               <div>
                 <p className="text-tag mb-0.5 font-black tracking-[0.4em] text-white/40 uppercase">
-                  Прогресс
+                  {t('settingsPage.progress')}
                 </p>
                 <p className="text-label font-medium text-white/20">
-                  {usedCount > 0 ? `${String(usedCount)} пройдено` : 'Нет пройденных'}
+                  {usedCount > 0
+                    ? t('settingsPage.usedCount', { n: usedCount })
+                    : t('settingsPage.noUsed')}
                 </p>
               </div>
               {usedCount > 0 && (
@@ -468,14 +469,14 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   className="bg-premium-red/10 text-premium-red rounded-premium-sm text-micro border-premium-red/20 flex items-center gap-1.5 border px-3 py-1.5 font-black tracking-widest uppercase transition-transform active:scale-95"
                 >
                   <RefreshCw className="h-3 w-3" />
-                  Сброс
+                  {t('settingsPage.reset')}
                 </button>
               )}
             </div>
 
             {/* 3. Add form */}
             <div className="space-y-3">
-              <SectionLabel>Добавить</SectionLabel>
+              <SectionLabel>{t('settingsPage.addSection')}</SectionLabel>
 
               {/* Difficulty selector (non-TruthOrDare) */}
               {!isTod && (
@@ -496,7 +497,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                           : 'border-white/8 text-white/20'
                       }`}
                     >
-                      {d.label}
+                      {t(d.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -542,7 +543,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               {/* Game chips — primary game selector */}
               <div>
                 <p className="text-micro mb-2 font-black tracking-[0.35em] text-white/20 uppercase">
-                  Добавить в:
+                  {t('settingsPage.addTo')}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {ALL_WORD_GAMES.map((game) => (
@@ -555,7 +556,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                         alsoAdd.has(game.id) ? game.activeCls : 'border-white/8 text-white/20'
                       }`}
                     >
-                      {game.short}
+                      {game.short ?? t('settingsPage.todShort')}
                     </button>
                   ))}
                 </div>
@@ -566,13 +567,13 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <div>
               <SectionLabel>
                 {isTod
-                  ? `Свои ${todType === 'truth' ? 'правды' : 'действия'} · ${DIFFICULTIES.find((d) => d.id === todDiff)?.label ?? ''}`
-                  : `Свои слова · ${DIFFICULTIES.find((d) => d.id === wordDiff)?.label ?? ''}`}
+                  ? `${todType === 'truth' ? t('settingsPage.customTruths') : t('settingsPage.customDares')} · ${t(DIFFICULTIES.find((d) => d.id === todDiff)?.labelKey ?? '')}`
+                  : `${t('settingsPage.customWords')} · ${t(DIFFICULTIES.find((d) => d.id === wordDiff)?.labelKey ?? '')}`}
               </SectionLabel>
 
               {customWords.length === 0 ? (
                 <p className="text-label py-10 text-center font-medium text-white/15 italic">
-                  Ничего не добавлено
+                  {t('settingsPage.nothingAdded')}
                 </p>
               ) : (
                 <>
@@ -585,7 +586,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                         setSearchQuery(e.target.value);
                         setCurrentPage(1);
                       }}
-                      placeholder="Поиск..."
+                      placeholder={t('settingsPage.searchPlaceholder')}
                       className="rounded-premium-md w-full border border-white/8 bg-white/5 py-2.5 pr-4 pl-8 text-sm text-white/60 outline-none placeholder:text-white/20"
                     />
                   </div>
@@ -593,7 +594,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                   {/* Word list */}
                   {filteredWords.length === 0 ? (
                     <p className="text-label py-6 text-center font-medium text-white/15 italic">
-                      Ничего не найдено
+                      {t('settingsPage.nothingFound')}
                     </p>
                   ) : (
                     <div className="space-y-2">

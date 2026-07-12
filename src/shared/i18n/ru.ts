@@ -30,6 +30,311 @@ export const ru: Translations = {
       medium: 'Нормально',
       hard: 'Сложно',
     },
+    difficultyShort: {
+      easy: 'Легко',
+      medium: 'Норма',
+      hard: 'Профи',
+    },
+    loading: 'Загрузка...',
+    add: 'Добавить',
+    participants: 'Участники',
+    difficultyLabel: 'Сложность',
+    modeLabel: 'Мод',
+    explains: '{{player}} объясняет',
+    secondsShort: '{{n}}с',
+    scoreTable: 'Счёт',
+    teamN: 'Команда {{n}}',
+    youDraw: 'Рисуешь',
+  },
+  menu: {
+    tagline: '{{n}} игр · Вечеринка начинается',
+    playersCount: '{{players}} игроков',
+    play: 'Играть',
+    balanceDebug: 'Баланс · Бункер',
+  },
+  settingsPage: {
+    title: 'Настройки',
+    tabGeneral: 'Общие',
+    tabWords: 'Слова',
+    effectsSection: 'Эффекты и отклик',
+    visualEffects: 'Визуальные эффекты',
+    visualEffectsDesc: 'Конфетти и анимации',
+    vibration: 'Вибрация',
+    vibrationDesc: 'Тактильный отклик',
+    sounds: 'Звуки',
+    soundsDesc: 'Звуковые эффекты',
+    storageSection: 'Хранилище',
+    storageActive: 'Активно',
+    storageDesc: 'Игроки, пройденные вопросы и свои слова хранятся локально в браузере.',
+    aboutSection: 'О приложении',
+    aboutText: 'Версия 1.1.0-beta · Я писал это на отьебись, как и всё остальное',
+    truth: 'Правда',
+    dare: 'Действие',
+    todShort: 'П/Действие',
+    progress: 'Прогресс',
+    usedCount: '{{n}} пройдено',
+    noUsed: 'Нет пройденных',
+    reset: 'Сброс',
+    confirmReset: 'Сбросить прогресс для этой игры?',
+    addSection: 'Добавить',
+    addTo: 'Добавить в:',
+    errMinLetters: 'Минимум 3 буквы',
+    errDuplicate: 'Уже добавлено',
+    customTruths: 'Свои правды',
+    customDares: 'Свои действия',
+    customWords: 'Свои слова',
+    nothingAdded: 'Ничего не добавлено',
+    searchPlaceholder: 'Поиск...',
+    nothingFound: 'Ничего не найдено',
+  },
+  registry: {
+    sublabels: {
+      cardsLeft: '{{n}} карт',
+      wordsLeft: '{{n}} сл',
+      minutes: '{{n}} мин',
+      seconds: '{{n}} сек',
+      shapes: '{{n}} фиг.',
+    },
+    games: {
+      spy: {
+        title: 'SPY HUNT',
+        subtitle: 'Вычисли шпиона среди своих',
+        placeholder: 'Игрок',
+        description:
+          'Один игрок не знает локацию. Остальные задают вопросы и отвечают так, чтобы не выдать место, но помочь найти шпиона.',
+        modes: {
+          classic: { name: 'Классика', description: '1 шпион, все остальные знают локацию' },
+          double_agent: { name: 'Двойной агент', description: '2 шпиона (от 5 игроков)' },
+          mole: { name: 'Предатель', description: '1 шпион и 1 помощник (от 5 игроков)' },
+        },
+      },
+      fake_artist: {
+        title: 'FAKE ARTIST',
+        subtitle: 'Найди того, кто рисует вслепую',
+        placeholder: 'Игрок',
+        description:
+          'Все рисуют одно и то же, но один игрок не знает слово и пытается подстроиться под остальных, не выдав себя.',
+        settings: {
+          rounds: {
+            label: 'Раунды',
+            options: {
+              '1': { label: '1 КРУГ' },
+              '2': { label: '2 КРУГА' },
+              '3': { label: '3 КРУГА' },
+            },
+          },
+          timerSeconds: {
+            label: 'Таймер хода',
+            options: {
+              '0': { label: '∞' },
+              '15': { label: '15 СЕК' },
+              '30': { label: '30 СЕК' },
+            },
+          },
+        },
+      },
+      bunker: {
+        title: 'БУНКЕР',
+        subtitle: 'Кто заслуживает выжить?',
+        placeholder: 'Выживший',
+        description:
+          'Катастрофа наступила. Бункер вмещает лишь половину группы. Каждый получает случайного персонажа — и борется за место внутри.',
+        settings: {
+          rounds: {
+            label: 'Раунды раскрытия',
+            options: {
+              '3': { label: '3 РАУНДА', sublabel: 'быстро' },
+              '5': { label: '5 РАУНДОВ', sublabel: 'стандарт' },
+              '7': { label: '7 РАУНДОВ', sublabel: 'полная' },
+            },
+          },
+          countHiddenTraits: {
+            label: 'Расчёт выживания',
+            options: {
+              true: { label: 'ВСЕ ЧЕРТЫ', sublabel: 'включая скрытые' },
+              false: { label: 'РАСКРЫТЫЕ', sublabel: 'только показанные' },
+            },
+          },
+        },
+        modes: {
+          classic: {
+            name: 'Классика',
+            description: 'Раунды раскрытия по очереди, честное голосование',
+          },
+          dictator: {
+            name: 'Диктатор',
+            description: 'Один игрок — директор бункера, его место гарантировано',
+          },
+          tribunal: {
+            name: 'Трибунал',
+            description: 'После голосования один исключённый может раскрыть скрытую черту',
+          },
+        },
+      },
+      corridor: {
+        title: 'КОРИДОР',
+        subtitle: 'Дойди первым до другой стороны',
+        placeholder: 'Игрок',
+        description:
+          'Двигай фишку к противоположному краю или ставь перегородки, чтобы преградить путь сопернику. Нельзя замуровать — путь должен оставаться.',
+      },
+      memo_risk: {
+        title: 'МЕМО-РИСК',
+        subtitle: 'Запомни и рискни',
+        placeholder: 'Игрок',
+        description:
+          'Открывай карты, запоминай поле и собирай целевые фигуры. Наткнёшься на опасную — очки хода сгорят. Рискни ещё раз или забери очки.',
+        modes: {
+          classic: {
+            name: 'Классика',
+            description: 'Открывай без ограничений, пока сам не решишь остановиться',
+          },
+          timed: { name: 'На время', description: 'Ограниченное время на ход — решай быстрее' },
+          limited: {
+            name: 'Ограниченные ходы',
+            description: 'Фиксированное число открытий за ход',
+          },
+        },
+      },
+      millionaire: {
+        title: 'МИЛЛИОНЕР',
+        subtitle: 'Кто хочет стать миллионером',
+        placeholder: 'Игрок',
+        description:
+          'По очереди садитесь в горячее кресло и отвечайте на 15 вопросов возрастающей сложности. Три подсказки, два несгораемых рубежа — и шанс выиграть миллион.',
+      },
+      truth_or_dare: {
+        title: 'ПРАВДА ИЛИ ДЕЙСТВИЕ',
+        subtitle: 'Выбирай: откровение или вызов',
+        placeholder: 'Игрок',
+        description:
+          'Задавайте неудобные вопросы, выполняйте смелые задания и проверяйте, кто готов рискнуть ради веселья.',
+      },
+      taboo: {
+        title: 'ТАБУ',
+        subtitle: 'Объясняй, не называя лишнего',
+        placeholder: 'Игрок',
+        description:
+          'Нужно объяснить слово команде, не используя самые очевидные и запрещённые подсказки с карточки.',
+        settings: {
+          timerSeconds: {
+            label: 'Время раунда',
+            options: {
+              '30': { label: '30 СЕК' },
+              '45': { label: '45 СЕК' },
+              '60': { label: '60 СЕК' },
+              '90': { label: '90 СЕК' },
+            },
+          },
+        },
+      },
+      taboo_reverse: {
+        title: 'ТАБУ НАОБОРОТ',
+        subtitle: 'Подсказки под запретом — больше нет',
+        placeholder: 'Игрок',
+        description:
+          'Объясняй слово только через запрещённые ассоциации, но не произноси сам ответ. Чем точнее намёк, тем быстрее угадают.',
+        settings: {
+          timerSeconds: {
+            label: 'Время раунда',
+            options: {
+              '30': { label: '30 СЕК' },
+              '45': { label: '45 СЕК' },
+              '60': { label: '60 СЕК' },
+              '90': { label: '90 СЕК' },
+            },
+          },
+        },
+        modes: {
+          classic: {
+            name: 'Классика',
+            description: 'Одна карточка за ход, объясняй — кто угадал, получает очки',
+          },
+          blitz: {
+            name: 'Блиц',
+            description: 'Несколько карточек за ход — угадали, берёте следующую',
+          },
+          team: { name: 'Командный', description: 'Две команды — угадывает только своя команда' },
+        },
+      },
+      telestrations: {
+        title: 'TELESTRATIONS',
+        subtitle: 'Рисунок превращается в хаос',
+        placeholder: 'Игрок',
+        description:
+          'Передавайте слова и рисунки по цепочке, а потом смотрите, как исходная идея смешно меняется на каждом ходе.',
+      },
+      codenames: {
+        title: 'CODENAMES',
+        subtitle: 'Битва шпионов',
+        placeholder: 'Агент',
+        description: 'Битва двух команд шпионов',
+        modes: {
+          classic: { name: 'Классика', description: '9 своих, 8 чужих, 1 убийца' },
+          deep_cover: { name: 'Глубокое прикрытие', description: '8 своих, 8 чужих, 2 убийцы' },
+          double_agent: {
+            name: 'Двойной агент',
+            description: '8 своих, 8 чужих, 1 общий агент (кто первый нашел)',
+          },
+        },
+      },
+      decrypto: {
+        title: 'DECRYPTO',
+        subtitle: 'Коды и перехваты',
+        placeholder: 'Шифровальщик',
+        description:
+          'Шифруйте числовые коды для своей команды так, чтобы союзники поняли намёк, а соперники не смогли его перехватить.',
+        modes: {
+          classic: { name: 'Классика', description: '4 слова, код из 3 цифр' },
+          extended_5: { name: 'Широкий код', description: '5 слов, код из 3 цифр' },
+          extended_6: { name: 'Супер-шифровка', description: '6 слов, код из 3 цифр' },
+        },
+      },
+      alias: {
+        title: 'ALIAS',
+        subtitle: 'Объясни быстрее всех',
+        placeholder: 'Игрок',
+        description:
+          'За ограниченное время объясняйте как можно больше слов, не используя однокоренные формы и прямые подсказки.',
+      },
+      resistance: {
+        title: 'RESISTANCE',
+        subtitle: 'Свергните тиранию',
+        placeholder: 'Игрок',
+        description:
+          'Группа сопротивления пытается выполнить миссии, в то время как шпионы пытаются их саботировать.',
+      },
+      wavelength: {
+        title: 'WAVELENGTH',
+        subtitle: 'На одной волне',
+        placeholder: 'Игрок',
+        description: 'Настройся на одну частоту',
+      },
+      just_one: {
+        title: 'JUST ONE',
+        subtitle: 'Пойми намек команды',
+        placeholder: 'Игрок',
+        description: 'Одно слово — одна подсказка',
+      },
+      mafia: {
+        title: 'MAFIA',
+        subtitle: 'Город засыпает...',
+        placeholder: 'Житель',
+        description: 'Город засыпает...',
+      },
+      connect_four: {
+        title: 'ЧЕТЫРЕ В РЯД',
+        subtitle: 'Connect Four',
+        placeholder: 'Игрок',
+        description: 'Первым собери 4 фишки в ряд — по горизонтали, вертикали или диагонали.',
+        modes: {
+          classic: { name: 'Классика', description: '7×6 — собери 4 фишки в ряд' },
+          large: { name: 'Большое поле', description: '9×7 — больше пространства для тактики' },
+          connect_five: { name: 'Пять в ряд', description: '9×7 — нужно собрать 5 фишек подряд' },
+          pop_out: { name: 'Pop Out', description: '7×6 — вытащи нижнюю фишку из столбца' },
+        },
+      },
+    },
   },
   bunker: {
     // BunkerGame.tsx — subtitles

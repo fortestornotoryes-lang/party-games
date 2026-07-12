@@ -15,7 +15,6 @@ import { ResistanceDistribution } from './components/ResistanceDistribution';
 import { initResistance } from './model/initResistance';
 import { ResistancePhase } from './types';
 
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { MISSION_SIZES } from '@/games/ResistanceGame/constants.ts';
@@ -116,7 +115,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
   return (
     <div className="flex min-h-screen flex-col pb-10">
       <GameHeader
-        title={GAMES_REGISTRY.resistance.title}
+        title={t('registry.games.resistance.title')}
         subtitle={t(`${NS.RESISTANCE}.missionN`, { n: missionIndex + 1 })}
         icon={Shield}
         theme="blue"

@@ -3,9 +3,10 @@ import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey, GameMode, GameSettingKey, GameSettingValue } from '@/entities/game/types';
+import { useLocalizedGame } from '@/entities/game/useLocalizedGame';
 import { contentService } from '@/features/word-stats/model/contentService';
+import { useTranslation } from '@/shared/i18n';
 import { getTheme } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
@@ -100,30 +101,31 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
   settingValues,
   onSettingChange,
 }) => {
-  const gameDef = currentGameId ? GAMES_REGISTRY[currentGameId] : undefined;
+  const { t } = useTranslation();
+  const gameDef = useLocalizedGame(currentGameId);
 
   const getDiffSublabel = (d: Difficulty): string | undefined => {
     if (!currentGameId || !gameDef?.difficultySublabel) return undefined;
     const stats = contentService.getWordStats(currentGameId, d);
-    return gameDef.difficultySublabel(d, stats.total > 0 ? stats.remaining : undefined);
+    return gameDef.difficultySublabel(d, stats.total > 0 ? stats.remaining : undefined, t);
   };
 
   const difficultyOptions: SettingOption[] = [
     {
       value: DIFFICULTY.EASY,
-      label: 'ЛЕГКО',
+      label: t('common.difficultyShort.easy'),
       sublabel: getDiffSublabel(DIFFICULTY.EASY),
       color: 'green',
     },
     {
       value: DIFFICULTY.MEDIUM,
-      label: 'НОРМА',
+      label: t('common.difficultyShort.medium'),
       sublabel: getDiffSublabel(DIFFICULTY.MEDIUM),
       color: 'sky',
     },
     {
       value: DIFFICULTY.HARD,
-      label: 'ПРОФИ',
+      label: t('common.difficultyShort.hard'),
       sublabel: getDiffSublabel(DIFFICULTY.HARD),
       color: 'red',
     },
@@ -133,7 +135,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
     <div className="mb-10 space-y-12">
       {gameDef?.hasDifficulty !== false && (
         <SettingRow
-          label="Сложность"
+          label={t('common.difficultyLabel')}
           icon={Target}
           options={difficultyOptions}
           value={difficulty}
@@ -148,7 +150,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
           <div className="mb-6 flex items-center gap-3 px-1">
             <Zap className="h-4 w-4 text-white/20" />
             <span className="text-tag font-black tracking-[0.4em] text-white/80 uppercase">
-              Мод
+              {t('common.modeLabel')}
             </span>
           </div>
           <div className="flex flex-col gap-4">

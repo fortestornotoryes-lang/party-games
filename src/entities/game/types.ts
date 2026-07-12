@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
+import type { TranslateFn } from '@/shared/i18n/types';
 import type { Difficulty, GameTheme } from '@/shared/types';
 
 export const GameKey = {
@@ -30,11 +31,16 @@ export interface InstructionItem {
   readonly content: string;
 }
 
-export interface GameMode {
+/** Структурная часть режима в реестре — тексты живут в словарях registry.games.<id>.modes */
+export interface GameModeDef {
   readonly id: string;
+  readonly icon: LucideIcon;
+}
+
+/** Режим с локализованными текстами (возвращает useLocalizedGame) */
+export interface GameMode extends GameModeDef {
   readonly name: string;
   readonly description: string;
-  readonly icon: LucideIcon;
 }
 
 // Общий для всех игр id режима по умолчанию
@@ -46,40 +52,66 @@ export type GameSettingKey = 'rounds' | 'timerSeconds' | 'countHiddenTraits';
 
 export type GameSettingValue = number | boolean;
 
-export interface GameSettingOption {
+/** Структурная часть опции — подписи живут в словарях registry.games.<id>.settings */
+export interface GameSettingOptionDef {
   readonly value: GameSettingValue;
+}
+
+/** Опция с локализованными подписями (возвращает useLocalizedGame) */
+export interface GameSettingOption extends GameSettingOptionDef {
   readonly label: string;
   readonly sublabel?: string;
 }
 
-export interface GameSettingDef {
+/** Структурная часть настройки — label живёт в словарях */
+export interface GameSettingDefBase {
   readonly key: GameSettingKey;
-  readonly label: string;
   readonly icon: LucideIcon;
   readonly color?: GameTheme;
+  readonly options: readonly GameSettingOptionDef[];
+}
+
+/** Настройка с локализованными подписями (возвращает useLocalizedGame) */
+export interface GameSettingDef extends GameSettingDefBase {
+  readonly label: string;
   readonly options: readonly GameSettingOption[];
 }
 
-export interface GameMetadata {
+/**
+ * Структурная запись реестра: иконки, темы, лимиты игроков.
+ * Все отображаемые тексты — в словарях i18n (registry.games.<id>),
+ * локализованную версию отдаёт useLocalizedGame / useLocalizedGames.
+ */
+export interface GameMetadataDef {
   readonly id: GameKey;
-  readonly title: string;
-  readonly subtitle: string;
   readonly icon: LucideIcon;
   readonly theme: GameTheme;
-  readonly placeholder: string;
-  readonly description: string;
   readonly players: string;
   readonly minPlayers: number;
   /** Верхний предел числа игроков (по умолчанию 12 в Setup) */
   readonly maxPlayers?: number;
-  readonly modes?: readonly GameMode[];
+  readonly modes?: readonly GameModeDef[];
   readonly backgroundImage?: string;
   /** Дополнительные настройки игры (раунды, таймер и т.п.) */
-  readonly settings?: readonly GameSettingDef[];
+  readonly settings?: readonly GameSettingDefBase[];
   /** false — у игры нет выбора сложности (по умолчанию есть) */
   readonly hasDifficulty?: boolean;
   /** Подпись под кнопкой сложности; remainingWords — остаток слов в пуле игры */
-  readonly difficultySublabel?: (d: Difficulty, remainingWords?: number) => string | undefined;
+  readonly difficultySublabel?: (
+    d: Difficulty,
+    remainingWords: number | undefined,
+    t: TranslateFn
+  ) => string | undefined;
+}
+
+/** Метаданные игры с локализованными текстами (возвращает useLocalizedGame) */
+export interface GameMetadata extends GameMetadataDef {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly placeholder: string;
+  readonly description: string;
+  readonly modes?: readonly GameMode[];
+  readonly settings?: readonly GameSettingDef[];
 }
 
 /**
@@ -97,4 +129,4 @@ export interface GameComponentProps {
 }
 
 export type GameInstructionsMap = Record<GameKey, readonly InstructionItem[]>;
-export type GamesRegistryMap = Record<GameKey, GameMetadata>;
+export type GamesRegistryMap = Record<GameKey, GameMetadataDef>;

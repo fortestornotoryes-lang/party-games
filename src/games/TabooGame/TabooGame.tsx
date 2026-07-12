@@ -11,7 +11,6 @@ import { VerdictPhase } from './phases/VerdictPhase';
 import { TabooPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
@@ -156,7 +155,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   return (
     <div className="safe-top safe-bottom flex min-h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY.taboo.title}
+        title={t('registry.games.taboo.title')}
         subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
         icon={Ban}
         theme="red"

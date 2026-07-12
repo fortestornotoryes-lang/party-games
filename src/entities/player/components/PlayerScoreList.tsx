@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useTranslation } from '@/shared/i18n';
+
 type AccentName = 'red' | 'orange' | 'sky' | 'green' | 'purple' | 'yellow';
 
 const AC: Record<AccentName, { row: string; text: string; badge: string }> = {
@@ -57,6 +59,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
   teams,
   className,
 }) => {
+  const { t } = useTranslation();
   const ac = AC[accentColor];
 
   const teamBadge = (player: string) => {
@@ -71,7 +74,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
             : 'text-premium-sky/80 bg-premium-sky/10'
         }`}
       >
-        {idx === 0 ? 'Команда 1' : 'Команда 2'}
+        {t('common.teamN', { n: idx + 1 })}
       </span>
     );
   };
@@ -81,7 +84,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
   return (
     <div className={`w-full max-w-sm space-y-2 ${className}`}>
       <p className="text-micro mb-3 text-center font-black tracking-widest text-white/30 uppercase">
-        Счёт
+        {t('common.scoreTable')}
       </p>
       {sorted.map((player) => {
         const isActive = player === activePlayer;

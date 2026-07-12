@@ -14,7 +14,6 @@ import type { BlitzResult } from './types';
 import { TabooReversePhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
@@ -298,7 +297,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
   return (
     <div className="safe-top safe-bottom flex min-h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY.taboo_reverse.title}
+        title={t('registry.games.taboo_reverse.title')}
         subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
         icon={ListChecks}
         theme="orange"

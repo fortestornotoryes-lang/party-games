@@ -1,8 +1,12 @@
-import type { GameInstructionsMap } from './types';
+import type { GameInstructionsMap, InstructionItem } from './types';
 import { GameKey } from './types';
+
+import type { Lang } from '@/shared/i18n/types';
 
 /**
  * Single source of truth for all game instructions and text rules.
+ * Русская версия — GAME_INSTRUCTIONS, английская — GAME_INSTRUCTIONS_EN;
+ * выбор по языку — getGameInstructions(gameKey, lang).
  */
 export const GAME_INSTRUCTIONS: GameInstructionsMap = {
   [GameKey.Spy]: [
@@ -367,3 +371,372 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
     },
   ],
 } as const;
+
+export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
+  [GameKey.Spy]: [
+    {
+      title: '1. Setup',
+      content: 'All players sit facing each other or around one table. Only one device is needed.',
+    },
+    {
+      title: '2. Secret Roles',
+      content:
+        'Players take turns looking at their role. Civilians see the same location and a unique role, while the spy sees a "Spy" card.',
+    },
+    {
+      title: '3. Interrogation',
+      content:
+        'The timer starts and players ask each other veiled questions in turn. Civilians try to spot the spy; the spy tries to figure out the location.',
+    },
+    {
+      title: '4. Goals & Finale',
+      content:
+        'Civilians win by voting out the spy. The spy wins by guessing the location — or if the civilians accuse an innocent player.',
+    },
+  ],
+  [GameKey.FakeArtist]: [
+    {
+      title: 'The Idea',
+      content:
+        'Everyone knows the secret drawing topic except one player — the Fake Artist, who tries to blend in with the rest.',
+    },
+    {
+      title: 'The Process',
+      content:
+        'Each player takes turns drawing exactly one continuous line in their own color, contributing to the shared picture.',
+    },
+    {
+      title: 'The Finale',
+      content:
+        'After two rounds of drawing, players vote for the fake artist. If caught, they get one chance to save themselves — by guessing the topic.',
+    },
+  ],
+  [GameKey.Resistance]: [
+    {
+      title: 'The Idea',
+      content:
+        "Players split into Resistance fighters and Imperial spies. Resistance members don't know anyone's role; spies know each other.",
+    },
+    {
+      title: 'Voting',
+      content:
+        'Each round the Leader proposes a mission team. All players openly vote for or against that lineup.',
+    },
+    {
+      title: 'Missions',
+      content:
+        'The approved team secretly plays "Success" or "Sabotage" cards. Resistance always plays success; a single sabotage card fails the mission.',
+    },
+  ],
+  [GameKey.Alias]: [
+    {
+      title: 'Teams',
+      content:
+        'Split into two or more teams. Each round one player explains words while teammates guess.',
+    },
+    {
+      title: 'Explaining',
+      content:
+        'Explain as many words as possible before time runs out. Same-root words, gestures and direct translations are forbidden.',
+    },
+    {
+      title: 'Points',
+      content:
+        'Each guessed word is worth 1 point. The penalty for skipped words depends on the game settings.',
+    },
+    {
+      title: 'Victory',
+      content:
+        'Play until the point limit (e.g. 50). The first team to reach it wins.',
+    },
+  ],
+  [GameKey.JustOne]: [
+    {
+      title: 'The Idea',
+      content:
+        'A cooperative game. One player tries to guess a secret word while everyone else secretly writes a one-word clue.',
+    },
+    {
+      title: 'Filtering',
+      content:
+        'Before the clues are shown to the guesser, the device compares them. All identical or same-root clues are cancelled and hidden.',
+    },
+    {
+      title: 'Guessing',
+      content:
+        'The guesser looks at the remaining unique clues and makes exactly one attempt to name the secret word.',
+    },
+  ],
+  [GameKey.Telestrations]: [
+    {
+      title: '1. Chain Start',
+      content:
+        'The first player picks a secret word of their difficulty, draws it on screen within the time limit and passes the phone on.',
+    },
+    {
+      title: '2. Guess the Drawing',
+      content:
+        "The second player looks only at the first player's drawing, writes a text guess of what it shows, and passes the phone on.",
+    },
+    {
+      title: '3. Draw the Text',
+      content:
+        "The third player sees only the second player's guess. Their job is to draw that word again and pass the phone to the fourth.",
+    },
+    {
+      title: '4. The Reveal',
+      content:
+        'The chain continues: Drawing -> Text -> Drawing. At the end, the full gallery of the word\'s transformation is revealed.',
+    },
+  ],
+  [GameKey.Wavelength]: [
+    {
+      title: 'The Idea',
+      content:
+        'A team mind-reading game. The psychic sees a hidden target zone on a semicircular dial and gives a clue reflecting a position between two opposites.',
+    },
+    {
+      title: 'Example',
+      content:
+        'If the scale is "Cold — Hot" and the target sits at the far right, the perfect clue would be "Lava".',
+    },
+    {
+      title: 'Scoring',
+      content:
+        'The team rotates the needle trying to hit the exact center of the target. Points depend on how close they get.',
+    },
+  ],
+  [GameKey.Codenames]: [
+    {
+      title: '1. Roles & Setup',
+      content:
+        'Split into two teams (Red and Blue). Each team picks a Captain; everyone else becomes Operatives.',
+    },
+    {
+      title: "2. Captain's Turn",
+      content:
+        'The Captain secretly checks the agent map and gives a clue: "one word + a number" (e.g. "Space 2", where the number is how many related words are on the board).',
+    },
+    {
+      title: "3. Operatives' Turn",
+      content:
+        'The team discusses and taps the chosen words on screen. A mistake ends the turn; tapping the black card (the Assassin) means instant defeat.',
+    },
+  ],
+  [GameKey.Decrypto]: [
+    {
+      title: '1. The Idea',
+      content:
+        'Players split into two teams. Each team has 4 secret words numbered 1–4. The goal is to transmit codes to your team using associations.',
+    },
+    {
+      title: '2. Encryption',
+      content:
+        'The captain receives a random three-digit code (e.g. 3-1-4) and writes 3 associations for the words at those numbers, then passes the phone.',
+    },
+    {
+      title: '3. Interception',
+      content:
+        'Starting from round 2, the rival team also tries to guess your code using the history of your previous clues.',
+    },
+  ],
+  [GameKey.Mafia]: [
+    {
+      title: 'The Goal',
+      content:
+        'Civilians must identify and vote out all mafiosi; the mafia must secretly eliminate civilians until they reach parity.',
+    },
+    {
+      title: 'Gameplay',
+      content:
+        'The game alternates between day and night. At night the mafia and special roles make hidden moves; by day everyone debates openly and executes a suspect.',
+    },
+  ],
+  [GameKey.ConnectFour]: [
+    {
+      title: 'The Goal',
+      content:
+        'Be the first to build an unbroken line of four discs of your color — horizontally, vertically or diagonally.',
+    },
+    {
+      title: 'Turns',
+      content:
+        'Players alternate turns: tap any cell in the desired column — the disc falls to the lowest free slot.',
+    },
+    {
+      title: 'Gravity',
+      content:
+        "You can't pick a specific row. A disc always lands in the lowest available position of the chosen column.",
+    },
+    {
+      title: 'Victory',
+      content:
+        'Connect 4 discs of your color in a row (horizontally, vertically or diagonally). If the board fills up with no winner — it\'s a draw.',
+    },
+  ],
+  [GameKey.TruthOrDare]: [
+    {
+      title: 'The Idea',
+      content:
+        'Players take turns. Each one chooses: answer a question honestly (Truth) or complete a challenge (Dare).',
+    },
+    {
+      title: 'Truth',
+      content:
+        'If you picked Truth — answer honestly. No dodging, no lying. The other players judge your honesty.',
+    },
+    {
+      title: 'Dare',
+      content:
+        'If you picked Dare — complete the challenge fully, no excuses. Difficulty depends on the chosen level.',
+    },
+    {
+      title: 'The Winner',
+      content:
+        'There are no winners here — only unforgettable moments. Play as long as the party wants.',
+    },
+  ],
+  [GameKey.TabooReverse]: [
+    {
+      title: 'The Idea',
+      content:
+        'Taboo flipped: the explainer MUST use every forbidden word on the card — they are now your only clues. The secret word itself must never be said.',
+    },
+    {
+      title: 'Explaining',
+      content:
+        'Use every required word at least once. For example, AIRPLANE with clues "wings", "sky", "pilot": "Its wings are metal. It rises into the sky every day. A pilot controls it from the cockpit."',
+    },
+    {
+      title: 'Points',
+      content:
+        '+2 — guessed and all words used. +1 — guessed, but not all words. 0 — not guessed. −1 — the explainer said the secret word.',
+    },
+    {
+      title: 'Difficulty',
+      content:
+        'Easy cards: clues clearly relate to the answer. Medium: the link is indirect. Hardcore: clues are almost opposites — creativity and absurdity required.',
+    },
+  ],
+  [GameKey.Taboo]: [
+    {
+      title: 'The Idea',
+      content:
+        'Classic Taboo: explain the secret word so others guess it. The catch — you may not say any of the forbidden words on the card.',
+    },
+    {
+      title: 'Explaining',
+      content:
+        'Use any other words, gestures and sounds — except same-root words and the ones on the card. For CAT you can\'t say "kitten", "animal", "meow" or "furry".',
+    },
+    {
+      title: 'Points',
+      content:
+        '+1 — word guessed. −1 — the explainer said a forbidden word. 0 — nobody guessed in time.',
+    },
+    {
+      title: 'Difficulty',
+      content:
+        'Easy cards: simple words, obvious taboos. Medium: more specific words. Pro: abstract concepts with every obvious synonym banned.',
+    },
+  ],
+  [GameKey.Millionaire]: [
+    {
+      title: 'The Idea',
+      content:
+        'Players take turns in the hot seat answering questions. Each correct answer moves you up the prize ladder — from 100 to 1,000,000.',
+    },
+    {
+      title: 'Three Lifelines',
+      content:
+        '"50:50" removes two wrong options. "Phone a Friend" gives advice (the friend almost always knows). "Ask the Audience" shows the crowd vote. Each lifeline works only once.',
+    },
+    {
+      title: 'Take the Money',
+      content:
+        'After any correct answer you may stop and walk away with your winnings — often wiser than risking it. Or press on toward the million.',
+    },
+    {
+      title: 'Checkpoints',
+      content:
+        "Questions 5 (1,000) and 10 (32,000) are safe checkpoints. Fail after a checkpoint and you're guaranteed its amount.",
+    },
+  ],
+  [GameKey.Bunker]: [
+    {
+      title: 'The Situation',
+      content:
+        'A global catastrophe has struck. There is a bunker, but fewer spots than people. Each player gets a random character with a unique set of traits.',
+    },
+    {
+      title: 'The Reveal',
+      content:
+        'The game runs in 3 rounds. Each round, everyone announces one trait of their character in turn. Profession first, then increasingly unexpected facts.',
+    },
+    {
+      title: 'Discussion',
+      content:
+        'After each round — open discussion. Persuade, bargain, bluff. Prove to the group that the bunker needs you.',
+    },
+    {
+      title: 'Vote & Outcome',
+      content:
+        "After three rounds the group votes on who doesn't get in. Then the game simulates the team's survival — revealing whether the choice was right.",
+    },
+  ],
+  [GameKey.Corridor]: [
+    {
+      title: '1. The Goal',
+      content:
+        'Get your pawn to the opposite edge first. Player 1 (teal ↑) starts at the bottom and moves up; Player 2 (orange ↓) — top to bottom.',
+    },
+    {
+      title: '2. Turns',
+      content:
+        'On your turn, either press "Move" and shift your pawn one cell (up, down, left, right), or place one wall — horizontal (─) or vertical (│).',
+    },
+    {
+      title: '3. Walls',
+      content:
+        "Each player has 10 walls. One wall blocks two adjacent passages. You can't cut off your opponent completely — at least one route to the finish must remain.",
+    },
+    {
+      title: '4. Jumping',
+      content:
+        'If the pawns stand next to each other, you may jump straight over your opponent. If a wall or the board edge is behind them — jump diagonally around.',
+    },
+  ],
+  [GameKey.MemoRisk]: [
+    {
+      title: '1. The Goal',
+      content:
+        'Score the most points before the 100-card deck runs out. Cards lie face down — memorize what is where: collected targets are replaced with new cards from the deck.',
+    },
+    {
+      title: '2. Turns',
+      content:
+        'At the start of a turn you see the target and the dangerous shape. Flip a target — score its points and keep going. Flip a neutral — no points, but the turn continues and the card stays open until the turn ends. Flip a dangerous one — all turn points burn and the turn passes on.',
+    },
+    {
+      title: '3. Risk or Stop',
+      content:
+        'You may stop at any moment and bank your turn points. The longer you push, the bigger the reward — and the higher the chance of hitting a dangerous shape.',
+    },
+    {
+      title: '4. Escalation',
+      content:
+        'After every bust the risk level rises: following turns have more targets and more dangerous shapes at the same time.',
+    },
+    {
+      title: '5. Card Values',
+      content:
+        'Rarity shows in the frame and the number: common +1, uncommon (green) +5, rare (blue) +10, epic (purple) +20. The lightning super-card doubles all points of the current turn.',
+    },
+  ],
+} as const;
+
+/** Инструкции игры на выбранном языке */
+export function getGameInstructions(gameKey: GameKey, lang: Lang): readonly InstructionItem[] {
+  const map = lang === 'en' ? GAME_INSTRUCTIONS_EN : GAME_INSTRUCTIONS;
+  return map[gameKey] ?? [];
+}

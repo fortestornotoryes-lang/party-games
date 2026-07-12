@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Typography } from '@/shared/components/Typography';
+import { useTranslation } from '@/shared/i18n';
 
 interface PlayingHeaderProps {
   /** Имя объясняющего игрока */
@@ -30,18 +31,21 @@ export const PlayingHeader: React.FC<PlayingHeaderProps> = ({
   timeLeft,
   timerColor,
   extra,
-}) => (
-  <div className="flex items-center justify-between">
-    <Typography.Caption color="faint" className="tracking-widest">
-      {explainer} объясняет
-    </Typography.Caption>
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-between">
+      <Typography.Caption color="faint" className="tracking-widest">
+        {t('common.explains', { player: explainer })}
+      </Typography.Caption>
 
-    <div className="flex items-center gap-3">
-      {extra}
-      {/* timerColor — динамический hex, не токен; используем span напрямую */}
-      <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
-        {timeLeft}с
-      </span>
+      <div className="flex items-center gap-3">
+        {extra}
+        {/* timerColor — динамический hex, не токен; используем span напрямую */}
+        <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
+          {t('common.secondsShort', { n: timeLeft })}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};

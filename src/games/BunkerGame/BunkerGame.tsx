@@ -21,7 +21,6 @@ import type {
 import { BunkerPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS } from '@/games/BunkerGame/contents';
 import { calculateSurvival, generateCharacter } from '@/games/BunkerGame/helpers.ts';
@@ -170,7 +169,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack, onR
   return (
     <div className="flex h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY[GameKey.Bunker].title}
+        title={t('registry.games.bunker.title')}
         subtitle={subtitle}
         icon={Siren}
         theme="orange"

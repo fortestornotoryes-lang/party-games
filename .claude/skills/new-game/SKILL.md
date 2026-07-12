@@ -10,7 +10,7 @@ description: Добавление новой party-игры в проект — 
 - Правила игры и игровой цикл (фазы, кто что видит на «одном телефоне»)
 - Мин/макс игроков
 - Нужны ли: режимы, сложность, раунды, таймер, контент-пул (слова/задания)
-- Название (ru), иконка (lucide), тема оформления
+- Название (ru + en), иконка (lucide), тема оформления
 
 ## Шаг 1 — прочитать конвенции
 
@@ -39,13 +39,14 @@ description: Добавление новой party-игры в проект — 
 - Таймеры — `useTimer` / `useCountdown` из `shared/hooks`
 - Комментарии в коде — на русском
 
-## Шаг 3 — регистрация (5 точек, все обязательны)
+## Шаг 3 — регистрация (6 точек, все обязательны)
 
 1. `src/entities/game/types.ts` — ключ в const-объект `GameKey`
-2. `src/entities/game/registry.tsx` — запись в `GAMES_REGISTRY`: title, иконка, theme, описание, min/maxPlayers, `modes`, декларативные `settings`, `hasDifficulty`
-3. `src/entities/game/instructions.ts` — инструкции для экрана Setup
-4. `src/pages/game/GamePlayRoute.tsx` — lazy-импорт + запись в `GAME_COMPONENTS`
-5. Настройки (difficulty/mode/rounds/timer) читать через `useGameSettings()` — персистятся сами, вручную не сохранять
+2. `src/entities/game/registry.tsx` — запись в `GAMES_REGISTRY`: **только структура** — иконка, theme, min/maxPlayers, `modes` (id + иконки), декларативные `settings` (key + значения опций), `hasDifficulty`. Никаких текстов в реестре!
+3. Словари i18n `src/shared/i18n/ru.ts` **и** `en.ts` — тексты игры в `registry.games.<gameKey>` (title/subtitle/description/placeholder + name/description режимов + label/options настроек, ключи опций — `String(value)`) и отдельный неймспейс игры для внутриигровых строк (тип — в `types.ts`, неймспейс — в `keys.ts`). UI-компоненты берут локализованные метаданные через `useLocalizedGame`
+4. `src/entities/game/instructions.ts` — инструкции для экрана Setup в оба словаря: `GAME_INSTRUCTIONS` (ru) и `GAME_INSTRUCTIONS_EN`
+5. `src/pages/game/GamePlayRoute.tsx` — lazy-импорт + запись в `GAME_COMPONENTS`
+6. Настройки (difficulty/mode/rounds/timer) читать через `useGameSettings()` — персистятся сами, вручную не сохранять
 
 Особых веток в роутинге не делать — всё рендерится единым маппингом.
 

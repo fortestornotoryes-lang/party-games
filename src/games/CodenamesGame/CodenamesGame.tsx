@@ -11,7 +11,6 @@ import type { Card, CardColor, Team } from './types';
 import { CodenamesPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
@@ -179,7 +178,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
   return (
     <div className="flex min-h-screen flex-col pb-20 text-white">
       <GameHeader
-        title={GAMES_REGISTRY.codenames.title}
+        title={t('registry.games.codenames.title')}
         subtitle={t(`${NS.CODENAMES}.subtitle`)}
         icon={Grid}
         theme="green"

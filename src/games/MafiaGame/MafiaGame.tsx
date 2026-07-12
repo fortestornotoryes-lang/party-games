@@ -2,7 +2,6 @@ import { Moon, Shield, Sun, Users } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -26,7 +25,7 @@ export default function MafiaGame({ playerNames, onBack }: Props) {
 
       <div className="space-y-2">
         <h2 className="text-3xl font-black tracking-tighter uppercase italic">
-          {GAMES_REGISTRY.mafia.title}
+          {t('registry.games.mafia.title')}
         </h2>
         <p className="text-tag font-bold tracking-[0.2em] text-white/30 uppercase">
           {t(`${NS.MAFIA}.cityFallsAsleep`)}

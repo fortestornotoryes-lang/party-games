@@ -10,7 +10,6 @@ import { ResultPhase } from './phases/ResultPhase';
 import { JustOnePhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
@@ -112,7 +111,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   return (
     <div className="flex h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY.just_one.title}
+        title={t('registry.games.just_one.title')}
         subtitle={t(`${NS.JUST_ONE}.subtitle`)}
         icon={Lightbulb}
         theme="yellow"

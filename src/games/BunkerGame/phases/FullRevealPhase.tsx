@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import React from 'react';
 
 import type { BunkerCharacter } from '../types';
-import { ALL_TRAIT_KEYS, TRAIT_LABELS } from '../types';
+import { ALL_TRAIT_KEYS } from '../types';
 
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
@@ -16,9 +16,10 @@ interface FullRevealPhaseProps {
   onContinue: () => void;
 }
 
-const ALL_TRAIT_ROWS: { key: 'profession' | (typeof ALL_TRAIT_KEYS)[number]; label: string }[] = [
-  { key: 'profession', label: TRAIT_LABELS.profession },
-  ...ALL_TRAIT_KEYS.map((k) => ({ key: k, label: TRAIT_LABELS[k] })),
+// Подписи резолвятся в рендере через t(bunker.traitLabels.<key>)
+const ALL_TRAIT_ROW_KEYS: ('profession' | (typeof ALL_TRAIT_KEYS)[number])[] = [
+  'profession',
+  ...ALL_TRAIT_KEYS,
 ];
 
 function CharacterCard({
@@ -68,7 +69,7 @@ function CharacterCard({
 
       {/* Trait rows */}
       <div className="space-y-1 px-3 pb-3">
-        {ALL_TRAIT_ROWS.map(({ key, label }) => {
+        {ALL_TRAIT_ROW_KEYS.map((key) => {
           const entry = char[key as keyof BunkerCharacter] as
             | {
                 name: string;
@@ -86,7 +87,9 @@ function CharacterCard({
               style={{ opacity: isRevealed ? 1 : 0.4 }}
             >
               <span className="w-5 flex-shrink-0 text-center text-sm">{entry.emoji}</span>
-              <span className="w-20 flex-shrink-0 truncate text-xs text-white/40">{label}</span>
+              <span className="w-20 flex-shrink-0 truncate text-xs text-white/40">
+                {t(`${NS.BUNKER}.traitLabels.${key}`)}
+              </span>
               <span className="flex-1 truncate text-xs font-bold text-white">{entry.name}</span>
               {!isRevealed && (
                 <span

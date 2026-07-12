@@ -5,9 +5,10 @@ import React, { useEffect, useState } from 'react';
 import { BunkerBalanceView } from '@/debug/BunkerBalanceView';
 import { GameMenuCard } from '@/entities/game/components/GameMenuCard';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey } from '@/entities/game/types';
+import { useLocalizedGames } from '@/entities/game/useLocalizedGame';
 import { contentService } from '@/features/word-stats/model/contentService';
+import { useTranslation } from '@/shared/i18n';
 import { getTheme } from '@/shared/theme/colors';
 import { DIFFICULTY } from '@/shared/types';
 
@@ -15,10 +16,10 @@ interface MainMenuProps {
   onSelectGame: (gameId: GameKey) => void;
 }
 
-const GAMES = Object.values(GAMES_REGISTRY);
-
 export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
   const { setCurrentGameId } = useGameSettings();
+  const { t: tr } = useTranslation();
+  const GAMES = useLocalizedGames();
   const [descriptionGameId, setDescriptionGameId] = useState<GameKey | null>(null);
   const [showBalance, setShowBalance] = useState<boolean>(false);
 
@@ -31,7 +32,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
     return stats.total > 0 ? stats : null;
   };
 
-  const descriptionGame = descriptionGameId ? GAMES_REGISTRY[descriptionGameId] : null;
+  const descriptionGame = descriptionGameId
+    ? (GAMES.find((g) => g.id === descriptionGameId) ?? null)
+    : null;
 
   return (
     <div className="relative flex min-h-screen flex-col items-center px-5 pt-6 pb-28">
@@ -53,7 +56,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
             </span>
           </h1>
           <p className="text-micro font-black tracking-[0.5em] text-white/20 uppercase italic">
-            {GAMES.length} ИГР · ВЕЧЕРИНКА НАЧИНАЕТСЯ
+            {tr('menu.tagline', { n: GAMES.length })}
           </p>
         </motion.div>
 
@@ -96,7 +99,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
           }}
         >
           <BarChart3 className="h-3.5 w-3.5" />
-          Баланс · Бункер
+          {tr('menu.balanceDebug')}
         </motion.button>
       </div>
 
@@ -199,7 +202,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           className={`rounded-premium-sm inline-flex items-center gap-1.5 px-3 py-1.5 ${t.bg10} ${t.text} text-micro border border-current/25 font-black tracking-[0.15em] uppercase`}
                         >
                           <Users className="h-2.5 w-2.5" />
-                          {descriptionGame.players} игроков
+                          {tr('menu.playersCount', { players: descriptionGame.players })}
                         </span>
                       </div>
 
@@ -213,7 +216,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                         className={`rounded-premium-md text-card w-full py-4 font-black tracking-[0.15em] text-black uppercase ${t.solid} transition-transform active:scale-[0.98]`}
                         style={{ boxShadow: 'var(--shadow-button)' }}
                       >
-                        Играть
+                        {tr('menu.play')}
                       </motion.button>
                     </div>
                   </div>

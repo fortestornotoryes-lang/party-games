@@ -4,12 +4,13 @@ import { motion, Reorder } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { DEFAULT_NAMES, PlayerRow } from '@/entities/player/components/PlayerRow';
+import { DEFAULT_NAMES, DEFAULT_NAMES_EN, PlayerRow } from '@/entities/player/components/PlayerRow';
 import type { PlayerEntry } from '@/entities/player/types';
 import { InstructionsModal } from '@/shared/components/InstructionsModal';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
 import { shuffle } from '@/shared/helpers/random';
+import { useLanguage } from '@/shared/i18n';
 import { storageService } from '@/shared/services/storageService';
 import { getTheme } from '@/shared/theme/colors';
 import { DIFFICULTY, type GameTheme } from '@/shared/types';
@@ -40,6 +41,7 @@ export const Setup: React.FC<SetupProps> = ({
   subtitle,
   themeColor,
   playerPlaceholder,
+  addPlayerLabel,
   instructions,
   description,
   minPlayers,
@@ -47,6 +49,7 @@ export const Setup: React.FC<SetupProps> = ({
   children,
 }) => {
   const { difficulty } = useGameSettings();
+  const { t, lang } = useLanguage();
   const config = getTheme(themeColor);
   // TODO: RN — replace with useEffect async load (useState lazy initializer incompatible with async)
   const [players, setPlayers] = useState<PlayerEntry[]>(() => {
@@ -54,7 +57,7 @@ export const Setup: React.FC<SetupProps> = ({
     if (savedNames.length >= minPlayers) {
       return savedNames.slice(0, maxPlayers).map((name) => ({ id: makeId(), name }));
     }
-    const shuffled = shuffle(DEFAULT_NAMES);
+    const shuffled = shuffle(lang === 'en' ? DEFAULT_NAMES_EN : DEFAULT_NAMES);
     return Array.from({ length: minPlayers }, (_, i) => ({
       id: makeId(),
       name: shuffled[i] ?? `${playerPlaceholder} ${i + 1}`,
@@ -137,10 +140,10 @@ export const Setup: React.FC<SetupProps> = ({
                 className={`rounded-premium-sm glass-card text-tag font-display border-none px-4 py-1.5 font-black tracking-[0.2em] uppercase italic ${difficulty === DIFFICULTY.EASY ? 'text-premium-green' : difficulty === DIFFICULTY.MEDIUM ? 'text-premium-sky' : 'text-premium-red'}`}
               >
                 {difficulty === DIFFICULTY.EASY
-                  ? 'ЛЕГКО'
+                  ? t('common.difficultyShort.easy')
                   : difficulty === DIFFICULTY.MEDIUM
-                    ? 'НОРМА'
-                    : 'ПРОФИ'}
+                    ? t('common.difficultyShort.medium')
+                    : t('common.difficultyShort.hard')}
               </div>
             </div>
           </div>
@@ -152,7 +155,7 @@ export const Setup: React.FC<SetupProps> = ({
             <div className="flex items-center gap-3">
               <Users className={`h-4 w-4 ${config.text}`} />
               <span className="text-tag font-black tracking-[0.4em] text-white/80 uppercase">
-                УЧАСТНИКИ
+                {t('common.participants')}
               </span>
             </div>
             <div className="flex items-center gap-4">
@@ -191,7 +194,7 @@ export const Setup: React.FC<SetupProps> = ({
               className={`rounded-premium-lg text-label mt-4 flex h-12 w-full items-center justify-center gap-4 border-2 border-dashed border-white/25 font-black tracking-[0.4em] text-white/50 uppercase transition-all ${config.addHover} hover:border-dashed`}
             >
               <UserPlus className="h-5 w-5" />
-              <span>Добавить</span>
+              <span>{addPlayerLabel}</span>
             </button>
           )}
         </div>
@@ -220,7 +223,7 @@ export const Setup: React.FC<SetupProps> = ({
             className={`h-16 ${config.button} rounded-premium-md group relative flex items-center justify-center gap-4 overflow-hidden border-none text-white transition-all active:scale-95 disabled:opacity-30`}
           >
             <span className="relative z-10 text-2xl leading-none font-black tracking-tighter uppercase italic">
-              СТАРТ
+              {t('common.start')}
             </span>
           </PrimaryButton>
         </div>

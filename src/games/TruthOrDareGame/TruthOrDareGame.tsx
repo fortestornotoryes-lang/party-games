@@ -10,7 +10,6 @@ import type { ChoiceType } from './types';
 import { TruthOrDarePhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
@@ -57,7 +56,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
   return (
     <div className="flex h-screen flex-col">
       <GameHeader
-        title={GAMES_REGISTRY.truth_or_dare.title}
+        title={t('registry.games.truth_or_dare.title')}
         subtitle={t(`${NS.TRUTH_OR_DARE}.subtitle`)}
         icon={Flame}
         theme="red"

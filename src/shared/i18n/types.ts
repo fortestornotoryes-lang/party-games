@@ -1,5 +1,8 @@
 export type Lang = 'ru' | 'en';
 
+/** Сигнатура функции перевода из LanguageContext — для передачи t() вне компонентов */
+export type TranslateFn = (path: string, vars?: Record<string, string | number>) => string;
+
 /** Базовые переводы — common-строки, используемые везде */
 export interface CommonTranslations {
   back: string;
@@ -30,6 +33,108 @@ export interface CommonTranslations {
     medium: string;
     hard: string;
   };
+  /** Короткие подписи кнопок сложности (Setup, UniversalGameSettings, Settings) */
+  difficultyShort: {
+    easy: string; // 'Легко'
+    medium: string; // 'Норма'
+    hard: string; // 'Профи'
+  };
+  loading: string; // 'Загрузка...'
+  add: string; // 'Добавить'
+  participants: string; // 'Участники'
+  difficultyLabel: string; // 'Сложность'
+  modeLabel: string; // 'Мод'
+  explains: string; // '{{player}} объясняет'
+  secondsShort: string; // '{{n}}с'
+  scoreTable: string; // 'Счёт'
+  teamN: string; // 'Команда {{n}}'
+  youDraw: string; // 'Рисуешь'
+}
+
+/** Главное меню (MainMenu) */
+export interface MenuTranslations {
+  tagline: string; // '{{n}} игр · Вечеринка начинается'
+  playersCount: string; // '{{players}} игроков'
+  play: string; // 'Играть'
+  balanceDebug: string; // 'Баланс · Бункер'
+}
+
+/** Страница настроек (widget/settings) */
+export interface SettingsPageTranslations {
+  title: string; // 'Настройки'
+  tabGeneral: string; // 'Общие'
+  tabWords: string; // 'Слова'
+  effectsSection: string; // 'Эффекты и отклик'
+  visualEffects: string;
+  visualEffectsDesc: string;
+  vibration: string;
+  vibrationDesc: string;
+  sounds: string;
+  soundsDesc: string;
+  storageSection: string; // 'Хранилище'
+  storageActive: string; // 'Активно'
+  storageDesc: string;
+  aboutSection: string; // 'О приложении'
+  aboutText: string;
+  truth: string; // 'Правда'
+  dare: string; // 'Действие'
+  todShort: string; // 'П/Действие' — чип игры в списке
+  progress: string; // 'Прогресс'
+  usedCount: string; // '{{n}} пройдено'
+  noUsed: string; // 'Нет пройденных'
+  reset: string; // 'Сброс'
+  confirmReset: string; // 'Сбросить прогресс для этой игры?'
+  addSection: string; // 'Добавить'
+  addTo: string; // 'Добавить в:'
+  errMinLetters: string; // 'Минимум 3 буквы'
+  errDuplicate: string; // 'Уже добавлено'
+  customTruths: string; // 'Свои правды'
+  customDares: string; // 'Свои действия'
+  customWords: string; // 'Свои слова'
+  nothingAdded: string; // 'Ничего не добавлено'
+  searchPlaceholder: string; // 'Поиск...'
+  nothingFound: string; // 'Ничего не найдено'
+}
+
+// ─── Реестр игр (карточки меню, Setup, режимы, настройки) ─────────────────────
+
+export interface RegistryModeText {
+  name: string;
+  description: string;
+}
+
+export interface RegistryOptionText {
+  label: string;
+  sublabel?: string;
+}
+
+export interface RegistrySettingText {
+  label: string;
+  /** Ключ — String(option.value) из GAMES_REGISTRY */
+  options: Record<string, RegistryOptionText>;
+}
+
+export interface RegistryGameText {
+  title: string;
+  subtitle: string;
+  description: string;
+  placeholder: string;
+  /** Ключ — id режима из *_MODES */
+  modes?: Record<string, RegistryModeText>;
+  /** Ключ — GameSettingKey */
+  settings?: Record<string, RegistrySettingText>;
+}
+
+export interface RegistryTranslations {
+  /** Подписи под кнопками сложности (difficultySublabel в реестре) */
+  sublabels: {
+    cardsLeft: string; // '{{n}} карт'
+    wordsLeft: string; // '{{n}} сл'
+    minutes: string; // '{{n}} мин'
+    seconds: string; // '{{n}} сек'
+    shapes: string; // '{{n}} фиг.'
+  };
+  games: Record<string, RegistryGameText>;
 }
 
 export interface TabooTranslations {
@@ -633,6 +738,9 @@ export interface MemoRiskTranslations {
  */
 export interface Translations {
   common: CommonTranslations;
+  menu: MenuTranslations;
+  settingsPage: SettingsPageTranslations;
+  registry: RegistryTranslations;
   taboo?: TabooTranslations;
   bunker?: BunkerTranslations;
   codenames?: CodenamesTranslations;
@@ -656,6 +764,9 @@ export interface Translations {
   [gameKey: string]:
     | Record<string, unknown>
     | CommonTranslations
+    | MenuTranslations
+    | SettingsPageTranslations
+    | RegistryTranslations
     | TabooTranslations
     | BunkerTranslations
     | CodenamesTranslations

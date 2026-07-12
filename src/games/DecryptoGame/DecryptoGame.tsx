@@ -13,7 +13,6 @@ import type { TeamColor, TeamState } from './types';
 import { DecryptoPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
-import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey } from '@/entities/game/types';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
@@ -165,7 +164,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
   return (
     <div className="flex min-h-screen flex-col pb-20 text-white">
       <GameHeader
-        title={GAMES_REGISTRY.decrypto.title}
+        title={t('registry.games.decrypto.title')}
         subtitle={t(`${NS.DECRYPTO}.subtitle`)}
         icon={Key}
         theme="purple"

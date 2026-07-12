@@ -7,6 +7,7 @@ import { TextInput } from '@/shared/components/TextInput';
 import type { ThemeTokens } from '@/shared/theme/colors';
 
 export const DEFAULT_NAMES = ['Дуня', 'Валера', 'Диана', 'Люба', 'Саша'];
+export const DEFAULT_NAMES_EN = ['Alex', 'Sam', 'Kate', 'Max', 'Nick'];
 type Config = ThemeTokens;
 
 interface PlayerRowProps {

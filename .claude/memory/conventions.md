@@ -38,6 +38,11 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 ## i18n
 
-`shared/i18n/` — контекст с ru/en словарями (`ru.ts`, `en.ts`, ключи в `keys.ts`), интерполяция `{{var}}`. Язык хранится в настройках (`storageService`). Часть игрового контента и UI-строк пока захардкожена по-русски — при рефакторинге переносить в словари.
+`shared/i18n/` — контекст с ru/en словарями (`ru.ts`, `en.ts`, ключи в `keys.ts`), интерполяция `{{var}}`. Язык хранится в настройках (`storageService`).
 
-_Ревизия: 2026-07-06_
+- **Весь UI переведён** (2026-07-12): неймспейсы `common` / `menu` / `settingsPage` / `registry` + по неймспейсу на игру.
+- Тексты реестра игр (title/subtitle/description/режимы/настройки) — в `registry.games.<gameKey>`; статический `GAMES_REGISTRY` хранит только структуру (иконки, темы, лимиты). Локализованные метаданные — через `useLocalizedGame` / `useLocalizedGames` (`entities/game/useLocalizedGame.ts`); `difficultySublabel` принимает `t` третьим аргументом.
+- Инструкции игр: `GAME_INSTRUCTIONS` (ru) + `GAME_INSTRUCTIONS_EN` в `entities/game/instructions.ts`, выбор — `getGameInstructions(gameKey, lang)`.
+- **Не переводится намеренно**: контент-пулы (слова/вопросы/персонажи Бункера — русский игровой контент), `debug/BunkerBalanceView`, секция «Язык / Language» (двуязычная по дизайну), комментарии в коде.
+
+_Ревизия: 2026-07-12_
