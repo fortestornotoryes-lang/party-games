@@ -18,7 +18,6 @@ import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
-import { storageService } from '@/shared/services/storageService';
 import { DIFFICULTY } from '@/shared/types';
 
 interface GameProps {

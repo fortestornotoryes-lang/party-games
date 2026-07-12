@@ -18,7 +18,6 @@ import { usePlayerCycle } from '@/shared/hooks/usePlayerCycle';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
-import { storageService } from '@/shared/services/storageService';
 
 interface WavelengthGameProps {
   playerNames: string[];
