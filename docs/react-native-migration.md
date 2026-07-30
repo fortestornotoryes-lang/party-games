@@ -1,7 +1,8 @@
 # План переноса Party Games на React Native
 
-> Статус: план утверждён, работа не начата.
+> Статус: **работа начата (2026-07-30)** — этапы 0–1 выполнены, см. отметки ниже.
 > Решения зафиксированы с владельцем проекта: **Expo** (managed workflow), **отдельный RN-проект** (веб-версия не является источником общего кода, код копируется и адаптируется), платформы **iOS + Android**, стилизация — **NativeWind**.
+> Уточнение 2026-07-30: RN-проект живёт в папке **`mobile-app/` внутри этого репозитория** (не отдельное репо `party-games-native`) — по явному решению владельца. Из корневого tsconfig папка исключена.
 
 ---
 
@@ -53,10 +54,10 @@
 
 ## 5. Структура нового проекта
 
-Отдельная папка/репозиторий `party-games-native`, FSD-структура сохраняется:
+Папка `mobile-app/` в корне репозитория, FSD-структура сохраняется:
 
 ```
-party-games-native/
+mobile-app/
   app/                      — expo-router: _layout.tsx, index.tsx, settings.tsx,
                               game/[gameKey]/setup.tsx, game/[gameKey]/play.tsx
   src/
@@ -84,20 +85,21 @@ party-games-native/
 
 ### Этап 0 — Bootstrap (фундамент)
 
-- `create-expo-app` (TypeScript template), expo-router, NativeWind v4, Reanimated, Gesture Handler, safe-area-context, MMKV, lucide-react-native + react-native-svg
-- eslint/prettier/tsconfig перенести из веб-проекта (paths-алиасы `@/...`)
-- Прогнать пустое приложение на реальном Android-устройстве и iOS (Expo Go / dev build; MMKV и Skia требуют **dev build**, не Expo Go — сразу настроить `expo-dev-client` + EAS)
+- ✅ **Сделано (2026-07-30):** `create-expo-app` в `mobile-app/` (Expo SDK 57, RN 0.86, React 19.2, expo-router). Установлены: nativewind@4.2 + tailwindcss@3.4, react-native-mmkv@4 (+ nitro-modules), lucide-react-native + react-native-svg, moti, expo-haptics/audio/blur/linear-gradient/keep-awake, expo-dev-client. NativeWind сконфигурирован (babel/metro/tailwind.config, `src/global.css`); tsconfig — алиас `@/*` + `allowImportingTsExtensions` как в вебе. Демо-экраны шаблона удалены, каркас `src/app/` — `_layout` с провайдерами + смоук-экран `index` (список игр из реестра).
+- ⬜ Прогнать приложение на реальном Android-устройстве и iOS (MMKV и Skia требуют **dev build**, не Expo Go — `expo-dev-client` уже установлен, осталось собрать через EAS/`expo run:android`)
+- ⬜ eslint/prettier перенести из веб-проекта
 
 **Готово, когда:** dev build ставится на оба телефона, hot reload работает, NativeWind красит тестовый экран.
 
 ### Этап 1 — Ядро shared (без UI)
 
-- Скопировать: types, contentPool, i18n, hooks, sessionService, GameSettingsContext, helpers
-- storageService: адаптер на MMKV, API не менять
-- tailwind.config.js: перенести токены тем из `src/app/styles/index.css` + `PREMIUM_RGB`
-- feedbackService: expo-haptics/expo-audio с прежними сигнатурами
+- ✅ **Сделано (2026-07-30):** скопированы types, contentPool + helpers (cardDeck/random/teams), i18n (полностью), hooks (useTimer/useCountdown/usePlayerCycle/usePersistedState; `NodeJS.Timeout` → `ReturnType<typeof setTimeout>`), sessionService, GameSettingsContext, registry + instructions + useLocalizedGame, theme/colors.ts. Плюс констант-файлы игр, от которых зависит реестр (Alias, Bunker, Codenames, ConnectFour, Decrypto, MemoRisk, SpyHunt + его content.ts, TabooReverse, Telestrations).
+- ✅ storageService/sessionService: работают через `kvStorage` — localStorage-совместимый адаптер над MMKV (`shared/services/kvStorage.ts`), API и `safeParseJson` не менялись.
+- ✅ tailwind: `scripts/generateTailwindColors.mjs` генерирует `tailwind.colors.json` из `PREMIUM_RGB` (npm `theme:gen`, вшит в `prestart`) — принцип «один источник цветов» сохранён.
+- ✅ feedbackService: те же сигнатуры; vibrate — на expo-haptics; celebrate/fireworks/playSound — заглушки с TODO (конфетти — этап 2/7, сэмплы expo-audio — этап 7).
+- Примечание: web-`backgroundImage` (картинки GameCard) из RN-реестра пока убраны — вернуть на этапе 3 при переносе меню (RN-импорты картинок отличаются от Vite).
 
-**Готово, когда:** `tsc --noEmit` чистый, юнит-логика (contentPool, helpers) работает в тестовом экране.
+**Готово, когда:** `tsc --noEmit` чистый ✅; юнит-логика (contentPool, helpers) работает в тестовом экране — проверить на dev build.
 
 ### Этап 2 — UI-кит
 

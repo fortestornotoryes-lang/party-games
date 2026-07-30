@@ -38,9 +38,15 @@ src/
 - `src/entities/game/instructions.ts` — инструкции ru + en, выбор через `getGameInstructions(gameKey, lang)`
 - `src/pages/game/GamePlayRoute.tsx` — lazy-импорты + `GAME_COMPONENTS`: все игры рендерятся одним маппингом с общим контрактом `GameComponentProps` (`entities/game/types.ts`) — `playerNames`, `onBack` + опциональные `onRestart` (Bunker), `initialDifficulty` (Telestrations); особых веток нет
 
-## Перенос на React Native (план, работа не начата)
+## Перенос на React Native (в работе, этапы 0–1 сделаны)
 
-Детальный план — `docs/react-native-migration.md`. Принятые решения (2026-07-06): Expo (dev build, не Expo Go), **отдельный RN-проект** `party-games-native` (не монорепо), iOS + Android, NativeWind, MMKV вместо localStorage, Skia для рисования. Пока веб жив — контент-правки дублировать в оба проекта.
+Детальный план и статус — `docs/react-native-migration.md`. RN-проект — папка **`mobile-app/` внутри этого репо** (решение 2026-07-30; ранее планировалось отдельное репо). Стек: Expo SDK 57 + expo-router + NativeWind v4 + MMKV + moti; Skia для рисования — позже.
+
+- Ядро shared перенесено (2026-07-30): types/helpers/hooks/i18n/сервисы/реестр + констант-файлы игр, от которых зависит реестр. `tsc --noEmit` чистый; на устройстве не прогонялось.
+- localStorage заменён адаптером `mobile-app/src/shared/services/kvStorage.ts` (MMKV, синхронный) — API сервисов не менялся. MMKV/Skia **не работают в Expo Go**, только dev build (expo-dev-client установлен).
+- Цвета: `mobile-app/scripts/generateTailwindColors.mjs` генерирует `tailwind.colors.json` из PREMIUM_RGB (`npm run theme:gen`, вшит в prestart) — аналог веб-`theme:gen`.
+- `mobile-app/` исключён из корневого tsconfig; у него свои tsconfig/CLAUDE.md/README.
+- Пока веб жив — контент-правки дублировать в оба проекта (файлы контента копируются 1:1).
 
 ## Субагенты
 
@@ -58,4 +64,4 @@ src/
 6. Lazy-импорт + запись в `GAME_COMPONENTS` в `GamePlayRoute.tsx`
 7. Персистенция партии через `usePersistedState` (см. conventions.md), контент через пул-хелперы
 
-_Ревизия: 2026-07-12_
+_Ревизия: 2026-07-30_

@@ -18,5 +18,7 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  // mobile-app — отдельный RN-проект со своим tsconfig (expo)
+  "exclude": ["node_modules", "dist", "mobile-app"]
 }

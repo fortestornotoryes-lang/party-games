@@ -46,7 +46,9 @@
       "PowerShell($base = Get-Content C:\\\\Users\\\\Alex\\\\Desktop\\\\party-games\\\\.lint-baseline.txt -Raw; \\($base | Select-String -Pattern 'rules-of-hooks' -AllMatches\\).Matches.Count; $base.Length)",
       "PowerShell(npx eslint src/App.tsx src/router/routes.tsx src/router/GameLayout.tsx src/router/GamePlayRoute.tsx src/router/GameSetupRoute.tsx src/registry/GameRegistry.tsx src/types.ts src/types/games.ts; \"eslint exit=$LASTEXITCODE\")",
       "PowerShell(npx eslint src/types.ts src/types/games.ts src/contexts/GameSettingsContext.tsx src/components/UniversalGameSettings.tsx; Write-Output \"exit=$LASTEXITCODE\")",
-      "PowerShell(Get-ChildItem src/games/MafiaGame, src/games/ConnectFourGame, src/games/CorridorGame -Recurse -File | Select-Object FullName, @{N='Lines';E={\\(Get-Content $_.FullName | Measure-Object -Line\\).Lines}})"
+      "PowerShell(Get-ChildItem src/games/MafiaGame, src/games/ConnectFourGame, src/games/CorridorGame -Recurse -File | Select-Object FullName, @{N='Lines';E={\\(Get-Content $_.FullName | Measure-Object -Line\\).Lines}})",
+      "Bash(npm install *)",
+      "Bash(npx expo *)"
     ]
   },
   "hooks": {
@@ -54,10 +56,6 @@
       {
         "matcher": "Edit|Write",
         "hooks": [
-          {
-            "type": "command",
-            "command": "node .claude/hooks/prettier-format.js"
-          },
           {
             "type": "command",
             "command": "npx tsc --noEmit 2>&1"

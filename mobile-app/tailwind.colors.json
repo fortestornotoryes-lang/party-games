@@ -1,0 +1,14 @@
+{
+  "premium-red": "rgb(255 46 77 / <alpha-value>)",
+  "premium-green": "rgb(0 216 138 / <alpha-value>)",
+  "premium-sky": "rgb(31 182 255 / <alpha-value>)",
+  "premium-blue": "rgb(63 123 255 / <alpha-value>)",
+  "premium-orange": "rgb(255 138 31 / <alpha-value>)",
+  "premium-yellow": "rgb(255 204 31 / <alpha-value>)",
+  "premium-purple": "rgb(199 123 255 / <alpha-value>)",
+  "premium-pink": "rgb(255 46 180 / <alpha-value>)",
+  "premium-cyan": "rgb(0 229 255 / <alpha-value>)",
+  "premium-lime": "rgb(132 204 22 / <alpha-value>)",
+  "premium-teal": "rgb(20 184 166 / <alpha-value>)",
+  "premium-indigo": "rgb(99 102 241 / <alpha-value>)"
+}
