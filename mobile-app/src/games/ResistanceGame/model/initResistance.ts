@@ -1,0 +1,24 @@
+import { RESISTANCE_ROLE_IDS } from '../constants';
+
+import type { Player } from '@/entities/player/types';
+import { generateId, shuffle } from '@/shared/helpers/random';
+
+export const initResistance = (playerNames: string[]) => {
+  const pCount = playerNames.length;
+  let spyCount = 2;
+  if (pCount >= 7) spyCount = 3;
+  if (pCount >= 10) spyCount = 4;
+
+  const indices = Array.from({ length: pCount }, (_, i) => i);
+  const shuffledIndices = shuffle(indices);
+  const spyIndices = shuffledIndices.slice(0, spyCount);
+
+  const players: Player[] = playerNames.map((name, index) => ({
+    id: generateId(),
+    name,
+    role: spyIndices.includes(index) ? RESISTANCE_ROLE_IDS.SPY : RESISTANCE_ROLE_IDS.RESISTANCE,
+    isSpy: spyIndices.includes(index),
+  }));
+
+  return { players };
+};

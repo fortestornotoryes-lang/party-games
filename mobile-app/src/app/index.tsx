@@ -1,55 +1,54 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { FlaskConical, Settings as SettingsIcon } from 'lucide-react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useLocalizedGames } from '@/entities/game/useLocalizedGame';
-import { useTranslation } from '@/shared/i18n';
-import { rgba } from '@/shared/theme/colors';
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import type { GameKey } from '@/entities/game/types';
+import { GlassCard } from '@/shared/components/GlassCard';
+import { MainMenu } from '@/widgets/main-menu/components/MainMenu';
 
-/**
- * Смоук-экран этапа 1: список всех игр из реестра.
- * Проверяет разом ядро без UI-кита: i18n (словари + t), GAMES_REGISTRY,
- * lucide-react-native, NativeWind-классы и MMKV (чтение языка при старте
- * LanguageProvider). Полноценное меню (GameCard-сетка) — этап 3.
- */
-export default function MenuScreen() {
-  const games = useLocalizedGames();
-  const { t } = useTranslation();
+export default function MenuRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { setCurrentGameId } = useGameSettings();
+
+  const handleSelectGame = (gameId: GameKey) => {
+    // Ставим id до навигации, чтобы Setup сразу отрендерился с нужным конфигом
+    void setCurrentGameId(gameId);
+    router.push(`/game/${gameId}/setup`);
+  };
 
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24 }}
-    >
-      <View className="px-5">
-        <Text className="mb-1 text-3xl font-bold text-white">Party Games</Text>
-        <Text className="mb-6 text-base text-white/50">
-          {t('menu.tagline', { n: games.length })}
-        </Text>
+    <View className="flex-1">
+      <MainMenu onSelectGame={handleSelectGame} />
 
-        {games.map((game) => {
-          const Icon = game.icon;
-          return (
-            <View
-              key={game.id}
-              className="mb-3 flex-row items-center rounded-2xl border border-white/10 bg-white/5 p-4"
-            >
-              <View
-                className="mr-4 h-11 w-11 items-center justify-center rounded-xl"
-                style={{ backgroundColor: rgba(game.theme, 0.15) }}
-              >
-                <Icon size={22} color={rgba(game.theme, 1)} />
-              </View>
-              <View className="flex-1">
-                <Text className="text-base font-semibold text-white">{game.title}</Text>
-                <Text className="text-sm text-white/40">
-                  {game.subtitle} · {game.players}
-                </Text>
-              </View>
-            </View>
-          );
-        })}
+      {/* Плавающие кнопки: настройки + debug-витрина UI-кита */}
+      <View
+        className="absolute right-6 gap-3"
+        style={{ bottom: insets.bottom + 24 }}
+      >
+        <Pressable
+          onPress={() => {
+            router.push('/showcase');
+          }}
+          style={({ pressed }) => (pressed ? { transform: [{ scale: 0.95 }] } : undefined)}
+        >
+          <GlassCard className="rounded-premium-md h-14 w-14 items-center justify-center">
+            <FlaskConical size={20} color="rgba(255,255,255,0.3)" />
+          </GlassCard>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            router.push('/settings');
+          }}
+          style={({ pressed }) => (pressed ? { transform: [{ scale: 0.95 }] } : undefined)}
+        >
+          <GlassCard className="rounded-premium-md h-14 w-14 items-center justify-center">
+            <SettingsIcon size={20} color="rgba(255,255,255,0.3)" />
+          </GlassCard>
+        </Pressable>
       </View>
-    </ScrollView>
+    </View>
   );
 }

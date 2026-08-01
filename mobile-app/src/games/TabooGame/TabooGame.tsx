@@ -1,0 +1,218 @@
+import { Ban } from 'lucide-react-native';
+import { AnimatePresence } from 'moti';
+import React, { useCallback, useEffect } from 'react';
+import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import type { TabooClassicCard } from './content';
+import { getNextTabooClassicCard, TABOO_CLASSIC_CARDS } from './content';
+import { GameOverPhase } from './phases/GameOverPhase';
+import { PassPhase } from './phases/PassPhase';
+import { PlayingPhase } from './phases/PlayingPhase';
+import { VerdictPhase } from './phases/VerdictPhase';
+import { TabooPhase } from './types';
+
+import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { GameKey } from '@/entities/game/types';
+import { GameHeader } from '@/shared/components/GameHeader';
+import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
+import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
+import { useTimer } from '@/shared/hooks/useTimer';
+import { useTranslation } from '@/shared/i18n';
+import { NS } from '@/shared/i18n/keys';
+import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
+
+interface TabooGameProps {
+  playerNames: string[];
+  onBack: () => void;
+}
+
+export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => {
+  const { difficulty, timerSeconds } = useGameSettings();
+  const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const cardTimer = timerSeconds;
+
+  // ── Игроки и очки ──────────────────────────────────────────────────────────
+  const [scores, setScores] = usePersistedState<Record<string, number>>(
+    GameKey.Taboo,
+    'scores',
+    () => Object.fromEntries(playerNames.map((p) => [p, 0]))
+  );
+  const [explainerIdx, setExplainerIdx] = usePersistedState(GameKey.Taboo, 'explainerIdx', 0);
+  const currentExplainer = playerNames[explainerIdx % playerNames.length];
+  const otherPlayers = playerNames.filter((p) => p !== currentExplainer);
+
+  // ── Счётчик раундов ────────────────────────────────────────────────────────
+  const [roundNum, setRoundNum] = usePersistedState(GameKey.Taboo, 'roundNum', 1);
+
+  // ── Карточка ───────────────────────────────────────────────────────────────
+  const buildUsedIds = (): Set<number> =>
+    buildUsedCardIds(GameKey.Taboo, TABOO_CLASSIC_CARDS, difficulty);
+
+  const [usedCardIds, setUsedCardIds] = usePersistedState<ReadonlySet<number>>(
+    GameKey.Taboo,
+    'usedCardIds',
+    buildUsedIds,
+    { save: (s) => [...s], load: (raw) => new Set(raw as number[]) }
+  );
+  const [card, setCard] = usePersistedState<TabooClassicCard>(GameKey.Taboo, 'card', () =>
+    getNextTabooClassicCard(difficulty, buildUsedIds())
+  );
+
+  // ── Фаза ───────────────────────────────────────────────────────────────────
+  const [phase, setPhase] = usePersistedState<TabooPhase>(GameKey.Taboo, 'phase', TabooPhase.Pass);
+
+  // ── Таймер ─────────────────────────────────────────────────────────────────
+  const [timedOut, setTimedOut] = usePersistedState(GameKey.Taboo, 'timedOut', false);
+
+  const {
+    timeLeft,
+    start: startTimer,
+    reset: resetTimer,
+  } = useTimer({
+    initialTime: cardTimer,
+    onTimeUp: () => {
+      feedbackService.vibrate(VIBRATE.timeout);
+      setTimedOut(true);
+      setPhase(TabooPhase.Verdict);
+    },
+  });
+
+  // После перезапуска приложения в фазе Playing — продолжаем отсчёт.
+  usePersistedTimer(
+    GameKey.Taboo,
+    'timeLeft',
+    { timeLeft, start: startTimer, reset: resetTimer },
+    phase === TabooPhase.Playing
+  );
+
+  // ── Конфетти на финале ─────────────────────────────────────────────────────
+  useEffect(() => {
+    if (phase === TabooPhase.GameOver) {
+      feedbackService.playSound('win');
+      feedbackService.vibrate(VIBRATE.win);
+      feedbackService.celebrate('win');
+    }
+  }, [phase]);
+
+  // ── Обработчики ────────────────────────────────────────────────────────────
+  const handleStart = useCallback(() => {
+    setTimedOut(false);
+    resetTimer(cardTimer);
+    startTimer();
+    setPhase(TabooPhase.Playing);
+  }, [cardTimer, resetTimer, startTimer]);
+
+  const handleGuessed = useCallback(() => {
+    setPhase(TabooPhase.Verdict);
+  }, []);
+
+  const handleVerdict = useCallback(
+    (guesser: string | null, penalty = false) => {
+      const newScores = { ...scores };
+
+      if (penalty) {
+        newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
+        feedbackService.playSound('error');
+        feedbackService.vibrate(VIBRATE.error);
+      } else if (guesser) {
+        newScores[guesser] = (newScores[guesser] ?? 0) + 1;
+        feedbackService.playSound('success');
+        feedbackService.celebrate('small', { colors: ['#ef4444', '#ffffff'] });
+      }
+
+      // Пометить карточку использованной; при исчерпании колода сбрасывается сама
+      const effectiveUsed = advanceUsedDeck(
+        GameKey.Taboo,
+        TABOO_CLASSIC_CARDS,
+        difficulty,
+        usedCardIds,
+        card
+      );
+
+      setUsedCardIds(effectiveUsed);
+      setScores(newScores);
+      setCard(getNextTabooClassicCard(difficulty, effectiveUsed));
+      setRoundNum((r) => r + 1);
+      setExplainerIdx((i) => i + 1);
+      setPhase(TabooPhase.Pass);
+    },
+    [card, currentExplainer, difficulty, scores, usedCardIds]
+  );
+
+  const handleStopGame = useCallback(() => {
+    setPhase(TabooPhase.GameOver);
+  }, []);
+
+  const handleRematch = useCallback(() => {
+    setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));
+    setExplainerIdx(0);
+    setRoundNum(1);
+    setCard(getNextTabooClassicCard(difficulty, usedCardIds));
+    setPhase(TabooPhase.Pass);
+  }, [difficulty, playerNames, usedCardIds]);
+
+  // ── Рендер ─────────────────────────────────────────────────────────────────
+  return (
+    <View className="flex-1" style={{ paddingTop: insets.top }}>
+      <GameHeader
+        title={t('registry.games.taboo.title')}
+        subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}
+        icon={Ban}
+        theme="red"
+        onBack={onBack}
+      />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
+      >
+        <AnimatePresence exitBeforeEnter>
+          {phase === TabooPhase.Pass && (
+            <PassPhase
+              key="pass"
+              playerNames={playerNames}
+              scores={scores}
+              currentExplainer={currentExplainer}
+              onStart={handleStart}
+            />
+          )}
+
+          {phase === TabooPhase.Playing && (
+            <PlayingPhase
+              key="playing"
+              card={card}
+              currentExplainer={currentExplainer}
+              timeLeft={timeLeft}
+              cardTimer={cardTimer}
+              onGuessed={handleGuessed}
+            />
+          )}
+
+          {phase === TabooPhase.Verdict && (
+            <VerdictPhase
+              key="verdict"
+              card={card}
+              timedOut={timedOut}
+              currentExplainer={currentExplainer}
+              otherPlayers={otherPlayers}
+              onVerdict={handleVerdict}
+              onStopGame={handleStopGame}
+            />
+          )}
+
+          {phase === TabooPhase.GameOver && (
+            <GameOverPhase
+              key="game-over"
+              playerNames={playerNames}
+              scores={scores}
+              onRematch={handleRematch}
+              onBack={onBack}
+            />
+          )}
+        </AnimatePresence>
+      </ScrollView>
+    </View>
+  );
+};

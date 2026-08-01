@@ -1,15 +1,17 @@
 import type { Difficulty } from '@/shared/types';
 
-export enum BunkerPhase {
-  Briefing = 'briefing',
-  DictatorReveal = 'dictator_reveal',
-  RevealPass = 'reveal_pass',
-  Discussion = 'discussion',
-  Voting = 'voting',
-  Tribunal = 'tribunal',
-  FullReveal = 'full_reveal',
-  SurvivalSim = 'survival_sim',
-}
+// Значения совпадают с веб-версией (там enum) — важно для восстановления персистентных сессий
+export const BunkerPhase = {
+  Briefing: 'briefing',
+  DictatorReveal: 'dictator_reveal',
+  RevealPass: 'reveal_pass',
+  Discussion: 'discussion',
+  Voting: 'voting',
+  Tribunal: 'tribunal',
+  FullReveal: 'full_reveal',
+  SurvivalSim: 'survival_sim',
+} as const;
+export type BunkerPhase = (typeof BunkerPhase)[keyof typeof BunkerPhase];
 
 export type ResourceKey = 'food' | 'water' | 'medicine' | 'energy' | 'morale';
 
