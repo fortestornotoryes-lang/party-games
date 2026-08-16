@@ -14,7 +14,6 @@ export function getFakeArtistPool(difficulty: Difficulty): FakeArtistCategory[] 
   ];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getFakeArtistWord(difficulty: Difficulty): { word: string; category: string } {
   return drawFromPool(GameKey.FakeArtist, getFakeArtistPool(difficulty), {
     keyOf: (item) => item.word,

@@ -11,7 +11,7 @@ export function getDecryptoWordPool(difficulty: Difficulty): string[] {
   return [...pool, ...storageService.getAllCustomWords(GameKey.Decrypto, difficulty)];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; called twice per init — write/read order must be preserved)
+// Вызывается дважды за инициализацию раунда — порядок запись/чтение важен, оставаться синхронной (см. gotchas.md)
 export function getDecryptoWords(difficulty: Difficulty, count = 4): string[] {
   return drawBatchFromPool(GameKey.Decrypto, getDecryptoWordPool(difficulty), count);
 }

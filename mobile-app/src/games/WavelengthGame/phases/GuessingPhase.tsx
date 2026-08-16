@@ -2,7 +2,7 @@ import { MotiView } from 'moti';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { GameCard } from '@/shared/components/GameCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -36,10 +36,10 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
   // Перетаскивание ползунка — прямой аналог веб <input type="range">
   const pan = Gesture.Pan()
     .onChange((e) => {
-      runOnJS(updateFromX)(e.x);
+      scheduleOnRN(updateFromX, e.x);
     })
     .onBegin((e) => {
-      runOnJS(updateFromX)(e.x);
+      scheduleOnRN(updateFromX, e.x);
     });
 
   return (

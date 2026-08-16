@@ -191,6 +191,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
               from={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ type: 'timing', duration: 200 }}
               className="rounded-premium-md overflow-hidden border bg-white/5 p-3"
               style={{ borderColor: 'rgba(63,123,255,0.25)' }}
             >
@@ -233,6 +234,7 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
               from={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ type: 'timing', duration: 200 }}
               className="rounded-premium-md overflow-hidden border bg-white/5 p-3"
               style={{ borderColor: 'rgba(0,216,138,0.25)' }}
             >

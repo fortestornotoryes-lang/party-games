@@ -32,17 +32,24 @@ interface PlayingPhaseProps {
   onSkip?: () => void;
 }
 
+interface CardContentProps {
+  card: TabooCard;
+  isBlitz?: boolean;
+  onGuessed: () => void;
+  onSkip?: () => void;
+}
+
 /**
  * Слово + обязательные слова + кнопки — вынесены в memo-компонент: card/isBlitz/
  * onGuessed/onSkip не меняются каждую секунду (в отличие от timeLeft у родителя),
  * поэтому 1Hz-тик таймера не должен их перерендеривать.
  */
-const CardContent: React.FC<{
-  card: TabooCard;
-  isBlitz?: boolean;
-  onGuessed: () => void;
-  onSkip?: () => void;
-}> = React.memo(({ card, isBlitz, onGuessed, onSkip }) => {
+const CardContent = React.memo(function CardContent({
+  card,
+  isBlitz,
+  onGuessed,
+  onSkip,
+}: CardContentProps) {
   const { t } = useTranslation();
   const fs = wordFontSize(card.word);
 

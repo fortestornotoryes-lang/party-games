@@ -18,7 +18,6 @@ export function getMillionaireQuestionPool(): string[] {
   return TIERS.flat().map((q) => q.text);
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getMillionaireQuestions(): MillionaireQuestion[] {
   let used = new Set(storageService.getUsedWords(GameKey.Millionaire));
 

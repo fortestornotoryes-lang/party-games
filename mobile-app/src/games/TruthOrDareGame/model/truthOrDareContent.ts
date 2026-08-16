@@ -14,7 +14,6 @@ export function getTruthOrDarePool(type: TruthOrDareType, difficulty: Difficulty
   return [...staticPool, ...storageService.getCustomWordsByKey(`tod_${type}_${difficulty}`)];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getTruthOrDareQuestion(type: TruthOrDareType, difficulty: Difficulty): string {
   return drawFromPool(GameKey.TruthOrDare, getTruthOrDarePool(type, difficulty));
 }

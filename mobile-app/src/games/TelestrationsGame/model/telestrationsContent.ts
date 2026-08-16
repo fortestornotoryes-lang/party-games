@@ -11,7 +11,6 @@ export function getTelestrationsWordPool(difficulty: Difficulty): string[] {
   return [...pool, ...storageService.getAllCustomWords(GameKey.Telestrations, difficulty)];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getTelestrationsWord(difficulty: Difficulty): string {
   return drawFromPool(GameKey.Telestrations, getTelestrationsWordPool(difficulty));
 }

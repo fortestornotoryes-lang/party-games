@@ -100,6 +100,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
               from={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.2 }}
+              transition={{ type: 'timing', duration: 200 }}
               className="absolute inset-0 items-center justify-center p-4"
             >
               <View className="rounded-premium-lg border border-white/20 bg-black/90 px-6 py-4">

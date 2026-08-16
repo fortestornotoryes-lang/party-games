@@ -11,7 +11,6 @@ export function getJustOneWordPool(difficulty: Difficulty): string[] {
   return [...pool, ...storageService.getAllCustomWords(GameKey.JustOne, difficulty)];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getJustOneWord(difficulty: Difficulty): string {
   return drawFromPool(GameKey.JustOne, getJustOneWordPool(difficulty));
 }

@@ -4,7 +4,7 @@ import { MotiView } from 'moti';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { useTranslation } from '@/shared/i18n';
 
@@ -68,8 +68,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   const [brushSize, setBrushSize] = useState(2);
   const brushColorRef = useRef(brushColor);
   const brushSizeRef = useRef(brushSize);
-  brushColorRef.current = brushColor;
-  brushSizeRef.current = brushSize;
+  useEffect(() => {
+    brushColorRef.current = brushColor;
+    brushSizeRef.current = brushSize;
+  }, [brushColor, brushSize]);
 
   const snapshotToDataUrl = () => {
     const image = canvasRef.current?.makeImageSnapshot();
@@ -104,13 +106,13 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 
   const pan = Gesture.Pan()
     .onBegin((e) => {
-      runOnJS(appendPoint)(e.x, e.y);
+      scheduleOnRN(appendPoint, e.x, e.y);
     })
     .onChange((e) => {
-      runOnJS(appendPoint)(e.x, e.y);
+      scheduleOnRN(appendPoint, e.x, e.y);
     })
     .onEnd(() => {
-      runOnJS(endStroke)();
+      scheduleOnRN(endStroke);
     })
     .minDistance(0);
 

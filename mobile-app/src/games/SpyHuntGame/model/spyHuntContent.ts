@@ -30,7 +30,6 @@ export function getSpyHuntLocationPool(difficulty: string) {
   ];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getSpyHuntLocation(difficulty: string) {
   const all = getSpyHuntLocationPool(difficulty);
   const used = storageService.getUsedWords(GameKey.Spy);

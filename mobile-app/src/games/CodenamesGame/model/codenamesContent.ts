@@ -11,7 +11,6 @@ export function getCodenamesWordPool(difficulty: Difficulty): string[] {
   return [...pool, ...storageService.getAllCustomWords(GameKey.Codenames, difficulty)];
 }
 
-// TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getCodenamesWords(difficulty: Difficulty): string[] {
   return drawBatchFromPool(GameKey.Codenames, getCodenamesWordPool(difficulty), 25);
 }

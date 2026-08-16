@@ -4,8 +4,8 @@ import { AnimatePresence, MotiView } from 'moti';
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { FakeArtistDistribution } from './components/FakeArtistDistribution';
 import { FakeArtistVoting } from './components/FakeArtistVoting';
@@ -133,13 +133,13 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
   const pan = Gesture.Pan()
     .onBegin((e) => {
-      runOnJS(appendPoint)(e.x, e.y);
+      scheduleOnRN(appendPoint, e.x, e.y);
     })
     .onChange((e) => {
-      runOnJS(appendPoint)(e.x, e.y);
+      scheduleOnRN(appendPoint, e.x, e.y);
     })
     .onEnd(() => {
-      runOnJS(endStroke)();
+      scheduleOnRN(endStroke);
     })
     .minDistance(0);
 
@@ -288,6 +288,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                   from={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+                  transition={{ type: 'timing', duration: 200 }}
                   className="absolute inset-0 z-10 items-center justify-end gap-8 bg-black p-6"
                   style={{ paddingTop: 160, paddingBottom: insets.bottom + 24 }}
                 >
