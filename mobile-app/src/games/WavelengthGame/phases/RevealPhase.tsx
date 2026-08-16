@@ -33,7 +33,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       from={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-6"
     >
       {/* Шапка */}

@@ -180,6 +180,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 from={{ opacity: 0, translateX: 20 }}
                 animate={{ opacity: 1, translateX: 0 }}
                 exit={{ opacity: 0, translateX: -20 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="gap-6"
               >
                 <View className="items-center gap-1">
@@ -257,6 +258,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 from={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 items-center justify-center"
               >
                 <PassPhoneCard
@@ -279,6 +281,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 from={{ opacity: 0, translateY: 20 }}
                 animate={{ opacity: 1, translateY: 0 }}
                 exit={{ opacity: 0, translateY: 20 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 items-center justify-center gap-8"
               >
                 <View className="items-center">
@@ -337,6 +340,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 from={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 items-center justify-center gap-8"
               >
                 <View
@@ -378,6 +382,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 from={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 items-center justify-center gap-12"
               >
                 <View

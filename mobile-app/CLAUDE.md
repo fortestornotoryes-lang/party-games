@@ -1,6 +1,10 @@
 # mobile-app — React Native порт Party Games
 
-Expo-приложение (SDK 57, expo-router, NativeWind, MMKV). Порт веб-версии из корня репозитория; план и статус переноса — `../docs/react-native-migration.md`, банк памяти проекта — `../.claude/memory/`.
+Expo-приложение (SDK 57, expo-router, NativeWind, MMKV). Порт веб-версии из корня репозитория; план и статус переноса — `../docs/react-native-migration.md`, банк памяти проекта — `.claude/memory/` (свой, независимый от корневого — см. правило о выделении в отдельный репозиторий в `MEMORY.md`).
+
+## Банк памяти
+
+В начале каждой сессии читать `mobile-app/.claude/memory/MEMORY.md` и файлы из его индекса, релевантные задаче (см. корневой `CLAUDE.md`, раздел «Project Memory Bank» — правила поддержки банка те же).
 
 ## Конвенции (те же, что в вебе)
 

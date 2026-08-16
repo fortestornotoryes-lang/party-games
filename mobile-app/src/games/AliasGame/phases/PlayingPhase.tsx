@@ -47,27 +47,20 @@ const AnswerButton: React.FC<{
   </Pressable>
 );
 
-export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
-  currentWord,
-  roundScore,
-  timeLeft,
-  roundTime,
-  onCorrect,
-  onSkip,
-}) => {
+/**
+ * Слово + счёт + кнопки — вынесены в отдельный memo-компонент, чтобы 1Hz-тик
+ * таймера (currentWord/roundScore внутри PlayingPhase не меняются каждую
+ * секунду) не перерендеривал их вслед за родителем.
+ */
+const PlayingBody: React.FC<{
+  currentWord: string;
+  roundScore: number;
+  onCorrect: () => void;
+  onSkip: () => void;
+}> = React.memo(({ currentWord, roundScore, onCorrect, onSkip }) => {
   const { t } = useTranslation();
   return (
-    <MotiView
-      key="playing"
-      from={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex-1"
-    >
-      <View className="items-center pb-1 pt-5">
-        <TimerRing timeLeft={timeLeft} totalTime={roundTime} />
-      </View>
-
+    <>
       <View className="flex-1 items-center justify-center px-8">
         <AnimatePresence exitBeforeEnter>
           <MotiView
@@ -75,7 +68,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             from={{ opacity: 0, translateY: 30, scale: 0.84 }}
             animate={{ opacity: 1, translateY: 0, scale: 1 }}
             exit={{ opacity: 0, translateY: -16, scale: 0.92 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+            transition={{ type: 'timing', duration: 180 }}
             className="items-center gap-2"
           >
             <Text
@@ -120,6 +113,37 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
           onPress={onCorrect}
         />
       </View>
+    </>
+  );
+});
+
+export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
+  currentWord,
+  roundScore,
+  timeLeft,
+  roundTime,
+  onCorrect,
+  onSkip,
+}) => {
+  return (
+    <MotiView
+      key="playing"
+      from={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
+      className="flex-1"
+    >
+      <View className="items-center pb-1 pt-5">
+        <TimerRing timeLeft={timeLeft} totalTime={roundTime} />
+      </View>
+
+      <PlayingBody
+        currentWord={currentWord}
+        roundScore={roundScore}
+        onCorrect={onCorrect}
+        onSkip={onSkip}
+      />
     </MotiView>
   );
 };

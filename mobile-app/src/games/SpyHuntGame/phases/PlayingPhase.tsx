@@ -53,55 +53,57 @@ const ToggleRow: React.FC<{
   </Pressable>
 );
 
-export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, onReveal }) => {
-  const { t } = useTranslation();
-  const [showQuestions, setShowQuestions] = useState(false);
-  const [showLocations, setShowLocations] = useState(false);
+/** Круглый индикатор времени — единственная часть экрана, которой нужен timeLeft каждую секунду */
+const TimerDisplay: React.FC<{ timeLeft: number }> = ({ timeLeft }) => {
   const warn = timeLeft < 60;
-
   return (
-    <MotiView
-      key="playing"
-      from={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex-1"
-    >
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ padding: 24, gap: 24, maxWidth: 672, width: '100%', alignSelf: 'center' }}
+    <View className="items-center">
+      <View
+        className={`h-28 w-28 items-center justify-center rounded-full border-2 ${
+          warn ? 'border-premium-red/60 bg-premium-red/10' : 'border-white/10 bg-white/5'
+        }`}
+        style={
+          warn
+            ? {
+                shadowColor: rgba('red', 0.5),
+                shadowOpacity: 1,
+                shadowRadius: 15,
+                shadowOffset: { width: 0, height: 0 },
+                elevation: 8,
+              }
+            : undefined
+        }
       >
-      <View className="items-center">
-        <View
-          className={`h-28 w-28 items-center justify-center rounded-full border-2 ${
-            warn ? 'border-premium-red/60 bg-premium-red/10' : 'border-white/10 bg-white/5'
-          }`}
-          style={
-            warn
-              ? {
-                  shadowColor: rgba('red', 0.5),
-                  shadowOpacity: 1,
-                  shadowRadius: 15,
-                  shadowOffset: { width: 0, height: 0 },
-                  elevation: 8,
-                }
-              : undefined
-          }
+        <Timer
+          size={24}
+          color={warn ? rgba('red', 1) : 'rgba(255,255,255,0.3)'}
+          style={{ marginBottom: 4 }}
+        />
+        <Text
+          className="text-3xl font-black italic text-white"
+          style={{ letterSpacing: -1.2, fontVariant: ['tabular-nums'] }}
         >
-          <Timer
-            size={24}
-            color={warn ? rgba('red', 1) : 'rgba(255,255,255,0.3)'}
-            style={{ marginBottom: 4 }}
-          />
-          <Text
-            className="text-3xl font-black italic text-white"
-            style={{ letterSpacing: -1.2, fontVariant: ['tabular-nums'] }}
-          >
-            {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-          </Text>
-        </View>
+          {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+        </Text>
       </View>
+    </View>
+  );
+};
 
+/**
+ * Аккордеоны с подсказками + список игроков + кнопка раскрытия — вынесены в
+ * memo-компонент: players/onReveal не меняются каждую секунду (в отличие от
+ * timeLeft у родителя), поэтому 1Hz-тик таймера не должен перерендеривать
+ * список игроков.
+ */
+const GameBody: React.FC<{ players: Player[]; onReveal: () => void }> = React.memo(
+  ({ players, onReveal }) => {
+    const { t } = useTranslation();
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [showLocations, setShowLocations] = useState(false);
+
+    return (
+      <>
       <View className="gap-3">
         <ToggleRow
           open={showQuestions}
@@ -185,7 +187,26 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           {t(`${NS.SPY_HUNT}.reveal`)}
         </PrimaryButton>
       </View>
-      </ScrollView>
-    </MotiView>
-  );
-};
+      </>
+    );
+  }
+);
+
+export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, onReveal }) => (
+  <MotiView
+    key="playing"
+    from={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ type: 'timing', duration: 200 }}
+    className="flex-1"
+  >
+    <ScrollView
+      className="flex-1"
+      contentContainerStyle={{ padding: 24, gap: 24, maxWidth: 672, width: '100%', alignSelf: 'center' }}
+    >
+      <TimerDisplay timeLeft={timeLeft} />
+      <GameBody players={players} onReveal={onReveal} />
+    </ScrollView>
+  </MotiView>
+);

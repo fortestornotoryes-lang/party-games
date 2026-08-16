@@ -28,31 +28,18 @@ interface PlayingPhaseProps {
   onGuessed: () => void;
 }
 
-export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
-  card,
-  currentExplainer,
-  timeLeft,
-  cardTimer,
-  onGuessed,
-}) => {
-  const { t } = useTranslation();
-  const timerPct = (timeLeft / cardTimer) * 100;
-  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
-  const fs = wordFontSize(card.word);
+/**
+ * Запрещённые слова + загадываемое слово + кнопка — вынесены в отдельный
+ * memo-компонент: card/onGuessed не меняются каждую секунду (в отличие от
+ * timeLeft у родителя), поэтому 1Hz-тик таймера не должен их перерендеривать.
+ */
+const CardContent: React.FC<{ card: TabooClassicCard; onGuessed: () => void }> = React.memo(
+  ({ card, onGuessed }) => {
+    const { t } = useTranslation();
+    const fs = wordFontSize(card.word);
 
-  return (
-    <MotiView
-      key="playing"
-      from={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="flex-1"
-    >
-      <TimerBar pct={timerPct} color={timerColor} />
-
-      <View className="mx-auto w-full max-w-lg flex-1 gap-5 p-6">
-        <PlayingHeader explainer={currentExplainer} timeLeft={timeLeft} timerColor={timerColor} />
-
+    return (
+      <>
         {/* Запрещённые слова — первыми, чтобы объясняющий сразу видел ограничения */}
         <View className="rounded-premium-lg border-premium-red/30 bg-premium-red/5 border-2 p-5">
           <Text
@@ -103,6 +90,35 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             {t(`${NS.TABOO}.forbiddenHint`)}
           </Text>
         </View>
+      </>
+    );
+  }
+);
+
+export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
+  card,
+  currentExplainer,
+  timeLeft,
+  cardTimer,
+  onGuessed,
+}) => {
+  const timerPct = (timeLeft / cardTimer) * 100;
+  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
+
+  return (
+    <MotiView
+      key="playing"
+      from={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ type: 'timing', duration: 200 }}
+      className="flex-1"
+    >
+      <TimerBar pct={timerPct} color={timerColor} />
+
+      <View className="mx-auto w-full max-w-lg flex-1 gap-5 p-6">
+        <PlayingHeader explainer={currentExplainer} timeLeft={timeLeft} timerColor={timerColor} />
+        <CardContent card={card} onGuessed={onGuessed} />
       </View>
     </MotiView>
   );

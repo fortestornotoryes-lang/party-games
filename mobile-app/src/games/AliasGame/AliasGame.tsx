@@ -1,6 +1,6 @@
 import { Brain } from 'lucide-react-native';
 import { AnimatePresence } from 'moti';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -74,12 +74,16 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerNames]);
 
-  const nextWord = () => {
+  // useCallback — currentWord/handleCorrect/handleSkip идут пропсами в мемоизированный
+  // PlayingBody (AliasGame/phases/PlayingPhase.tsx); без стабильных ссылок 1Hz-тик
+  // таймера (родитель AliasGame перерендеривается каждую секунду через useTimer)
+  // всё равно перерендеривал бы слово/кнопки на каждый тик.
+  const nextWord = useCallback(() => {
     const available = getAliasWords(difficulty);
     const word = pickRandom(available);
     setCurrentWord(word);
     storageService.markWordAsUsed(GameKey.Alias, word);
-  };
+  }, [difficulty, setCurrentWord]);
 
   const startRound = () => {
     resetTimer(roundTime);
@@ -89,19 +93,19 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     startTimer();
   };
 
-  const handleCorrect = () => {
+  const handleCorrect = useCallback(() => {
     feedbackService.playSound('success');
     feedbackService.vibrate(VIBRATE.correct);
     setRoundScore((s) => s + 1);
     nextWord();
-  };
+  }, [nextWord, setRoundScore]);
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     feedbackService.playSound('error');
     feedbackService.vibrate(VIBRATE.error);
     setRoundScore((s) => s - 1);
     nextWord();
-  };
+  }, [nextWord, setRoundScore]);
 
   const finishRound = () => {
     const updatedTeams = teams.map((t, i) =>

@@ -1,5 +1,4 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { MotiView } from 'moti';
 import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Pressable, Text, View } from 'react-native';
@@ -59,15 +58,14 @@ interface RoleRevealPanelProps {
   children: React.ReactNode;
 }
 
-/** Анимированная панель одной роли внутри `RoleRevealCard` (шапка / тело / кнопка). */
+/**
+ * Панель одной роли внутри `RoleRevealCard` (шапка / тело / кнопка).
+ * Без собственной анимации появления — карточка уже анимируется целиком
+ * во внешнем MotiView (DistributionFlow); независимый fade здесь только
+ * задваивал анимацию и создавал ощущение "дёрганости".
+ */
 export const RoleRevealPanel: React.FC<RoleRevealPanelProps> = ({ children }) => (
-  <MotiView
-    from={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    className="w-full flex-1 items-center justify-between"
-  >
-    {children}
-  </MotiView>
+  <View className="w-full flex-1 items-center justify-between">{children}</View>
 );
 
 interface RoleRevealButtonProps {

@@ -44,6 +44,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-4"
     >
       <View className="rounded-premium-md relative items-center overflow-hidden border border-white/10 bg-white/5 py-3">

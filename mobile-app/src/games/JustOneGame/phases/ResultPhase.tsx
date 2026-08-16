@@ -25,7 +25,7 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({ isCorrect, word, guess
       from={{ opacity: 0, scale: 0.88 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.88 }}
-      transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 items-center justify-center gap-8 p-6"
     >
       <View className="items-center gap-4">

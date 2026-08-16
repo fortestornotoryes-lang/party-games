@@ -188,6 +188,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 from={{ opacity: 0, translateY: 20 }}
                 animate={{ opacity: 1, translateY: 0 }}
                 exit={{ opacity: 0, translateY: -20 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 justify-center gap-6"
               >
                 <Text
@@ -343,6 +344,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 from={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="w-full flex-1 items-center justify-center gap-6"
               >
                 <View className="w-full">
@@ -441,6 +443,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 from={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'timing', duration: 200 }}
                 className="flex-1 items-center justify-center gap-8"
               >
                 <Trophy size={96} color={winner ? rgba(winner, 1) : '#fff'} />

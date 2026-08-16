@@ -37,7 +37,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
       from={{ opacity: 0, translateX: 40 }}
       animate={{ opacity: 1, translateX: 0 }}
       exit={{ opacity: 0, translateX: -40 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-5 px-5 py-6"
     >
       {/* Прогресс раундов */}

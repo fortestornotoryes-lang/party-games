@@ -36,6 +36,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="gap-6 p-5"
     >
       <View className="items-center gap-2 pt-2">

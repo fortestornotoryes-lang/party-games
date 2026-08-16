@@ -40,6 +40,7 @@ export const PassScreen: React.FC<PassScreenProps> = ({
       from={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.1 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 items-center justify-center gap-6"
     >
       <View className={`rounded-premium-md items-center border p-8 ${tBg(team)}`}>

@@ -66,10 +66,9 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
   return (
     <Pressable
       onPress={onClick}
-      className="rounded-premium-2xl w-full items-center justify-center overflow-hidden"
+      className="rounded-premium-2xl h-full w-full items-center justify-center overflow-hidden"
       style={({ pressed }) => [
         {
-          aspectRatio: 3 / 4,
           borderWidth: 1.5,
           borderColor,
           shadowColor: glowColor,

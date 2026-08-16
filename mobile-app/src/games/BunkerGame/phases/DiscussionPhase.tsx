@@ -1,6 +1,6 @@
 import { ChevronRight, Clock, MessageCircle } from 'lucide-react-native';
 import { MotiView } from 'moti';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Text, View } from 'react-native';
 
 import { ResourceContribRow } from '../components/ResourceContribRow';
@@ -26,77 +26,23 @@ interface DiscussionPhaseProps {
   onNext: () => void;
 }
 
-export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
-  characters,
-  revealRound,
-  totalRounds,
-  difficulty,
-  onNext,
-}) => {
+/**
+ * Списки раскрытий + кнопка «дальше» — вынесены в memo-компонент: их пропсы
+ * не меняются каждую секунду (в отличие от timeLeft у родителя), поэтому
+ * 1Hz-тик таймера не должен перерендеривать эти списки.
+ */
+const DiscussionBody: React.FC<{
+  characters: BunkerCharacter[];
+  revealRound: number;
+  totalRounds: number;
+  difficulty: DifficultyLevel;
+  onNext: () => void;
+}> = React.memo(({ characters, revealRound, totalRounds, difficulty, onNext }) => {
   const { t } = useTranslation();
-  const { timerSeconds } = useGameSettings();
   const isLastRound = revealRound === totalRounds;
 
-  const { timeLeft, start, reset } = useTimer({
-    initialTime: timerSeconds,
-    onTimeUp: () => {
-      feedbackService.vibrate(VIBRATE.timeout);
-    },
-  });
-
-  useEffect(() => {
-    reset(timerSeconds);
-    start();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [revealRound, timerSeconds]);
-
-  const handleNext = () => {
-    feedbackService.vibrate(VIBRATE.tap);
-    onNext();
-  };
-
-  const timerPct = (timeLeft / timerSeconds) * 100;
-  const timerColor = timerPct > 50 ? '#00D88A' : timerPct > 20 ? '#FFCC1F' : '#FF2E4D';
-
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-
   return (
-    <MotiView
-      key={`discussion-${revealRound}`}
-      from={{ opacity: 0, translateY: 20 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      exit={{ opacity: 0, translateY: -20 }}
-      className="flex-1 gap-5 px-5 py-6"
-    >
-      {/* Шапка */}
-      <View className="items-center gap-1">
-        <View className="flex-row items-center justify-center gap-2">
-          <MessageCircle size={16} color={rgba('green', 1)} />
-          <Typography.Label size="sm" color="green">
-            {t(`${NS.BUNKER}.discussionOf`)} —{' '}
-            {t(`${NS.BUNKER}.discussionRoundNames.r${revealRound}`)}
-          </Typography.Label>
-        </View>
-        <Typography.Caption color="faint">
-          {t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: totalRounds })}
-        </Typography.Caption>
-      </View>
-
-      {/* Таймер */}
-      <View className="gap-2">
-        <TimerBar pct={timerPct} color={timerColor} />
-        <View className="flex-row items-center justify-center gap-2">
-          <Clock size={14} color="rgba(255,255,255,0.3)" />
-          <Text
-            className="text-2xl font-black italic"
-            style={{ color: timerColor, fontVariant: ['tabular-nums'] }}
-          >
-            {minutes}:{String(seconds).padStart(2, '0')}
-          </Text>
-        </View>
-      </View>
-
+    <>
       {/* Раскрытое в этом раунде */}
       <View className="gap-2">
         <Typography.Label size="xs" color="muted">
@@ -191,7 +137,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       {/* Дальше */}
       <View className="mt-auto">
         <PrimaryButton
-          onClick={handleNext}
+          onClick={onNext}
           variant={isLastRound ? 'premium' : 'outline'}
           icon={ChevronRight}
         >
@@ -200,6 +146,91 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
             : t(`${NS.BUNKER}.nextRoundBtn`, { next: revealRound + 1, total: totalRounds })}
         </PrimaryButton>
       </View>
+    </>
+  );
+});
+
+export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
+  characters,
+  revealRound,
+  totalRounds,
+  difficulty,
+  onNext,
+}) => {
+  const { t } = useTranslation();
+  const { timerSeconds } = useGameSettings();
+
+  const { timeLeft, start, reset } = useTimer({
+    initialTime: timerSeconds,
+    onTimeUp: () => {
+      feedbackService.vibrate(VIBRATE.timeout);
+    },
+  });
+
+  useEffect(() => {
+    reset(timerSeconds);
+    start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealRound, timerSeconds]);
+
+  // useCallback — стабильная ссылка для memo-компонента DiscussionBody, иначе
+  // 1Hz-тик таймера (DiscussionPhase перерендеривается каждую секунду через
+  // useTimer) заново перерендеривал бы все списки раскрытий.
+  const handleNext = useCallback(() => {
+    feedbackService.vibrate(VIBRATE.tap);
+    onNext();
+  }, [onNext]);
+
+  const timerPct = (timeLeft / timerSeconds) * 100;
+  const timerColor = timerPct > 50 ? '#00D88A' : timerPct > 20 ? '#FFCC1F' : '#FF2E4D';
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  return (
+    <MotiView
+      key={`discussion-${revealRound}`}
+      from={{ opacity: 0, translateY: 20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      exit={{ opacity: 0, translateY: -20 }}
+      transition={{ type: 'timing', duration: 200 }}
+      className="flex-1 gap-5 px-5 py-6"
+    >
+      {/* Шапка */}
+      <View className="items-center gap-1">
+        <View className="flex-row items-center justify-center gap-2">
+          <MessageCircle size={16} color={rgba('green', 1)} />
+          <Typography.Label size="sm" color="green">
+            {t(`${NS.BUNKER}.discussionOf`)} —{' '}
+            {t(`${NS.BUNKER}.discussionRoundNames.r${revealRound}`)}
+          </Typography.Label>
+        </View>
+        <Typography.Caption color="faint">
+          {t(`${NS.BUNKER}.roundOf`, { current: revealRound, total: totalRounds })}
+        </Typography.Caption>
+      </View>
+
+      {/* Таймер */}
+      <View className="gap-2">
+        <TimerBar pct={timerPct} color={timerColor} />
+        <View className="flex-row items-center justify-center gap-2">
+          <Clock size={14} color="rgba(255,255,255,0.3)" />
+          <Text
+            className="text-2xl font-black italic"
+            style={{ color: timerColor, fontVariant: ['tabular-nums'] }}
+          >
+            {minutes}:{String(seconds).padStart(2, '0')}
+          </Text>
+        </View>
+      </View>
+
+      <DiscussionBody
+        characters={characters}
+        revealRound={revealRound}
+        totalRounds={totalRounds}
+        difficulty={difficulty}
+        onNext={handleNext}
+      />
     </MotiView>
   );
 };

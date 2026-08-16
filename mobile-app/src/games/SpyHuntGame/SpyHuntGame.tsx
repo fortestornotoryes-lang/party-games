@@ -1,6 +1,6 @@
 import { Skull } from 'lucide-react-native';
 import { AnimatePresence, MotiView } from 'moti';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -70,6 +70,13 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
     feedbackService.celebrate('success', { colors: ['#ef4444', '#ffffff'] });
   }, [phase]);
 
+  // useCallback — стабильная ссылка для memo-компонента GameBody (PlayingPhase.tsx),
+  // иначе 1Hz-тик таймера (timeLeft меняется каждую секунду в SpyHuntGame) заново
+  // перерендеривал бы весь список игроков.
+  const handleReveal = useCallback(() => {
+    setPhase(SpyHuntPhase.Reveal);
+  }, [setPhase]);
+
   const spy = players.find((p) => p.isSpy);
   const subtitle =
     phase === SpyHuntPhase.Distributing
@@ -99,6 +106,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
               from={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ type: 'timing', duration: 200 }}
               className="flex-1"
             >
               <RoleDistribution
@@ -117,9 +125,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
               key="playing"
               players={players}
               timeLeft={timeLeft}
-              onReveal={() => {
-                setPhase(SpyHuntPhase.Reveal);
-              }}
+              onReveal={handleReveal}
             />
           )}
 

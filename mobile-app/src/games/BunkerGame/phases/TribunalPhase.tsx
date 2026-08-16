@@ -35,6 +35,7 @@ const SLIDE = {
   from: { opacity: 0, translateY: 20 },
   animate: { opacity: 1, translateY: 0 },
   exit: { opacity: 0, translateY: -20 },
+  transition: { type: 'timing', duration: 200 },
 } as const;
 
 /** Строка игрока с бейджем действия (апелляция / исключение) */
@@ -440,6 +441,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
           from={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, translateY: -20 }}
+          transition={{ type: 'timing', duration: 200 }}
           className="flex-1 items-center justify-center gap-6 px-5 py-6"
         >
           <MotiView

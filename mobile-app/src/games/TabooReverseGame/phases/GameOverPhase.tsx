@@ -49,6 +49,7 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
       from={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="mx-auto w-full max-w-sm items-center gap-8 p-6"
     >
       {/* ── Шапка результата ──────────────────────────────────────────────── */}

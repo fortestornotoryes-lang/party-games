@@ -29,6 +29,7 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="gap-8 p-6"
     >
       <View className="items-center gap-1 pt-2">

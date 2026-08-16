@@ -75,7 +75,14 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
 
         <AnimatePresence exitBeforeEnter>
           {!revealed ? (
-            <MotiView key="voting" from={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="gap-6">
+            <MotiView
+              key="voting"
+              from={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'timing', duration: 200 }}
+              className="gap-6"
+            >
               <Text
                 className="text-center text-sm uppercase italic text-white/20"
                 style={{ letterSpacing: 2 }}

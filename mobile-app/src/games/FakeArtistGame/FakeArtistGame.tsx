@@ -154,6 +154,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
             from={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ type: 'timing', duration: 200 }}
             className="flex-1"
           >
             <FakeArtistDistribution
@@ -326,6 +327,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
             from={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ type: 'timing', duration: 200 }}
             className="flex-1"
           >
             <FakeArtistVoting players={players} canvasImage={gameState.canvasImage} onReveal={onBack} />

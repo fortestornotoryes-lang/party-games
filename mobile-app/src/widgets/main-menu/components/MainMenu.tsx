@@ -1,5 +1,5 @@
 import { Users, X } from 'lucide-react-native';
-import { MotiView } from 'moti';
+import { AnimatePresence, MotiView } from 'moti';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,7 +22,19 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
   const { t: tr } = useTranslation();
   const GAMES = useLocalizedGames();
   const insets = useSafeAreaInsets();
+  // descriptionGameId — контент шита (держим до конца exit-анимации); isSheetOpen —
+  // управляет самой анимацией; Modal остаётся visible, пока шит не доанимировался вниз
   const [descriptionGameId, setDescriptionGameId] = useState<GameKey | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const openDescription = (gameId: GameKey) => {
+    setDescriptionGameId(gameId);
+    setIsSheetOpen(true);
+  };
+
+  const closeDescription = () => {
+    setIsSheetOpen(false);
+  };
 
   useEffect(() => {
     void setCurrentGameId(null);
@@ -100,7 +112,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   onSelectGame(game.id);
                 }}
                 onDescriptionClick={() => {
-                  setDescriptionGameId(game.id);
+                  openDescription(game.id);
                 }}
               />
             );
@@ -113,21 +125,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
         visible={!!descriptionGame}
         transparent
         animationType="fade"
-        onRequestClose={() => {
-          setDescriptionGameId(null);
-        }}
+        onRequestClose={closeDescription}
       >
-        <Pressable
-          className="flex-1 bg-black/60"
-          onPress={() => {
-            setDescriptionGameId(null);
-          }}
-        />
-        {!!descriptionGame && !!dt && (
+        <Pressable className="flex-1 bg-black/60" onPress={closeDescription} />
+        <AnimatePresence onExitComplete={() => setDescriptionGameId(null)}>
+          {isSheetOpen && !!descriptionGame && !!dt && (
           <MotiView
             from={{ translateY: 400 }}
             animate={{ translateY: 0 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 36 }}
+            exit={{ translateY: 400 }}
+            transition={{ type: 'timing', duration: 260 }}
             className="absolute bottom-0 left-0 right-0 px-4"
             style={{ paddingBottom: insets.bottom + 16 }}
           >
@@ -160,9 +167,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                     </Text>
                   </View>
                   <Pressable
-                    onPress={() => {
-                      setDescriptionGameId(null);
-                    }}
+                    onPress={closeDescription}
                     className="h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5"
                     style={({ pressed }) => (pressed ? { transform: [{ scale: 0.9 }] } : undefined)}
                   >
@@ -195,6 +200,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                 {/* Играть */}
                 <Pressable
                   onPress={() => {
+                    setIsSheetOpen(false);
                     setDescriptionGameId(null);
                     onSelectGame(descriptionGame.id);
                   }}
@@ -211,7 +217,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
               </View>
             </View>
           </MotiView>
-        )}
+          )}
+        </AnimatePresence>
       </Modal>
     </ScrollView>
   );

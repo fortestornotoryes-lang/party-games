@@ -47,6 +47,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
       from={{ opacity: 0, translateY: 20 }}
       animate={{ opacity: 1, translateY: 0 }}
       exit={{ opacity: 0, translateY: -20 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="mx-auto w-full max-w-lg gap-6 p-6"
     >
       {/* Раскрытие слова */}

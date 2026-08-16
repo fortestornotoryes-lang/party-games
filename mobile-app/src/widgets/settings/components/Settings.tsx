@@ -1,5 +1,5 @@
 import { ArrowLeft, Database, WholeWord } from 'lucide-react-native';
-import { MotiView } from 'moti';
+import { AnimatePresence, MotiView } from 'moti';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -103,11 +103,14 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
           </TabButton>
         </View>
 
+        <AnimatePresence exitBeforeEnter>
         {activeTab === 'general' && (
           <MotiView
+            key="general"
             from={{ opacity: 0, translateY: 10 }}
             animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: 'timing', duration: 250 }}
+            exit={{ opacity: 0, translateY: -10 }}
+            transition={{ type: 'timing', duration: 200 }}
             className="gap-6"
           >
             <GlassCard className="rounded-premium-xl border-white/5 p-6">
@@ -194,9 +197,11 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
 
         {activeTab === 'words' && (
           <MotiView
+            key="words"
             from={{ opacity: 0, translateY: 10 }}
             animate={{ opacity: 1, translateY: 0 }}
-            transition={{ type: 'timing', duration: 250 }}
+            exit={{ opacity: 0, translateY: -10 }}
+            transition={{ type: 'timing', duration: 200 }}
           >
             {/* TODO(этапы 4–6): полный редактор кастомных слов после переноса контент-модулей игр */}
             <GlassCard className="rounded-premium-xl items-center border-white/5 p-10">
@@ -209,6 +214,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             </GlassCard>
           </MotiView>
         )}
+        </AnimatePresence>
       </View>
     </ScrollView>
   );

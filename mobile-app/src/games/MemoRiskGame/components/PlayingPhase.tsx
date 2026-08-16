@@ -87,6 +87,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
               from={{ opacity: 0, translateY: 8 }}
               animate={{ opacity: 1, translateY: 0 }}
               exit={{ opacity: 0, translateY: -8 }}
+              transition={{ type: 'timing', duration: 200 }}
             >
               <Text numberOfLines={1} className="font-black text-white/90">
                 {currentPlayer}{' '}
@@ -157,6 +158,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             from={{ opacity: 0, translateY: 10 }}
             animate={{ opacity: 1, translateY: 0 }}
             exit={{ opacity: 0, translateY: -10 }}
+            transition={{ type: 'timing', duration: 200 }}
           >
             <PrimaryButton
               onClick={onBank}
@@ -173,6 +175,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             from={{ opacity: 0, translateY: 10 }}
             animate={{ opacity: 1, translateY: 0 }}
             exit={{ opacity: 0, translateY: -10 }}
+            transition={{ type: 'timing', duration: 200 }}
             className={`rounded-premium-md items-center border px-4 py-4 ${
               isBusted
                 ? 'border-premium-red/40 bg-premium-red/10'

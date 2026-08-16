@@ -24,6 +24,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({ spy, location, onBack 
       from={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.8, opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="mx-auto w-full max-w-md flex-1 items-center justify-center gap-12 p-6"
     >
       <View className="items-center gap-4">

@@ -66,6 +66,7 @@ export const MemoRiskGame: React.FC<Props> = ({ playerNames, onBack }) => {
               from={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
               exit={{ opacity: 0, translateY: -20 }}
+              transition={{ type: 'timing', duration: 200 }}
             >
               <PlayingPhase
                 board={cards.board}
@@ -94,6 +95,7 @@ export const MemoRiskGame: React.FC<Props> = ({ playerNames, onBack }) => {
               from={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
               exit={{ opacity: 0, translateY: -20 }}
+              transition={{ type: 'timing', duration: 200 }}
             >
               <GameOverPhase
                 playerNames={playerNames}

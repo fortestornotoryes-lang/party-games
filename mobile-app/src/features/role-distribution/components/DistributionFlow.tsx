@@ -82,8 +82,9 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
             from={{ opacity: 0, scale: 0.92, translateY: 20 }}
             animate={{ opacity: 1, scale: 1, translateY: 0 }}
             exit={{ opacity: 0, scale: 0.92, translateY: -20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+            transition={{ type: 'timing', duration: 220 }}
             className="w-full max-w-sm"
+            style={{ aspectRatio: 3 / 4 }}
           >
             <PassPhoneCard
               playerName={currentPlayer.name}
@@ -101,7 +102,7 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
             from={{ scale: 0.82, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ opacity: 0, scale: 0.92, translateY: -20 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+            transition={{ type: 'timing', duration: 220 }}
             className={`rounded-premium-2xl w-full max-w-sm overflow-hidden ${cardMeta.className ?? ''}`}
             style={cardMeta.style}
           >

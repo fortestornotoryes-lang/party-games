@@ -71,7 +71,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: 'timing', duration: 300, delay: 100 + idx * 100 }}
               >
-                <GlassCard className="rounded-premium-lg border-white/5 p-6">
+                <GlassCard noBlur className="rounded-premium-lg border-white/5 p-6">
                   <Typography.Heading size="sm" className={`mb-2 ${themeConfig.text}`}>
                     {item.title}
                   </Typography.Heading>

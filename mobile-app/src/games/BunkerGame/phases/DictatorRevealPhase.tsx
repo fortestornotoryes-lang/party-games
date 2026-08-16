@@ -38,6 +38,7 @@ export const DictatorRevealPhase: React.FC<DictatorRevealPhaseProps> = ({
       from={{ opacity: 0, translateY: 20 }}
       animate={{ opacity: 1, translateY: 0 }}
       exit={{ opacity: 0, translateY: -20 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-6 px-5 py-6"
     >
       {/* Шапка */}

@@ -2,6 +2,7 @@ import { Pencil } from 'lucide-react-native';
 import { AnimatePresence, MotiView } from 'moti';
 import React, { useState } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TelestrationsGallery } from './components/TelestrationsGallery';
 import { TelestrationsGuess } from './components/TelestrationsGuess';
@@ -37,6 +38,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
   initialDifficulty,
 }) => {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const K = GameKey.Telestrations;
   const [shuffledPlayers, setShuffledPlayers] = usePersistedState(K, 'shuffledPlayers', () =>
     shuffle(playerNames)
@@ -142,7 +144,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
         }`;
 
   return (
-    <View className="flex-1">
+    <View className="flex-1" style={{ paddingTop: insets.top }}>
       <GameHeader
         title="TELESTRATIONS"
         subtitle={subtitle}

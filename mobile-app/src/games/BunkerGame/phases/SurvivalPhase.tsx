@@ -92,6 +92,7 @@ export const SurvivalPhase: React.FC<SurvivalPhaseProps> = ({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="gap-5 px-5 py-6"
     >
       {/* Метка симуляции */}

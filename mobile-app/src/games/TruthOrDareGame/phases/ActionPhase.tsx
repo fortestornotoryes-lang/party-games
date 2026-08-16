@@ -34,7 +34,7 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
       from={{ opacity: 0, translateY: 30 }}
       animate={{ opacity: 1, translateY: 0 }}
       exit={{ opacity: 0, translateY: -20 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-6 p-5"
     >
       <View className="items-center gap-2 pt-2">

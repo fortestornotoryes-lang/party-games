@@ -81,7 +81,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
                 )}
               </View>
             ) : (
-              <GlassCard className="rounded-premium-md h-14 items-center justify-center border-white/5">
+              <GlassCard noBlur className="rounded-premium-md h-14 items-center justify-center border-white/5">
                 <Text
                   className="text-card font-black uppercase italic text-white/90"
                   style={{ letterSpacing: -0.5 }}
@@ -234,7 +234,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                       {textBox}
                     </View>
                   ) : (
-                    <GlassCard className="rounded-premium-lg border-white/5 p-3">
+                    <GlassCard noBlur className="rounded-premium-lg border-white/5 p-3">
                       <View className="flex-row items-center gap-6">
                         {iconBox}
                         {textBox}

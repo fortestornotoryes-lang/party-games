@@ -36,6 +36,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-6 pb-8"
     >
       <View className="items-center py-3">
