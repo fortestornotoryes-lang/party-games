@@ -19,7 +19,7 @@ src/
   widget/     — main-menu, setup, settings
   features/   — game-settings, role-distribution, taboo-pass, word-stats
   entities/   — game (registry, types, instructions, GameSettingsContext), player
-  games/      — 19 игр, по папке на игру
+  games/      — 21 игра, по папке на игру
   shared/     — components, helpers, hooks, i18n, services, theme, types
   debug/      — инструменты балансировки (bunkerBalance)
 ```
@@ -57,7 +57,7 @@ src/
 
 ## Аудит UX на мобильных
 
-`docs/web-ux-fixes.md` — найденные и исправленные проблемы веб-версии на телефонах/планшетах (длинные слова, строки без `min-w-0`, `100vh`, рисование, safe-area, цели нажатия) + рекомендации и чеклист для RN. Правки веба, которые нужно повторить в RN, фиксируются отдельными файлами в `docs/` (примеры: `docs/web-alias-teams.md` — команды и составы в Alias; `docs/web-crocodile.md` — новая игра Крокодил, пока только веб). Игра ориентирована на телефоны и планшеты — десктопный вид не приоритет.
+`docs/web-ux-fixes.md` — найденные и исправленные проблемы веб-версии на телефонах/планшетах (длинные слова, строки без `min-w-0`, `100vh`, рисование, safe-area, цели нажатия) + рекомендации и чеклист для RN. Правки веба, которые нужно повторить в RN, фиксируются отдельными файлами в `docs/` (примеры: `docs/web-alias-teams.md` — команды и составы в Alias; `docs/web-crocodile.md` — новая игра Крокодил, пока только веб; `docs/web-two-truths-who-among-us.md` — две новые игры, пока только веб, с чеклистом переноса). Игра ориентирована на телефоны и планшеты — десктопный вид не приоритет.
 
 ## Субагенты
 

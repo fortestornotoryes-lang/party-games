@@ -297,6 +297,20 @@ export const en: Translations = {
         description:
           'Explain as many words as you can before time runs out — no same-root words, no direct hints.',
       },
+      two_truths: {
+        title: 'TWO TRUTHS AND A LIE',
+        subtitle: 'Spot the lie',
+        placeholder: 'Player',
+        description:
+          'Each player tells two truths and one lie about themselves. Everyone else takes turns guessing which one is the lie.',
+      },
+      who_among_us: {
+        title: 'WHO AMONG US',
+        subtitle: 'Vote for who fits best',
+        placeholder: 'Player',
+        description:
+          'Everyone secretly votes in turn for the player who fits the question best. The most votes earns a point.',
+      },
       crocodile: {
         title: 'CROCODILE',
         subtitle: 'Act it out and explain',
@@ -333,8 +347,7 @@ export const en: Translations = {
         title: 'CONNECT FOUR',
         subtitle: 'Connect Four',
         placeholder: 'Player',
-        description:
-          'Be the first to line up 4 discs — horizontally, vertically or diagonally.',
+        description: 'Be the first to line up 4 discs — horizontally, vertically or diagonally.',
         modes: {
           classic: { name: 'Classic', description: '7×6 — connect 4 discs in a row' },
           large: { name: 'Big Board', description: '9×7 — more room for tactics' },
@@ -620,6 +633,45 @@ export const en: Translations = {
     victory: 'VICTORY!',
     winningTeam: 'Team {{name}}',
     mainMenu: 'MAIN MENU',
+  },
+  two_truths: {
+    subtitle: 'Spot the lie',
+    storytellerLabel: 'Storyteller',
+    passInstruction:
+      '{{name}}, make up 2 truths and 1 lie about yourself. Everyone else, look away!',
+    writeTitle: 'Write three statements and mark the lie',
+    statementN: 'Statement {{n}}',
+    statementPlaceholder: 'Something about you...',
+    markAsLie: 'Mark as lie',
+    markedLie: 'Lie ✓',
+    showAll: 'SHOW EVERYONE',
+    voterLabel: 'Guessing',
+    voterPass: '{{name}}, your turn to spot the lie',
+    voteQuestion: 'Which statement is the lie?',
+    revealTitle: 'Truth or lie?',
+    lieLabel: 'LIE',
+    truthLabel: 'TRUTH',
+    guessedRight: 'guessed right',
+    guessedWrong: 'fooled',
+    fooledCount: '{{name}} fooled: {{n}}',
+    nextRound: 'NEXT ROUND',
+    finishGame: 'RESULTS',
+    scoreboard: 'Scoreboard',
+    toMenu: 'MENU',
+  },
+  who_among_us: {
+    subtitle: 'Vote for who fits best',
+    roundOf: 'Round {{n}} of {{total}}',
+    startVoting: 'START VOTING',
+    voterLabel: 'Voting',
+    voterPass: '{{name}}, your turn to vote. Everyone else, look away!',
+    pickPlayer: 'Pick a player',
+    topPlayers: 'Most votes',
+    votesCount: '{{n}} votes',
+    nextRound: 'NEXT ROUND',
+    finishGame: 'FINAL RESULTS',
+    scoreboard: 'Scoreboard',
+    toMenu: 'MENU',
   },
   crocodile: {
     subtitle: 'Act it out and explain',

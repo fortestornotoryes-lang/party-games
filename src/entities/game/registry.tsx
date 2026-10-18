@@ -6,6 +6,7 @@ import {
   Crown,
   Drama,
   Flame,
+  Ghost,
   Grid,
   Key,
   LayoutGrid,
@@ -23,6 +24,7 @@ import {
   Timer,
   Trophy,
   Users,
+  Vote,
   Zap,
 } from 'lucide-react';
 
@@ -314,6 +316,23 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     maxPlayers: 12,
     backgroundImage: JustOneImage,
     difficultySublabel: wordsLeft,
+  },
+  [GameKey.TwoTruths]: {
+    id: GameKey.TwoTruths,
+    icon: Ghost,
+    theme: 'teal',
+    players: '3+',
+    minPlayers: 3,
+    // Каждый игрок рассказывает по разу — количество раундов равно числу игроков
+    hasDifficulty: false,
+  },
+  [GameKey.WhoAmongUs]: {
+    id: GameKey.WhoAmongUs,
+    icon: Vote,
+    theme: 'pink',
+    players: '3+',
+    minPlayers: 3,
+    hasDifficulty: false,
   },
   [GameKey.Mafia]: {
     id: GameKey.Mafia,

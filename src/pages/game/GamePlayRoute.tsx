@@ -69,6 +69,13 @@ const CrocodileGame = lazy(() =>
   import('@/games/CrocodileGame/CrocodileGame').then((m) => ({ default: m.CrocodileGame }))
 );
 
+const TwoTruthsGame = lazy(() =>
+  import('@/games/TwoTruthsGame/TwoTruthsGame').then((m) => ({ default: m.TwoTruthsGame }))
+);
+const WhoAmongUsGame = lazy(() =>
+  import('@/games/WhoAmongUsGame/WhoAmongUsGame').then((m) => ({ default: m.WhoAmongUsGame }))
+);
+
 // Все игры получают единый набор пропсов GameComponentProps;
 // каждая объявляет нужное ей подмножество (onRestart — Bunker,
 // initialDifficulty — Telestrations, остальные — playerNames + onBack).
@@ -92,6 +99,8 @@ const GAME_COMPONENTS: Record<GameKey, ComponentType<GameComponentProps>> = {
   [GameKey.Corridor]: CorridorGame,
   [GameKey.MemoRisk]: MemoRiskGame,
   [GameKey.Crocodile]: CrocodileGame,
+  [GameKey.TwoTruths]: TwoTruthsGame,
+  [GameKey.WhoAmongUs]: WhoAmongUsGame,
 };
 
 /** Экран самой игры: резолвит игроков и рендерит компонент по gameKey. */

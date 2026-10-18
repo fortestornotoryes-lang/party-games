@@ -423,6 +423,46 @@ export interface AliasTranslations {
   mainMenu: string; // "В ГЛАВНОЕ МЕНЮ"
 }
 
+export interface TwoTruthsTranslations {
+  subtitle: string;
+  storytellerLabel: string;
+  passInstruction: string; // "{{name}}, придумай 2 правды и 1 ложь о себе..."
+  writeTitle: string;
+  statementN: string; // "Утверждение {{n}}"
+  statementPlaceholder: string;
+  markAsLie: string;
+  markedLie: string;
+  showAll: string;
+  voterLabel: string;
+  voterPass: string; // "{{name}}, твоя очередь угадать ложь"
+  voteQuestion: string;
+  revealTitle: string;
+  lieLabel: string;
+  truthLabel: string;
+  guessedRight: string;
+  guessedWrong: string;
+  fooledCount: string; // "{{name}} обманул игроков: {{n}}"
+  nextRound: string;
+  finishGame: string;
+  scoreboard: string;
+  toMenu: string;
+}
+
+export interface WhoAmongUsTranslations {
+  subtitle: string;
+  roundOf: string; // "Раунд {{n}} из {{total}}"
+  startVoting: string;
+  voterLabel: string;
+  voterPass: string; // "{{name}}, твоя очередь голосовать..."
+  pickPlayer: string;
+  topPlayers: string;
+  votesCount: string; // "{{n}} гол."
+  nextRound: string;
+  finishGame: string;
+  scoreboard: string;
+  toMenu: string;
+}
+
 export interface CrocodileTranslations {
   subtitle: string; // "Покажи и объясни"
   teamRed: string;
@@ -807,6 +847,8 @@ export interface Translations {
   corridor?: CorridorTranslations;
   memo_risk?: MemoRiskTranslations;
   crocodile?: CrocodileTranslations;
+  two_truths?: TwoTruthsTranslations;
+  who_among_us?: WhoAmongUsTranslations;
 
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]:
@@ -834,5 +876,7 @@ export interface Translations {
     | CorridorTranslations
     | MemoRiskTranslations
     | CrocodileTranslations
+    | TwoTruthsTranslations
+    | WhoAmongUsTranslations
     | undefined;
 }

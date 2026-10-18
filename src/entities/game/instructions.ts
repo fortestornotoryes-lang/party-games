@@ -9,6 +9,39 @@ import type { Lang } from '@/shared/i18n/types';
  * выбор по языку — getGameInstructions(gameKey, lang).
  */
 export const GAME_INSTRUCTIONS: GameInstructionsMap = {
+  [GameKey.TwoTruths]: [
+    {
+      title: 'Суть игры',
+      content:
+        'Рассказчик придумывает три утверждения о себе: две правды и одну ложь. Остальные по очереди угадывают, какое из них ложь.',
+    },
+    {
+      title: 'Голосование',
+      content:
+        'Телефон передаётся каждому угадывающему по очереди. Он выбирает утверждение, которое считает ложью, и не видит ответы других.',
+    },
+    {
+      title: 'Очки',
+      content:
+        'Угадавший ложь получает 1 очко. Рассказчик получает 1 очко за каждого, кого обманул. Каждый игрок рассказывает по одному разу.',
+    },
+  ],
+  [GameKey.WhoAmongUs]: [
+    {
+      title: 'Суть игры',
+      content:
+        'В каждом раунде задаётся вопрос вида «Кто из нас…». Все по очереди тайно голосуют за одного игрока (не за себя).',
+    },
+    {
+      title: 'Подсчёт',
+      content:
+        'Игрок с наибольшим числом голосов получает 1 очко. При ничьей очко получают все лидеры.',
+    },
+    {
+      title: 'Победа',
+      content: 'Партия длится 5 раундов. Побеждает игрок с наибольшим количеством очков.',
+    },
+  ],
   [GameKey.Spy]: [
     {
       title: '1. Подготовка и сбор',
@@ -399,6 +432,38 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
 } as const;
 
 export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
+  [GameKey.TwoTruths]: [
+    {
+      title: 'The Idea',
+      content:
+        'The storyteller makes up three statements about themselves: two truths and one lie. Everyone else takes turns guessing which one is the lie.',
+    },
+    {
+      title: 'Voting',
+      content:
+        "The phone is passed to each guesser in turn. They pick the statement they think is the lie and cannot see anyone else's choice.",
+    },
+    {
+      title: 'Points',
+      content:
+        'The player who spots the lie gets 1 point. The storyteller gets 1 point for each person they fooled. Each player tells once.',
+    },
+  ],
+  [GameKey.WhoAmongUs]: [
+    {
+      title: 'The Idea',
+      content:
+        'Each round asks a "Who among us…" question. Everyone takes turns voting secretly for one player (not themselves).',
+    },
+    {
+      title: 'Counting',
+      content: 'The player with the most votes gets 1 point. On a tie, every leader gets a point.',
+    },
+    {
+      title: 'Winning',
+      content: 'The game lasts 5 rounds. The player with the most points wins.',
+    },
+  ],
   [GameKey.Spy]: [
     {
       title: '1. Setup',
@@ -467,7 +532,8 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     },
     {
       title: 'Replacing words',
-      content: 'If none of the words fit, you can replace all three at once — it costs the team 1 point.',
+      content:
+        'If none of the words fit, you can replace all three at once — it costs the team 1 point.',
     },
     {
       title: 'Explaining',
@@ -497,8 +563,7 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     },
     {
       title: 'Victory',
-      content:
-        'Play until the point limit (e.g. 50). The first team to reach it wins.',
+      content: 'Play until the point limit (e.g. 50). The first team to reach it wins.',
     },
   ],
   [GameKey.JustOne]: [
@@ -537,7 +602,7 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     {
       title: '4. The Reveal',
       content:
-        'The chain continues: Drawing -> Text -> Drawing. At the end, the full gallery of the word\'s transformation is revealed.',
+        "The chain continues: Drawing -> Text -> Drawing. At the end, the full gallery of the word's transformation is revealed.",
     },
   ],
   [GameKey.Wavelength]: [
@@ -622,7 +687,7 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     {
       title: 'Victory',
       content:
-        'Connect 4 discs of your color in a row (horizontally, vertically or diagonally). If the board fills up with no winner — it\'s a draw.',
+        "Connect 4 discs of your color in a row (horizontally, vertically or diagonally). If the board fills up with no winner — it's a draw.",
     },
   ],
   [GameKey.TruthOrDare]: [

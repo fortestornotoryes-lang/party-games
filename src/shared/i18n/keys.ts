@@ -24,4 +24,6 @@ export const NS = {
   CORRIDOR: 'corridor',
   MEMO_RISK: 'memo_risk',
   CROCODILE: 'crocodile',
+  TWO_TRUTHS: 'two_truths',
+  WHO_AMONG_US: 'who_among_us',
 } as const;

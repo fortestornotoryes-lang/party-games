@@ -23,6 +23,8 @@ export const GameKey = {
   Corridor: 'corridor',
   MemoRisk: 'memo_risk',
   Crocodile: 'crocodile',
+  TwoTruths: 'two_truths',
+  WhoAmongUs: 'who_among_us',
 } as const;
 
 export type GameKey = (typeof GameKey)[keyof typeof GameKey];
