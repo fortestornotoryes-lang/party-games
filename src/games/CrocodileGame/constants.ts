@@ -43,6 +43,9 @@ export const REPLACE_PENALTY = 1;
 /** Последние секунды раунда: тик становится чаще по тону и таймер краснеет. */
 export const URGENT_SECONDS = 10;
 
+/** Цвета конфетти при угаданном слове (canvas-confetti принимает только HEX). */
+export const GUESSED_CONFETTI = ['#84CC16', '#00D88A', '#ffffff'];
+
 /** Ключ used-хранилища слов: у каждой сложности свой пул, сброс одного не трогает остальные. */
 export const poolGameId = (gameId: string, difficulty: Difficulty): string =>
     `${gameId}_${difficulty}`;

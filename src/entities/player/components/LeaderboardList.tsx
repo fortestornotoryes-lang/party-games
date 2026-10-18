@@ -1,16 +1,35 @@
+import { motion } from 'motion/react';
 import React from 'react';
+
+import { AnimatedNumber } from '@/shared/components/AnimatedNumber';
+import { SPRING } from '@/shared/theme/motion';
+
+/** Пауза между строками при каскадном появлении, с */
+const ROW_STAGGER = 0.12;
 
 interface LeaderboardListProps {
   players: string[];
   scores: Record<string, number>;
   className?: string;
+  /**
+   * Каскадное появление снизу вверх (последнее место первым, победитель — в конце
+   * с «попом»), очки прокручиваются от нуля. Задержка старта — `animationDelay`, с.
+   */
+  animated?: boolean;
+  animationDelay?: number;
 }
 
 /**
  * Ranked score list for GameOver screens.
  * Sorts players by score, highlights the winner in yellow.
  */
-export const LeaderboardList: React.FC<LeaderboardListProps> = ({ players, scores, className }) => {
+export const LeaderboardList: React.FC<LeaderboardListProps> = ({
+  players,
+  scores,
+  className,
+  animated = false,
+  animationDelay = 0,
+}) => {
   const sorted = [...players].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
   const topScore = scores[sorted[0]] ?? 0;
   const secondScore = sorted.length > 1 ? (scores[sorted[1]] ?? 0) : -1;
@@ -21,9 +40,13 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({ players, score
       {sorted.map((player, idx) => {
         const sc = scores[player] ?? 0;
         const isWinner = idx === 0 && hasWinner;
+        const delay = animationDelay + (sorted.length - 1 - idx) * ROW_STAGGER;
         return (
-          <div
+          <motion.div
             key={player}
+            initial={animated ? { opacity: 0, y: 24, scale: isWinner ? 0.8 : 0.95 } : false}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ ...(isWinner ? SPRING.pop : SPRING.soft), delay }}
             className={`rounded-premium-md flex items-center justify-between border-2 p-5 ${
               isWinner
                 ? 'border-premium-yellow/60 bg-premium-yellow/10 shadow-[0_0_30px_rgba(234,179,8,0.15)]'
@@ -46,9 +69,9 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({ players, score
             <span
               className={`ml-3 shrink-0 text-4xl font-black italic tabular-nums ${isWinner ? 'text-premium-yellow' : 'text-white/50'}`}
             >
-              {sc}
+              {animated ? <AnimatedNumber value={sc} from={0} delay={delay} /> : sc}
             </span>
-          </div>
+          </motion.div>
         );
       })}
     </div>

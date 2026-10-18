@@ -415,6 +415,7 @@ export interface AliasTranslations {
   explainWord: string; // "Объясни слово"
   scoreLabel: string; // "Очки"
   guessed: string; // "Угадано"
+  swipeHint: string; // "← пропуск · свайп · угадано →"
   timeUp: string; // "Время вышло"
   pointsPerRound: string; // "Очков за раунд"
   continueBtn: string; // "ПРОДОЛЖИТЬ"

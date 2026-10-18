@@ -627,6 +627,7 @@ export const en: Translations = {
     explainWord: 'Explain the word',
     scoreLabel: 'Score',
     guessed: 'Guessed',
+    swipeHint: '← skip · swipe · got it →',
     timeUp: "Time's up",
     pointsPerRound: 'Points this round',
     continueBtn: 'CONTINUE',

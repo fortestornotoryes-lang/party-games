@@ -12,6 +12,13 @@ export const ALIAS_DIFFICULTY_CONFIG: Record<Difficulty, { roundTime: number }> 
 export const WIN_SCORE = 30;
 export const TROPHY_THRESHOLD = 20;
 
+/** Последние секунды раунда: таймер краснеет, по краям экрана пульсирует виньетка. */
+export const URGENT_SECONDS = 10;
+
+/** Свайп карточки слова: сдвиг (px) или скорость (px/с), после которых засчитывается ответ. */
+export const SWIPE_OFFSET = 110;
+export const SWIPE_VELOCITY = 600;
+
 /** Ключ перевода названия команды по цвету (alias.<ключ>). */
 export const TEAM_NAME_KEY: Record<TeamColor, string> = {
   red: 'teamRed',

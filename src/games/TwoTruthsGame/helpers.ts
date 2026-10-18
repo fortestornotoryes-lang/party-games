@@ -1,4 +1,4 @@
-import { POINTS_FOR_CORRECT_GUESS, POINTS_FOR_FOOLED } from './constants';
+import { POINTS_FOR_CORRECT_GUESS, POINTS_FOR_FOOLED, REVEAL_TIMING } from './constants';
 
 /** Все утверждения заполнены и отмечена ложь. */
 export const isStatementsReady = (statements: string[], lieIndex: number | null): boolean =>
@@ -34,4 +34,18 @@ export const addScores = (
     result[player] = (result[player] ?? 0) + points;
   }
   return result;
+};
+
+/**
+ * Задержки переворота карточек при раскрытии (с), по индексу утверждения:
+ * правды открываются по очереди, ложь — последней, после паузы.
+ */
+export const getRevealDelays = (count: number, lieIndex: number): number[] => {
+  const { start, truthStep, liePause } = REVEAL_TIMING;
+  const lastTruthDelay = start + Math.max(0, count - 2) * truthStep;
+  let truthOrder = 0;
+  return Array.from({ length: count }, (_, i) => {
+    if (i === lieIndex) return lastTruthDelay + liePause;
+    return start + truthOrder++ * truthStep;
+  });
 };

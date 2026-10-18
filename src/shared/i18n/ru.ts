@@ -628,6 +628,7 @@ export const ru: Translations = {
     explainWord: 'Объясни слово',
     scoreLabel: 'Очки',
     guessed: 'Угадано',
+    swipeHint: '← пропуск · свайп · угадано →',
     timeUp: 'Время вышло',
     pointsPerRound: 'Очков за раунд',
     continueBtn: 'ПРОДОЛЖИТЬ',

@@ -1,22 +1,24 @@
 import { Ghost } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { STATEMENTS_COUNT, STATEMENT_MAX_LENGTH } from './constants';
 import { addScores, isStatementsReady, scoreTwoTruthsRound } from './helpers';
+import { RevealPhase } from './phases/RevealPhase';
+import { VotePhase } from './phases/VotePhase';
+import { WritingPhase } from './phases/WritingPhase';
 import { TwoTruthsPhase } from './types';
 
 import { GameKey } from '@/entities/game/types';
+import { FinalStandings } from '@/entities/player/components/FinalStandings';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
-import { PrimaryButton } from '@/shared/components/PrimaryButton';
-import { TextInput } from '@/shared/components/TextInput';
-import { Typography } from '@/shared/components/Typography';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { usePlayerCycle } from '@/shared/hooks/usePlayerCycle';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-import { feedbackService } from '@/shared/services/feedbackService';
+import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
+import { CARD_DEAL_VARIANTS, PHASE_VARIANTS } from '@/shared/theme/motion';
 
 interface TwoTruthsGameProps {
   playerNames: string[];
@@ -113,9 +115,14 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
     setPhase(TwoTruthsPhase.Pass);
   };
 
-  const fooledCount = voters.filter((v) => guesses[v] !== lieIndex).length;
+  useEffect(() => {
+    if (phase !== TwoTruthsPhase.Finish) return;
+    feedbackService.playSound('win');
+    feedbackService.vibrate(VIBRATE.win);
+    feedbackService.celebrate('win', { origin: { y: 0.35 } });
+  }, [phase]);
+
   const isLastRound = roundsPlayed + 1 >= playerNames.length;
-  const sortedPlayers = [...playerNames].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
 
   return (
     <div className="flex h-dvh flex-col">
@@ -127,211 +134,124 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
         onBack={onBack}
       />
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      {/* layoutScroll: плашка «Ложь» перелетает между карточками внутри прокручиваемой области */}
+      <motion.div layoutScroll className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
         <AnimatePresence mode="wait">
           {phase === TwoTruthsPhase.Pass && (
             <motion.div
               key={`pass-${roundsPlayed}`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex min-h-full flex-col items-center justify-center gap-6 p-6"
+              variants={PHASE_VARIANTS}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex min-h-full flex-col items-center justify-center gap-6 p-6 perspective-distant"
             >
-              <PassPhoneCard
-                playerName={storyteller}
-                playerLabel={t(`${NS.TWO_TRUTHS}.storytellerLabel`)}
-                instruction={t(`${NS.TWO_TRUTHS}.passInstruction`, { name: storyteller })}
-                icon={Ghost}
-                onClick={() => {
-                  setPhase(TwoTruthsPhase.Writing);
-                }}
-              />
+              <motion.div variants={CARD_DEAL_VARIANTS} className="w-full">
+                <PassPhoneCard
+                  playerName={storyteller}
+                  playerLabel={t(`${NS.TWO_TRUTHS}.storytellerLabel`)}
+                  instruction={t(`${NS.TWO_TRUTHS}.passInstruction`, { name: storyteller })}
+                  icon={Ghost}
+                  onClick={() => {
+                    setPhase(TwoTruthsPhase.Writing);
+                  }}
+                />
+              </motion.div>
             </motion.div>
           )}
 
           {phase === TwoTruthsPhase.Writing && (
             <motion.div
               key="writing"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              variants={PHASE_VARIANTS}
+              initial="initial"
+              animate="animate"
+              exit="exit"
               className="flex min-h-full flex-col gap-4 p-6"
             >
-              <Typography.Caption className="text-center tracking-[0.4em]">
-                {t('common.roundN', { n: roundsPlayed + 1 })} · {storyteller}
-              </Typography.Caption>
-              <Typography.Body align="center" color="faint">
-                {t(`${NS.TWO_TRUTHS}.writeTitle`)}
-              </Typography.Body>
-
-              {statements.map((s, i) => (
-                <div key={i} className="glass-card rounded-premium-xl flex flex-col gap-3 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-micro font-black tracking-[0.3em] text-white/40 uppercase">
-                      {t(`${NS.TWO_TRUTHS}.statementN`, { n: i + 1 })}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLieIndex(i);
-                      }}
-                      className={`rounded-full px-3 py-1.5 text-xs font-black tracking-widest uppercase transition ${
-                        lieIndex === i ? 'bg-premium-red text-white' : 'bg-white/5 text-white/40'
-                      }`}
-                    >
-                      {lieIndex === i
-                        ? t(`${NS.TWO_TRUTHS}.markedLie`)
-                        : t(`${NS.TWO_TRUTHS}.markAsLie`)}
-                    </button>
-                  </div>
-                  <TextInput
-                    value={s}
-                    maxLength={STATEMENT_MAX_LENGTH}
-                    placeholder={t(`${NS.TWO_TRUTHS}.statementPlaceholder`)}
-                    onChange={(e) => {
-                      updateStatement(i, e.target.value);
-                    }}
-                  />
-                </div>
-              ))}
-
-              <PrimaryButton
-                onClick={showAll}
-                disabled={!isStatementsReady(statements, lieIndex)}
-                className="mt-2"
-              >
-                {t(`${NS.TWO_TRUTHS}.showAll`)}
-              </PrimaryButton>
+              <WritingPhase
+                roundNo={roundsPlayed + 1}
+                storyteller={storyteller}
+                statements={statements}
+                lieIndex={lieIndex}
+                ready={isStatementsReady(statements, lieIndex)}
+                onChange={updateStatement}
+                onMarkLie={setLieIndex}
+                onSubmit={showAll}
+              />
             </motion.div>
           )}
 
           {phase === TwoTruthsPhase.Voting && (
             <motion.div
               key={`voting-${voterIdx}-${voterReady}`}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              className="flex min-h-full flex-col gap-4 p-6"
+              variants={PHASE_VARIANTS}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="flex min-h-full flex-col gap-4 p-6 perspective-distant"
             >
               {!voterReady ? (
-                <div className="flex min-h-full items-center justify-center">
-                  <PassPhoneCard
-                    playerName={voter}
-                    playerLabel={t(`${NS.TWO_TRUTHS}.voterLabel`)}
-                    instruction={t(`${NS.TWO_TRUTHS}.voterPass`, { name: voter })}
-                    icon={Ghost}
-                    onClick={() => {
-                      setVoterReady(true);
-                    }}
-                  />
+                <div className="flex min-h-full flex-1 items-center justify-center">
+                  <motion.div variants={CARD_DEAL_VARIANTS} className="w-full">
+                    <PassPhoneCard
+                      playerName={voter}
+                      playerLabel={t(`${NS.TWO_TRUTHS}.voterLabel`)}
+                      instruction={t(`${NS.TWO_TRUTHS}.voterPass`, { name: voter })}
+                      icon={Ghost}
+                      onClick={() => {
+                        setVoterReady(true);
+                      }}
+                    />
+                  </motion.div>
                 </div>
               ) : (
-                <>
-                  <Typography.Body align="center" color="faint">
-                    {t(`${NS.TWO_TRUTHS}.voteQuestion`)}
-                  </Typography.Body>
-                  {statements.map((s, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        submitGuess(i);
-                      }}
-                      className="glass-card rounded-premium-xl p-4 text-left text-base leading-relaxed break-words transition active:scale-[0.98]"
-                    >
-                      <span className="text-micro mr-2 font-black text-white/40">{i + 1}.</span>
-                      {s}
-                    </button>
-                  ))}
-                </>
+                <VotePhase statements={statements} onPick={submitGuess} />
               )}
             </motion.div>
           )}
 
-          {phase === TwoTruthsPhase.Reveal && (
+          {phase === TwoTruthsPhase.Reveal && lieIndex !== null && (
             <motion.div
               key="reveal"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex min-h-full flex-col gap-4 p-6"
+              variants={PHASE_VARIANTS}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="relative flex min-h-full flex-col gap-4 p-6"
             >
-              <Typography.Display size="md" align="center">
-                {t(`${NS.TWO_TRUTHS}.revealTitle`)}
-              </Typography.Display>
-
-              {statements.map((s, i) => (
-                <div
-                  key={i}
-                  className={`glass-card rounded-premium-xl p-4 ${
-                    i === lieIndex ? 'border-premium-red border-2' : ''
-                  }`}
-                >
-                  <span
-                    className={`text-micro font-black tracking-[0.3em] uppercase ${
-                      i === lieIndex ? 'text-premium-red' : 'text-premium-green'
-                    }`}
-                  >
-                    {i === lieIndex
-                      ? t(`${NS.TWO_TRUTHS}.lieLabel`)
-                      : t(`${NS.TWO_TRUTHS}.truthLabel`)}
-                  </span>
-                  <p className="mt-1 break-words">{s}</p>
-                </div>
-              ))}
-
-              <div className="glass-card rounded-premium-xl space-y-2 p-4">
-                {voters.map((v) => (
-                  <div key={v} className="flex items-center justify-between gap-3 text-sm">
-                    <span className="min-w-0 break-words">{v}</span>
-                    <span
-                      className={`shrink-0 font-bold ${
-                        guesses[v] === lieIndex ? 'text-premium-green' : 'text-premium-red'
-                      }`}
-                    >
-                      {guesses[v] === lieIndex
-                        ? t(`${NS.TWO_TRUTHS}.guessedRight`)
-                        : t(`${NS.TWO_TRUTHS}.guessedWrong`)}
-                    </span>
-                  </div>
-                ))}
-                <p className="pt-2 text-center text-sm text-white/50">
-                  {t(`${NS.TWO_TRUTHS}.fooledCount`, { name: storyteller, n: fooledCount })}
-                </p>
-              </div>
-
-              <PrimaryButton onClick={finishRound} className="mt-2">
-                {isLastRound ? t(`${NS.TWO_TRUTHS}.finishGame`) : t(`${NS.TWO_TRUTHS}.nextRound`)}
-              </PrimaryButton>
+              <RevealPhase
+                statements={statements}
+                lieIndex={lieIndex}
+                storyteller={storyteller}
+                voters={voters}
+                guesses={guesses}
+                isLastRound={isLastRound}
+                onNext={finishRound}
+              />
             </motion.div>
           )}
 
           {phase === TwoTruthsPhase.Finish && (
             <motion.div
               key="finish"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex min-h-full flex-col items-center justify-center gap-6 p-6 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="min-h-full"
             >
-              <Typography.Display size="md" align="center">
-                {t('common.gameOver')}
-              </Typography.Display>
-              <div className="glass-card rounded-premium-xl w-full max-w-sm space-y-2 p-4">
-                <p className="text-micro font-black tracking-[0.3em] text-white/40 uppercase">
-                  {t(`${NS.TWO_TRUTHS}.scoreboard`)}
-                </p>
-                {sortedPlayers.map((p) => (
-                  <div key={p} className="flex items-center justify-between gap-3">
-                    <span className="min-w-0 break-words">{p}</span>
-                    <span className="shrink-0 font-black">{scores[p] ?? 0}</span>
-                  </div>
-                ))}
-              </div>
-              <PrimaryButton onClick={onBack}>{t(`${NS.TWO_TRUTHS}.toMenu`)}</PrimaryButton>
+              <FinalStandings
+                players={playerNames}
+                scores={scores}
+                color="teal"
+                iconClassName="text-premium-teal"
+                scoreboardLabel={t(`${NS.TWO_TRUTHS}.scoreboard`)}
+                buttonLabel={t(`${NS.TWO_TRUTHS}.toMenu`)}
+                onBack={onBack}
+              />
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </div>
   );
 };

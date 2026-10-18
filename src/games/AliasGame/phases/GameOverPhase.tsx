@@ -6,9 +6,10 @@ import { TEAM_NAME_KEY, TEAM_STYLES } from '../constants';
 import type { Team } from '../types';
 
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
-import { Typography } from '@/shared/components/Typography';
+import { VictoryHero } from '@/shared/components/VictoryHero';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { SPRING } from '@/shared/theme/motion';
 
 interface GameOverPhaseProps {
   currentTeam: Team;
@@ -25,24 +26,26 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ currentTeam, onBac
       key="game_over"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex h-full flex-col items-center justify-center gap-10 p-6 text-center"
+      className="flex h-full flex-col items-center justify-center gap-10 overflow-hidden p-6 text-center"
     >
-      <div className="relative">
-        <div
-          className="absolute -inset-16 rounded-full blur-3xl"
-          style={{ backgroundColor: style.confetti, opacity: 0.15 }}
-        />
-        <Trophy className={`relative mx-auto mb-5 h-24 w-24 ${style.text}`} />
-        <Typography.Display size="xl" align="center" className="relative mb-2">
-          {t(`${NS.ALIAS}.victory`)}
-        </Typography.Display>
-        <Typography.Label size="md" color={style.typo} align="center" className="relative">
-          {t(`${NS.ALIAS}.winningTeam`, { name: teamName })}
-        </Typography.Label>
-      </div>
-      <PrimaryButton onClick={onBack} icon={RotateCcw} variant={style.button}>
-        {t(`${NS.ALIAS}.mainMenu`)}
-      </PrimaryButton>
+      <VictoryHero
+        icon={Trophy}
+        color={currentTeam.color}
+        iconClassName={style.text}
+        title={t(`${NS.ALIAS}.victory`)}
+        subtitle={t(`${NS.ALIAS}.winningTeam`, { name: teamName })}
+        subtitleColor={style.typo}
+      />
+      <motion.div
+        className="relative w-full"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...SPRING.soft, delay: 1 }}
+      >
+        <PrimaryButton onClick={onBack} icon={RotateCcw} variant={style.button}>
+          {t(`${NS.ALIAS}.mainMenu`)}
+        </PrimaryButton>
+      </motion.div>
     </motion.div>
   );
 };

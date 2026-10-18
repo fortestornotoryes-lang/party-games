@@ -16,12 +16,16 @@
 
 ## Общие компоненты (`src/shared/components/`)
 
-Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Игрокоспецифичные списки — `entities/player/components/`.
+Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, RingTimer (круговой таймер раунда), FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Анимационные: AnimatedNumber (прокрутка числа), VictoryHero (кубок/корона с лучами и искрами), FlipCard (3D-переворот при монтировании), UrgencyVignette (красная виньетка последних секунд). Игрокоспецифичные списки — `entities/player/components/` (LeaderboardList с `animated`, FinalStandings — финал игры на очки).
 
 ## Анимации
 
 - Библиотека `motion` v12, импорт из `motion/react`
-- Смена фаз/экранов — через `AnimatePresence` с ключом фазы
-- Прогрессивное появление списков — stagger через `delay: index * ...`
+- **Пресеты — `src/shared/theme/motion.ts`**: пружины `SPRING` (soft/pop/snappy/flip), `PHASE_VARIANTS` (смена фаз + каскад детей), `STAGGER_ITEM`, `CARD_DEAL_VARIANTS` (3D-«раздача», родителю нужен `perspective-distant`), `SHAKE_X`. Новые анимации собирать из них, а не подбирать stiffness/damping на месте.
+- Смена фаз: корень фазы `variants={PHASE_VARIANTS} initial="initial" animate="animate" exit="exit"` под `AnimatePresence mode="wait"`; дети с `variants={STAGGER_ITEM}` появляются каскадом автоматически.
+- Перелёт элементов между контейнерами (игроки между командами, плашка «Ложь») — `layoutId`; у прокручиваемого предка — `layoutScroll`.
+- Выбор ответа с анимацией (карточка вспыхивает, остальные гаснут) — локальный `picked` + `setTimeout(PICK_DELAY_MS)` в эффекте, потом колбэк наверх (Crocodile ChooseWord, VotePhase в TwoTruths/WhoAmongUs).
+- Настройка «Визуальные эффекты» выключает движение глобально: `MotionConfig reducedMotion` в RootLayout (`app/router/routes.tsx`). Imperative `animate()` (AnimatedNumber) и конфетти этим не управляются — конфетти гасит `feedbackService`.
+- Эталоны: Alias (свайп-карточка `AliasGame/components/SwipeWordCard.tsx`), TwoTruths `phases/RevealPhase.tsx` (последовательное раскрытие со звуком по таймерам).
 
 _Ревизия: 2026-10-18_
