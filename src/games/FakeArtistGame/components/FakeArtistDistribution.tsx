@@ -40,7 +40,7 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
       activeColor="bg-premium-sky"
       passIcon={EyeOff}
       passAccentColor="sky"
-      getCardStyle={(player) => ({
+      getCardStyle={() => ({
         // min-h вместо aspect-ratio: карточка с overflow-hidden иначе режет контент, не влезший в 3:4 (узкие экраны)
         className: 'min-h-[calc(min(100vw_-_3rem,24rem)*4/3)]',
         style: {

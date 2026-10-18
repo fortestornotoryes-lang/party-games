@@ -71,7 +71,7 @@ export const feedbackService = {
     if (!storageService.getSettings().visualEffects) return;
     try {
       void confetti({ ...CONFETTI[preset], ...overrides });
-    } catch (e) {
+    } catch {
       // Ignore confetti errors
     }
   },
@@ -105,7 +105,7 @@ export const feedbackService = {
           particleCount,
           origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
         });
-      } catch (e) {
+      } catch {
         // Ignore confetti errors
       }
     }, 250);
@@ -121,7 +121,7 @@ export const feedbackService = {
       if (vibration && typeof navigator !== 'undefined' && navigator.vibrate) {
         try {
           navigator.vibrate(pattern);
-        } catch (e) {
+        } catch {
           // Ignore vibration errors
         }
       }
@@ -230,7 +230,7 @@ export const feedbackService = {
             osc.stop(now + 0.06);
             break;
         }
-      } catch (e) {
+      } catch {
         // Ignore audio errors
       }
     });

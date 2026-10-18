@@ -43,7 +43,9 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'react/jsx-no-leaked-render': ['warn', { validStrategies: ['coerce', 'ternary'] }],
+      // jsx-no-leaked-render не видит типов: срабатывает на чистых boolean и конфликтует
+      // с no-unnecessary-type-conversion (оно запрещает `!!flag`). Числа слева от && — следить на ревью.
+      'react/jsx-no-leaked-render': 'off',
 
       // TypeScript Strictness
       '@typescript-eslint/no-unused-vars': [

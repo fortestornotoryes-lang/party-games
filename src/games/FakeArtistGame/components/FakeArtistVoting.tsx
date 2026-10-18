@@ -57,7 +57,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
         )}
 
         <AnimatePresence>
-          {!!fullscreen && (
+          {fullscreen && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

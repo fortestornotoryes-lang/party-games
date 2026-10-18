@@ -36,7 +36,7 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
     >
       {/* Word reveal */}
       <div className="space-y-2 pt-2 text-center">
-        {!!timedOut && (
+        {timedOut && (
           <p className="text-micro text-premium-red/70 font-black tracking-widest uppercase">
             {t(`${NS.TABOO}.timeOut`)}
           </p>

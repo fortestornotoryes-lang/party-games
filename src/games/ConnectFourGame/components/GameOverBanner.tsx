@@ -19,7 +19,7 @@ export const GameOverBanner: React.FC<Props> = ({ show, win, p1, p2 }) => {
 
   return (
     <AnimatePresence>
-      {!!show && (
+      {show && (
         <motion.div
           key="game-over"
           initial={{ opacity: 0, y: 16, scale: 0.94 }}

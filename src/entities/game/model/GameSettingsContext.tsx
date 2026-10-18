@@ -52,9 +52,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   );
   const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
 
-  const setCurrentGameId = async (id: GameKey | null) => {
-    setCurrentGameIdState(id);
-    if (!id) return;
+  const loadGameConfig = async (id: GameKey) => {
     const savedConfig = await storageService.getGameConfigAsync<SavedConfig>(id);
     if (savedConfig) {
       if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
@@ -70,6 +68,11 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
       setTimerSecondsState(DEFAULT_GAME_CONFIG.timerSeconds);
       setCountHiddenTraitsState(DEFAULT_GAME_CONFIG.countHiddenTraits);
     }
+  };
+
+  const setCurrentGameId = (id: GameKey | null) => {
+    setCurrentGameIdState(id);
+    if (id) void loadGameConfig(id);
   };
 
   const setDifficulty = (d: Difficulty) => {

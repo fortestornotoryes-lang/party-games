@@ -60,7 +60,9 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
         try {
           savedImage.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        } catch {}
+        } catch {
+          // getImageData может бросить (tainted canvas) — просто не сохраняем
+        }
       }
     },
     onResize: (ctx, canvas) => {
@@ -73,7 +75,9 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       if (savedImage.current) {
         try {
           ctx.putImageData(savedImage.current, 0, 0);
-        } catch {}
+        } catch {
+          // снимок не удалось восстановить — рисуем с чистого листа
+        }
       }
       isCanvasReady.current = true;
     },

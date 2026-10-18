@@ -19,7 +19,7 @@ export const PopOutToggle: React.FC<Props> = ({ show, action, current, onChange 
 
   return (
     <AnimatePresence>
-      {!!show && (
+      {show && (
         <motion.div
           key="pop-toggle"
           initial={{ opacity: 0, y: -8 }}

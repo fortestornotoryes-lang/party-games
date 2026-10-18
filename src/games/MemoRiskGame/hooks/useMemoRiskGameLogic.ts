@@ -32,7 +32,7 @@ import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 
 const K = GameKey.MemoRisk;
 
-export const useMemoRiskGameLogic = (playerNames: string[], onBack: () => void) => {
+export const useMemoRiskGameLogic = (playerNames: string[]) => {
   const { difficulty, mode } = useGameSettings();
   const cfg = MEMO_RISK_DIFFICULTY_CONFIG[difficulty];
   const isTimed = mode === MEMO_RISK_MODES.TIMED;

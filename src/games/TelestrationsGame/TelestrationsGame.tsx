@@ -22,7 +22,6 @@ import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 import { sessionService } from '@/shared/services/sessionService';
-import { storageService } from '@/shared/services/storageService';
 import { DIFFICULTY, type Difficulty } from '@/shared/types';
 
 interface TelestrationsGameProps {

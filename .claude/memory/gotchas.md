@@ -23,7 +23,7 @@
 
 ## Prettier
 
-- Не запускать `prettier --write` по папке игры целиком: часть файлов (`CrocodileGame/constants.ts` с 4 пробелами, большие `content.ts`) не отформатирована, и дифф заливается чужими правками. Форматировать только изменённые файлы.
+- Не запускать `prettier --write` по `src` или папке игры целиком (и `npm run lint:fix`): часть файлов (`CrocodileGame/constants.ts` с 4 пробелами, большие `content.ts`) не отформатирована, и дифф заливается чужими правками. Форматировать только изменённые файлы.
 
 ## Layout на мобильных
 
@@ -60,6 +60,6 @@
 - `Array(n).fill(x)` даёт `any[]` (no-unsafe-assignment) — писать `Array<T>(n).fill(x)`; вместо `[...Array(n)].map` — `Array.from({ length: n }).map`.
 - `react/prop-types` не резолвит `React.InputHTMLAttributes` как тип пропсов — используемые в компоненте пропсы (напр. `className`) объявлять явно в локальном интерфейсе (см. `shared/components/TextInput.tsx`).
 - `react-hooks/exhaustive-deps` (предупреждение): сеттеры из `usePersistedState` — это обычный `setState`, стабильны → смело добавлять в deps. Исключение: `setCurrentGameId` из `useGameSettings()` пересоздаётся каждый рендер провайдера — в deps эффекта MainMenu его **не** добавлять (эффект начнёт перезапускаться).
-- `react/jsx-no-leaked-render` срабатывает и на чисто булевых флагах — реальный баг только когда слева от `&&` число.
+- `react/jsx-no-leaked-render` выключено в `eslint.config.js` (не видит типов, конфликтовало с `no-unnecessary-type-conversion`, которое запрещает `!!` на boolean). Писать `{flag && …}` без `!!`; число слева от `&&` (рендерит `0`) — ловить на ревью, использовать `n > 0 &&`.
 
 _Ревизия: 2026-10-18_

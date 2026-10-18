@@ -36,7 +36,7 @@ export const MemoRiskGame: React.FC<Props> = ({ playerNames, onBack }) => {
     handleBank,
     handleRestart,
     stopGame,
-  } = useMemoRiskGameLogic(playerNames, onBack);
+  } = useMemoRiskGameLogic(playerNames);
 
   return (
     <div className="relative flex flex-col" style={{ minHeight: '100dvh' }}>

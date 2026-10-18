@@ -81,7 +81,7 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           </div>
 
           {/* Expanding rings for million */}
-          {!!isMillion &&
+          {isMillion &&
             Array.from({ length: 4 }).map((_, i) => (
               <motion.div
                 key={i}

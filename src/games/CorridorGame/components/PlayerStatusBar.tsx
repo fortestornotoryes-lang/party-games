@@ -47,7 +47,7 @@ export const PlayerStatusBar: React.FC<Props> = ({ p1, p2, current, winner, wall
                 <span className="text-micro font-black tracking-[0.25em] text-white/35 uppercase">
                   {t(`${NS.CORRIDOR}.wallsLeft`, { n: wallsLeft[p] })}
                 </span>
-                {!!isActive && (
+                {isActive && (
                   <span
                     className="text-micro shrink-0 rounded-full px-1.5 py-0.5 font-black tracking-[0.25em] uppercase"
                     style={{ background: `${PLAYER_COLOR[p]}22`, color: PLAYER_COLOR[p] }}

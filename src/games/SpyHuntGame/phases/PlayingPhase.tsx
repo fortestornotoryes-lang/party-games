@@ -61,7 +61,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           {showQuestions ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
 
-        {!!showQuestions && (
+        {showQuestions && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -93,7 +93,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
           {showLocations ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
 
-        {!!showLocations && (
+        {showLocations && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
