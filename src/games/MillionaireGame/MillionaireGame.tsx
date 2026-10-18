@@ -165,7 +165,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   const currentQuestion = currentQuestions[questionIndex];
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t(`${NS.MILLIONAIRE}.gameTitle`)}
         subtitle={t(`${NS.MILLIONAIRE}.subtitle`)}

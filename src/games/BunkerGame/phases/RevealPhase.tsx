@@ -104,7 +104,7 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({
                   >
                     {t(`${NS.BUNKER}.traitLabels.${revealed.traitKey}`)}
                   </div>
-                  <div className="mt-0.5 truncate text-sm font-black text-white">
+                  <div className="mt-0.5 text-sm leading-tight font-black wrap-anywhere text-white">
                     {revealed.entry.name}
                   </div>
                 </div>

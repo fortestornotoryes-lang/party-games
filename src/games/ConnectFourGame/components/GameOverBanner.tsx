@@ -3,6 +3,7 @@ import React from 'react';
 
 import type { WinResult } from '../types';
 
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -35,7 +36,7 @@ export const GameOverBanner: React.FC<Props> = ({ show, win, p1, p2 }) => {
           <p className="text-micro mb-2 font-black tracking-[0.45em] text-white/35 uppercase">
             {win ? t(`${NS.COMMON}.winner`) : t(`${NS.CONNECT_FOUR}.roundResult`)}
           </p>
-          <h3
+          <FitText as="h3"
             className={`text-5xl leading-none font-black uppercase italic ${
               win
                 ? win.player === 1
@@ -45,7 +46,7 @@ export const GameOverBanner: React.FC<Props> = ({ show, win, p1, p2 }) => {
             }`}
           >
             {win ? (win.player === 1 ? p1 : p2) : t(`${NS.COMMON}.draw`)}
-          </h3>
+          </FitText>
         </motion.div>
       )}
     </AnimatePresence>

@@ -3,6 +3,7 @@ import React from 'react';
 
 import type { TabooClassicCard } from '../content';
 
+import { FitText } from '@/shared/components/FitText';
 import { StopGameButton } from '@/shared/components/StopGameButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -43,9 +44,9 @@ export const VerdictPhase: React.FC<VerdictPhaseProps> = ({
         <p className="text-micro font-black tracking-[0.4em] text-white/30 uppercase">
           {t(`${NS.TABOO}.wordToGuess`)}
         </p>
-        <h2 className="text-5xl font-black tracking-tighter text-white uppercase italic">
+        <FitText as="h2" className="text-5xl font-black tracking-tighter text-white uppercase italic">
           {card.word}
-        </h2>
+        </FitText>
       </div>
 
       {/* Forbidden words reminder */}

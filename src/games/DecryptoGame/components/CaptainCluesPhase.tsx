@@ -74,7 +74,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
                 onChange(c);
               }}
               placeholder={t(`${NS.DECRYPTO}.associationFor`, { word: words[num - 1] })}
-              className="rounded-premium-sm flex-1 border border-white/10 bg-white/5 px-4 py-3 text-sm transition-colors outline-none placeholder:text-white/25 focus:border-white"
+              className="rounded-premium-sm min-w-0 flex-1 border border-white/10 bg-white/5 px-4 py-3 text-sm transition-colors outline-none placeholder:text-white/25 focus:border-white"
             />
           </div>
         ))}

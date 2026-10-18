@@ -128,7 +128,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const currentTeam = teams[currentTeamIdx];
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t('registry.games.alias.title')}
         subtitle={t(`${NS.ALIAS}.subtitle`)}

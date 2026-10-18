@@ -2,6 +2,7 @@ import React from 'react';
 
 import { PLAYER_COLOR } from '../constants';
 
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -25,7 +26,7 @@ export const PlayerStatusBar: React.FC<Props> = ({ p1, p2, current, winner, wall
         return (
           <div
             key={p}
-            className={`flex flex-1 items-center gap-2.5 px-3 py-2.5 transition-all duration-200 ${isActive ? 'bg-white/[0.055]' : 'opacity-40'}`}
+            className={`flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 transition-all duration-200 ${isActive ? 'bg-white/[0.055]' : 'opacity-40'}`}
           >
             <div
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black text-black"
@@ -33,22 +34,29 @@ export const PlayerStatusBar: React.FC<Props> = ({ p1, p2, current, winner, wall
             >
               {goalArrow}
             </div>
-            <div className="min-w-0">
-              <div className="truncate text-xs leading-none font-black tracking-tight text-white uppercase">
+            <div className="min-w-0 flex-1">
+              {/* FitText вместо truncate: имя читается целиком, а не «АЛЕКС…» */}
+              <FitText
+                className="text-xs leading-tight font-black tracking-tight text-white uppercase"
+                minFontSize={9}
+              >
                 {name}
-              </div>
-              <div className="text-micro mt-0.5 font-black tracking-[0.25em] text-white/35 uppercase">
-                {t(`${NS.CORRIDOR}.wallsLeft`, { n: wallsLeft[p] })}
+              </FitText>
+              {/* Плашка «ход» — во второй строке, а не сбоку: сбоку она отнимала у имени ~70 px */}
+              <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <span className="text-micro font-black tracking-[0.25em] text-white/35 uppercase">
+                  {t(`${NS.CORRIDOR}.wallsLeft`, { n: wallsLeft[p] })}
+                </span>
+                {!!isActive && (
+                  <span
+                    className="text-micro shrink-0 rounded-full px-1.5 py-0.5 font-black tracking-[0.25em] uppercase"
+                    style={{ background: `${PLAYER_COLOR[p]}22`, color: PLAYER_COLOR[p] }}
+                  >
+                    {t(`${NS.CORRIDOR}.turn`)}
+                  </span>
+                )}
               </div>
             </div>
-            {!!isActive && (
-              <span
-                className="text-tag ml-auto shrink-0 rounded-full px-2 py-0.5 font-black tracking-[0.3em] uppercase"
-                style={{ background: `${PLAYER_COLOR[p]}22`, color: PLAYER_COLOR[p] }}
-              >
-                {t(`${NS.CORRIDOR}.turn`)}
-              </span>
-            )}
           </div>
         );
       })}

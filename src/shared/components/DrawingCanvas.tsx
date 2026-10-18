@@ -79,9 +79,11 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     },
   });
 
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    // Prevent default to avoid scrolling/gestures interfering
-    if ('cancelable' in e && e.cancelable) e.preventDefault();
+  const startDrawing = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    // Второй палец/кнопка не должны начинать новый штрих
+    if (!e.isPrimary) return;
+    // Захват указателя: штрих не обрывается, если палец/курсор ушёл за край canvas
+    e.currentTarget.setPointerCapture(e.pointerId);
 
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
@@ -112,9 +114,8 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     ctx.lineJoin = 'round';
   };
 
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+  const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDrawing || !canvasRef.current) return;
-    if ('cancelable' in e && e.cancelable) e.preventDefault();
 
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
@@ -154,20 +155,20 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 p-3">
-      <div className="flex flex-shrink-0 items-center justify-between px-1">
-        <div>
+      <div className="flex flex-shrink-0 items-center justify-between gap-2 px-1">
+        <div className="min-w-0">
           <p className="text-micro font-black tracking-widest text-white/30 uppercase">
             ✏️ {t('common.youDraw')}
           </p>
           <motion.p
             initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
             animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
-            className="text-premium-orange text-lg leading-tight font-black"
+            className="text-premium-orange text-lg leading-tight font-black wrap-anywhere"
           >
             {word}
           </motion.p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <span
             className={`min-w-[2rem] text-right text-sm font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/35'}`}
           >
@@ -212,13 +213,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
       <div className="rounded-premium-md relative min-h-0 flex-1 overflow-hidden border border-white/10 bg-[#120a0a] shadow-2xl">
         <canvas
           ref={canvasRef}
-          onMouseDown={startDrawing}
-          onMouseUp={stopDrawing}
-          onMouseMove={draw}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchEnd={stopDrawing}
-          onTouchMove={draw}
+          onPointerDown={startDrawing}
+          onPointerMove={draw}
+          onPointerUp={stopDrawing}
+          onPointerCancel={stopDrawing}
           className="h-full w-full touch-none"
         />
       </div>

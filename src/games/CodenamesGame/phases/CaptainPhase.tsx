@@ -4,6 +4,7 @@ import React from 'react';
 
 import type { Card, Team } from '../types';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -40,11 +41,12 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
       className="flex flex-col space-y-4"
     >
       <div className="text-center">
-        <p
+        <FitText
+          as="p"
           className={`text-sub-heading font-black tracking-widest uppercase ${turn === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}
         >
           {t(`${NS.CODENAMES}.captainTurn`, { name: currentCaptain })}
-        </p>
+        </FitText>
         <div className="text-label mt-3 mb-2 flex flex-wrap justify-center gap-x-3 gap-y-1 font-black tracking-widest uppercase">
           <div className="flex items-center gap-1">
             <span className="border-premium-red h-4 w-4 rounded-full border bg-black"></span>
@@ -66,11 +68,11 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
         <p className="mt-1 text-xs text-white/40">{t(`${NS.CODENAMES}.makeClueHint`)}</p>
       </div>
 
-      <div className="mb-4 grid grid-cols-5 gap-1.5">
+      <div className="mb-4 grid grid-cols-5 gap-1 sm:gap-1.5">
         {cards.map((card) => (
           <div
             key={card.id}
-            className={`relative flex aspect-4/3 items-center justify-center rounded border p-1 text-center ${card.revealed ? 'opacity-30' : ''} ${
+            className={`relative flex aspect-4/3 items-center justify-center rounded border px-0.5 py-1 text-center ${card.revealed ? 'opacity-30' : ''} ${
               card.color === 'red'
                 ? 'border-premium-red/80'
                 : card.color === 'blue'
@@ -82,9 +84,14 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
                       : 'border-red-900 bg-red-900'
             } `}
           >
-            <span className="text-micro leading-tight font-bold wrap-break-word uppercase">
+            {/* Слова в сетке 5×5 узкие: FitText уменьшает длинное слово, а не даёт ему налезть на соседей */}
+            <FitText
+              as="span"
+              className="text-tag leading-tight font-bold tracking-tight uppercase"
+              minFontSize={7}
+            >
               {card.word}
-            </span>
+            </FitText>
             {card.color === 'double_agent' && (
               <div className="absolute top-1 right-1">
                 <Zap className="h-4 w-4 fill-white text-white" />
@@ -103,7 +110,7 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
               onClueWordChange(e.target.value.replace(/ /g, ''));
             }}
             placeholder={t(`${NS.CODENAMES}.oneWord`)}
-            className="rounded-premium-sm focus:border-premium-green/50 flex-1 border border-white/10 bg-white/5 px-4 py-3 text-center font-bold uppercase transition-colors outline-none"
+            className="rounded-premium-sm focus:border-premium-green/50 min-w-0 flex-1 border border-white/10 bg-white/5 px-4 py-3 text-center font-bold uppercase transition-colors outline-none"
             required
           />
           <input
@@ -117,7 +124,7 @@ export const CaptainPhase: React.FC<CaptainPhaseProps> = ({
               onClueCountChange(parseInt(e.target.value) || 0);
             }}
             placeholder="0"
-            className="rounded-premium-sm focus:border-premium-green/50 w-20 border border-white/10 bg-white/5 px-4 py-3 text-center text-xl font-bold transition-colors outline-none"
+            className="rounded-premium-sm focus:border-premium-green/50 w-20 shrink-0 border border-white/10 bg-white/5 px-4 py-3 text-center text-xl font-bold transition-colors outline-none"
             required
           />
         </div>

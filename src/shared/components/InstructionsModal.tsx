@@ -46,7 +46,7 @@ export const InstructionsModal: React.FC<InstructionsModalProps> = ({
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-[#0B0915]/98"
         >
-          <div className="mx-auto flex min-h-screen w-full max-w-lg flex-col p-8">
+          <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col p-8">
             <div className="mb-12 flex items-center justify-start gap-4">
               <button
                 onClick={onClose}

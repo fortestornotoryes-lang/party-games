@@ -2,6 +2,7 @@ import { CheckCircle, Send } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useState } from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -39,16 +40,21 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
         <p className="text-micro text-premium-yellow/40 font-black tracking-[0.5em] uppercase">
           {t(`${NS.JUST_ONE}.secretWord`)}
         </p>
-        <h2 className="text-5xl leading-none font-black tracking-tighter text-white uppercase italic">
+        <FitText
+          as="h2"
+          className="text-5xl leading-none font-black tracking-tighter text-white uppercase italic"
+        >
           {word}
-        </h2>
+        </FitText>
       </div>
 
       <div className="rounded-premium-md bg-premium-yellow/[0.05] border-premium-yellow/15 border p-4 text-center">
         <p className="text-micro mb-1 font-black tracking-[0.3em] text-white/30 uppercase">
           {t(`${NS.JUST_ONE}.guessing`)}
         </p>
-        <h3 className="text-premium-yellow text-xl font-black uppercase italic">{guesser}</h3>
+        <FitText as="h3" className="text-premium-yellow text-xl font-black uppercase italic">
+          {guesser}
+        </FitText>
       </div>
 
       <div className="space-y-4">
@@ -67,18 +73,23 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
               key={player}
               className="rounded-premium-md flex items-center gap-3 border border-white/8 bg-white/3 p-3"
             >
-              <span className="min-w-[72px] shrink-0 text-sm font-black text-white/70 italic">
+              {/* Колонка имени фиксирована, текст подгоняется: иначе длинное имя выталкивает поле ввода,
+                  а в узкой колонке «Александр» ломается на «Александ/р» */}
+              <FitText
+                className="w-24 max-w-[40%] shrink-0 text-sm leading-tight font-black text-white/70 italic"
+                minFontSize={10}
+              >
                 {player}
-              </span>
+              </FitText>
               {hints[player] ? (
-                <div className="flex flex-1 items-center justify-between">
-                  <span className="text-premium-yellow/70 text-sm font-black tracking-tight uppercase italic">
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                  <span className="text-premium-yellow/70 min-w-0 text-sm font-black tracking-tight wrap-anywhere uppercase italic">
                     {hints[player]}
                   </span>
                   <CheckCircle className="text-premium-green h-4 w-4 shrink-0" />
                 </div>
               ) : (
-                <div className="flex flex-1 items-center gap-2">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <input
                     type="text"
                     value={localHints[player] || ''}
@@ -86,7 +97,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                       setLocalHints((prev) => ({ ...prev, [player]: e.target.value }));
                     }}
                     placeholder={t(`${NS.JUST_ONE}.hintPlaceholder`)}
-                    className="rounded-premium-sm focus:border-premium-yellow/40 h-9 flex-1 border border-white/8 bg-white/4 px-3 text-sm transition-colors outline-none"
+                    className="rounded-premium-sm focus:border-premium-yellow/40 h-11 min-w-0 flex-1 border border-white/8 bg-white/4 px-3 text-sm transition-colors outline-none"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') onSubmitHint(player, localHints[player] || '');
                     }}
@@ -95,7 +106,7 @@ export const HintingPhase: React.FC<HintingPhaseProps> = ({
                     onClick={() => {
                       onSubmitHint(player, localHints[player] || '');
                     }}
-                    className="bg-premium-yellow rounded-premium-sm flex h-9 w-9 shrink-0 items-center justify-center text-black transition-transform active:scale-95"
+                    className="bg-premium-yellow rounded-premium-sm flex h-11 w-11 shrink-0 items-center justify-center text-black transition-transform active:scale-95"
                   >
                     <Send className="h-4 w-4" />
                   </button>

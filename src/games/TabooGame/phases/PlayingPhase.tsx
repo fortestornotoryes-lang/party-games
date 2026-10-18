@@ -3,21 +3,12 @@ import React from 'react';
 
 import type { TabooClassicCard } from '../content.ts';
 
+import { FitText } from '@/shared/components/FitText';
 import { PlayingHeader } from '@/shared/components/PlayingHeader.tsx';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-
-/** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
-const wordFontSize = (word: string): string => {
-  const n = word.length;
-  if (n <= 6) return '3.5rem';
-  if (n <= 8) return '2.8rem';
-  if (n <= 10) return '2.3rem';
-  if (n <= 13) return '1.9rem';
-  return '1.5rem';
-};
 
 interface PlayingPhaseProps {
   card: TabooClassicCard;
@@ -70,16 +61,16 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
         {/* Main word */}
         <div className="flex flex-1 items-center justify-center">
-          <div className="rounded-premium-2xl w-full border-2 border-white/15 bg-white/5 p-8 text-center">
+          <div className="rounded-premium-2xl w-full border-2 border-white/15 bg-white/5 px-4 py-8 text-center sm:px-8">
             <p className="text-micro mb-3 font-black tracking-[0.5em] text-white/30 uppercase">
               {t(`${NS.TABOO}.wordToGuess`)}
             </p>
-            <h2
-              className="leading-tight font-black tracking-tighter wrap-break-word text-white uppercase italic"
-              style={{ fontSize: wordFontSize(card.word) }}
+            <FitText
+              as="h2"
+              className="text-[3.5rem] leading-tight font-black tracking-tighter text-white uppercase italic"
             >
               {card.word}
-            </h2>
+            </FitText>
           </div>
         </div>
 

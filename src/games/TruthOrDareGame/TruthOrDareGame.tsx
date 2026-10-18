@@ -54,7 +54,7 @@ export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, o
   };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t('registry.games.truth_or_dare.title')}
         subtitle={t(`${NS.TRUTH_OR_DARE}.subtitle`)}

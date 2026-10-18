@@ -12,11 +12,11 @@ import { useTranslation } from '@/shared/i18n';
 function RootLayout() {
   const { t } = useTranslation();
   return (
-    <div className="safe-top safe-bottom flex min-h-screen flex-col items-center">
-      <div className="relative flex min-h-screen w-full max-w-3xl flex-col bg-black/20 shadow-2xl ring-1 ring-white/5">
+    <div className="safe-top safe-bottom flex min-h-dvh flex-col items-center">
+      <div className="relative flex min-h-dvh w-full max-w-3xl flex-col bg-black/20 shadow-2xl ring-1 ring-white/5">
         <Suspense
           fallback={
-            <div className="flex min-h-screen animate-pulse items-center justify-center bg-black font-black tracking-widest text-white/50 uppercase">
+            <div className="flex min-h-dvh animate-pulse items-center justify-center bg-black font-black tracking-widest text-white/50 uppercase">
               {t('common.loading')}
             </div>
           }

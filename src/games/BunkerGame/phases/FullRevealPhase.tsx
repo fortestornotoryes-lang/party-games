@@ -58,10 +58,10 @@ function CharacterCard({
           {char.profession.emoji}
         </span>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-black" style={{ color: nameColor }}>
+          <div className="text-sm leading-tight font-black wrap-anywhere" style={{ color: nameColor }}>
             {char.playerName}
           </div>
-          <div className="text-tag truncate text-white/35">
+          <div className="text-tag leading-tight wrap-anywhere text-white/35">
             {char.profession.name} · {t(`${NS.BUNKER}.ageShort`, { n: char.age })} · {char.gender}
           </div>
         </div>
@@ -87,10 +87,10 @@ function CharacterCard({
               style={{ opacity: isRevealed ? 1 : 0.4 }}
             >
               <span className="w-5 flex-shrink-0 text-center text-sm">{entry.emoji}</span>
-              <span className="w-20 flex-shrink-0 truncate text-xs text-white/40">
+              <span className="w-20 flex-shrink-0 text-xs leading-tight wrap-anywhere text-white/40">
                 {t(`${NS.BUNKER}.traitLabels.${key}`)}
               </span>
-              <span className="flex-1 truncate text-xs font-bold text-white">{entry.name}</span>
+              <span className="min-w-0 flex-1 text-xs leading-tight font-bold wrap-anywhere text-white">{entry.name}</span>
               {!isRevealed && (
                 <span
                   className="text-tag flex-shrink-0 rounded px-1.5 py-0.5"

@@ -4,21 +4,12 @@ import React from 'react';
 
 import type { TabooCard } from '../content';
 
+import { FitText } from '@/shared/components/FitText';
 import { PlayingHeader } from '@/shared/components/PlayingHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-
-/** Плавное уменьшение шрифта по длине слова + перенос как запасной вариант */
-const wordFontSize = (word: string): string => {
-  const n = word.length;
-  if (n <= 6) return '3.5rem';
-  if (n <= 8) return '2.8rem';
-  if (n <= 10) return '2.3rem';
-  if (n <= 13) return '1.9rem';
-  return '1.5rem';
-};
 
 interface PlayingPhaseProps {
   card: TabooCard;
@@ -76,16 +67,16 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
         />
 
         {/* Secret word */}
-        <div className="rounded-premium-2xl border-premium-orange/30 bg-premium-orange/5 border-2 p-8 text-center">
+        <div className="rounded-premium-2xl border-premium-orange/30 bg-premium-orange/5 border-2 px-4 py-8 text-center sm:px-8">
           <p className="text-micro text-premium-orange/50 mb-3 font-black tracking-[0.5em] uppercase">
             {t(`${NS.TABOO_REVERSE}.secretWord`)}
           </p>
-          <h2
-            className="leading-tight font-black tracking-tighter wrap-break-word text-white uppercase italic"
-            style={{ fontSize: wordFontSize(card.word) }}
-          >
-            {card.word}
-          </h2>
+          <FitText
+              as="h2"
+              className="text-[3.5rem] leading-tight font-black tracking-tighter text-white uppercase italic"
+            >
+              {card.word}
+            </FitText>
         </div>
 
         {/* Required words */}

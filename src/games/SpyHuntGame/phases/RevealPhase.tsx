@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import React from 'react';
 
 import type { Player } from '@/entities/player/types';
+import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
@@ -36,9 +37,9 @@ export const RevealPhase: React.FC<RevealPhaseProps> = ({ spy, location, onBack 
           <p className="text-tag text-premium-red/60 font-black tracking-widest uppercase">
             {t(`${NS.SPY_HUNT}.agent00`)}
           </p>
-          <h3 className="px-4 text-5xl font-black wrap-break-word text-white uppercase italic">
+          <FitText as="h3" className="text-5xl font-black text-white uppercase italic">
             {spy?.name}
-          </h3>
+          </FitText>
         </div>
         <div className="border-premium-red/20 border-t pt-6">
           <p className="text-tag text-premium-green/60 font-black tracking-widest uppercase">

@@ -37,7 +37,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
     : null;
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center px-5 pt-6 pb-28">
+    <div className="relative flex min-h-dvh flex-col items-center px-5 pt-6 pb-28">
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <motion.div
@@ -144,7 +144,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   animate={{ y: 0 }}
                   exit={{ y: '100%' }}
                   transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-                  className="fixed right-0 bottom-0 left-0 z-50 mx-auto max-w-md px-4 pb-8"
+                  className="fixed right-0 bottom-0 left-0 z-50 mx-auto max-w-md px-4 pb-[calc(2rem+env(safe-area-inset-bottom))]"
                 >
                   <div
                     className="rounded-premium-xl overflow-hidden border border-white/8"

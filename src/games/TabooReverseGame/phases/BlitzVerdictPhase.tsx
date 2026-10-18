@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import type { BlitzResult } from '../types';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -48,9 +49,9 @@ export const BlitzVerdictPhase: React.FC<BlitzVerdictPhaseProps> = ({
         <p className="text-micro font-black tracking-[0.5em] text-white/30 uppercase">
           {t(`${NS.TABOO_REVERSE}.turnResult`)}
         </p>
-        <h2 className="text-3xl font-black tracking-tighter text-white uppercase italic">
+        <FitText as="h2" className="text-3xl font-black tracking-tighter text-white uppercase italic">
           {currentExplainer}
-        </h2>
+        </FitText>
         <div className="flex items-center justify-center gap-4 pt-1">
           <span className="text-premium-green text-sm font-black">
             {t(`${NS.TABOO_REVERSE}.guessedCount`, { n: guessedResults.length })}

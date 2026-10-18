@@ -11,6 +11,7 @@ import {
   RoleRevealPanel,
 } from '@/features/role-distribution/components/RoleRevealCard';
 import { SPY_HUNT_ROLE_IDS } from '@/games/SpyHuntGame/constants.ts';
+import { FitText } from '@/shared/components/FitText';
 import { Typography } from '@/shared/components/Typography';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -64,9 +65,12 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                   <Typography.Caption color="green" className="tracking-[0.45em] opacity-50">
                     {t(`${NS.SPY_HUNT}.secretRole`)}
                   </Typography.Caption>
-                  <Typography.Title color="muted" className="mt-0.5">
+                  <FitText
+                    as="h1"
+                    className="text-heading mt-0.5 leading-[0.75] font-black tracking-tighter text-white/50 uppercase italic"
+                  >
                     {player.name}
-                  </Typography.Title>
+                  </FitText>
                 </div>
 
                 <div className="space-y-3 text-center">
@@ -173,15 +177,13 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                     <Typography.Caption color="green" className="tracking-[0.35em] opacity-50">
                       {t(`${NS.SPY_HUNT}.secretLocation`)}
                     </Typography.Caption>
-                    <h3
-                      className="leading-tight font-black tracking-tighter wrap-break-word text-white uppercase italic"
-                      style={{
-                        textShadow: ROLE_TOKENS.agent.textShadow,
-                        fontSize: 'clamp(22px, 9vw, 40px)',
-                      }}
+                    <FitText
+                      as="h3"
+                      className="text-[40px] leading-tight font-black tracking-tighter text-white uppercase italic"
+                      style={{ textShadow: ROLE_TOKENS.agent.textShadow }}
                     >
                       {location}
-                    </h3>
+                    </FitText>
                   </div>
                   <div className="bg-premium-green/10 border-premium-green/20 rounded-premium-md border px-4 py-3">
                     <Typography.Caption size="xs" color="dimmer" className="mb-1">

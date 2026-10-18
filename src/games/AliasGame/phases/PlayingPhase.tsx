@@ -2,6 +2,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -82,9 +83,12 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             <p className="text-micro text-premium-sky/35 font-black tracking-[0.5em] uppercase">
               {t(`${NS.ALIAS}.explainWord`)}
             </p>
-            <h2 className="text-6xl leading-none font-black tracking-tighter wrap-break-word text-white uppercase italic">
+            <FitText
+              as="h2"
+              className="text-6xl leading-none font-black tracking-tighter text-white uppercase italic"
+            >
               {currentWord}
-            </h2>
+            </FitText>
           </motion.div>
         </AnimatePresence>
       </div>

@@ -9,6 +9,7 @@ import { FakeArtistPhase } from './types';
 
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
+import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -18,6 +19,9 @@ import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
+
+/** Минимум точек, чтобы штрих был видимой линией, а не случайным тапом */
+const MIN_STROKE_POINTS = 2;
 
 interface Props {
   playerNames: string[];
@@ -155,10 +159,20 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
     if (phase === FakeArtistPhase.Playing) drawAll();
   }, [drawAll, phase]);
 
+  // Штрих из одной точки (случайный тап) не рисует ничего — не сжигаем на него единственную линию хода
+  const finishStroke = () => {
+    if (!isDrawing || !currentStroke) return;
+    setIsDrawing(false);
+    setCurrentStroke(null);
+    if (currentStroke.length < MIN_STROKE_POINTS) return;
+    setStrokes([...strokes, { points: currentStroke, color: playerColor }]);
+    setHasDrawn(true);
+  };
+
   if (players.length === 0) return null;
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden select-none">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden select-none">
       <AnimatePresence mode="wait">
         {phase === FakeArtistPhase.Distributing ? (
           <motion.div
@@ -196,22 +210,22 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
             />
 
             <div className="flex flex-1 flex-col items-center space-y-6 p-6">
-              <div className="flex w-full items-center justify-between">
-                <div className="space-y-1">
+              <div className="flex w-full items-center justify-between gap-3">
+                <div className="min-w-0 space-y-1">
                   <p className="text-tag font-black tracking-widest text-white/80 uppercase">
                     {t(`${NS.FAKE_ARTIST}.drawingLabel`)}
                   </p>
                   <div className="flex items-center gap-3">
                     <div
-                      className="h-3 w-3 rounded-full"
+                      className="h-3 w-3 shrink-0 rounded-full"
                       style={{ backgroundColor: playerColor }}
                     />
-                    <h3 className="text-2xl leading-none font-black text-white uppercase italic">
+                    <h3 className="min-w-0 text-2xl leading-none font-black wrap-anywhere text-white uppercase italic">
                       {players[turnIndex % players.length].name}
                     </h3>
                   </div>
                 </div>
-                <div className="space-y-1 text-right">
+                <div className="max-w-[45%] shrink-0 space-y-1 text-right">
                   {gameState.timerSeconds > 0 && (
                     <p
                       className={`mb-1 text-xl font-black italic ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}
@@ -222,7 +236,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                   <p className="text-tag font-black tracking-widest text-white/80 uppercase">
                     {t(`${NS.FAKE_ARTIST}.categoryLabel`)}
                   </p>
-                  <h3 className="text-premium-green text-xl leading-none font-black uppercase italic">
+                  <h3 className="text-premium-green text-xl leading-none font-black wrap-anywhere uppercase italic">
                     {gameState.category}
                   </h3>
                 </div>
@@ -232,42 +246,19 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                 <div
                   className="h-full w-full"
                   style={{ touchAction: 'none' }}
-                  onMouseDown={(e) => {
-                    if (!hasDrawn) {
-                      setIsDrawing(true);
-                      setCurrentStroke([getCssPos(e)]);
-                    }
+                  onPointerDown={(e) => {
+                    if (hasDrawn || !e.isPrimary) return;
+                    // Захват указателя: штрих не обрывается за краем поля
+                    e.currentTarget.setPointerCapture(e.pointerId);
+                    setIsDrawing(true);
+                    setCurrentStroke([getCssPos(e)]);
                   }}
-                  onMouseMove={(e) => {
+                  onPointerMove={(e) => {
                     if (isDrawing && currentStroke)
                       setCurrentStroke([...currentStroke, getCssPos(e)]);
                   }}
-                  onMouseUp={() => {
-                    if (isDrawing && currentStroke) {
-                      setStrokes([...strokes, { points: currentStroke, color: playerColor }]);
-                      setIsDrawing(false);
-                      setCurrentStroke(null);
-                      setHasDrawn(true);
-                    }
-                  }}
-                  onTouchStart={(e) => {
-                    if (!hasDrawn) {
-                      setIsDrawing(true);
-                      setCurrentStroke([getCssPos(e)]);
-                    }
-                  }}
-                  onTouchMove={(e) => {
-                    if (isDrawing && currentStroke)
-                      setCurrentStroke([...currentStroke, getCssPos(e)]);
-                  }}
-                  onTouchEnd={() => {
-                    if (isDrawing && currentStroke) {
-                      setStrokes([...strokes, { points: currentStroke, color: playerColor }]);
-                      setIsDrawing(false);
-                      setCurrentStroke(null);
-                      setHasDrawn(true);
-                    }
-                  }}
+                  onPointerUp={finishStroke}
+                  onPointerCancel={finishStroke}
                 >
                   <canvas
                     ref={canvasRef}
@@ -318,13 +309,16 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                 >
                   <GameCard className="border-premium-green/20 bg-premium-green/5 flex aspect-square w-full max-w-xs flex-1 flex-col items-center justify-center space-y-4">
                     <Palette className="text-premium-green h-16 w-16 animate-pulse" />
-                    <div className="space-y-4 text-center">
+                    <div className="w-full space-y-4 px-6 text-center">
                       <p className="text-tag font-black tracking-[0.3em] text-white/80 uppercase">
                         {t(`${NS.FAKE_ARTIST}.nextPlayer`)}
                       </p>
-                      <h3 className="text-5xl font-black tracking-tighter text-white uppercase italic">
+                      <FitText
+                        as="h3"
+                        className="text-5xl font-black tracking-tighter text-white uppercase italic"
+                      >
                         {players[turnIndex % players.length].name}
-                      </h3>
+                      </FitText>
                     </div>
                     <p className="text-premium-green px-8 text-center text-xs">
                       {t(`${NS.FAKE_ARTIST}.passPhoneInstruction`)}

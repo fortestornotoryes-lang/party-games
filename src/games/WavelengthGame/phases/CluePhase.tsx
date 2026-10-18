@@ -2,6 +2,7 @@ import { ChevronRight, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
@@ -36,9 +37,12 @@ export const CluePhase: React.FC<CluePhaseProps> = ({
         <div className="text-tag font-black tracking-[0.4em] text-white/35 uppercase">
           {t(`${NS.WAVELENGTH}.currentPsychic`)}
         </div>
-        <h3 className="text-premium-purple text-4xl font-black tracking-tighter uppercase italic">
+        <FitText
+          as="h3"
+          className="text-premium-purple text-4xl font-black tracking-tighter uppercase italic"
+        >
           {psychic}
-        </h3>
+        </FitText>
         <p className="mx-auto max-w-xs text-sm font-medium text-white/50">
           {t(`${NS.WAVELENGTH}.onlyYouSeeTarget`)}
         </p>

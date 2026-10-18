@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
 import type { Player } from '@/entities/player/types';
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -31,7 +32,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
   }, [fullscreen]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
+    <div className="flex min-h-dvh flex-col items-center justify-center overflow-hidden p-6">
       <div className="flex w-full max-w-md flex-col gap-8">
         {!!canvasImage && (
           <motion.div
@@ -112,7 +113,7 @@ export const FakeArtistVoting: React.FC<FakeArtistVotingProps> = ({
                 <h4 className="text-premium-red text-3xl font-black uppercase italic">
                   {t(`${NS.FAKE_ARTIST}.imposter`)}
                 </h4>
-                <div className="text-4xl font-black text-white">{spy?.name}</div>
+                <FitText className="text-4xl font-black text-white">{spy?.name}</FitText>
               </div>
 
               <button

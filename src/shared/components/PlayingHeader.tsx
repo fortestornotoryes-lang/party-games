@@ -34,12 +34,12 @@ export const PlayingHeader: React.FC<PlayingHeaderProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-between">
-      <Typography.Caption color="faint" className="tracking-widest">
+    <div className="flex items-center justify-between gap-3">
+      <Typography.Caption color="faint" className="min-w-0 tracking-widest wrap-anywhere">
         {t('common.explains', { player: explainer })}
       </Typography.Caption>
 
-      <div className="flex items-center gap-3">
+      <div className="flex shrink-0 items-center gap-3">
         {extra}
         {/* timerColor — динамический hex, не токен; используем span напрямую */}
         <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import type { Player } from '@/entities/player/types';
 import { LOCATIONS, QUESTION_IDEAS } from '@/games/SpyHuntGame/constants.ts';
+import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
@@ -116,11 +117,15 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
         </h4>
         <div className="grid grid-cols-2 gap-3">
           {players.map((p) => (
-            <GameCard key={p.id} className="flex items-center space-x-3 border-white/5 p-4">
-              <div className="bg-premium-red/50 h-2 w-2 rounded-full" />
-              <span className="truncate text-sm font-black tracking-tight uppercase italic">
+            <GameCard key={p.id} className="flex items-center gap-2 border-white/5 p-3!">
+              <div className="bg-premium-red/50 h-2 w-2 shrink-0 rounded-full" />
+              {/* FitText вместо truncate: имя читается целиком, а не «АЛЕКС…» */}
+              <FitText
+                className="flex-1 text-sm leading-tight font-black tracking-tight uppercase italic"
+                minFontSize={10}
+              >
                 {p.name}
-              </span>
+              </FitText>
             </GameCard>
           ))}
         </div>

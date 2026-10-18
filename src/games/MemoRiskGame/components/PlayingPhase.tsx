@@ -88,10 +88,11 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="truncate font-black text-white/90"
+              className="flex items-baseline gap-2 font-black text-white/90"
             >
-              {currentPlayer}
-              <span className="text-premium-pink ml-2 tabular-nums">{totalScore}</span>
+              {/* Имя переносится, а счёт не прячется вместе с обрезанным именем */}
+              <span className="min-w-0 leading-tight wrap-anywhere">{currentPlayer}</span>
+              <span className="text-premium-pink shrink-0 tabular-nums">{totalScore}</span>
             </motion.p>
           </AnimatePresence>
           <p className="text-micro font-black tracking-widest text-white/30 uppercase">

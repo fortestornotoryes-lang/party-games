@@ -295,7 +295,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="safe-top safe-bottom flex min-h-screen flex-col">
+    <div className="safe-top safe-bottom flex min-h-dvh flex-col">
       <GameHeader
         title={t('registry.games.taboo_reverse.title')}
         subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}

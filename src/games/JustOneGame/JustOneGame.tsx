@@ -109,7 +109,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
   );
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t('registry.games.just_one.title')}
         subtitle={t(`${NS.JUST_ONE}.subtitle`)}

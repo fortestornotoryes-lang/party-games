@@ -244,6 +244,11 @@
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    /* Быстрые повторные тапы (Alias «Угадано/Пропустить») не должны зумить страницу в iOS Safari;
+       щипок-зум остаётся доступным */
+    touch-action: manipulation;
+    /* Жест «потянуть вниз» на корне не перезагружает страницу посреди партии */
+    overscroll-behavior-y: contain;
   }
 
   body {

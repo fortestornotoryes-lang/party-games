@@ -152,7 +152,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="safe-top safe-bottom flex min-h-screen flex-col">
+    <div className="safe-top safe-bottom flex min-h-dvh flex-col">
       <GameHeader
         title={t('registry.games.taboo.title')}
         subtitle={t(`${NS.COMMON}.roundN`, { n: roundNum })}

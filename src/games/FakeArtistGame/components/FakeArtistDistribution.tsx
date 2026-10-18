@@ -12,6 +12,7 @@ import {
   RoleRevealCard,
   RoleRevealPanel,
 } from '@/features/role-distribution/components/RoleRevealCard';
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { rgba } from '@/shared/theme/colors';
@@ -40,7 +41,8 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
       passIcon={EyeOff}
       passAccentColor="sky"
       getCardStyle={(player) => ({
-        className: 'aspect-3/4',
+        // min-h вместо aspect-ratio: карточка с overflow-hidden иначе режет контент, не влезший в 3:4 (узкие экраны)
+        className: 'min-h-[calc(min(100vw_-_3rem,24rem)*4/3)]',
         style: {
           border: `1.5px solid ${rgba('sky', 0.25)}`,
           boxShadow: `0 0 80px ${rgba('sky', 0.22)}, var(--shadow-card), inset 0 1px 0 ${rgba('sky', 0.12)}`,
@@ -108,12 +110,13 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
                   <p className="text-micro text-premium-sky/50 font-black tracking-[0.35em] uppercase">
                     {t(`${NS.FAKE_ARTIST}.yourWord`)}
                   </p>
-                  <h3
+                  <FitText
+                    as="h3"
                     className="text-5xl leading-tight font-black tracking-tighter text-white uppercase italic"
                     style={{ textShadow: `0 0 32px ${rgba('sky', 0.25)}` }}
                   >
                     {word}
-                  </h3>
+                  </FitText>
                 </div>
                 <div className="bg-premium-sky/10 border-premium-sky/20 rounded-premium-md border px-4 py-3">
                   <p className="text-micro text-premium-sky/50 mb-1 font-black tracking-widest uppercase">

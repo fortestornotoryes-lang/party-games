@@ -142,7 +142,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
         }`;
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden select-none">
+    <div className="flex h-dvh flex-col overflow-hidden select-none">
       <GameHeader
         title="TELESTRATIONS"
         subtitle={subtitle}

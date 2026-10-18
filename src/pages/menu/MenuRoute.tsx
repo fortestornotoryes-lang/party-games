@@ -20,7 +20,7 @@ export function MenuRoute() {
       <MainMenu onSelectGame={handleSelectGame} />
       <button
         onClick={() => void navigate('/settings')}
-        className="glass-card rounded-premium-md fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center text-white/30 transition-all hover:text-white/60 active:scale-95"
+        className="glass-card rounded-premium-md fixed right-6 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 flex h-14 w-14 items-center justify-center text-white/30 transition-all hover:text-white/60 active:scale-95"
       >
         <SettingsIcon className="h-5 w-5" />
       </button>

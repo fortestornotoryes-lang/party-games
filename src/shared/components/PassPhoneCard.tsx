@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { Typography } from '@/shared/components/Typography';
 
 type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';
@@ -121,7 +122,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
     <motion.div
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className="rounded-premium-2xl relative flex aspect-3/4 w-full cursor-pointer flex-col items-center justify-center overflow-hidden transition-colors duration-300"
+      className="rounded-premium-2xl relative flex min-h-[calc(min(100vw_-_3rem,24rem)*4/3)] w-full cursor-pointer flex-col items-center justify-center overflow-hidden transition-colors duration-300"
       style={{
         background:
           'linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.018) 100%)',
@@ -151,7 +152,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
         className={`absolute right-5 bottom-5 h-10 w-10 border-r border-b ${accent.border} rounded-br-premium-xs`}
       />
 
-      <div className="relative z-10 space-y-7 px-10 text-center">
+      <div className="relative z-10 space-y-7 px-6 text-center sm:px-10">
         <motion.div
           animate={{ opacity: [0.5, 0.9, 0.9, 0.5], scale: [1, 1.15, 1.15, 1] }}
           transition={{ duration: 1.2, repeat: Infinity }}
@@ -177,7 +178,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
             </Typography.Label>
 
             {/* Cyberpunk HUD Container */}
-            <div className="rounded-premium-xs relative inline-flex items-center justify-center overflow-visible border border-white/5 bg-black/40 px-6 py-3 delay-1000">
+            <div className="rounded-premium-xs relative inline-flex max-w-full items-center justify-center overflow-visible border border-white/5 bg-black/40 px-4 py-3 delay-1000 sm:px-6">
               {/* Технологический микро-текст по бокам */}
               <span className="text-pico absolute bottom-1 left-1 font-mono text-white/20 select-none">
                 SYS_ERR
@@ -189,8 +190,11 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
               {/* Задняя плашка помех, которая взрывается глитчами */}
               <div className="animate-matrix-glitch pointer-events-none absolute inset-0 z-0 bg-white/5 opacity-5" />
 
-              <Typography.Heading
-                className={`font-display relative z-10 text-4xl leading-none font-black tracking-tighter uppercase italic select-none`}
+              {/* FitText: длинное имя уменьшается, а не вылезает за карточку */}
+              <FitText
+                as="h2"
+                minFontSize={12}
+                className="font-display relative z-10 text-4xl leading-none font-black tracking-tighter text-white/80 uppercase italic select-none"
               >
                 {playerName}
 
@@ -203,7 +207,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
                 <span className="text-premium-pink animate-cyber-hard-2 pointer-events-none absolute top-0 left-0 z-[-2] h-full w-full opacity-100 mix-blend-screen select-none before:content-['_'] after:content-['_']">
                   {playerName}
                 </span>
-              </Typography.Heading>
+              </FitText>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { ArrowRight, Eye } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -39,7 +40,7 @@ export const TelestrationsStart: React.FC<Props> = ({
             {t(`${NS.TELESTRATIONS}.firstDraws`)}
           </span>
         </div>
-        <h3 className="text-4xl font-black italic">{currentPlayer}</h3>
+        <FitText as="h3" className="text-4xl font-black italic">{currentPlayer}</FitText>
         <p className="text-sm text-white/30">{t(`${NS.TELESTRATIONS}.rememberAndDraw`)}</p>
       </div>
 
@@ -83,7 +84,7 @@ export const TelestrationsStart: React.FC<Props> = ({
           <p className="text-tag mb-2 font-black tracking-widest text-white/25 uppercase">
             {t(`${NS.TELESTRATIONS}.yourSecretWord`)}
           </p>
-          <h4 className="text-premium-orange text-3xl font-black">{currentWord}</h4>
+          <FitText as="h4" className="text-premium-orange text-3xl font-black">{currentWord}</FitText>
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import React from 'react';
 
 import { LeaderboardList } from '@/entities/player/components/LeaderboardList';
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -60,13 +61,13 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
               {t(`${NS.COMMON}.draw`)}!
             </h2>
           ) : (
-            <h2
+            <FitText as="h2"
               className={`text-4xl font-black tracking-tighter uppercase italic ${
                 teamWinner === 0 ? 'text-premium-orange' : 'text-premium-sky'
               }`}
             >
               {t(`${NS.TABOO_REVERSE}.teamWon`, { n: (teamWinner ?? 0) + 1 })}
-            </h2>
+            </FitText>
           )}
 
           {/* Team score cards */}
@@ -129,9 +130,9 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({
             {t(`${NS.TABOO}.gameEnded`)}
           </p>
           {hasWinner ? (
-            <h2 className="text-premium-yellow text-4xl font-black tracking-tighter uppercase italic">
+            <FitText as="h2" className="text-premium-yellow text-4xl font-black tracking-tighter uppercase italic">
               {t(`${NS.TABOO_REVERSE}.playerWon`, { player: sorted[0] })}
-            </h2>
+            </FitText>
           ) : (
             <h2 className="text-4xl font-black tracking-tighter text-white/70 uppercase italic">
               {t(`${NS.COMMON}.draw`)}!

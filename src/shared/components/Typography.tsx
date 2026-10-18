@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
+
 // ─── Токены ──────────────────────────────────────────────────────────────────
 
 /**
@@ -112,10 +114,12 @@ const Display = ({
   } as const;
 
   const glowValue = color ? GLOW[color] : undefined;
-  const style = glow && glowValue ? { textShadow: glowValue } : undefined;
 
+  // Hero-текст — это имена и слова пользователя: длинное слово уменьшается, а не вылезает за экран
+  // (FitText сам находит доступную ширину, обёртки подгонять не нужно).
   return (
-    <Tag
+    <FitText
+      as={Tag}
       className={[
         'leading-none font-black tracking-tighter uppercase italic',
         SIZES[size],
@@ -123,10 +127,10 @@ const Display = ({
         align ? ALIGN[align] : '',
         className,
       ].join(' ')}
-      style={style}
+      style={glow && glowValue ? { textShadow: glowValue } : undefined}
     >
       {children}
-    </Tag>
+    </FitText>
   );
 };
 
@@ -163,18 +167,21 @@ const Title = ({
     xl: 'text-4xl',
   } as const;
 
-  return (
-    <Tag
-      className={[
-        'font-black tracking-tighter uppercase italic',
-        SIZES[size],
-        COLOR[color],
-        align ? ALIGN[align] : '',
-        className,
-      ].join(' ')}
-    >
+  const classes = [
+    'font-black tracking-tighter uppercase italic',
+    SIZES[size],
+    COLOR[color],
+    align ? ALIGN[align] : '',
+    className,
+  ].join(' ');
+
+  // Строка (имя игрока, перевод) не должна вылезать за экран — уменьшаем шрифт
+  return typeof children === 'string' ? (
+    <FitText as={Tag} className={classes}>
       {children}
-    </Tag>
+    </FitText>
+  ) : (
+    <Tag className={classes}>{children}</Tag>
   );
 };
 
@@ -211,18 +218,20 @@ const Heading = ({
     lg: 'text-3xl',
   } as const;
 
-  return (
-    <Tag
-      className={[
-        'font-black tracking-tighter uppercase italic',
-        SIZES[size],
-        COLOR[color],
-        align ? ALIGN[align] : '',
-        className,
-      ].join(' ')}
-    >
+  const classes = [
+    'font-black tracking-tighter uppercase italic',
+    SIZES[size],
+    COLOR[color],
+    align ? ALIGN[align] : '',
+    className,
+  ].join(' ');
+
+  return typeof children === 'string' ? (
+    <FitText as={Tag} className={classes}>
       {children}
-    </Tag>
+    </FitText>
+  ) : (
+    <Tag className={classes}>{children}</Tag>
   );
 };
 

@@ -38,23 +38,24 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   const handleClick = () => {
     feedbackService.playSound('click');
     feedbackService.vibrate(VIBRATE.tap);
-    console.log('onClick', onClick);
     if (onClick) onClick();
   };
 
   const baseStyles =
-    'w-full h-16 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none';
+    'w-full min-h-16 px-5 py-3 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none';
 
   return (
     <button
       type={type}
       onClick={handleClick}
       disabled={disabled}
-      className={`${baseStyles} ${buttonVariants[variant]} ${className}`}
+      className={`${baseStyles} ${buttonVariants[variant]} ${className ?? ''}`}
     >
       <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       {iconElement ?? (Icon && <Icon className="relative z-10 h-6 w-6" />)}
-      <span className="relative z-10 leading-none tracking-tighter uppercase">{children}</span>
+      <span className="relative z-10 min-w-0 text-center leading-tight tracking-tighter wrap-anywhere uppercase">
+        {children}
+      </span>
     </button>
   );
 };

@@ -22,7 +22,7 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ psychic, onReady }) => {
       exit={{ opacity: 0, scale: 0.9 }}
       className="flex h-full flex-col items-center justify-center space-y-10 text-center"
     >
-      <div className="space-y-4 text-center">
+      <div className="w-full space-y-4 px-4 text-center">
         <Typography.Label size="sm" color="body">
           {t(`${NS.WAVELENGTH}.newRound`)}
         </Typography.Label>

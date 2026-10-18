@@ -39,6 +39,16 @@ async, чтобы не сломать синхронные чтения при �
 вызывается дважды за инициализацию раунда — важен порядок запись/чтение, это тоже причина оставаться
 синхронной, а не сигнал к переводу на async.
 
+## Баги веб-версии, которые нельзя повторить в RN
+
+Аудит веба (2026-10-18) нашёл класс проблем, которые, судя по исходникам, есть и в RN: `docs/web-ux-fixes.md` (`../docs/web-ux-fixes.md`) — сводная таблица W-01…W-11 с рекомендациями для RN и чеклистом. Главное:
+
+- Крупный текст с именем/словом (Alias `fontSize: 60`, раздача ролей, Wavelength, Taboo…) обрезается/вылезает на узких экранах — нужен общий `FitText` на `adjustsFontSizeToFit` + `numberOfLines`; `letterSpacing` (px) пересчитывать от нового размера.
+- `numberOfLines={1}` на именах в узких плитках (Spy `PlayingPhase`, Bunker, MemoRisk, Corridor) и на значениях черт Бункера скрывает ключевую информацию.
+- Строки `flexDirection: 'row'` с именем: `flexShrink: 1` у `Text`, `flexShrink: 0` у иконок/кнопок.
+- Рисование: тап не должен добавлять запись в undo и «тратить» единственную линию FakeArtist; штрих не обрывается за границей холста.
+- Нижние панели — через `useSafeAreaInsets`, цели нажатия — `hitSlop`/`minHeight: 44`.
+
 ## Expo Go / нативные модули
 
 - **MMKV и `@shopify/react-native-skia` не работают в Expo Go** — только dev build (`npx expo run:android`/EAS). Смоук-тест новой игры/фичи обязательно на dev build, не в Expo Go — иначе персистенция и рисование молча не работают.
@@ -58,4 +68,4 @@ async, чтобы не сломать синхронные чтения при �
 - `@typescript-eslint/no-deprecated` ложно срабатывает на `x`/`y` пропсах `<Rect>`/других SVG-фигур из `react-native-svg`: `RectProps.x`/`.y` (позиция, тип `NumberProp`) переопределяют собственным объявлением унаследованный из `TransformProps.x`/`.y` (устаревший shorthand трансформации, тип `NumberArray`) в цепочке `extends CommonPathProps → TransformProps` (баг типов самой библиотеки `react-native-svg`, не проекта). Гасится `/* eslint-disable @typescript-eslint/no-deprecated */` на файл (не построчно — в файлах с доской/сеткой таких срабатываний обычно много), см. `games/CorridorGame/components/CorridorBoard.tsx`. Не путать с реальным устаревшим `runOnJS` (см. выше) — там предупреждение обоснованное.
 - `react/prop-types` + `React.memo`: паттерн `const X: React.FC<Props> = React.memo((props) => ...)` **не распознаётся** — плагин не резолвит пропсы через обёртку `memo`, даже если `Props` — именованный интерфейс (не только инлайн-тип, как считалось раньше). Даёт `react/prop-types` на каждое поле + `react/display-name`. Рабочий фикс — именованная функция с инлайн-типом параметра: `React.memo(function X({ a, b }: XProps) { ... })` (displayName берётся из имени функции автоматически). Системная проблема — тот же паттерн со старым `React.FC<{...}> = React.memo((props) => ...)` есть ещё в `games/BunkerGame/phases/DiscussionPhase.tsx`, `games/SpyHuntGame/phases/PlayingPhase.tsx`, `games/TabooGame/phases/PlayingPhase.tsx`, `games/AliasGame/phases/PlayingPhase.tsx` — не исправлено, чинить тем же способом при следующей правке этих файлов.
 
-_Ревизия: 2026-08-16_
+_Ревизия: 2026-10-18_

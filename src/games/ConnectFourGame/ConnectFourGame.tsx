@@ -138,7 +138,7 @@ export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
     : t(`${NS.CONNECT_FOUR}.currentTurn`, { player: current === 1 ? p1 : p2 });
 
   return (
-    <div className="flex min-h-screen flex-col pb-10">
+    <div className="flex min-h-dvh flex-col pb-10">
       <GameHeader
         title={t(`${NS.CONNECT_FOUR}.title`)}
         subtitle={subtitle}

@@ -116,7 +116,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                     {char.playerName} · {t(`${NS.BUNKER}.ageShort`, { n: char.age })} ·{' '}
                     {char.gender} · {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                   </div>
-                  <div className="truncate text-sm font-bold text-white">{rev.entry.name}</div>
+                  <div className="text-sm leading-tight font-bold wrap-anywhere text-white">{rev.entry.name}</div>
                 </div>
                 {!rev.entry.isPositive && <span className="text-premium-red/70 text-xs">⚠</span>}
               </div>
@@ -140,10 +140,10 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
               }
               return (
                 <div key={char.playerName} className="text-label flex items-start gap-2">
-                  <span className="w-20 flex-shrink-0 truncate font-black text-white/50">
+                  <span className="w-20 flex-shrink-0 leading-tight font-black wrap-anywhere text-white/50">
                     {char.playerName}
                   </span>
-                  <span className="text-white/30">{prev.join(' · ')}</span>
+                  <span className="min-w-0 wrap-anywhere text-white/30">{prev.join(' · ')}</span>
                 </div>
               );
             })}
@@ -163,7 +163,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
               if (Object.values(contrib).every((v) => v === 0)) return null;
               return (
                 <div key={char.playerName} className="flex min-w-0 items-center gap-2">
-                  <span className="w-20 flex-shrink-0 truncate text-xs font-black text-white/50">
+                  <span className="w-20 flex-shrink-0 text-xs leading-tight font-black wrap-anywhere text-white/50">
                     {char.playerName}
                   </span>
                   <ResourceContribRow contrib={contrib} className="flex flex-wrap gap-2" />

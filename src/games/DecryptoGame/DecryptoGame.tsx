@@ -15,6 +15,7 @@ import { DecryptoPhase } from './types';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
+import { FitText } from '@/shared/components/FitText';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { randomInt, shuffle } from '@/shared/helpers/random';
@@ -162,7 +163,7 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
   const guessCorrect = (teamGuess as number[]).join('') === currentCode.join('');
 
   return (
-    <div className="flex min-h-screen flex-col pb-20 text-white">
+    <div className="flex min-h-dvh flex-col pb-20 text-white">
       <GameHeader
         title={t('registry.games.decrypto.title')}
         subtitle={t(`${NS.DECRYPTO}.subtitle`)}
@@ -232,9 +233,12 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 <p className="text-sm font-bold tracking-widest text-white/30 uppercase">
                   {t(`${NS.DECRYPTO}.roundCaptain`, { n: round })}
                 </p>
-                <h2 className={`text-5xl font-black tracking-tight uppercase ${tText(activeTeam)}`}>
+                <FitText
+                  as="h2"
+                  className={`text-5xl font-black tracking-tight uppercase ${tText(activeTeam)}`}
+                >
                   {getCaptainName(activeTeam)}
-                </h2>
+                </FitText>
                 <span
                   className={`inline-block rounded-full px-4 py-1.5 text-xs font-bold tracking-widest uppercase ${tBadge(activeTeam)}`}
                 >
@@ -406,9 +410,12 @@ export const DecryptoGame: React.FC<DecryptoGameProps> = ({ playerNames, onBack 
                 <p className="text-premium-green text-sm font-bold tracking-widest uppercase">
                   {t(`${NS.COMMON}.gameOver`)}
                 </p>
-                <h2 className={`text-5xl font-black uppercase ${winner ? tText(winner) : ''}`}>
+                <FitText
+                  as="h2"
+                  className={`text-5xl font-black uppercase ${winner ? tText(winner) : ''}`}
+                >
                   {winner ? t(`${NS.DECRYPTO}.victory`, { name: teamLabel(winner, t) }) : ''}
-                </h2>
+                </FitText>
               </div>
               <div className="flex gap-4">
                 {(

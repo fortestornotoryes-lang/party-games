@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -29,12 +30,13 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ guesser, onReady }) => {
         <h3 className="text-base font-black tracking-[0.3em] text-white/50 uppercase">
           {t(`${NS.JUST_ONE}.guessing`)}:
         </h3>
-        <h2
+        <FitText
+          as="h2"
           className="text-premium-yellow text-5xl leading-none font-black tracking-tighter uppercase italic"
           style={{ textShadow: '0 0 40px rgba(255,204,31,0.3)' }}
         >
           {guesser}
-        </h2>
+        </FitText>
       </div>
 
       <div className="bg-premium-yellow/[0.05] border-premium-yellow/15 rounded-premium-xl w-full max-w-sm border p-6 text-sm leading-relaxed text-white/40">

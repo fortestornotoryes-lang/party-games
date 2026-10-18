@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import React from 'react';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -31,9 +32,12 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
       className="space-y-8 p-6"
     >
       <div className="space-y-1 pt-2 text-center">
-        <h3 className="text-premium-yellow text-2xl font-black tracking-tighter uppercase italic">
+        <FitText
+          as="h3"
+          className="text-premium-yellow text-2xl font-black tracking-tighter uppercase italic"
+        >
           {guesser}
-        </h3>
+        </FitText>
         <p className="text-sm font-medium text-white/40">{t(`${NS.JUST_ONE}.guessInstruction`)}</p>
       </div>
 
@@ -44,9 +48,9 @@ export const GuessingPhase: React.FC<GuessingPhaseProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: i * 0.07, type: 'spring', stiffness: 320, damping: 22 }}
-            className="bg-premium-yellow/[0.07] border-premium-yellow/20 rounded-premium-md border px-5 py-3"
+            className="bg-premium-yellow/[0.07] border-premium-yellow/20 rounded-premium-md max-w-full border px-5 py-3"
           >
-            <span className="text-premium-yellow text-xl font-black tracking-tight uppercase italic">
+            <span className="text-premium-yellow text-xl font-black tracking-tight wrap-anywhere uppercase italic">
               {hint}
             </span>
           </motion.div>

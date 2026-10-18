@@ -3,6 +3,7 @@ import React from 'react';
 
 import type { Card, Team } from '../types';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -54,7 +55,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
         </p>
       </div>
 
-      <div className="relative grid flex-1 grid-cols-5 items-center gap-1.5">
+      <div className="relative grid flex-1 grid-cols-5 items-center gap-1 sm:gap-1.5">
         <AnimatePresence>
           {!!lastActionMsg && (
             <motion.div
@@ -81,13 +82,15 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
               onCardClick(card);
             }}
             disabled={card.revealed}
-            className={`flex aspect-4/3 items-center justify-center rounded p-1 text-center transition-all ${!card.revealed ? 'cursor-pointer border-b-2 border-stone-400 bg-stone-200 text-stone-800 shadow-md hover:bg-stone-300 active:scale-95' : ''} ${card.revealed && card.color === 'red' ? 'bg-premium-red pointer-events-none border border-red-700 text-white opacity-80' : ''} ${card.revealed && card.color === 'blue' ? 'bg-premium-blue pointer-events-none border border-blue-700 text-white opacity-80' : ''} ${card.revealed && card.color === 'neutral' ? 'pointer-events-none border border-stone-500 bg-stone-400 text-stone-800 opacity-80' : ''} ${card.revealed && card.color === 'assassin' ? 'pointer-events-none border border-black bg-stone-900 text-white opacity-90' : ''} `}
+            className={`flex aspect-4/3 items-center justify-center rounded px-0.5 py-1 text-center transition-all ${!card.revealed ? 'cursor-pointer border-b-2 border-stone-400 bg-stone-200 text-stone-800 shadow-md hover:bg-stone-300 active:scale-95' : ''} ${card.revealed && card.color === 'red' ? 'bg-premium-red pointer-events-none border border-red-700 text-white opacity-80' : ''} ${card.revealed && card.color === 'blue' ? 'bg-premium-blue pointer-events-none border border-blue-700 text-white opacity-80' : ''} ${card.revealed && card.color === 'neutral' ? 'pointer-events-none border border-stone-500 bg-stone-400 text-stone-800 opacity-80' : ''} ${card.revealed && card.color === 'assassin' ? 'pointer-events-none border border-black bg-stone-900 text-white opacity-90' : ''} `}
           >
-            <span
-              className={`text-tag leading-tight font-black wrap-break-word uppercase sm:text-xs ${!card.revealed ? 'text-stone-800' : ''}`}
+            <FitText
+              as="span"
+              className={`text-tag leading-tight font-black tracking-tight uppercase sm:text-xs ${!card.revealed ? 'text-stone-800' : ''}`}
+              minFontSize={7}
             >
               {card.word}
-            </span>
+            </FitText>
           </button>
         ))}
       </div>

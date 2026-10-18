@@ -18,6 +18,7 @@ import { ResistancePhase } from './types';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { MISSION_SIZES } from '@/games/ResistanceGame/constants.ts';
+import { FitText } from '@/shared/components/FitText';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -113,7 +114,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
   };
 
   return (
-    <div className="flex min-h-screen flex-col pb-10">
+    <div className="flex min-h-dvh flex-col pb-10">
       <GameHeader
         title={t('registry.games.resistance.title')}
         subtitle={t(`${NS.RESISTANCE}.missionN`, { n: missionIndex + 1 })}
@@ -165,9 +166,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 <p className="text-tag font-black tracking-widest text-white/80 uppercase">
                   {t(`${NS.RESISTANCE}.missionLeader`)}
                 </p>
-                <h3 className="text-4xl font-black text-white uppercase italic">
+                <FitText as="h3" className="text-4xl font-black text-white uppercase italic">
                   {currentLeader.name}
-                </h3>
+                </FitText>
                 <p className="text-premium-blue mt-2 text-xs font-bold tracking-wider uppercase">
                   {t(`${NS.RESISTANCE}.selectTeam`, { n: missionSize })}
                 </p>
@@ -190,7 +191,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                       )}
                     </div>
                     <span
-                      className={`text-lg font-black tracking-tight uppercase italic ${selectedTeam.includes(p.id) ? 'text-white' : 'text-white/30'}`}
+                      className={`min-w-0 text-lg font-black tracking-tight wrap-anywhere uppercase italic ${selectedTeam.includes(p.id) ? 'text-white' : 'text-white/30'}`}
                     >
                       {p.name}
                     </span>
@@ -245,9 +246,9 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                 <p className="text-tag text-premium-blue mb-2 font-black tracking-widest uppercase">
                   {t(`${NS.RESISTANCE}.votingBadge`)}
                 </p>
-                <h4 className="text-4xl font-black text-white uppercase italic">
+                <FitText as="h4" className="text-4xl font-black text-white uppercase italic">
                   {currentVoter?.name}
-                </h4>
+                </FitText>
               </div>
 
               <div className="grid w-full grid-cols-1 gap-4">
@@ -346,7 +347,7 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
                     .map((p) => (
                       <div
                         key={p.id}
-                        className="bg-premium-red/10 border-premium-red/30 rounded-premium-sm text-premium-red border p-3 font-bold uppercase italic"
+                        className="bg-premium-red/10 border-premium-red/30 rounded-premium-sm text-premium-red border p-3 font-bold wrap-anywhere uppercase italic"
                       >
                         {p.name}
                       </div>

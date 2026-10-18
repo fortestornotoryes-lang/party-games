@@ -3,6 +3,7 @@ import React from 'react';
 
 import type { Team } from '../types';
 
+import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -27,11 +28,11 @@ export const GameOverPhase: React.FC<GameOverPhaseProps> = ({ winner, onRematch 
         <p className="text-premium-green text-sm font-bold tracking-widest uppercase">
           {t(`${NS.COMMON}.gameOver`)}
         </p>
-        <h2
+        <FitText as="h2"
           className={`text-5xl font-black uppercase ${winner === 'red' ? 'text-premium-red' : 'text-premium-blue'}`}
         >
           {winner === 'red' ? t(`${NS.CODENAMES}.redWins`) : t(`${NS.CODENAMES}.blueWins`)}
-        </h2>
+        </FitText>
       </div>
       <PrimaryButton onClick={onRematch} variant="white">
         {t(`${NS.COMMON}.rematch`)}

@@ -86,7 +86,7 @@ export const TelestrationsGallery: React.FC<Props> = ({
         ))}
       </div>
 
-      <div className="pointer-events-none fixed right-0 bottom-0 left-0 bg-gradient-to-t from-[#0a0502] via-[#0a0502]/95 to-transparent p-5">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 bg-gradient-to-t from-[#0a0502] via-[#0a0502]/95 to-transparent px-5 pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
         <div className="pointer-events-auto mx-auto flex max-w-sm flex-col gap-3">
           <button
             onClick={onNewGame}

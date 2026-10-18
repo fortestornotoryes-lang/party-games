@@ -16,7 +16,7 @@
 
 ## Общие компоненты (`src/shared/components/`)
 
-Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Игрокоспецифичные списки — `entities/player/components/`.
+Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Игрокоспецифичные списки — `entities/player/components/`.
 
 ## Анимации
 
@@ -24,4 +24,4 @@
 - Смена фаз/экранов — через `AnimatePresence` с ключом фазы
 - Прогрессивное появление списков — stagger через `delay: index * ...`
 
-_Ревизия: 2026-07-06_
+_Ревизия: 2026-10-18_

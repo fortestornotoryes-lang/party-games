@@ -167,7 +167,7 @@ export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack, onR
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t('registry.games.bunker.title')}
         subtitle={subtitle}

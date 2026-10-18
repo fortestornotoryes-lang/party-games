@@ -78,7 +78,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   if (players.length === 0) return null;
 
   return (
-    <div className="flex min-h-screen flex-col pb-10">
+    <div className="flex min-h-dvh flex-col pb-10">
       <GameHeader
         title={t('registry.games.spy.title')}
         subtitle={subtitle}

@@ -81,7 +81,7 @@ export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onB
   }, [phase, score]);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-dvh flex-col">
       <GameHeader
         title={t('registry.games.wavelength.title')}
         subtitle={t(`${NS.WAVELENGTH}.subtitle`)}

@@ -169,14 +169,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
 
   if (playerNames.length < 4) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-8 text-center text-white">
+      <div className="flex min-h-dvh items-center justify-center p-8 text-center text-white">
         {t(`${NS.CODENAMES}.minPlayers`)}
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col pb-20 text-white">
+    <div className="flex min-h-dvh flex-col pb-20 text-white">
       <GameHeader
         title={t('registry.games.codenames.title')}
         subtitle={t(`${NS.CODENAMES}.subtitle`)}

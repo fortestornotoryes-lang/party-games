@@ -97,7 +97,7 @@ export const Setup: React.FC<SetupProps> = ({
   const titleWords = title.split(' ');
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center px-6 pt-6 pb-24">
+    <div className="relative flex min-h-dvh flex-col items-center px-6 pt-6 pb-24">
       {/* Ambient Background Gradient */}
 
       <motion.div
@@ -161,7 +161,7 @@ export const Setup: React.FC<SetupProps> = ({
             <div className="flex items-center gap-4">
               <button
                 onClick={shufflePlayers}
-                className="text-white/20 transition-all hover:text-white/50 active:scale-90"
+                className="-m-3 p-3 text-white/20 transition-all hover:text-white/50 active:scale-90"
               >
                 <Shuffle className="h-5 w-5" />
               </button>
@@ -203,7 +203,7 @@ export const Setup: React.FC<SetupProps> = ({
       </motion.div>
 
       {/* Footer Buttons */}
-      <div className="fixed right-0 bottom-0 left-0 z-50 bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent p-6">
+      <div className="fixed right-0 bottom-0 left-0 z-50 bg-linear-to-t from-[#0B0915] via-[#0B0915]/95 to-transparent px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
         <div className="mx-auto grid max-w-md grid-cols-[1fr_2fr] gap-5">
           <button
             onClick={() => {

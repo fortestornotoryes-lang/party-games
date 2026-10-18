@@ -89,14 +89,17 @@ const SettingToggle: React.FC<{
   value: boolean;
   onToggle: () => void;
 }> = ({ label, description, value, onToggle }) => (
-  <div className="flex items-center justify-between py-2">
-    <div>
+  <div className="flex items-center justify-between gap-4 py-2">
+    <div className="min-w-0">
       <p className="text-sm font-bold text-white/80">{label}</p>
       <p className="text-tag font-black tracking-widest text-white/25 uppercase">{description}</p>
     </div>
+    {/* before: расширяет зону нажатия до ~44px по высоте, не меняя вид переключателя */}
     <button
+      role="switch"
+      aria-checked={value}
       onClick={onToggle}
-      className={`h-6 w-12 rounded-full p-1 transition-colors ${value ? 'bg-premium-green' : 'bg-white/10'}`}
+      className={`relative h-6 w-12 shrink-0 rounded-full p-1 transition-colors before:absolute before:-inset-x-2 before:-inset-y-3 before:content-[''] ${value ? 'bg-premium-green' : 'bg-white/10'}`}
     >
       <motion.div
         animate={{ x: value ? 24 : 0 }}
