@@ -2,20 +2,26 @@ import { Brain } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import React, { useEffect } from 'react';
 
+import { buildTeams, movePlayerToNextTeam } from './helpers';
 import { getAliasWords } from './model/aliasContent';
 import { GameOverPhase } from './phases/GameOverPhase';
 import { PlayingPhase } from './phases/PlayingPhase';
 import { RoundEndPhase } from './phases/RoundEndPhase';
+import { SetupPhase } from './phases/SetupPhase';
 import { StartPhase } from './phases/StartPhase';
 import type { Team } from './types';
 import { AliasPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
-import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/games/AliasGame/constants.ts';
+import {
+  ALIAS_DIFFICULTY_CONFIG,
+  MIN_TEAMS,
+  TEAM_STYLES,
+  WIN_SCORE,
+} from '@/games/AliasGame/constants.ts';
 import { GameHeader } from '@/shared/components/GameHeader';
-import { pickRandom, shuffle } from '@/shared/helpers/random';
-import { splitInHalf } from '@/shared/helpers/teams';
+import { pickRandom } from '@/shared/helpers/random';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -28,15 +34,12 @@ interface AliasGameProps {
   onBack: () => void;
 }
 
-// Отображаемые имена команд резолвятся по color через t(alias.teamRed/teamBlue)
-const TEAM_COLORS = ['red', 'blue'] as const;
-
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
   const { difficulty } = useGameSettings();
   const [teams, setTeams] = usePersistedState<Team[]>(GameKey.Alias, 'teams', []);
   const [currentTeamIdx, setCurrentTeamIdx] = usePersistedState(GameKey.Alias, 'currentTeamIdx', 0);
-  const [phase, setPhase] = usePersistedState<AliasPhase>(GameKey.Alias, 'phase', AliasPhase.Start);
+  const [phase, setPhase] = usePersistedState<AliasPhase>(GameKey.Alias, 'phase', AliasPhase.Setup);
   const [currentWord, setCurrentWord] = usePersistedState(GameKey.Alias, 'currentWord', '');
   const [roundScore, setRoundScore] = usePersistedState(GameKey.Alias, 'roundScore', 0);
 
@@ -63,13 +66,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   useEffect(() => {
     // Команды уже восстановлены из сессии — не перетасовываем заново.
     if (teams.length > 0) return;
-    const [teamA, teamB] = splitInHalf(shuffle(playerNames));
-    setTeams([
-      { color: TEAM_COLORS[0], players: teamA, score: 0 },
-      { color: TEAM_COLORS[1], players: teamB, score: 0 },
-    ]);
+    setTeams(buildTeams(playerNames, MIN_TEAMS));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerNames]);
+
+  // Смена числа команд и «Перемешать» — новая случайная раздача; ручные правки сбрасываются.
+  const reshuffle = (count: number) => { setTeams(buildTeams(playerNames, count)); };
 
   const nextWord = () => {
     const available = getAliasWords(difficulty);
@@ -102,7 +104,9 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
   const finishRound = () => {
     const updatedTeams = teams.map((t, i) =>
-      i === currentTeamIdx ? { ...t, score: t.score + roundScore } : t
+      i === currentTeamIdx
+        ? { ...t, score: t.score + roundScore, turnsPlayed: (t.turnsPlayed ?? 0) + 1 }
+        : t
     );
     setTeams(updatedTeams);
     if (updatedTeams[currentTeamIdx].score >= WIN_SCORE) {
@@ -119,9 +123,10 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     feedbackService.vibrate(VIBRATE.win);
     feedbackService.celebrate('win', {
       origin: { y: 0.6 },
-      colors: currentTeamIdx === 0 ? ['#FF2E4D', '#ffffff'] : ['#3F7BFF', '#ffffff'],
+      colors: [TEAM_STYLES[teams[currentTeamIdx].color].confetti, '#ffffff'],
     });
-  }, [phase, currentTeamIdx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   if (teams.length === 0) return null;
 
@@ -139,6 +144,17 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
 
       <div className="flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
+          {phase === AliasPhase.Setup && (
+            <SetupPhase
+              teams={teams}
+              playersCount={playerNames.length}
+              onTeamsCountChange={reshuffle}
+              onShuffle={() => { reshuffle(teams.length); }}
+              onMovePlayer={(player) => { setTeams((prev) => movePlayerToNextTeam(prev, player)); }}
+              onStart={() => { setPhase(AliasPhase.Start); }}
+            />
+          )}
+
           {phase === AliasPhase.Start && (
             <StartPhase teams={teams} currentTeamIdx={currentTeamIdx} onStart={startRound} />
           )}
