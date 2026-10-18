@@ -515,7 +515,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                       setValidationError(null);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleAdd();
+                      if (e.key === 'Enter') void handleAdd();
                     }}
                     className="flex-1"
                   />
@@ -611,7 +611,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                           </span>
                           <button
                             onClick={() => {
-                              handleRemove(word);
+                              void handleRemove(word);
                             }}
                             className="hover:text-premium-red rounded-premium-xs shrink-0 p-1 text-white/15 transition-all active:scale-90"
                           >
