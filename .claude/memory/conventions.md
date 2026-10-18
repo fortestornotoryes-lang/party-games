@@ -30,6 +30,7 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 - Пулы контента: `shared/helpers/contentPool.ts` — `availableFromPool` / `drawFromPool` / `drawBatchFromPool`. Used-слова хранятся per-gameId в `storageService`, при исчерпании пул автосбрасывается. Не выбирать слова вручную мимо этих хелперов.
 - Если игра берёт слова сразу из нескольких сложностей (Крокодил), у каждой сложности свой used-ключ (`poolGameId` в `CrocodileGame/constants.ts`): `availableFromPool` при исчерпании сбрасывает used всего `gameId`, общий ключ обнулил бы историю соседних сложностей.
+- Слова Крокодила (`CrocodileGame/content.ts`): не длиннее 2 слов (правило игры). Счёт слов по пробелам; дефис не разделяет (`Винни-Пух` — 1 слово).
 - Кастомные слова: общие (`getCustomWords(gameId)`) + привязанные к сложности через keyed-хранилище (`getCustomWordsByKey('<gameId>_<difficulty>')`); объединение — `getAllCustomWords`
 - Контент игры — `content.ts` или `contents/` в папке игры, разбит по `Difficulty`
 
