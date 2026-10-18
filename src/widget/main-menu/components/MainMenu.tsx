@@ -25,6 +25,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
   useEffect(() => {
     setCurrentGameId(null);
+    // Только при маунте: setCurrentGameId из контекста пересоздаётся каждый рендер,
+    // в deps он перезапускал бы эффект.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getGameStats = (gameId: GameKey) => {

@@ -7,7 +7,8 @@ const STORAGE_KEYS = {
   HISTORY: 'party_app_history',
 };
 
-type GameDictionary = Record<string, string[]>;
+// Partial: данные из localStorage — ключа игры может не быть
+type GameDictionary = Partial<Record<string, string[]>>;
 
 export interface GameSettings {
   spyHuntTimer?: number;
@@ -48,16 +49,16 @@ export const storageService = {
   // Used Words
   getUsedWords: (gameId: string): string[] => {
     const used = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
-    return used[gameId] || [];
+    return used[gameId] ?? [];
   },
   getUsedWordsAsync: (gameId: string): Promise<string[]> => {
     return Promise.resolve(storageService.getUsedWords(gameId));
   },
   markWordAsUsed: (gameId: string, word: string) => {
     const used = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
-    if (!used[gameId]) used[gameId] = [];
-    if (!used[gameId].includes(word)) {
-      used[gameId].push(word);
+    const list = (used[gameId] ??= []);
+    if (!list.includes(word)) {
+      list.push(word);
       localStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
     }
   },
@@ -81,7 +82,7 @@ export const storageService = {
       localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
       {}
     );
-    return custom[gameId] || [];
+    return custom[gameId] ?? [];
   },
   getCustomWordsAsync: (gameId: string): Promise<string[]> => {
     return Promise.resolve(storageService.getCustomWords(gameId));
@@ -91,9 +92,9 @@ export const storageService = {
       localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
       {}
     );
-    if (!custom[gameId]) custom[gameId] = [];
-    if (!custom[gameId].includes(word)) {
-      custom[gameId].push(word);
+    const list = (custom[gameId] ??= []);
+    if (!list.includes(word)) {
+      list.push(word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
     }
   },
@@ -106,8 +107,9 @@ export const storageService = {
       localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
       {}
     );
-    if (custom[gameId]) {
-      custom[gameId] = custom[gameId].filter((w: string) => w !== word);
+    const list = custom[gameId];
+    if (list) {
+      custom[gameId] = list.filter((w) => w !== word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
     }
   },
@@ -130,23 +132,23 @@ export const storageService = {
 
   // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
   getCustomWordsByKey: (key: string): string[] => {
-    const store = safeParseJson<Record<string, string[]>>(
+    const store = safeParseJson<GameDictionary>(
       localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
       {}
     );
-    return store[key] || [];
+    return store[key] ?? [];
   },
   getCustomWordsByKeyAsync: (key: string): Promise<string[]> => {
     return Promise.resolve(storageService.getCustomWordsByKey(key));
   },
   addCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<Record<string, string[]>>(
+    const store = safeParseJson<GameDictionary>(
       localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
       {}
     );
-    if (!store[key]) store[key] = [];
-    if (!store[key].includes(word)) {
-      store[key].push(word);
+    const list = (store[key] ??= []);
+    if (!list.includes(word)) {
+      list.push(word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
     }
   },
@@ -155,12 +157,13 @@ export const storageService = {
     storageService.addCustomWordByKey(key, word);
   },
   removeCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<Record<string, string[]>>(
+    const store = safeParseJson<GameDictionary>(
       localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
       {}
     );
-    if (store[key]) {
-      store[key] = store[key].filter((w) => w !== word);
+    const list = store[key];
+    if (list) {
+      store[key] = list.filter((w) => w !== word);
       localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
     }
   },

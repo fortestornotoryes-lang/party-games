@@ -260,7 +260,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       const newScores = { ...scores };
       let anySuccess = false;
 
-      blitzResults.forEach((result, i) => {
+      for (const [i, result] of blitzResults.entries()) {
         if (result.status === 'guessed') {
           const guesser = guessers[i] ?? null;
           if (guesser) {
@@ -271,7 +271,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
           // skipped → penalty for explainer
           newScores[currentExplainer] = (newScores[currentExplainer] ?? 0) - 1;
         }
-      });
+      }
 
       if (anySuccess) {
         feedbackService.playSound('success');

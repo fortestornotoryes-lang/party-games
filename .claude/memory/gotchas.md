@@ -60,6 +60,7 @@
 - `Array(n).fill(x)` даёт `any[]` (no-unsafe-assignment) — писать `Array<T>(n).fill(x)`; вместо `[...Array(n)].map` — `Array.from({ length: n }).map`.
 - `react/prop-types` не резолвит `React.InputHTMLAttributes` как тип пропсов — используемые в компоненте пропсы (напр. `className`) объявлять явно в локальном интерфейсе (см. `shared/components/TextInput.tsx`).
 - `react-hooks/exhaustive-deps` (предупреждение): сеттеры из `usePersistedState` — это обычный `setState`, стабильны → смело добавлять в deps. Исключение: `setCurrentGameId` из `useGameSettings()` пересоздаётся каждый рендер провайдера — в deps эффекта MainMenu его **не** добавлять (эффект начнёт перезапускаться).
+- `no-unnecessary-condition` (предупреждение) врёт на `record[key] ?? fallback` и `arr[i]?.x`: `noUncheckedIndexedAccess` выключен, TS считает доступ по индексу всегда успешным. **Не удалять** такие проверки — данные часто из localStorage/битых настроек. Честный фикс — `Partial<Record<…>>` (см. `GameDictionary` в `storageService.ts`). Флаг, выставляемый внутри `forEach`-колбэка, TS тоже не видит → `for…of`.
 - `react/jsx-no-leaked-render` выключено в `eslint.config.js` (не видит типов, конфликтовало с `no-unnecessary-type-conversion`, которое запрещает `!!` на boolean). Писать `{flag && …}` без `!!`; число слева от `&&` (рендерит `0`) — ловить на ревью, использовать `n > 0 &&`.
 
 _Ревизия: 2026-10-18_
