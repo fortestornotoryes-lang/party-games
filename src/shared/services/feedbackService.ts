@@ -129,7 +129,9 @@ export const feedbackService = {
   },
 
   // Sound Effects using Web Audio API
-  playSound: (type: 'success' | 'click' | 'error' | 'start' | 'win' | 'timeout') => {
+  playSound: (
+    type: 'success' | 'click' | 'error' | 'start' | 'win' | 'timeout' | 'tick' | 'tickUrgent'
+  ) => {
     void storageService.getSettingsAsync().then(({ sounds }) => {
       if (!sounds) return;
 
@@ -208,6 +210,24 @@ export const feedbackService = {
             gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
             osc.start(now);
             osc.stop(now + 0.4);
+            break;
+          case 'tick':
+            // Тихий сухой «тик» секундомера
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(1000, now);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+            osc.start(now);
+            osc.stop(now + 0.04);
+            break;
+          case 'tickUrgent':
+            // Тик последних секунд — выше и громче
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(1500, now);
+            gain.gain.setValueAtTime(0.07, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+            osc.start(now);
+            osc.stop(now + 0.06);
             break;
         }
       } catch (e) {

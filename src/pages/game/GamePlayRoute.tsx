@@ -65,6 +65,9 @@ const CorridorGame = lazy(() =>
 const MemoRiskGame = lazy(() =>
   import('@/games/MemoRiskGame/MemoRiskGame').then((m) => ({ default: m.MemoRiskGame }))
 );
+const CrocodileGame = lazy(() =>
+  import('@/games/CrocodileGame/CrocodileGame').then((m) => ({ default: m.CrocodileGame }))
+);
 
 // Все игры получают единый набор пропсов GameComponentProps;
 // каждая объявляет нужное ей подмножество (onRestart — Bunker,
@@ -88,6 +91,7 @@ const GAME_COMPONENTS: Record<GameKey, ComponentType<GameComponentProps>> = {
   [GameKey.Millionaire]: MillionaireGame,
   [GameKey.Corridor]: CorridorGame,
   [GameKey.MemoRisk]: MemoRiskGame,
+  [GameKey.Crocodile]: CrocodileGame,
 };
 
 /** Экран самой игры: резолвит игроков и рендерит компонент по gameKey. */

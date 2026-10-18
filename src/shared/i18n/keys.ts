@@ -23,4 +23,5 @@ export const NS = {
   TABOO_REVERSE: 'taboo_reverse',
   CORRIDOR: 'corridor',
   MEMO_RISK: 'memo_risk',
+  CROCODILE: 'crocodile',
 } as const;

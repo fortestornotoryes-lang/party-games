@@ -65,6 +65,32 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
         'Утвержденная команда тайно сдает карты «Успех» или «Саботаж». Повстанцы всегда голосуют за успех, шпионам достаточно одной карты саботажа для провала миссии.',
     },
   ],
+  [GameKey.Crocodile]: [
+    {
+      title: 'Команды и цель',
+      content:
+        'Разделитесь на команды и выберите, до скольких очков играете. Команды ходят по очереди, а объясняющий в команде меняется каждый раунд.',
+    },
+    {
+      title: 'Выбор слова',
+      content:
+        'Объясняющему показывают три слова: лёгкое (1 очко, 1 минута), среднее (2 очка, 1:30) и сложное (3 очка, 2 минуты). Остальные в это время не смотрят в экран.',
+    },
+    {
+      title: 'Замена слов',
+      content:
+        'Если ни одно слово не подходит, можно заменить сразу все три — это стоит команде 1 очко.',
+    },
+    {
+      title: 'Объяснение',
+      content:
+        'Время идёт после выбора слова. Объясняйте словами, жестами или рисунками — как договорились. Угадали вовремя — команда получает очки слова, не успели — ничего.',
+    },
+    {
+      title: 'Победа',
+      content: 'Выигрывает первая команда, набравшая выбранное число очков.',
+    },
+  ],
   [GameKey.Alias]: [
     {
       title: 'Команды',
@@ -426,6 +452,31 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
       title: 'Missions',
       content:
         'The approved team secretly plays "Success" or "Sabotage" cards. Resistance always plays success; a single sabotage card fails the mission.',
+    },
+  ],
+  [GameKey.Crocodile]: [
+    {
+      title: 'Teams and goal',
+      content:
+        'Split into teams and choose the score you play to. Teams take turns, and the explainer within a team changes every round.',
+    },
+    {
+      title: 'Picking a word',
+      content:
+        'The explainer sees three words: easy (1 point, 1 minute), medium (2 points, 1:30) and hard (3 points, 2 minutes). Everyone else looks away from the screen.',
+    },
+    {
+      title: 'Replacing words',
+      content: 'If none of the words fit, you can replace all three at once — it costs the team 1 point.',
+    },
+    {
+      title: 'Explaining',
+      content:
+        'The timer starts once the word is picked. Explain with words, gestures or drawings — however you agreed. Guessed in time: the team gets the word’s points; otherwise nothing.',
+    },
+    {
+      title: 'Victory',
+      content: 'The first team to reach the chosen score wins.',
     },
   ],
   [GameKey.Alias]: [

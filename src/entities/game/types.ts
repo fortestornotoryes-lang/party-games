@@ -22,6 +22,7 @@ export const GameKey = {
   Millionaire: 'millionaire',
   Corridor: 'corridor',
   MemoRisk: 'memo_risk',
+  Crocodile: 'crocodile',
 } as const;
 
 export type GameKey = (typeof GameKey)[keyof typeof GameKey];

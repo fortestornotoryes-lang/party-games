@@ -423,6 +423,43 @@ export interface AliasTranslations {
   mainMenu: string; // "В ГЛАВНОЕ МЕНЮ"
 }
 
+export interface CrocodileTranslations {
+  subtitle: string; // "Покажи и объясни"
+  teamRed: string;
+  teamBlue: string;
+  teamGreen: string;
+  teamYellow: string;
+  teamsCount: string; // "Количество команд"
+  targetScore: string; // "Играем до очков"
+  shuffleTeams: string; // "Перемешать"
+  moveHint: string; // "Нажми на игрока, чтобы перенести его в следующую команду"
+  teamTooSmall: string; // "В каждой команде минимум {{n}} игрока"
+  startGame: string; // "К ИГРЕ"
+  explains: string; // "Объясняет"
+  guessers: string; // "Угадывают"
+  toWords: string; // "ВЫБРАТЬ СЛОВО"
+  chooseWord: string; // "Выбери слово"
+  chooseHint: string; // "Экран видит только объясняющий. Время пойдёт после выбора."
+  levelEasy: string; // "Легко"
+  levelMedium: string; // "Средне"
+  levelHard: string; // "Сложно"
+  pointsValue: string; // "{{n}} оч."
+  replaceAll: string; // "Заменить все слова (−{{n}})"
+  explainWord: string; // "Объясни слово"
+  scoreLabel: string; // "Счёт"
+  guessed: string; // "Угадали"
+  giveUp: string; // "Сдаёмся"
+  timeUp: string; // "Время вышло"
+  roundGuessed: string; // "Слово угадано!"
+  roundFailed: string; // "Не угадали"
+  wordWas: string; // "Было загадано"
+  pointsPerRound: string; // "Очков за раунд"
+  continueBtn: string; // "ПРОДОЛЖИТЬ"
+  victory: string; // "ПОБЕДА!"
+  winningTeam: string; // "Команда {{name}}"
+  mainMenu: string; // "В ГЛАВНОЕ МЕНЮ"
+}
+
 export interface SpyHuntTranslations {
   // SpyHuntGame.tsx subtitles
   subtitleDistributing: string; // 'Раздача ролей'
@@ -769,6 +806,7 @@ export interface Translations {
   taboo_reverse?: TabooReverseTranslations;
   corridor?: CorridorTranslations;
   memo_risk?: MemoRiskTranslations;
+  crocodile?: CrocodileTranslations;
 
   // Игры добавляются инкрементально по мере запуска /i18n-game <gameKey>
   [gameKey: string]:
@@ -795,5 +833,6 @@ export interface Translations {
     | TabooReverseTranslations
     | CorridorTranslations
     | MemoRiskTranslations
+    | CrocodileTranslations
     | undefined;
 }

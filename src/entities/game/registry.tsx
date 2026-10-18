@@ -4,6 +4,7 @@ import {
   Brain,
   Clock,
   Crown,
+  Drama,
   Flame,
   Grid,
   Key,
@@ -276,6 +277,15 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       const secStr = t('registry.sublabels.seconds', { n: roundTime });
       return remaining !== undefined ? `${secStr} · ${remaining}` : secStr;
     },
+  },
+  [GameKey.Crocodile]: {
+    id: GameKey.Crocodile,
+    icon: Drama,
+    theme: 'lime',
+    players: '4+',
+    minPlayers: 4,
+    // Сложность выбирает объясняющий в каждом раунде (3 слова), общей настройки нет
+    hasDifficulty: false,
   },
   [GameKey.Resistance]: {
     id: GameKey.Resistance,
