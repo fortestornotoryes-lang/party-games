@@ -59,5 +59,7 @@
 - React 19: `React.FormEvent`/`FormEventHandler` deprecated — для submit-хендлеров типизировать `React.SyntheticEvent<HTMLFormElement>`.
 - `Array(n).fill(x)` даёт `any[]` (no-unsafe-assignment) — писать `Array<T>(n).fill(x)`; вместо `[...Array(n)].map` — `Array.from({ length: n }).map`.
 - `react/prop-types` не резолвит `React.InputHTMLAttributes` как тип пропсов — используемые в компоненте пропсы (напр. `className`) объявлять явно в локальном интерфейсе (см. `shared/components/TextInput.tsx`).
+- `react-hooks/exhaustive-deps` (предупреждение): сеттеры из `usePersistedState` — это обычный `setState`, стабильны → смело добавлять в deps. Исключение: `setCurrentGameId` из `useGameSettings()` пересоздаётся каждый рендер провайдера — в deps эффекта MainMenu его **не** добавлять (эффект начнёт перезапускаться).
+- `react/jsx-no-leaked-render` срабатывает и на чисто булевых флагах — реальный баг только когда слева от `&&` число.
 
 _Ревизия: 2026-10-18_

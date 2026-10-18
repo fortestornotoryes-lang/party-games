@@ -18,7 +18,6 @@ import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 
-
 interface JustOneGameProps {
   playerNames: string[];
   onBack: () => void;
@@ -66,11 +65,14 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
     setPhase(JustOnePhase.Pass);
   }
 
-  const submitHint = useCallback((player: string, hint: string) => {
-    const trimmed = hint.trim().toLowerCase();
-    if (!trimmed) return;
-    setHints((prev) => (prev[player] === trimmed ? prev : { ...prev, [player]: trimmed }));
-  }, []);
+  const submitHint = useCallback(
+    (player: string, hint: string) => {
+      const trimmed = hint.trim().toLowerCase();
+      if (!trimmed) return;
+      setHints((prev) => (prev[player] === trimmed ? prev : { ...prev, [player]: trimmed }));
+    },
+    [setHints]
+  );
 
   const startGuessing = useCallback(() => {
     const counts: Record<string, number> = {};
@@ -82,7 +84,7 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
 
     setVisibleHints(vals.filter((h) => counts[h] === 1));
     setPhase(JustOnePhase.Guessing);
-  }, [hints]);
+  }, [hints, setPhase, setVisibleHints]);
 
   const handleGuess = useCallback(() => {
     const correct = guess.trim().toLowerCase() === word.toLowerCase();
@@ -97,11 +99,11 @@ export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack })
       feedbackService.vibrate(VIBRATE.error);
     }
     setPhase(JustOnePhase.Result);
-  }, [guess, word]);
+  }, [guess, setIsCorrect, setPhase, word]);
 
   const handleReady = useCallback(() => {
     setPhase(JustOnePhase.Hinting);
-  }, []);
+  }, [setPhase]);
 
   const hinters = useMemo(
     () => playerNames.filter((_, i) => i !== guesserIdx),

@@ -172,6 +172,7 @@ export const useMemoRiskGameLogic = (playerNames: string[], onBack: () => void) 
     setCards,
     setPhase,
     setRound,
+    setEscalation,
     setTurn,
   ]);
 

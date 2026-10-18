@@ -99,11 +99,11 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     resetTimer(cardTimer);
     startTimer();
     setPhase(TabooPhase.Playing);
-  }, [cardTimer, resetTimer, startTimer]);
+  }, [cardTimer, resetTimer, setPhase, setTimedOut, startTimer]);
 
   const handleGuessed = useCallback(() => {
     setPhase(TabooPhase.Verdict);
-  }, []);
+  }, [setPhase]);
 
   const handleVerdict = useCallback(
     (guesser: string | null, penalty = false) => {
@@ -135,12 +135,24 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
       setExplainerIdx((i) => i + 1);
       setPhase(TabooPhase.Pass);
     },
-    [card, currentExplainer, difficulty, scores, usedCardIds]
+    [
+      card,
+      currentExplainer,
+      difficulty,
+      scores,
+      setCard,
+      setExplainerIdx,
+      setPhase,
+      setRoundNum,
+      setScores,
+      setUsedCardIds,
+      usedCardIds,
+    ]
   );
 
   const handleStopGame = useCallback(() => {
     setPhase(TabooPhase.GameOver);
-  }, []);
+  }, [setPhase]);
 
   const handleRematch = useCallback(() => {
     setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));
@@ -148,7 +160,16 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     setRoundNum(1);
     setCard(getNextTabooClassicCard(difficulty, usedCardIds));
     setPhase(TabooPhase.Pass);
-  }, [difficulty, playerNames, usedCardIds]);
+  }, [
+    difficulty,
+    playerNames,
+    setCard,
+    setExplainerIdx,
+    setPhase,
+    setRoundNum,
+    setScores,
+    usedCardIds,
+  ]);
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (

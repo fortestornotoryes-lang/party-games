@@ -73,7 +73,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
 
   const initQuestionsForPlayer = useCallback(() => {
     setCurrentQuestions(getMillionaireQuestions());
-  }, []);
+  }, [setCurrentQuestions]);
 
   useEffect(() => {
     if (phase !== MillionairePhase.Reveal) return;
@@ -97,7 +97,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
     return () => {
       clearTimeout(timer);
     };
-  }, [phase, isCorrect, questionIndex, currentPlayer]);
+  }, [phase, isCorrect, questionIndex, currentPlayer, setPlayerScores, setPhase]);
 
   const handlePassDone = () => {
     initQuestionsForPlayer();

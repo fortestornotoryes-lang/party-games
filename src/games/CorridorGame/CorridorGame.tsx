@@ -1,5 +1,5 @@
 import { Route } from 'lucide-react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { ActionControls } from './components/ActionControls';
 import type { HoveredSlot } from './components/CorridorBoard';
@@ -46,13 +46,16 @@ export const CorridorGame: React.FC<Props> = ({ playerNames, onBack }) => {
   );
   const [hovered, setHovered] = useState<HoveredSlot | null>(null);
 
-  const moves = winner ? [] : validMoves(current, pawns, hWalls, vWalls);
+  const moves = useMemo(
+    () => (winner ? [] : validMoves(current, pawns, hWalls, vWalls)),
+    [winner, current, pawns, hWalls, vWalls]
+  );
   const curColor = PLAYER_COLOR[current];
 
   const nextTurn = useCallback(() => {
     setCurrent((c) => (c === 1 ? 2 : 1));
     setActionMode(ActionMode.Move);
-  }, []);
+  }, [setActionMode, setCurrent]);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -66,7 +69,7 @@ export const CorridorGame: React.FC<Props> = ({ playerNames, onBack }) => {
       }
       nextTurn();
     },
-    [winner, actionMode, moves, current, pawns, nextTurn]
+    [winner, actionMode, moves, pawns, current, setPawns, nextTurn, setWinner]
   );
 
   const handleWallClick = useCallback(
@@ -89,7 +92,19 @@ export const CorridorGame: React.FC<Props> = ({ playerNames, onBack }) => {
       setWallsLeft((prev) => ({ ...prev, [current]: prev[current] - 1 }));
       nextTurn();
     },
-    [winner, actionMode, wallsLeft, current, hWalls, vWalls, pawns, nextTurn]
+    [
+      winner,
+      actionMode,
+      wallsLeft,
+      current,
+      hWalls,
+      vWalls,
+      pawns,
+      setHWalls,
+      setVWalls,
+      setWallsLeft,
+      nextTurn,
+    ]
   );
 
   const handleRestart = useCallback(() => {
@@ -101,7 +116,7 @@ export const CorridorGame: React.FC<Props> = ({ playerNames, onBack }) => {
     setWinner(null);
     setActionMode(ActionMode.Move);
     setHovered(null);
-  }, []);
+  }, [setActionMode, setCurrent, setHWalls, setPawns, setVWalls, setWallsLeft, setWinner]);
 
   return (
     <div className="relative flex flex-col" style={{ minHeight: '100dvh' }}>

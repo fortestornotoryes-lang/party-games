@@ -121,7 +121,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       setUsedCardIds(effectiveUsed);
       setCard(getNextTabooCard(difficulty, effectiveUsed));
     },
-    [difficulty]
+    [difficulty, setCard, setUsedCardIds]
   );
 
   // ── Timer ─────────────────────────────────────────────────────────────────
@@ -129,7 +129,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     feedbackService.vibrate(VIBRATE.timeout);
     setTimedOut(true);
     setPhase(isBlitz ? TabooReversePhase.BlitzVerdict : TabooReversePhase.Verdict);
-  }, [isBlitz]);
+  }, [isBlitz, setPhase, setTimedOut]);
 
   const {
     timeLeft,
@@ -165,7 +165,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     resetTimer(cardTimer);
     startTimer();
     setPhase(TabooReversePhase.Playing);
-  }, [cardTimer, resetTimer, startTimer]);
+  }, [cardTimer, resetTimer, setBlitzResults, setPhase, setTimedOut, setUsedWordIdxs, startTimer]);
 
   // Called when "УГАДАНО!" is pressed during Playing.
   // Classic/team → go to Verdict.  Blitz → record and load next card.
@@ -178,26 +178,29 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     } else {
       setPhase(TabooReversePhase.Verdict);
     }
-  }, [isBlitz, card, usedCardIds, cycleCard]);
+  }, [isBlitz, setBlitzResults, cycleCard, card, usedCardIds, setPhase]);
 
   // Blitz only: skip current card (−1 to explainer)
   const handleSkip = useCallback(() => {
     setBlitzResults((prev) => [...prev, { card, status: 'skipped' }]);
     feedbackService.vibrate(VIBRATE.error);
     cycleCard(card, usedCardIds);
-  }, [card, usedCardIds, cycleCard]);
+  }, [setBlitzResults, cycleCard, card, usedCardIds]);
 
-  const handleToggleWord = useCallback((i: number) => {
-    setUsedWordIdxs((prev) => {
-      const next = new Set(prev);
-      if (next.has(i)) {
-        next.delete(i);
-      } else {
-        next.add(i);
-      }
-      return next;
-    });
-  }, []);
+  const handleToggleWord = useCallback(
+    (i: number) => {
+      setUsedWordIdxs((prev) => {
+        const next = new Set(prev);
+        if (next.has(i)) {
+          next.delete(i);
+        } else {
+          next.add(i);
+        }
+        return next;
+      });
+    },
+    [setUsedWordIdxs]
+  );
 
   // Classic / team mode verdict
   const handleVerdict = useCallback(
@@ -235,7 +238,21 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       setUsedWordIdxs(new Set());
       setPhase(TabooReversePhase.Pass);
     },
-    [card, currentExplainer, difficulty, scores, usedCardIds, usedWordIdxs]
+    [
+      card,
+      currentExplainer,
+      difficulty,
+      scores,
+      setCard,
+      setExplainerIdx,
+      setPhase,
+      setRoundNum,
+      setScores,
+      setUsedCardIds,
+      setUsedWordIdxs,
+      usedCardIds,
+      usedWordIdxs.size,
+    ]
   );
 
   // Blitz verdict: guessers[i] = player name or null for each blitzResult
@@ -271,12 +288,21 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       setExplainerIdx((i) => i + 1);
       setPhase(TabooReversePhase.Pass);
     },
-    [blitzResults, currentExplainer, scores]
+    [
+      blitzResults,
+      currentExplainer,
+      scores,
+      setBlitzResults,
+      setExplainerIdx,
+      setPhase,
+      setRoundNum,
+      setScores,
+    ]
   );
 
   const handleStopGame = useCallback(() => {
     setPhase(TabooReversePhase.GameOver);
-  }, []);
+  }, [setPhase]);
 
   const handleRematch = useCallback(() => {
     setScores(Object.fromEntries(playerNames.map((p) => [p, 0])));
@@ -285,7 +311,17 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     setBlitzResults([]);
     setCard(getNextTabooCard(difficulty, usedCardIds));
     setPhase(TabooReversePhase.Pass);
-  }, [difficulty, playerNames, usedCardIds]);
+  }, [
+    difficulty,
+    playerNames,
+    setBlitzResults,
+    setCard,
+    setExplainerIdx,
+    setPhase,
+    setRoundNum,
+    setScores,
+    usedCardIds,
+  ]);
 
   // ── Blitz stats (shown inside PlayingPhase) ────────────────────────────────
   const blitzStats = {
