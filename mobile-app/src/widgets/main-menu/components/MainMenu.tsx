@@ -5,7 +5,7 @@ import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GameMenuCard } from '@/entities/game/components/GameMenuCard';
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useCurrentGame } from '@/entities/game/model/GameSettingsContext';
 import type { GameKey } from '@/entities/game/types';
 import { useLocalizedGames } from '@/entities/game/useLocalizedGame';
 import { contentService } from '@/features/word-stats/model/contentService';
@@ -18,7 +18,7 @@ interface MainMenuProps {
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
-  const { setCurrentGameId } = useGameSettings();
+  const { setCurrentGameId } = useCurrentGame();
   const { t: tr } = useTranslation();
   const GAMES = useLocalizedGames();
   const insets = useSafeAreaInsets();
@@ -37,7 +37,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
   };
 
   useEffect(() => {
-    void setCurrentGameId(null);
+    setCurrentGameId(null);
     // Намеренно только при маунте — сброс выбранной игры при возврате в меню
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -128,8 +128,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
         onRequestClose={closeDescription}
       >
         <Pressable className="flex-1 bg-black/60" onPress={closeDescription} />
-        <AnimatePresence onExitComplete={() => setDescriptionGameId(null)}>
-          {isSheetOpen && !!descriptionGame && !!dt && (
+        <AnimatePresence onExitComplete={() => { setDescriptionGameId(null); }}>
+          {!!isSheetOpen && !!descriptionGame && !!dt && (
           <MotiView
             from={{ translateY: 400 }}
             animate={{ translateY: 0 }}
@@ -217,7 +217,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
               </View>
             </View>
           </MotiView>
-          )}
+        )}
         </AnimatePresence>
       </Modal>
     </ScrollView>

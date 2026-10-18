@@ -22,7 +22,7 @@ import type {
 } from './types';
 import { BunkerPhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { CATASTROPHE_SCENARIOS, SURVIVAL_EVENTS } from '@/games/BunkerGame/contents';
 import { calculateSurvival, generateCharacter } from '@/games/BunkerGame/helpers';
@@ -40,7 +40,7 @@ interface BunkerGameProps {
 
 export const BunkerGame: React.FC<BunkerGameProps> = ({ playerNames, onBack, onRestart }) => {
   const { t } = useTranslation();
-  const { mode, difficulty, rounds, countHiddenTraits } = useGameSettings();
+  const { mode, difficulty, rounds, countHiddenTraits } = useGameConfig();
   const insets = useSafeAreaInsets();
   const totalRounds = Math.max(3, Math.min(7, rounds));
   const isDictator = mode === BUNKER_MODES.DICTATOR;

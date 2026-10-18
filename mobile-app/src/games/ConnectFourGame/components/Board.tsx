@@ -41,7 +41,7 @@ export const Board: React.FC<Props> = ({
   return (
     <>
       {/* Индикатор колонок, доступных для Pop Out */}
-      {isPopOut && action === C4Action.Pop && !gameOver && (
+      {!!isPopOut && action === C4Action.Pop && !gameOver && (
         <View className="flex-row flex-wrap px-[3px]">
           {Array.from({ length: cols }, (_, c) => {
             const showPopDot = canPopColumn(board, c, current);

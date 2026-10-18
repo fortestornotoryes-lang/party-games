@@ -17,7 +17,7 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 ## Настройки игры (difficulty / mode / rounds / timer)
 
-- Читаются через `useGameSettings()` (`entities/game/model/GameSettingsContext.tsx`)
+- Два раздельных контекста в `entities/game/model/GameSettingsContext.tsx` (разделены 2026-08-16, чтобы смена конфига не ре-рендерила навигационный код и наоборот): `useCurrentGame()` — `{ currentGameId, setCurrentGameId }`, только для роутов/меню (`_layout.tsx`, `index.tsx`, `MainMenu.tsx`); `useGameConfig()` — `{ difficulty, mode, rounds, timerSeconds, countHiddenTraits, set* }`, для всех игр и Setup. `setup.tsx`-роуту нужны оба. Оба провайдера объединены одним `<GameSettingsProvider>` (в `app/_layout.tsx`) — новую игру всегда подключать через `useGameConfig()`, не заводить локальные копии этих полей.
 - Дефолты — `DEFAULT_GAME_CONFIG` там же (+ `GAME_DEFAULT_ROUNDS` для исключений)
 - Сеттеры контекста сами персистят конфиг per-game через `storageService.saveGameConfig(gameId)` → ключ `party_app_settings_<gameId>` в MMKV. Вручную сохранять не нужно.
 - Декларативные доп. настройки (кнопки в Setup) описываются в `settings` записи реестра и рендерятся `UniversalGameSettings`
@@ -26,7 +26,10 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 - `sessionService` (`shared/services/`) — ключ `party_app_session_<gameKey>` в MMKV, хранит `players` + произвольные `fields`
 - В компонентах игр — `usePersistedState(gameKey, field, initial, codec?)` как drop-in замена useState; для Set/Map передавать codec
-- Жизненный цикл: Setup при старте очищает сессию; `syncPlayers` в GamePlayRoute сбрасывает её при смене состава. Таймеры — `useTimer`/`useCountdown` (`shared/hooks`)
+- Составное эфемерное состояние, которое всегда сбрасывается/переинициализируется группой полей разом (код раунда+подсказки+догадки в Decrypto, состояние текущего вопроса в Millionaire, состав команд/активная подсказка в Codenames) — один `usePersistedState<T>` с объектным `T`, а не N параллельных примитивных полей: так сброс — один вызов, и нельзя забыть обнулить одно из полей. Поля с независимой логикой обновления (не сбрасываются синхронно с остальными) — оставлять отдельными `usePersistedState`, не сводить искусственно в общий объект.
+- Раздача ролей/раскладка при старте партии, которая не должна повториться, если состояние уже восстановлено из сессии (kill-and-relaunch) — `shared/hooks/useGameInit.ts` (`useGameInit(isRestored, initFn, deps)`), а не руками писать `useEffect` с guard-return + `eslint-disable-next-line react-hooks/exhaustive-deps` в каждой игре (используется в Alias/Codenames/Decrypto/FakeArtist/SpyHunt).
+- Личный зачёт «победитель/ничья» на экране итогов партии — `shared/helpers/scoring.ts` (`getLeaderboardWinner`) + `shared/components/GameOverLeaderboard` (шапка+LeaderboardList+кнопки rematch/back), а не пересчитывать `sorted/topScore/hasWinner` в каждой игре заново. Командный/нестандартный зачёт (см. TabooReverseGame) — через проп `renderResult` компонента.
+- Жизненный цикл: Setup при старте очищает сессию; `syncPlayers` в GamePlayRoute сбрасывает её при смене состава. Таймеры — только `useTimer` (`shared/hooks`, единственный таймер-хук в проекте с 2026-08-16; `useCountdown` удалён как дублирующий). API: `{ timeLeft, isActive, start, pause, reset(newTime?), setTimeLeft }`. Для условия «тикать, пока выполняется derived-условие» (не просто старт/пауза по клику) — `useEffect`, вызывающий `start()`/`pause()` при смене условия (см. `FakeArtistGame.tsx`, `TelestrationsGame.tsx`).
 - Все чтения из MMKV идут через адаптер `shared/services/kvStorage.ts` и `storageService`/`safeParseJson` — не обращаться к MMKV напрямую в компонентах
 
 ## Контент и словари

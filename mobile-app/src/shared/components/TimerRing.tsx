@@ -41,6 +41,9 @@ export const TimerRing: React.FC<TimerRingProps> = ({
   const progress = useSharedValue(timeLeft / totalTime);
 
   useEffect(() => {
+    // react-hooks/immutability не распознаёт reanimated SharedValue — мутация `.value`
+    // это штатный API, а не изменение возвращённого хуком значения (см. CorridorBoard.tsx).
+    // eslint-disable-next-line react-hooks/immutability
     progress.value = withTiming(timeLeft / totalTime, {
       duration: 1000,
       easing: Easing.linear,

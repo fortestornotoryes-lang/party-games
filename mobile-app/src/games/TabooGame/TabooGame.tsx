@@ -12,7 +12,7 @@ import { PlayingPhase } from './phases/PlayingPhase';
 import { VerdictPhase } from './phases/VerdictPhase';
 import { TabooPhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
@@ -28,7 +28,7 @@ interface TabooGameProps {
 }
 
 export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => {
-  const { difficulty, timerSeconds } = useGameSettings();
+  const { difficulty, timerSeconds } = useGameConfig();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const cardTimer = timerSeconds;

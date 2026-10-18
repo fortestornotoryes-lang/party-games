@@ -1,8 +1,8 @@
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useKeepAwake } from 'expo-keep-awake';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import type { ComponentType } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import { GameKey, type GameComponentProps } from '@/entities/game/types';
 import { AliasGame } from '@/games/AliasGame/AliasGame';
@@ -11,7 +11,6 @@ import { CodenamesGame } from '@/games/CodenamesGame/CodenamesGame';
 import { ConnectFourGame } from '@/games/ConnectFourGame/ConnectFourGame';
 import { CorridorGame } from '@/games/CorridorGame/CorridorGame';
 import { DecryptoGame } from '@/games/DecryptoGame/DecryptoGame';
-import { WavelengthGame } from '@/games/WavelengthGame/WavelengthGame';
 import { FakeArtistGame } from '@/games/FakeArtistGame/FakeArtistGame';
 import { JustOneGame } from '@/games/JustOneGame/JustOneGame';
 import MafiaGame from '@/games/MafiaGame/MafiaGame';
@@ -19,10 +18,11 @@ import { MemoRiskGame } from '@/games/MemoRiskGame/MemoRiskGame';
 import { MillionaireGame } from '@/games/MillionaireGame/MillionaireGame';
 import { ResistanceGame } from '@/games/ResistanceGame/ResistanceGame';
 import { SpyHuntGame } from '@/games/SpyHuntGame/SpyHuntGame';
-import { TabooReverseGame } from '@/games/TabooReverseGame/TabooReverseGame';
 import { TabooGame } from '@/games/TabooGame/TabooGame';
+import { TabooReverseGame } from '@/games/TabooReverseGame/TabooReverseGame';
 import { TelestrationsGame } from '@/games/TelestrationsGame/TelestrationsGame';
 import { TruthOrDareGame } from '@/games/TruthOrDareGame/TruthOrDareGame';
+import { WavelengthGame } from '@/games/WavelengthGame/WavelengthGame';
 import { sessionService } from '@/shared/services/sessionService';
 import { storageService } from '@/shared/services/storageService';
 
@@ -58,7 +58,7 @@ export default function GamePlayRoute() {
 
   const { gameKey } = useLocalSearchParams<{ gameKey: string }>();
   const router = useRouter();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
 
   const currentGameKey = gameKey as GameKey;
   const config = GAMES_REGISTRY[currentGameKey];

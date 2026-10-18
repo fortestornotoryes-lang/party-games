@@ -18,3 +18,21 @@ export interface Card {
   color: CardColor;
   revealed: boolean;
 }
+
+/** Состав команд — назначается один раз при старте партии, все 4 поля всегда вместе. */
+export interface Roster {
+  redCaptain: string;
+  blueCaptain: string;
+  redTeam: string[];
+  blueTeam: string[];
+}
+
+export const EMPTY_ROSTER: Roster = { redCaptain: '', blueCaptain: '', redTeam: [], blueTeam: [] };
+
+/** Активная подсказка капитана — сбрасывается целиком в конце хода (см. endTurn). */
+export interface ClueState {
+  clueWord: string;
+  clueCount: number;
+}
+
+export const EMPTY_CLUE: ClueState = { clueWord: '', clueCount: 0 };

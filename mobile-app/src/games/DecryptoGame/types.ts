@@ -29,3 +29,18 @@ export interface TeamState {
   history: RoundData[];
   captainIndex: number;
 }
+
+/** Эфемерное состояние текущего раунда — всегда читается/сбрасывается целиком (см. startRound). */
+export interface RoundState {
+  currentCode: number[];
+  clues: string[];
+  interceptGuess: (number | '')[];
+  teamGuess: (number | '')[];
+}
+
+export const EMPTY_ROUND: RoundState = {
+  currentCode: [],
+  clues: ['', '', ''],
+  interceptGuess: ['', '', ''],
+  teamGuess: ['', '', ''],
+};

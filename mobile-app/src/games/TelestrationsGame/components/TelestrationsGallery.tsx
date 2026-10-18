@@ -1,5 +1,5 @@
-import { Home, Shuffle } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Home, Shuffle } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import React from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';

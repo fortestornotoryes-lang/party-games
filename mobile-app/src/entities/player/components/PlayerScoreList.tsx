@@ -117,7 +117,7 @@ export const PlayerScoreList: React.FC<PlayerScoreListProps> = ({
               >
                 {player}
               </Text>
-              {isActive && !!activeLabel && (
+              {!!isActive && !!activeLabel && (
                 <View className={`shrink-0 rounded-full px-2 py-0.5 ${ac.badge}`}>
                   <Text
                     className={`text-micro font-black uppercase ${ac.badgeText}`}

@@ -17,7 +17,7 @@ import {
 } from './helpers';
 import { C4Action, type C4Player, type Cell, type WinResult } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -33,7 +33,7 @@ interface Props {
 
 export const ConnectFourGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { mode } = useGameSettings();
+  const { mode } = useGameConfig();
   const insets = useSafeAreaInsets();
 
   const p1 = playerNames[0] ?? t(`${NS.CONNECT_FOUR}.player1`);

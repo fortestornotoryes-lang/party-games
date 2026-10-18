@@ -3,7 +3,7 @@ import { FlaskConical, Settings as SettingsIcon } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useCurrentGame } from '@/entities/game/model/GameSettingsContext';
 import type { GameKey } from '@/entities/game/types';
 import { GlassCard } from '@/shared/components/GlassCard';
 import { MainMenu } from '@/widgets/main-menu/components/MainMenu';
@@ -11,11 +11,11 @@ import { MainMenu } from '@/widgets/main-menu/components/MainMenu';
 export default function MenuRoute() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { setCurrentGameId } = useGameSettings();
+  const { setCurrentGameId } = useCurrentGame();
 
   const handleSelectGame = (gameId: GameKey) => {
     // Ставим id до навигации, чтобы Setup сразу отрендерился с нужным конфигом
-    void setCurrentGameId(gameId);
+    setCurrentGameId(gameId);
     router.push(`/game/${gameId}/setup`);
   };
 

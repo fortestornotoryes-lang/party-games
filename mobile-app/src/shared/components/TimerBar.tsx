@@ -1,7 +1,7 @@
 import { MotiView } from 'moti';
 import React from 'react';
-import { Easing } from 'react-native-reanimated';
 import { View } from 'react-native';
+import { Easing } from 'react-native-reanimated';
 
 interface TimerBarProps {
   /** Процент оставшегося времени (0–100) */

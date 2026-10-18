@@ -1,8 +1,8 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { HelpCircle, Users } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import type { GameMetadata } from '../types';
 

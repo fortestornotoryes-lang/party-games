@@ -23,7 +23,7 @@ import {
   type RoundShapes,
 } from '../types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { usePlayerCycle } from '@/shared/hooks/usePlayerCycle';
@@ -32,8 +32,8 @@ import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
 
 const K = GameKey.MemoRisk;
 
-export const useMemoRiskGameLogic = (playerNames: string[], onBack: () => void) => {
-  const { difficulty, mode } = useGameSettings();
+export const useMemoRiskGameLogic = (playerNames: string[]) => {
+  const { difficulty, mode } = useGameConfig();
   const cfg = MEMO_RISK_DIFFICULTY_CONFIG[difficulty];
   const isTimed = mode === MEMO_RISK_MODES.TIMED;
   const isLimited = mode === MEMO_RISK_MODES.LIMITED;

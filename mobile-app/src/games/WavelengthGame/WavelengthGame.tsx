@@ -11,7 +11,7 @@ import { PassPhase } from './phases/PassPhase';
 import { RevealPhase } from './phases/RevealPhase';
 import { WavelengthPhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { randomInt } from '@/shared/helpers/random';
@@ -28,7 +28,7 @@ interface WavelengthGameProps {
 
 export const WavelengthGame: React.FC<WavelengthGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
   const insets = useSafeAreaInsets();
   const [phase, setPhase] = usePersistedState<WavelengthPhase>(
     GameKey.Wavelength,

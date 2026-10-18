@@ -11,7 +11,8 @@ import { GameOverPhase } from './phases/GameOverPhase';
 import { PassPhase } from './phases/PassPhase';
 import { QuestionPhase } from './phases/QuestionPhase';
 import { WinPhase } from './phases/WinPhase';
-import { MillionairePhase } from './types';
+import type { QuestionState } from './types';
+import { EMPTY_QUESTION_STATE, MillionairePhase } from './types';
 
 import { GameKey } from '@/entities/game/types';
 import { PRIZE_LADDER } from '@/games/MillionaireGame/constants';
@@ -36,11 +37,6 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
   const playerIdxState = usePersistedState(K, 'playerIdx', 0);
   const { current: currentPlayer, next: nextPlayer } = usePlayerCycle(playerNames, playerIdxState);
   const [questionIndex, setQuestionIndex] = usePersistedState(K, 'questionIndex', 0);
-  const [selectedAnswer, setSelectedAnswer] = usePersistedState<number | null>(
-    K,
-    'selectedAnswer',
-    null
-  );
   const [isCorrect, setIsCorrect] = usePersistedState(K, 'isCorrect', false);
   const [usedLifelines, setUsedLifelines] = usePersistedState<Set<string>>(
     K,
@@ -48,21 +44,14 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
     new Set(),
     { save: (s) => [...s], load: (raw) => new Set(raw as string[]) }
   );
-  const [eliminatedOptions, setEliminatedOptions] = usePersistedState<number[]>(
+  // Эфемерное состояние текущего вопроса — одним объектом, чтобы сброс на новый вопрос
+  // (handlePassDone/handleContinue) не мог случайно забыть одно из полей.
+  const [questionState, setQuestionState] = usePersistedState<QuestionState>(
     K,
-    'eliminatedOptions',
-    []
+    'questionState',
+    EMPTY_QUESTION_STATE
   );
-  const [audienceVotes, setAudienceVotes] = usePersistedState<number[] | null>(
-    K,
-    'audienceVotes',
-    null
-  );
-  const [phoneFriendSuggestion, setPhoneFriendSuggestion] = usePersistedState<number | null>(
-    K,
-    'phoneFriendSuggestion',
-    null
-  );
+  const { selectedAnswer, eliminatedOptions, audienceVotes, phoneFriendSuggestion } = questionState;
   const [playerScores, setPlayerScores] = usePersistedState<Record<string, string>>(
     K,
     'playerScores',
@@ -106,16 +95,13 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
     initQuestionsForPlayer();
     setQuestionIndex(0);
     setUsedLifelines(new Set());
-    setEliminatedOptions([]);
-    setAudienceVotes(null);
-    setPhoneFriendSuggestion(null);
-    setSelectedAnswer(null);
+    setQuestionState(EMPTY_QUESTION_STATE);
     setPhase(MillionairePhase.Question);
   };
 
   const handleAnswer = (answerIndex: number) => {
     const correct = answerIndex === currentQuestions[questionIndex].correctIndex;
-    setSelectedAnswer(answerIndex);
+    setQuestionState((s) => ({ ...s, selectedAnswer: answerIndex }));
     setIsCorrect(correct);
     feedbackService.vibrate(VIBRATE.tap);
     setPhase(MillionairePhase.Reveal);
@@ -129,10 +115,7 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
 
   const handleContinue = () => {
     setQuestionIndex((prev) => prev + 1);
-    setSelectedAnswer(null);
-    setEliminatedOptions([]);
-    setAudienceVotes(null);
-    setPhoneFriendSuggestion(null);
+    setQuestionState(EMPTY_QUESTION_STATE);
     setPhase(MillionairePhase.Question);
   };
 
@@ -146,21 +129,23 @@ export const MillionaireGame: React.FC<MillionaireGameProps> = ({ playerNames, o
     const question = currentQuestions[questionIndex];
     const wrongIndices = [0, 1, 2, 3].filter((i) => i !== question.correctIndex);
     const toEliminate = shuffle(wrongIndices).slice(0, 2);
-    setEliminatedOptions(toEliminate);
+    setQuestionState((s) => ({ ...s, eliminatedOptions: toEliminate }));
     setUsedLifelines((prev) => new Set([...prev, '50_50']));
     feedbackService.vibrate(VIBRATE.tap);
   };
 
   const handlePhoneFriend = () => {
     if (usedLifelines.has('phone') || !currentQuestions.length) return;
-    setPhoneFriendSuggestion(currentQuestions[questionIndex].correctIndex);
+    const suggestion = currentQuestions[questionIndex].correctIndex;
+    setQuestionState((s) => ({ ...s, phoneFriendSuggestion: suggestion }));
     setUsedLifelines((prev) => new Set([...prev, 'phone']));
     feedbackService.vibrate(VIBRATE.tap);
   };
 
   const handleAskAudience = () => {
     if (usedLifelines.has('audience') || !currentQuestions.length) return;
-    setAudienceVotes(simulateAudienceVote(currentQuestions[questionIndex].correctIndex));
+    const votes = simulateAudienceVote(currentQuestions[questionIndex].correctIndex);
+    setQuestionState((s) => ({ ...s, audienceVotes: votes }));
     setUsedLifelines((prev) => new Set([...prev, 'audience']));
     feedbackService.vibrate(VIBRATE.tap);
   };

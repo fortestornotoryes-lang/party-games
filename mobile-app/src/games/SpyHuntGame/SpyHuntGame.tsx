@@ -10,11 +10,12 @@ import { PlayingPhase } from './phases/PlayingPhase';
 import { RevealPhase } from './phases/RevealPhase';
 import { SpyHuntPhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import type { Player } from '@/entities/player/types';
 import { GAME_DURATION_BY_DIFFICULTY } from '@/games/SpyHuntGame/constants';
 import { GameHeader } from '@/shared/components/GameHeader';
+import { useGameInit } from '@/shared/hooks/useGameInit';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -29,7 +30,7 @@ interface GameProps {
 
 export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty, mode } = useGameSettings();
+  const { difficulty, mode } = useGameConfig();
   const insets = useSafeAreaInsets();
   const [players, setPlayers] = usePersistedState<Player[]>(GameKey.Spy, 'players', []);
   const [location, setLocation] = usePersistedState(GameKey.Spy, 'location', '');
@@ -54,14 +55,15 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
     phase === SpyHuntPhase.Playing
   );
 
-  useEffect(() => {
-    // Роли уже восстановлены из сессии — не раздаём заново.
-    if (players.length > 0) return;
-    const { players: p, location: loc } = initSpyHunt(playerNames, difficulty, mode);
-    setPlayers(p);
-    setLocation(loc);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerNames, difficulty, mode]);
+  useGameInit(
+    players.length > 0,
+    () => {
+      const { players: p, location: loc } = initSpyHunt(playerNames, difficulty, mode);
+      setPlayers(p);
+      setLocation(loc);
+    },
+    [playerNames, difficulty, mode]
+  );
 
   useEffect(() => {
     if (phase !== SpyHuntPhase.Reveal) return;

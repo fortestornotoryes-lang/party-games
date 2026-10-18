@@ -1,12 +1,12 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import type { LucideIcon } from 'lucide-react-native';
 import { ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { DEFAULT_NAMES, DEFAULT_NAMES_EN, PlayerRow } from '@/entities/player/components/PlayerRow';
 import type { PlayerEntry } from '@/entities/player/types';
 import { GlassCard } from '@/shared/components/GlassCard';
@@ -55,7 +55,7 @@ export const Setup: React.FC<SetupProps> = ({
   maxPlayers = 12,
   children,
 }) => {
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
   const { t, lang } = useLanguage();
   const insets = useSafeAreaInsets();
   const config = getTheme(themeColor);

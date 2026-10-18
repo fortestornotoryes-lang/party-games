@@ -11,7 +11,7 @@ import { PassPhase } from './phases/PassPhase';
 import type { ChoiceType } from './types';
 import { TruthOrDarePhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
@@ -26,7 +26,7 @@ interface TruthOrDareGameProps {
 
 export const TruthOrDareGame: React.FC<TruthOrDareGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
   const insets = useSafeAreaInsets();
   const [phase, setPhase] = usePersistedState<TruthOrDarePhase>(
     GameKey.TruthOrDare,

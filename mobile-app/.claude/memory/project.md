@@ -43,6 +43,12 @@ src/
 - `src/entities/game/instructions.ts` — инструкции ru + en, `getGameInstructions(gameKey, lang)`
 - Расходуемый контент игры регистрируется в `WORD_POOLS` (`src/features/word-stats/model/contentService.ts`)
 
+## Бэклог архитектурных улучшений
+
+`mobile-app/docs/improvements-todo.md` — найденные архитектурные проблемы; на 2026-08-16 остался только
+`as unknown as` в i18n. (Разделение `GameSettingsContext`, унификация таймер-хуков, консолидация
+составного состояния раунда в Decrypto/Millionaire/Codenames — исправлены, см. conventions.md и gotchas.md.)
+
 ## Статус переноса
 
 Все 18 игр перенесены (этапы 0–6 веб-миграции выполнены). Брендинг (иконка/сплэш из веб-лого «Party Hub»)

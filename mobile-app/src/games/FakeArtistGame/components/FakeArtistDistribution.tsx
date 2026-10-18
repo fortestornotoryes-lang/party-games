@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 
 import { getFakeArtistWord } from '../model/fakeArtistContent';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import {
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) => {
-  const { difficulty, rounds, timerSeconds } = useGameSettings();
+  const { difficulty, rounds, timerSeconds } = useGameConfig();
   const { t } = useTranslation();
   const { word, category } = useMemo(
     () => getFakeArtistWord(difficulty || DIFFICULTY.EASY),

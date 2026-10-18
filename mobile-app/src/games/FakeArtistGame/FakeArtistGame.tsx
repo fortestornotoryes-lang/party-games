@@ -17,8 +17,9 @@ import type { Player } from '@/entities/player/types';
 import { GameCard } from '@/shared/components/GameCard';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
-import { useCountdown } from '@/shared/hooks/useCountdown';
+import { useGameInit } from '@/shared/hooks/useGameInit';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
+import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
@@ -70,13 +71,14 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
   const [isTransitioning, setIsTransitioning] = usePersistedState(K, 'isTransitioning', true);
 
-  useEffect(() => {
-    // Роли уже восстановлены из сессии — не раздаём заново.
-    if (players.length > 0) return;
-    const { players: p } = initFakeArtist(playerNames);
-    setPlayers(p);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerNames]);
+  useGameInit(
+    players.length > 0,
+    () => {
+      const { players: p } = initFakeArtist(playerNames);
+      setPlayers(p);
+    },
+    [playerNames]
+  );
 
   const playerColor = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'][
     turnIndex % (players.length || 1)
@@ -106,13 +108,26 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
   const timerActive =
     gameState.timerSeconds > 0 && !isTransitioning && phase === FakeArtistPhase.Playing;
-  const [timeLeft, setTimeLeft] = useCountdown(timerActive, gameState.timerSeconds, () => {
-    confirm();
+  const {
+    timeLeft,
+    start: startTimer,
+    pause: pauseTimer,
+    reset: resetTimer,
+  } = useTimer({
+    initialTime: gameState.timerSeconds,
+    onTimeUp: () => {
+      confirm();
+    },
   });
 
   // Новый ход — перезапускаем отсчёт
   useEffect(() => {
-    if (timerActive) setTimeLeft(gameState.timerSeconds);
+    if (timerActive) {
+      resetTimer(gameState.timerSeconds);
+      startTimer();
+    } else {
+      pauseTimer();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turnIndex, timerActive, gameState.timerSeconds]);
 

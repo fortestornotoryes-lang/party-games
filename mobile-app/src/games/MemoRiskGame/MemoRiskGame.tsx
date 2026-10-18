@@ -39,7 +39,7 @@ export const MemoRiskGame: React.FC<Props> = ({ playerNames, onBack }) => {
     handleBank,
     handleRestart,
     stopGame,
-  } = useMemoRiskGameLogic(playerNames, onBack);
+  } = useMemoRiskGameLogic(playerNames);
 
   return (
     <View className="flex-1" style={{ paddingTop: insets.top }}>

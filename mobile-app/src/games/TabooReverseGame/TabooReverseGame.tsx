@@ -15,7 +15,7 @@ import { VerdictPhase } from './phases/VerdictPhase';
 import type { BlitzResult } from './types';
 import { TabooReversePhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { advanceUsedDeck, buildUsedCardIds } from '@/shared/helpers/cardDeck';
@@ -32,7 +32,7 @@ interface TabooReverseGameProps {
 
 export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty, timerSeconds, mode } = useGameSettings();
+  const { difficulty, timerSeconds, mode } = useGameConfig();
   const insets = useSafeAreaInsets();
   const cardTimer = timerSeconds;
   const isBlitz = mode === TABOO_REVERSE_MODES.BLITZ;

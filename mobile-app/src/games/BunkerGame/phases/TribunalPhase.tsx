@@ -7,7 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import { getHiddenTraits } from '../helpers';
 import { type AttributeEntry, type BunkerCharacter, type TraitKey } from '../types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
 import { pickRandom } from '@/shared/helpers/random';
@@ -72,7 +72,7 @@ export const TribunalPhase: React.FC<TribunalPhaseProps> = ({
   onDone,
 }) => {
   const { t } = useTranslation();
-  const { rounds } = useGameSettings();
+  const { rounds } = useGameConfig();
   const totalRounds = Math.max(3, Math.min(7, rounds));
 
   // ── Состояние серии апелляций ──────────────────────────────────────────────

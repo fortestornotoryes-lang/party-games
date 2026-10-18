@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react-native';
 import { AnimatePresence, MotiView } from 'moti';
 import React, { useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import type { Player } from '@/entities/player/types';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';

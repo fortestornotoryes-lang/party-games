@@ -7,7 +7,7 @@ import { ResourceContribRow } from '../components/ResourceContribRow';
 import { getRevealedResourceContribution, getRevealedTrait } from '../helpers';
 import { type BunkerCharacter, type DifficultyLevel } from '../types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
 import { Typography } from '@/shared/components/Typography';
@@ -158,7 +158,7 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
   onNext,
 }) => {
   const { t } = useTranslation();
-  const { timerSeconds } = useGameSettings();
+  const { timerSeconds } = useGameConfig();
 
   const { timeLeft, start, reset } = useTimer({
     initialTime: timerSeconds,

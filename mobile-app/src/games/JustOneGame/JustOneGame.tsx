@@ -11,7 +11,7 @@ import { PassPhase } from './phases/PassPhase';
 import { ResultPhase } from './phases/ResultPhase';
 import { JustOnePhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
@@ -27,7 +27,7 @@ interface JustOneGameProps {
 
 export const JustOneGame: React.FC<JustOneGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
   const insets = useSafeAreaInsets();
   const guesserIdxState = usePersistedState(GameKey.JustOne, 'guesserIdx', () =>
     Math.floor(Math.random() * playerNames.length)

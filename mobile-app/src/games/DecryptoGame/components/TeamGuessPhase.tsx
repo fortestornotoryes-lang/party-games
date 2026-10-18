@@ -2,6 +2,7 @@ import { MotiView } from 'moti';
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { isCodeComplete } from '../helpers';
 import type { TeamColor } from '../types';
 
 import { CodeInput } from './CodeInput';
@@ -36,6 +37,8 @@ export const TeamGuessPhase: React.FC<TeamGuessPhaseProps> = ({
       key="team_guess"
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: 'timing', duration: 200 }}
       className="flex-1 gap-4"
     >
       <WordGrid words={words} cellHeight={64} />
@@ -62,7 +65,7 @@ export const TeamGuessPhase: React.FC<TeamGuessPhaseProps> = ({
           {t(`${NS.DECRYPTO}.enterYourCode`)}
         </Text>
         <CodeInput value={teamGuess} onChange={onChange} max={wordCount} team={activeTeam} />
-        <PrimaryButton onClick={onSubmit} variant={activeTeam}>
+        <PrimaryButton onClick={onSubmit} variant={activeTeam} disabled={!isCodeComplete(teamGuess)}>
           {t(`${NS.DECRYPTO}.decode`)}
         </PrimaryButton>
       </View>

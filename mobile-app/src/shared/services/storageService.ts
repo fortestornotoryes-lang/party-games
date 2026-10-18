@@ -36,24 +36,14 @@ export const storageService = {
   getPlayers: (): string[] => {
     return safeParseJson<string[]>(kvStorage.getItem(STORAGE_KEYS.PLAYERS), []);
   },
-  getPlayersAsync: (): Promise<string[]> => {
-    return Promise.resolve(storageService.getPlayers());
-  },
   savePlayers: (players: string[]) => {
     kvStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(players));
-  },
-  savePlayersAsync: async (players: string[]): Promise<void> => {
-    await Promise.resolve();
-    storageService.savePlayers(players);
   },
 
   // Used Words
   getUsedWords: (gameId: string): string[] => {
     const used = safeParseJson<GameDictionary>(kvStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
     return used[gameId] || [];
-  },
-  getUsedWordsAsync: (gameId: string): Promise<string[]> => {
-    return Promise.resolve(storageService.getUsedWords(gameId));
   },
   markWordAsUsed: (gameId: string, word: string) => {
     const used = safeParseJson<GameDictionary>(kvStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
@@ -63,18 +53,10 @@ export const storageService = {
       kvStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
     }
   },
-  markWordAsUsedAsync: async (gameId: string, word: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.markWordAsUsed(gameId, word);
-  },
   resetUsedWords: (gameId: string) => {
     const used = safeParseJson<GameDictionary>(kvStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
     used[gameId] = [];
     kvStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
-  },
-  resetUsedWordsAsync: async (gameId: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.resetUsedWords(gameId);
   },
 
   // Custom Words
@@ -84,9 +66,6 @@ export const storageService = {
       {}
     );
     return custom[gameId] || [];
-  },
-  getCustomWordsAsync: (gameId: string): Promise<string[]> => {
-    return Promise.resolve(storageService.getCustomWords(gameId));
   },
   addCustomWord: (gameId: string, word: string) => {
     const custom = safeParseJson<GameDictionary>(
@@ -99,10 +78,6 @@ export const storageService = {
       kvStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
     }
   },
-  addCustomWordAsync: async (gameId: string, word: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.addCustomWord(gameId, word);
-  },
   removeCustomWord: (gameId: string, word: string) => {
     const custom = safeParseJson<GameDictionary>(
       kvStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
@@ -114,20 +89,12 @@ export const storageService = {
     }
   },
 
-  removeCustomWordAsync: async (gameId: string, word: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.removeCustomWord(gameId, word);
-  },
-
   // Полный список кастомных слов игры: общие + привязанные к сложности
   getAllCustomWords: (gameId: string, difficulty: string): string[] => {
     return [
       ...storageService.getCustomWords(gameId),
       ...storageService.getCustomWordsByKey(`${gameId}_${difficulty}`),
     ];
-  },
-  getAllCustomWordsAsync: (gameId: string, difficulty: string): Promise<string[]> => {
-    return Promise.resolve(storageService.getAllCustomWords(gameId, difficulty));
   },
 
   // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
@@ -137,9 +104,6 @@ export const storageService = {
       {}
     );
     return store[key] || [];
-  },
-  getCustomWordsByKeyAsync: (key: string): Promise<string[]> => {
-    return Promise.resolve(storageService.getCustomWordsByKey(key));
   },
   addCustomWordByKey: (key: string, word: string) => {
     const store = safeParseJson<Record<string, string[]>>(
@@ -152,10 +116,6 @@ export const storageService = {
       kvStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
     }
   },
-  addCustomWordByKeyAsync: async (key: string, word: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.addCustomWordByKey(key, word);
-  },
   removeCustomWordByKey: (key: string, word: string) => {
     const store = safeParseJson<Record<string, string[]>>(
       kvStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
@@ -167,11 +127,6 @@ export const storageService = {
     }
   },
 
-  removeCustomWordByKeyAsync: async (key: string, word: string): Promise<void> => {
-    await Promise.resolve();
-    storageService.removeCustomWordByKey(key, word);
-  },
-
   // Settings
   getSettings: (): GameSettings => {
     const defaults: GameSettings = { visualEffects: true, vibration: true, sounds: true };
@@ -181,16 +136,9 @@ export const storageService = {
     );
     return { ...defaults, ...saved };
   },
-  getSettingsAsync: (): Promise<GameSettings> => {
-    return Promise.resolve(storageService.getSettings());
-  },
   saveSettings: (settings: Partial<GameSettings>) => {
     const current = storageService.getSettings();
     kvStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify({ ...current, ...settings }));
-  },
-  saveSettingsAsync: async (settings: Partial<GameSettings>): Promise<void> => {
-    await Promise.resolve();
-    storageService.saveSettings(settings);
   },
 
   // Game Configs (Difficulty, Modes, etc.)
@@ -200,14 +148,7 @@ export const storageService = {
       null
     );
   },
-  getGameConfigAsync: <T>(gameId: string): Promise<T | null> => {
-    return Promise.resolve(storageService.getGameConfig<T>(gameId));
-  },
   saveGameConfig: <T>(gameId: string, config: T) => {
     kvStorage.setItem(`${STORAGE_KEYS.SETTINGS}_${gameId}`, JSON.stringify(config));
-  },
-  saveGameConfigAsync: async <T>(gameId: string, config: T): Promise<void> => {
-    await Promise.resolve();
-    storageService.saveGameConfig(gameId, config);
   },
 };

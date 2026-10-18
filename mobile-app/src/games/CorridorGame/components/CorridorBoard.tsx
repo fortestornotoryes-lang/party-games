@@ -1,3 +1,8 @@
+// Ложное срабатывание @typescript-eslint/no-deprecated на x/y пропсах <Rect>: RectProps.x/.y
+// (позиция, react-native-svg) переопределяют собственным объявлением унаследованный из
+// TransformProps.x/.y (устаревший shorthand трансформации) в цепочке extends
+// CommonPathProps → TransformProps. К трансформациям это не относится — см. gotchas.md.
+/* eslint-disable @typescript-eslint/no-deprecated */
 import React, { useEffect } from 'react';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
 import Svg, { Circle, G, Rect, Text as SvgText } from 'react-native-svg';
@@ -7,7 +12,7 @@ import { canPlaceWall } from '../helpers';
 import { ActionMode, type Pos, type WallGrid } from '../types';
 
 // Пустой интерфейс сохранён для совместимости сигнатуры пропсов — hover в RN не применим (нет мыши)
-export type HoveredSlot = { r: number; c: number; o: 'H' | 'V' };
+export interface HoveredSlot { r: number; c: number; o: 'H' | 'V' }
 
 interface Props {
   pawns: { 1: Pos; 2: Pos };
@@ -36,7 +41,11 @@ const Pawn: React.FC<{ pos: Pos; color: string; label: string }> = ({ pos, color
   const y = useSharedValue(cy);
 
   useEffect(() => {
+    // react-hooks/immutability не распознаёт reanimated SharedValue — presence-мутация `.value`
+    // это штатный API, а не изменение возвращённого хуком значения.
+    // eslint-disable-next-line react-hooks/immutability
     x.value = withSpring(cx, { stiffness: 380, damping: 32 });
+    // eslint-disable-next-line react-hooks/immutability
     y.value = withSpring(cy, { stiffness: 380, damping: 32 });
   }, [cx, cy, x, y]);
 

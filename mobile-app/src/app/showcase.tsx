@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { LeaderboardList } from '@/entities/player/components/LeaderboardList';
 import { PlayerRow } from '@/entities/player/components/PlayerRow';
 import { PlayerScoreList } from '@/entities/player/components/PlayerScoreList';
-import { LeaderboardList } from '@/entities/player/components/LeaderboardList';
 import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import { MemoCardView } from '@/games/MemoRiskGame/components/MemoCardView';
 import { MemoCardState, MemoRarity, MemoShape, type MemoCard } from '@/games/MemoRiskGame/types';
@@ -28,6 +28,11 @@ import { TimerBar } from '@/shared/components/TimerBar';
 import { Typography } from '@/shared/components/Typography';
 import { getTheme, PREMIUM_RGB, rgba } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
+
+/** Заглушка для декоративных обработчиков витрины — компоненты здесь не выполняют реальных действий */
+const noop = () => {
+  /* демо-заглушка */
+};
 
 /** Демо-карты MemoRisk: по одной каждой редкости + супер + опасная — для витрины состояний */
 const DEMO_RARITIES = [MemoRarity.Common, MemoRarity.Uncommon, MemoRarity.Rare, MemoRarity.Epic];
@@ -81,7 +86,7 @@ export default function ShowcaseScreen() {
         subtitle="UI kit · 12 themes"
         icon={Play}
         theme={theme}
-        onBack={() => {}}
+        onBack={noop}
       />
       <ScrollView
         className="flex-1"
@@ -128,27 +133,27 @@ export default function ShowcaseScreen() {
 
         <Section title="Buttons">
           <View className="gap-3">
-            <PrimaryButton variant="premium" icon={Play} onClick={() => {}}>
+            <PrimaryButton variant="premium" icon={Play} onClick={noop}>
               Играть
             </PrimaryButton>
-            <PrimaryButton variant="white" onClick={() => {}}>
+            <PrimaryButton variant="white" onClick={noop}>
               Белая
             </PrimaryButton>
-            <PrimaryButton variant="red" onClick={() => {}}>
+            <PrimaryButton variant="red" onClick={noop}>
               Красная
             </PrimaryButton>
-            <PrimaryButton variant="outline" onClick={() => {}}>
+            <PrimaryButton variant="outline" onClick={noop}>
               Outline
             </PrimaryButton>
-            <PrimaryButton variant="emerald" disabled onClick={() => {}}>
+            <PrimaryButton variant="emerald" disabled onClick={noop}>
               Disabled
             </PrimaryButton>
             <View className="flex-row gap-3">
-              <IconButton variant="filled" icon={Play} onClick={() => {}} />
-              <IconButton variant="ghost" icon={Users} onClick={() => {}} />
-              <IconButton variant="danger" icon={Play} onClick={() => {}} />
+              <IconButton variant="filled" icon={Play} onClick={noop} />
+              <IconButton variant="ghost" icon={Users} onClick={noop} />
+              <IconButton variant="danger" icon={Play} onClick={noop} />
             </View>
-            <StopGameButton onClick={() => {}} />
+            <StopGameButton onClick={noop} />
           </View>
         </Section>
 
@@ -192,7 +197,7 @@ export default function ShowcaseScreen() {
             instruction="Нажми, когда телефон у тебя"
             icon={Users}
             accentColor={accent}
-            onClick={() => {}}
+            onClick={noop}
           />
         </Section>
 
@@ -205,7 +210,7 @@ export default function ShowcaseScreen() {
               config={tokens}
               theme={theme}
               placeholder="Игрок"
-              onRemove={() => {}}
+              onRemove={noop}
               onChange={(_, n) => {
                 setName(n);
               }}

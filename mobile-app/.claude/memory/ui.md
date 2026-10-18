@@ -22,7 +22,7 @@
 Перед созданием нового UI — проверить готовые RN-порты веб-компонентов (API сохранён): PrimaryButton,
 IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, PassPhoneCard (передача телефона),
 DrawingCanvas (Skia-рисование), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel,
-ProgressDots, Pagination, TextInput, StopGameButton, GlassCard. Витрина всех компонентов — роут `/showcase`.
+ProgressDots, Pagination, TextInput, StopGameButton, GlassCard, GameOverLeaderboard (экран итогов: победитель/ничья по личному зачёту + таблица очков + rematch/back, кастомный результат — через `renderResult`). Витрина всех компонентов — роут `/showcase`.
 Игрокоспецифичные списки — `entities/player/components/`.
 
 ## Анимации

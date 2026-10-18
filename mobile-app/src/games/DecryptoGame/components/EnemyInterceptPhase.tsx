@@ -2,7 +2,7 @@ import { MotiView } from 'moti';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { teamLabel, tText } from '../helpers';
+import { isCodeComplete, teamLabel, tText } from '../helpers';
 import type { RoundData, TeamColor } from '../types';
 
 import { CodeInput } from './CodeInput';
@@ -83,7 +83,11 @@ export const EnemyInterceptPhase: React.FC<EnemyInterceptPhaseProps> = ({
           {t(`${NS.DECRYPTO}.enterInterceptedCode`)}
         </Text>
         <CodeInput value={interceptGuess} onChange={onChange} max={wordCount} team={enemyColor} />
-        <PrimaryButton onClick={onSubmit} variant={enemyColor}>
+        <PrimaryButton
+          onClick={onSubmit}
+          variant={enemyColor}
+          disabled={!isCodeComplete(interceptGuess)}
+        >
           {t(`${NS.DECRYPTO}.confirmIntercept`)}
         </PrimaryButton>
       </View>

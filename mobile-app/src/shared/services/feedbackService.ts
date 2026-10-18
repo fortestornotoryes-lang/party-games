@@ -95,10 +95,14 @@ export const feedbackService = {
    * TODO(этап 2/7): реальная реализация вместе с celebrate.
    */
   fireworks: (colors?: string[], durationMs = 3000): (() => void) => {
-    if (!storageService.getSettings().visualEffects) return () => {};
+    if (!storageService.getSettings().visualEffects) return () => {
+      /* noop-заглушка отмены — fireworks ещё не реализован, см. TODO выше */
+    };
     void colors;
     void durationMs;
-    return () => {};
+    return () => {
+      /* noop-заглушка отмены — fireworks ещё не реализован, см. TODO выше */
+    };
   },
 
   // Хаптика: сигнатура веб-версии (мс / массив мс), внутри — expo-haptics

@@ -370,7 +370,7 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({ letter, text, state, disabl
     >
       <Pressable
         onPress={!disabled ? onClick : undefined}
-        disabled={disabled && state !== 'correct' && state !== 'wrong'}
+        disabled={!!disabled && state !== 'correct' && state !== 'wrong'}
         className={`rounded-premium-md flex-row items-stretch overflow-hidden border ${s.wrapper}`}
         style={({ pressed }) => [
           { minHeight: 72 },

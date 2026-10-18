@@ -1,6 +1,6 @@
 import { Grid, User } from 'lucide-react-native';
 import { AnimatePresence } from 'moti';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,15 +10,16 @@ import { GameOverPhase } from './phases/GameOverPhase';
 import { SetupPhase } from './phases/SetupPhase';
 import { TeamPhase } from './phases/TeamPhase';
 import type { Card, CardColor, Team } from './types';
-import { CodenamesPhase } from './types';
+import { CodenamesPhase, EMPTY_CLUE, EMPTY_ROSTER } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { shuffle } from '@/shared/helpers/random';
 import { splitInHalf } from '@/shared/helpers/teams';
+import { useGameInit } from '@/shared/hooks/useGameInit';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -29,7 +30,7 @@ interface CodenamesGameProps {
 }
 
 export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBack }) => {
-  const { difficulty, mode: activeMode } = useGameSettings();
+  const { difficulty, mode: activeMode } = useGameConfig();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
@@ -38,13 +39,14 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
   const [cards, setCards] = usePersistedState<Card[]>(K, 'cards', []);
   const [turn, setTurn] = usePersistedState<Team>(K, 'turn', 'red');
 
-  const [redCaptain, setRedCaptain] = usePersistedState(K, 'redCaptain', '');
-  const [blueCaptain, setBlueCaptain] = usePersistedState(K, 'blueCaptain', '');
-  const [redTeam, setRedTeam] = usePersistedState<string[]>(K, 'redTeam', []);
-  const [blueTeam, setBlueTeam] = usePersistedState<string[]>(K, 'blueTeam', []);
+  // Состав команд — назначается один раз при старте партии, все поля всегда вместе.
+  const [roster, setRoster] = usePersistedState(K, 'roster', EMPTY_ROSTER);
+  const { redCaptain, blueCaptain, redTeam, blueTeam } = roster;
 
-  const [clueWord, setClueWord] = usePersistedState(K, 'clueWord', '');
-  const [clueCount, setClueCount] = usePersistedState(K, 'clueCount', 0);
+  // Активная подсказка капитана — одним объектом, чтобы сброс в конце хода (endTurn)
+  // не мог случайно забыть одно из полей.
+  const [clue, setClue] = usePersistedState(K, 'clue', EMPTY_CLUE);
+  const { clueWord, clueCount } = clue;
   const [guessesLeft, setGuessesLeft] = usePersistedState(K, 'guessesLeft', 0);
   const [winner, setWinner] = usePersistedState<Team | null>(K, 'winner', null);
   const [lastActionMsg, setLastActionMsg] = useState<string | null>(null);
@@ -86,19 +88,16 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
     setWinner(null);
   };
 
-  useEffect(() => {
-    if (playerNames.length < 4) return;
-    // Доска и команды уже восстановлены из сессии — не пересоздаём.
-    if (cards.length > 0) return;
-    const shuffled = shuffle(playerNames);
-    setRedCaptain(shuffled[0]);
-    setBlueCaptain(shuffled[1]);
-    const [redTeam, blueTeam] = splitInHalf(shuffled.slice(2));
-    setRedTeam(redTeam);
-    setBlueTeam(blueTeam);
-    initBoard();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerNames]);
+  useGameInit(
+    playerNames.length < 4 || cards.length > 0,
+    () => {
+      const shuffled = shuffle(playerNames);
+      const [red, blue] = splitInHalf(shuffled.slice(2));
+      setRoster({ redCaptain: shuffled[0], blueCaptain: shuffled[1], redTeam: red, blueTeam: blue });
+      initBoard();
+    },
+    [playerNames]
+  );
 
   const currentCaptain = turn === 'red' ? redCaptain : blueCaptain;
 
@@ -110,8 +109,7 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
 
   const endTurn = () => {
     setTurn((prev) => (prev === 'red' ? 'blue' : 'red'));
-    setClueWord('');
-    setClueCount(0);
+    setClue(EMPTY_CLUE);
     setPhase(CodenamesPhase.PassCaptain);
   };
 
@@ -226,8 +224,12 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
                 currentCaptain={currentCaptain}
                 clueWord={clueWord}
                 clueCount={clueCount}
-                onClueWordChange={setClueWord}
-                onClueCountChange={setClueCount}
+                onClueWordChange={(clueWord) => {
+                  setClue((c) => ({ ...c, clueWord }));
+                }}
+                onClueCountChange={(clueCount) => {
+                  setClue((c) => ({ ...c, clueCount }));
+                }}
                 onSubmit={handleSubmitClue}
               />
             )}

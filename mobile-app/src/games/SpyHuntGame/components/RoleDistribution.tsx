@@ -3,7 +3,7 @@ import { MotiView } from 'moti';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import type { Player } from '@/entities/player/types';
 import { DistributionFlow } from '@/features/role-distribution/components/DistributionFlow';
 import {
@@ -42,7 +42,7 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
   onFinish,
 }) => {
   const { t } = useTranslation();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
 
   const nextLabel = (isLast: boolean) =>
     isLast ? t(`${NS.SPY_HUNT}.startGame`) : t(`${NS.SPY_HUNT}.gotIt`);

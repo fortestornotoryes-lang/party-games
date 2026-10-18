@@ -12,12 +12,13 @@ import { StartPhase } from './phases/StartPhase';
 import type { Team } from './types';
 import { AliasPhase } from './types';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import { GameKey } from '@/entities/game/types';
 import { ALIAS_DIFFICULTY_CONFIG, WIN_SCORE } from '@/games/AliasGame/constants';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { pickRandom, shuffle } from '@/shared/helpers/random';
 import { splitInHalf } from '@/shared/helpers/teams';
+import { useGameInit } from '@/shared/hooks/useGameInit';
 import { usePersistedState, usePersistedTimer } from '@/shared/hooks/usePersistedState';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -35,7 +36,7 @@ const TEAM_COLORS = ['red', 'blue'] as const;
 
 export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => {
   const { t } = useTranslation();
-  const { difficulty } = useGameSettings();
+  const { difficulty } = useGameConfig();
   const insets = useSafeAreaInsets();
   const [teams, setTeams] = usePersistedState<Team[]>(GameKey.Alias, 'teams', []);
   const [currentTeamIdx, setCurrentTeamIdx] = usePersistedState(GameKey.Alias, 'currentTeamIdx', 0);
@@ -63,16 +64,17 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     phase === AliasPhase.Playing
   );
 
-  useEffect(() => {
-    // Команды уже восстановлены из сессии — не перетасовываем заново.
-    if (teams.length > 0) return;
-    const [teamA, teamB] = splitInHalf(shuffle(playerNames));
-    setTeams([
-      { color: TEAM_COLORS[0], players: teamA, score: 0 },
-      { color: TEAM_COLORS[1], players: teamB, score: 0 },
-    ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerNames]);
+  useGameInit(
+    teams.length > 0,
+    () => {
+      const [teamA, teamB] = splitInHalf(shuffle(playerNames));
+      setTeams([
+        { color: TEAM_COLORS[0], players: teamA, score: 0 },
+        { color: TEAM_COLORS[1], players: teamB, score: 0 },
+      ]);
+    },
+    [playerNames]
+  );
 
   // useCallback — currentWord/handleCorrect/handleSkip идут пропсами в мемоизированный
   // PlayingBody (AliasGame/phases/PlayingPhase.tsx); без стабильных ссылок 1Hz-тик

@@ -1,6 +1,6 @@
 import { Pencil } from 'lucide-react-native';
 import { AnimatePresence, MotiView } from 'moti';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,8 +18,8 @@ import { DrawingCanvas } from '@/shared/components/DrawingCanvas';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { shuffle } from '@/shared/helpers/random';
-import { useCountdown } from '@/shared/hooks/useCountdown';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
+import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
@@ -97,11 +97,29 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     }
   };
 
-  const [timeLeft, setTimeLeft] = useCountdown(phase === TelestrationsPhase.Action, 0, () => {
-    if (phase === TelestrationsPhase.Action && !isDrawingRound) {
-      finishAction(guess, STEP_TYPE.Guess);
-    }
+  const {
+    timeLeft,
+    start: startTimer,
+    pause: pauseTimer,
+    reset: resetTimer,
+  } = useTimer({
+    initialTime: 0,
+    onTimeUp: () => {
+      if (phase === TelestrationsPhase.Action && !isDrawingRound) {
+        finishAction(guess, STEP_TYPE.Guess);
+      }
+    },
   });
+
+  // Тикаем только в фазе рисования/угадывания — выход из неё (в т.ч. не через onTimeUp) должен
+  // останавливать отсчёт, а не тикать вхолостую в фоне.
+  useEffect(() => {
+    if (phase === TelestrationsPhase.Action) {
+      startTimer();
+    } else {
+      pauseTimer();
+    }
+  }, [phase, startTimer, pauseTimer]);
 
   const handleStartGame = () => {
     const word = getTelestrationsWord(difficulty);
@@ -111,7 +129,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setSteps([]);
     setCurrentRound(0);
     setWordRevealed(false);
-    setTimeLeft(0);
+    resetTimer(0);
     setPhase(TelestrationsPhase.Start);
   };
 
@@ -119,7 +137,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setSteps([]);
     setCurrentRound(0);
     setWordRevealed(false);
-    setTimeLeft(0);
+    resetTimer(0);
     setPhase(TelestrationsPhase.Setup);
   };
 
@@ -127,7 +145,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setPhase(TelestrationsPhase.Action);
     setGuess('');
     const cfg = DIFFICULTY_CONFIG[difficulty];
-    setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
+    resetTimer(isDrawingRound ? cfg.drawTime : cfg.guessTime);
   };
 
   const diffLabel = t(`${NS.TELESTRATIONS}.difficultyLabels.${difficulty}`);

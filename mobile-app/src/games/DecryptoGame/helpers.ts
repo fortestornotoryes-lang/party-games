@@ -11,3 +11,7 @@ export const tBg = (c: TeamColor) =>
     : 'bg-premium-blue/10 border-premium-blue/20';
 export const tBadge = (c: TeamColor) =>
   c === 'red' ? 'bg-premium-red/20 text-premium-red' : 'bg-premium-blue/20 text-premium-blue';
+
+/** Код заполнен полностью (ни одна ячейка не пуста) — общая проверка для догадки команды и перехвата врага */
+export const isCodeComplete = (code: (number | '')[]): code is number[] =>
+  code.every((v) => v !== '');

@@ -1,11 +1,11 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import type { LucideIcon } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import { Typography } from '@/shared/components/Typography';
-import { PREMIUM_RGB, rgba } from '@/shared/theme/colors';
+import { PREMIUM_RGB } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
 
 type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';

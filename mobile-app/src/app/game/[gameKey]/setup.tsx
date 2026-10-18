@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { getGameInstructions } from '@/entities/game/instructions';
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useCurrentGame, useGameConfig } from '@/entities/game/model/GameSettingsContext';
 import type { GameKey } from '@/entities/game/types';
 import { useLocalizedGame } from '@/entities/game/useLocalizedGame';
 import { UniversalGameSettings } from '@/features/game-settings/components/UniversalGameSettings';
@@ -25,8 +25,8 @@ export default function GameSetupRoute() {
     setRounds,
     setTimerSeconds,
     setCountHiddenTraits,
-    currentGameId,
-  } = useGameSettings();
+  } = useGameConfig();
+  const { currentGameId } = useCurrentGame();
 
   const currentGameKey = gameKey as GameKey;
   const { t, lang } = useLanguage();
@@ -40,7 +40,7 @@ export default function GameSetupRoute() {
     // Новая партия всегда начинается с чистого листа — сохранённая
     // сессия (восстановление после перезагрузки) сбрасывается.
     sessionService.begin(currentGameKey, playerNames);
-    void storageService.savePlayersAsync(playerNames);
+    storageService.savePlayers(playerNames);
     // Игроки не передаются параметром: play читает их из storage (Setup персистит)
     router.push(`/game/${currentGameKey}/play`);
   };

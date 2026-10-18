@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 import { CLASSIC_MODE_ID, GameKey, type GameMode } from '@/entities/game/types';
 import { storageService } from '@/shared/services/storageService';
@@ -9,7 +9,14 @@ const GAME_DEFAULT_ROUNDS: Partial<Record<GameKey, number>> = {
   [GameKey.Bunker]: 5,
 };
 
-interface GameSettingsContextType {
+/** Навигационное состояние: какая игра сейчас выбрана. Меняется редко (переход между экранами). */
+interface CurrentGameContextType {
+  currentGameId: GameKey | null;
+  setCurrentGameId: (id: GameKey | null) => void;
+}
+
+/** Конфиг сложности/режима текущей игры. Меняется часто (каждый тап по настройке в Setup). */
+interface GameConfigContextType {
   difficulty: Difficulty;
   mode: GameMode['id'];
   rounds: number;
@@ -20,11 +27,10 @@ interface GameSettingsContextType {
   setRounds: (r: number) => void;
   setTimerSeconds: (s: number) => void;
   setCountHiddenTraits: (v: boolean) => void;
-  currentGameId: GameKey | null;
-  setCurrentGameId: (id: GameKey | null) => void;
 }
 
-const GameSettingsContext = createContext<GameSettingsContextType | undefined>(undefined);
+const CurrentGameContext = createContext<CurrentGameContextType | undefined>(undefined);
+const GameConfigContext = createContext<GameConfigContextType | undefined>(undefined);
 
 interface SavedConfig {
   difficulty?: Difficulty;
@@ -52,10 +58,12 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   );
   const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
 
-  const setCurrentGameId = async (id: GameKey | null) => {
+  // Стабильна (нет внешних зависимостей, кроме сеттеров useState) — не пересоздаётся на каждый рендер,
+  // поэтому смена конфига не заставляет CurrentGameContext.Provider ре-рендерить своих потребителей.
+  const setCurrentGameId = useCallback((id: GameKey | null) => {
     setCurrentGameIdState(id);
     if (!id) return;
-    const savedConfig = await storageService.getGameConfigAsync<SavedConfig>(id);
+    const savedConfig = storageService.getGameConfig<SavedConfig>(id);
     if (savedConfig) {
       if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
       if (savedConfig.mode) setModeState(savedConfig.mode);
@@ -70,24 +78,19 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
       setTimerSecondsState(DEFAULT_GAME_CONFIG.timerSeconds);
       setCountHiddenTraitsState(DEFAULT_GAME_CONFIG.countHiddenTraits);
     }
-  };
+  }, []);
 
   const setDifficulty = (d: Difficulty) => {
     setDifficultyState(d);
     if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty: d,
-        mode,
-        rounds,
-        timerSeconds,
-      });
+      storageService.saveGameConfig(currentGameId, { difficulty: d, mode, rounds, timerSeconds });
     }
   };
 
   const setMode = (m: GameMode['id']) => {
     setModeState(m);
     if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
+      storageService.saveGameConfig(currentGameId, {
         difficulty,
         mode: m,
         rounds,
@@ -99,7 +102,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   const setRounds = (r: number) => {
     setRoundsState(r);
     if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
+      storageService.saveGameConfig(currentGameId, {
         difficulty,
         mode,
         rounds: r,
@@ -111,7 +114,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   const setTimerSeconds = (s: number) => {
     setTimerSecondsState(s);
     if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
+      storageService.saveGameConfig(currentGameId, {
         difficulty,
         mode,
         rounds,
@@ -124,7 +127,7 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
   const setCountHiddenTraits = (v: boolean) => {
     setCountHiddenTraitsState(v);
     if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
+      storageService.saveGameConfig(currentGameId, {
         difficulty,
         mode,
         rounds,
@@ -134,33 +137,53 @@ export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ childr
     }
   };
 
+  const currentGameValue = useMemo<CurrentGameContextType>(
+    () => ({ currentGameId, setCurrentGameId }),
+    [currentGameId, setCurrentGameId]
+  );
+
+  const configValue = useMemo<GameConfigContextType>(
+    () => ({
+      difficulty,
+      mode,
+      rounds,
+      timerSeconds,
+      countHiddenTraits,
+      setDifficulty,
+      setMode,
+      setRounds,
+      setTimerSeconds,
+      setCountHiddenTraits,
+    }),
+    // Сеттеры замыкают текущие difficulty/mode/rounds/timerSeconds/countHiddenTraits/currentGameId
+    // (чтобы сохранить полный конфиг) — пересоздаются вместе с ними, это ожидаемо.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [difficulty, mode, rounds, timerSeconds, countHiddenTraits, currentGameId]
+  );
+
   return (
-    <GameSettingsContext.Provider
-      value={{
-        difficulty,
-        mode,
-        rounds,
-        timerSeconds,
-        countHiddenTraits,
-        setDifficulty,
-        setMode,
-        setRounds,
-        setTimerSeconds,
-        setCountHiddenTraits,
-        currentGameId,
-        setCurrentGameId,
-      }}
-    >
-      {children}
-    </GameSettingsContext.Provider>
+    <CurrentGameContext.Provider value={currentGameValue}>
+      <GameConfigContext.Provider value={configValue}>{children}</GameConfigContext.Provider>
+    </CurrentGameContext.Provider>
   );
 };
 
+/** Только текущая выбранная игра — для навигационного кода (роуты, меню). Не ре-рендерится на смену конфига. */
 // eslint-disable-next-line react-refresh/only-export-components
-export const useGameSettings = () => {
-  const context = useContext(GameSettingsContext);
+export const useCurrentGame = () => {
+  const context = useContext(CurrentGameContext);
   if (context === undefined) {
-    throw new Error('useGameSettings must be used within a GameSettingsProvider');
+    throw new Error('useCurrentGame must be used within a GameSettingsProvider');
+  }
+  return context;
+};
+
+/** Конфиг сложности/режима текущей игры — для экрана настроек и самих игр. Не ре-рендерится на смену навигации. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const useGameConfig = () => {
+  const context = useContext(GameConfigContext);
+  if (context === undefined) {
+    throw new Error('useGameConfig must be used within a GameSettingsProvider');
   }
   return context;
 };

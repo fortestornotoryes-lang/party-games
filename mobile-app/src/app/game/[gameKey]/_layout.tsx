@@ -1,7 +1,7 @@
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 
-import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { useCurrentGame } from '@/entities/game/model/GameSettingsContext';
 import { GAMES_REGISTRY } from '@/entities/game/registry';
 import type { GameKey } from '@/entities/game/types';
 
@@ -15,11 +15,11 @@ const isGameKey = (key: string | undefined): key is GameKey =>
  */
 export default function GameLayout() {
   const { gameKey } = useLocalSearchParams<{ gameKey: string }>();
-  const { currentGameId, setCurrentGameId } = useGameSettings();
+  const { currentGameId, setCurrentGameId } = useCurrentGame();
 
   useEffect(() => {
     if (isGameKey(gameKey) && currentGameId !== gameKey) {
-      void setCurrentGameId(gameKey);
+      setCurrentGameId(gameKey);
     }
   }, [gameKey, currentGameId, setCurrentGameId]);
 

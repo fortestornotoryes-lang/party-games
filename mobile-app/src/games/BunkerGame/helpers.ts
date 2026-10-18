@@ -29,9 +29,7 @@ import {
   ITEMS,
   TRAITS,
   PHOBIAS,
-  CATASTROPHE_SCENARIOS,
   HEALTH_CONDITIONS,
-  SURVIVAL_EVENTS,
   SPECIAL_FACTS,
 } from '@/games/BunkerGame/contents';
 import { pickRandom, shuffle } from '@/shared/helpers/random';
