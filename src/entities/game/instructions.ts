@@ -30,7 +30,7 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
     {
       title: 'Суть игры',
       content:
-        'В каждом раунде задаётся вопрос вида «Кто из нас…». Все по очереди тайно голосуют за одного игрока (не за себя).',
+        'В каждом раунде задаётся вопрос вида «Кто из нас…». Все по очереди тайно голосуют за одного игрока — можно и за себя.',
     },
     {
       title: 'Подсчёт',
@@ -39,7 +39,7 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
     },
     {
       title: 'Победа',
-      content: 'Партия длится 5 раундов. Побеждает игрок с наибольшим количеством очков.',
+      content: 'Раундов сколько угодно: текущий счёт виден перед каждым вопросом, закончить игру можно в любой момент. Побеждает игрок с наибольшим количеством очков.',
     },
   ],
   [GameKey.Spy]: [
@@ -453,7 +453,7 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     {
       title: 'The Idea',
       content:
-        'Each round asks a "Who among us…" question. Everyone takes turns voting secretly for one player (not themselves).',
+        'Each round asks a "Who among us…" question. Everyone takes turns voting secretly for one player — voting for yourself is allowed.',
     },
     {
       title: 'Counting',
@@ -461,7 +461,7 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     },
     {
       title: 'Winning',
-      content: 'The game lasts 5 rounds. The player with the most points wins.',
+      content: 'Play as many rounds as you like: the scores are shown before each question and you can end the game at any time. The player with the most points wins.',
     },
   ],
   [GameKey.Spy]: [

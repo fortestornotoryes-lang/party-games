@@ -2,7 +2,6 @@ import { Vote } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { ROUNDS_COUNT } from './constants';
 import { addScores, getTopPlayers, scoreWhoAmongUsRound, tallyVotes } from './helpers';
 import { getWhoAmongUsQuestion } from './model/whoAmongUsContent';
 import { QuestionPhase } from './phases/QuestionPhase';
@@ -51,9 +50,8 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
   // Экран «передай телефон» перед голосом — не сохраняем, после F5 покажется снова
   const [voterReady, setVoterReady] = useState(false);
 
-  // Голосуют все игроки; за себя голосовать нельзя
+  // Голосуют все игроки; голосовать можно и за себя
   const voter = playerNames[voterIdx] ?? '';
-  const candidates = playerNames.filter((p) => p !== voter);
 
   const startVoting = () => {
     setVotes({});
@@ -79,19 +77,18 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
     setPhase(WhoAmongUsPhase.Result);
   };
 
+  // Число раундов не ограничено — игру завершают вручную с экрана вопроса
   const nextRound = () => {
-    const played = roundNo + 1;
-    setRoundNo(played);
-
-    if (played >= ROUNDS_COUNT) {
-      setPhase(WhoAmongUsPhase.Finish);
-      return;
-    }
+    setRoundNo(roundNo + 1);
     setQuestion(getWhoAmongUsQuestion());
     setVotes({});
     setVoterIdx(0);
     setVoterReady(false);
     setPhase(WhoAmongUsPhase.Question);
+  };
+
+  const finishGame = () => {
+    setPhase(WhoAmongUsPhase.Finish);
   };
 
   useEffect(() => {
@@ -102,7 +99,6 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
   }, [phase]);
 
   const counts = tallyVotes(votes, playerNames);
-  const isLastRound = roundNo + 1 >= ROUNDS_COUNT;
 
   return (
     <div className="flex h-dvh flex-col">
@@ -125,7 +121,14 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
               exit="exit"
               className="flex min-h-full flex-col items-center justify-center gap-8 p-6 text-center perspective-distant"
             >
-              <QuestionPhase roundNo={roundNo} question={question} onStartVoting={startVoting} />
+              <QuestionPhase
+                roundNo={roundNo}
+                question={question}
+                players={playerNames}
+                scores={scores}
+                onStartVoting={startVoting}
+                onFinish={finishGame}
+              />
             </motion.div>
           )}
 
@@ -153,7 +156,7 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
                   </motion.div>
                 </div>
               ) : (
-                <VotePhase question={question} candidates={candidates} onPick={submitVote} />
+                <VotePhase question={question} candidates={playerNames} onPick={submitVote} />
               )}
             </motion.div>
           )}
@@ -172,7 +175,6 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
                 players={playerNames}
                 counts={counts}
                 topPlayers={getTopPlayers(counts)}
-                isLastRound={isLastRound}
                 onNext={nextRound}
               />
             </motion.div>

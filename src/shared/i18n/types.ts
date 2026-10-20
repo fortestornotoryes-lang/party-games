@@ -451,7 +451,7 @@ export interface TwoTruthsTranslations {
 
 export interface WhoAmongUsTranslations {
   subtitle: string;
-  roundOf: string; // "Раунд {{n}} из {{total}}"
+  roundOf: string; // "Раунд {{n}}"
   startVoting: string;
   voterLabel: string;
   voterPass: string; // "{{name}}, твоя очередь голосовать..."
@@ -459,7 +459,7 @@ export interface WhoAmongUsTranslations {
   topPlayers: string;
   votesCount: string; // "{{n}} гол."
   nextRound: string;
-  finishGame: string;
+  endGame: string;
   scoreboard: string;
   toMenu: string;
 }

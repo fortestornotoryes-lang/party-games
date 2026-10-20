@@ -662,7 +662,7 @@ export const ru: Translations = {
   },
   who_among_us: {
     subtitle: 'Голосуй за того, кто подходит',
-    roundOf: 'Раунд {{n}} из {{total}}',
+    roundOf: 'Раунд {{n}}',
     startVoting: 'НАЧАТЬ ГОЛОСОВАНИЕ',
     voterLabel: 'Голосует',
     voterPass: '{{name}}, твоя очередь голосовать. Остальные — не смотрите!',
@@ -670,7 +670,7 @@ export const ru: Translations = {
     topPlayers: 'Больше всего голосов',
     votesCount: '{{n}} гол.',
     nextRound: 'СЛЕДУЮЩИЙ РАУНД',
-    finishGame: 'ИТОГИ ИГРЫ',
+    endGame: 'ЗАКОНЧИТЬ ИГРУ',
     scoreboard: 'Таблица очков',
     toMenu: 'В МЕНЮ',
   },

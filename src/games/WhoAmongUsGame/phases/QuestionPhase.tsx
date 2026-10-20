@@ -1,12 +1,9 @@
-import { Quote } from 'lucide-react';
+import { Flag, Quote } from 'lucide-react';
 import type { Variants } from 'motion/react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { ROUNDS_COUNT } from '../constants';
-
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
-import { ProgressDots } from '@/shared/components/ProgressDots';
 import { Typography } from '@/shared/components/Typography';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
@@ -27,25 +24,55 @@ const wordVariants: Variants = {
 interface QuestionPhaseProps {
   roundNo: number;
   question: string;
+  players: string[];
+  scores: Record<string, number>;
   onStartVoting: () => void;
+  onFinish: () => void;
 }
 
 export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
   roundNo,
   question,
+  players,
+  scores,
   onStartVoting,
+  onFinish,
 }) => {
   const { t } = useTranslation();
   const words = question.split(' ');
+  // Счёт показываем, начиная со второго раунда — до этого он у всех нулевой
+  const hasScores = roundNo > 0;
+  const standings = [...players].sort((a, b) => (scores[b] ?? 0) - (scores[a] ?? 0));
 
   return (
     <>
       <motion.div variants={STAGGER_ITEM} className="flex flex-col items-center gap-3">
-        <ProgressDots count={ROUNDS_COUNT} current={roundNo} activeColor="bg-premium-pink" />
         <Typography.Caption className="tracking-[0.4em]">
-          {t(`${NS.WHO_AMONG_US}.roundOf`, { n: roundNo + 1, total: ROUNDS_COUNT })}
+          {t(`${NS.WHO_AMONG_US}.roundOf`, { n: roundNo + 1 })}
         </Typography.Caption>
       </motion.div>
+
+      {hasScores ? (
+        <motion.div
+          variants={STAGGER_ITEM}
+          className="glass-card rounded-premium-xl w-full space-y-2 p-4 text-left"
+        >
+          <Typography.Caption className="tracking-[0.3em]">
+            {t(`${NS.WHO_AMONG_US}.scoreboard`)}
+          </Typography.Caption>
+          <div className="flex flex-wrap gap-2">
+            {standings.map((p) => (
+              <span
+                key={p}
+                className="flex max-w-full items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-sm"
+              >
+                <span className="min-w-0 wrap-anywhere">{p}</span>
+                <span className="text-premium-pink shrink-0 font-black">{scores[p] ?? 0}</span>
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      ) : null}
 
       <motion.div
         variants={CARD_DEAL_VARIANTS}
@@ -82,6 +109,14 @@ export const QuestionPhase: React.FC<QuestionPhaseProps> = ({
       <motion.div variants={STAGGER_ITEM} className="w-full">
         <PrimaryButton onClick={onStartVoting}>{t(`${NS.WHO_AMONG_US}.startVoting`)}</PrimaryButton>
       </motion.div>
+
+      {hasScores ? (
+        <motion.div variants={STAGGER_ITEM} className="w-full">
+          <PrimaryButton onClick={onFinish} variant="outline" icon={Flag}>
+            {t(`${NS.WHO_AMONG_US}.endGame`)}
+          </PrimaryButton>
+        </motion.div>
+      ) : null}
     </>
   );
 };

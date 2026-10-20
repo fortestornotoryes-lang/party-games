@@ -16,7 +16,6 @@ interface ResultPhaseProps {
   players: string[];
   counts: Record<string, number>;
   topPlayers: string[];
-  isLastRound: boolean;
   onNext: () => void;
 }
 
@@ -26,7 +25,6 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({
   players,
   counts,
   topPlayers,
-  isLastRound,
   onNext,
 }) => {
   const { t } = useTranslation();
@@ -126,7 +124,7 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({
         transition={{ ...SPRING.soft, delay: buttonDelay }}
       >
         <PrimaryButton onClick={onNext}>
-          {isLastRound ? t(`${NS.WHO_AMONG_US}.finishGame`) : t(`${NS.WHO_AMONG_US}.nextRound`)}
+          {t(`${NS.WHO_AMONG_US}.nextRound`)}
         </PrimaryButton>
       </motion.div>
     </>

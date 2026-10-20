@@ -662,7 +662,7 @@ export const en: Translations = {
   },
   who_among_us: {
     subtitle: 'Vote for who fits best',
-    roundOf: 'Round {{n}} of {{total}}',
+    roundOf: 'Round {{n}}',
     startVoting: 'START VOTING',
     voterLabel: 'Voting',
     voterPass: '{{name}}, your turn to vote. Everyone else, look away!',
@@ -670,7 +670,7 @@ export const en: Translations = {
     topPlayers: 'Most votes',
     votesCount: '{{n}} votes',
     nextRound: 'NEXT ROUND',
-    finishGame: 'FINAL RESULTS',
+    endGame: 'END GAME',
     scoreboard: 'Scoreboard',
     toMenu: 'MENU',
   },
