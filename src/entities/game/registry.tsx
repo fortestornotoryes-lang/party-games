@@ -1,34 +1,27 @@
 import {
   ArrowDown,
-  Ban,
   Brain,
-  Castle,
   Clock,
   Crown,
-  Drama,
-  Flame,
-  Ghost,
   Grid,
   Key,
   LayoutGrid,
   Lightbulb,
   ListChecks,
-  Palette,
-  Pencil,
-  Radio,
-  Route,
   Scale,
-  Shapes,
   Shield,
-  Siren,
   Target,
   Timer,
-  Trophy,
   Users,
-  Vote,
   Zap,
 } from 'lucide-react';
 
+import {
+  AliasIcon, BunkerIcon, ChessIcon, CodenamesIcon, ConnectFourIcon, CorridorIcon,
+  CrocodileIcon, DecryptoIcon, FakeArtistIcon, JustOneIcon, MafiaIcon, MemoRiskIcon,
+  MillionaireIcon, ResistanceIcon, SpyIcon, TabooIcon, TabooReverseIcon,
+  TelestrationsIcon, TruthOrDareIcon, TwoTruthsIcon, WavelengthIcon, WhoAmongUsIcon,
+} from './gameIcons';
 import type { GamesRegistryMap } from './types';
 import { GameKey } from './types';
 
@@ -78,23 +71,9 @@ const wordsLeft = (_d: Difficulty, remaining: number | undefined, t: TranslateFn
   remaining !== undefined ? t('registry.sublabels.wordsLeft', { n: remaining }) : undefined;
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
-  [GameKey.Chess]: {
-    id: GameKey.Chess,
-    icon: Castle,
-    theme: 'green',
-    players: '1–2',
-    minPlayers: 1,
-    maxPlayers: 2,
-    backgroundImage: ChessCardImage,
-    modes: [
-      { id: CHESS_MODES.COMPUTER, icon: Brain },
-      { id: CHESS_MODES.LOCAL, icon: Users },
-      { id: CHESS_MODES.TRAINING, icon: Lightbulb },
-    ],
-  },
   [GameKey.Spy]: {
     id: GameKey.Spy,
-    icon: Shield,
+    icon: SpyIcon,
     theme: 'indigo',
     players: '3–7',
     minPlayers: 3,
@@ -113,7 +92,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.FakeArtist]: {
     id: GameKey.FakeArtist,
-    icon: Palette,
+    icon: FakeArtistIcon,
     theme: 'lime',
     players: '4–7',
     minPlayers: 4,
@@ -137,7 +116,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Bunker]: {
     id: GameKey.Bunker,
-    icon: Siren,
+    icon: BunkerIcon,
     theme: 'orange',
     players: '4–10',
     minPlayers: 4,
@@ -165,7 +144,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Corridor]: {
     id: GameKey.Corridor,
-    icon: Route,
+    icon: CorridorIcon,
     theme: 'teal',
     players: '2',
     minPlayers: 2,
@@ -175,7 +154,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.MemoRisk]: {
     id: GameKey.MemoRisk,
-    icon: Shapes,
+    icon: MemoRiskIcon,
     theme: 'pink',
     players: '2+',
     minPlayers: 2,
@@ -192,7 +171,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Millionaire]: {
     id: GameKey.Millionaire,
-    icon: Trophy,
+    icon: MillionaireIcon,
     theme: 'yellow',
     players: '2+',
     minPlayers: 1,
@@ -201,7 +180,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.TruthOrDare]: {
     id: GameKey.TruthOrDare,
-    icon: Flame,
+    icon: TruthOrDareIcon,
     theme: 'red',
     players: '2+',
     minPlayers: 2,
@@ -210,7 +189,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Taboo]: {
     id: GameKey.Taboo,
-    icon: Ban,
+    icon: TabooIcon,
     theme: 'red',
     players: '4–10',
     minPlayers: 4,
@@ -228,7 +207,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.TabooReverse]: {
     id: GameKey.TabooReverse,
-    icon: ListChecks,
+    icon: TabooReverseIcon,
     theme: 'orange',
     players: '4–10',
     minPlayers: 4,
@@ -251,7 +230,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Telestrations]: {
     id: GameKey.Telestrations,
-    icon: Pencil,
+    icon: TelestrationsIcon,
     theme: 'green',
     players: '4–12',
     minPlayers: 4,
@@ -265,7 +244,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Codenames]: {
     id: GameKey.Codenames,
-    icon: Grid,
+    icon: CodenamesIcon,
     theme: 'indigo',
     players: '4+',
     minPlayers: 4,
@@ -279,7 +258,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Decrypto]: {
     id: GameKey.Decrypto,
-    icon: Key,
+    icon: DecryptoIcon,
     theme: 'pink',
     players: '4+',
     minPlayers: 4,
@@ -293,7 +272,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Alias]: {
     id: GameKey.Alias,
-    icon: Brain,
+    icon: AliasIcon,
     theme: 'red',
     players: '4+',
     minPlayers: 4,
@@ -306,7 +285,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Crocodile]: {
     id: GameKey.Crocodile,
-    icon: Drama,
+    icon: CrocodileIcon,
     theme: 'lime',
     players: '4+',
     minPlayers: 4,
@@ -316,7 +295,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Resistance]: {
     id: GameKey.Resistance,
-    icon: Shield,
+    icon: ResistanceIcon,
     theme: 'sky',
     players: '5–10',
     minPlayers: 5,
@@ -325,7 +304,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Wavelength]: {
     id: GameKey.Wavelength,
-    icon: Radio,
+    icon: WavelengthIcon,
     theme: 'purple',
     players: '4+',
     minPlayers: 2,
@@ -334,7 +313,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.JustOne]: {
     id: GameKey.JustOne,
-    icon: Lightbulb,
+    icon: JustOneIcon,
     theme: 'yellow',
     players: '3–12',
     minPlayers: 3,
@@ -344,7 +323,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.TwoTruths]: {
     id: GameKey.TwoTruths,
-    icon: Ghost,
+    icon: TwoTruthsIcon,
     theme: 'teal',
     players: '3+',
     minPlayers: 3,
@@ -354,7 +333,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.WhoAmongUs]: {
     id: GameKey.WhoAmongUs,
-    icon: Vote,
+    icon: WhoAmongUsIcon,
     theme: 'pink',
     players: '3+',
     minPlayers: 3,
@@ -363,7 +342,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.Mafia]: {
     id: GameKey.Mafia,
-    icon: Users,
+    icon: MafiaIcon,
     theme: 'orange',
     players: '6–12',
     minPlayers: 6,
@@ -372,7 +351,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
   },
   [GameKey.ConnectFour]: {
     id: GameKey.ConnectFour,
-    icon: LayoutGrid,
+    icon: ConnectFourIcon,
     theme: 'red',
     players: '2',
     minPlayers: 2,
@@ -386,4 +365,19 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
       { id: CONNECT_FOUR_MODES.POP_OUT, icon: ArrowDown },
     ],
   },
+  [GameKey.Chess]: {
+    id: GameKey.Chess,
+    icon: ChessIcon,
+    theme: 'green',
+    players: '1–2',
+    minPlayers: 1,
+    maxPlayers: 2,
+    backgroundImage: ChessCardImage,
+    modes: [
+      { id: CHESS_MODES.COMPUTER, icon: Brain },
+      { id: CHESS_MODES.LOCAL, icon: Users },
+      { id: CHESS_MODES.TRAINING, icon: Lightbulb },
+    ],
+  },
+
 } as const;

@@ -1,10 +1,11 @@
 import { BarChart3, Users, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { BunkerBalanceView } from '@/debug/BunkerBalanceView';
 import { GameMenuCard } from '@/entities/game/components/GameMenuCard';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { getGameStartCounts, sortGamesByPopularity } from '@/entities/game/popularity';
 import type { GameKey } from '@/entities/game/types';
 import { useLocalizedGames } from '@/entities/game/useLocalizedGame';
 import { contentService } from '@/features/word-stats/model/contentService';
@@ -20,6 +21,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
   const { setCurrentGameId } = useGameSettings();
   const { t: tr } = useTranslation();
   const GAMES = useLocalizedGames();
+  const sortedGames = useMemo(() => sortGamesByPopularity(GAMES, getGameStartCounts()), [GAMES]);
   const [descriptionGameId, setDescriptionGameId] = useState<GameKey | null>(null);
   const [showBalance, setShowBalance] = useState<boolean>(false);
 
@@ -65,7 +67,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
         {/* Game List */}
         <div className="space-y-3">
-          {GAMES.map((game, index) => {
+          {sortedGames.map((game, index) => {
             const stats = getGameStats(game.id);
             const countDisplay = stats ? `${stats.remaining} / ${stats.total}` : null;
 
@@ -122,7 +124,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
       <AnimatePresence>
         {!!descriptionGame &&
           (() => {
-            const Icon = descriptionGame.icon;
             const t = getTheme(descriptionGame.theme);
             return (
               <>
@@ -170,7 +171,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           className={`rounded-premium-md h-12 w-12 ${t.solid} relative flex shrink-0 items-center justify-center overflow-hidden`}
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
-                          <Icon className="relative z-10 h-5 w-5 text-white" />
+                          <img src={descriptionGame.icon} alt="" aria-hidden className="relative z-10 h-full w-full object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <h3

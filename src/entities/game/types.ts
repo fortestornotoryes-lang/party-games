@@ -88,7 +88,7 @@ export interface GameSettingDef extends GameSettingDefBase {
  */
 export interface GameMetadataDef {
   readonly id: GameKey;
-  readonly icon: LucideIcon;
+  readonly icon: string;
   readonly theme: GameTheme;
   readonly players: string;
   readonly minPlayers: number;

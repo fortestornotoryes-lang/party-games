@@ -1,4 +1,3 @@
-import type { LucideIcon } from 'lucide-react';
 import { ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users } from 'lucide-react';
 import { motion, Reorder } from 'motion/react';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +19,7 @@ interface SetupProps {
   onBack: () => void;
   title: string;
   subtitle: string;
-  icon: LucideIcon;
+  icon: string;
   themeColor: GameTheme;
   playerPlaceholder: string;
   addPlayerLabel: string;
@@ -39,6 +38,7 @@ export const Setup: React.FC<SetupProps> = ({
   onBack,
   title,
   subtitle,
+  icon,
   themeColor,
   playerPlaceholder,
   addPlayerLabel,
@@ -126,6 +126,7 @@ export const Setup: React.FC<SetupProps> = ({
                 <span className={config.text}>{title}</span>
               )}
             </Typography.Title>
+            <img src={icon} alt="" aria-hidden className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-lg" />
           </div>
 
           <div className="px-1">

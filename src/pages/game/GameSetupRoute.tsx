@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import { getGameInstructions } from '@/entities/game/instructions';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
+import { recordGameStart } from '@/entities/game/popularity';
 import type { GameKey } from '@/entities/game/types';
 import { useLocalizedGame } from '@/entities/game/useLocalizedGame';
 import { UniversalGameSettings } from '@/features/game-settings/components/UniversalGameSettings';
@@ -40,6 +41,7 @@ export function GameSetupRoute() {
     // Новая партия всегда начинается с чистого листа — сохранённая
     // сессия (восстановление после перезагрузки) сбрасывается.
     sessionService.begin(currentGameKey, playerNames);
+    recordGameStart(currentGameKey);
     void storageService.savePlayersAsync(playerNames);
     void navigate(`/game/${currentGameKey}/play`, { state: { playerNames } });
   };

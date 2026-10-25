@@ -21,7 +21,6 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
   onSelect,
   onDescriptionClick,
 }) => {
-  const Icon = game.icon;
   const t = getTheme(game.theme);
 
   return (
@@ -60,7 +59,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
       >
         <div className="absolute inset-0 bg-linear-to-br from-white/25 to-transparent" />
         <div className="absolute inset-0 bg-linear-to-br from-transparent to-black/25" />
-        <Icon className="relative z-10 h-5.5 w-5.5 text-white transition-transform duration-300 group-hover:scale-110" />
+        <img src={game.icon} alt="" aria-hidden className="relative z-10 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
       </div>
 
       {/* Content */}
