@@ -1,7 +1,8 @@
-import { ArrowLeft, BookOpen, Lightbulb, RotateCcw, Search, Undo2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Lightbulb, RotateCcw, Search, Sparkles, Undo2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { CHESS_DEPTH, CHESS_MODES } from './constants';
+import './ChessGame.css';
 import {
   START_FEN,
   applyMove,
@@ -11,9 +12,7 @@ import {
   gameResult,
   isInCheck,
   legalMoves,
-  moveKey,
   moveLabel,
-  scoreMove,
   squareName,
   toFen,
   type Move,
@@ -60,6 +59,7 @@ export function ChessGame({ playerNames, onBack }: Props) {
   const [reviewing, setReviewing] = useState(false);
   const [reviewProgress, setReviewProgress] = useState(0);
   const analysisRun = useRef(0);
+  const analysisWorker = useRef<Worker | null>(null);
   const [reviewIndex, setReviewIndex] = useState<number | null>(null);
   const current = useMemo(() => fromFen(fens[fens.length - 1] ?? START_FEN), [fens]);
   const displayed = useMemo(() => fromFen(
@@ -136,44 +136,35 @@ export function ChessGame({ playerNames, onBack }: Props) {
     setReviewIndex(null);
   };
 
-  const analyze = async () => {
+  const analyze = () => {
+    analysisWorker.current?.terminate();
     const run = ++analysisRun.current;
     setReviewing(true);
     setReviewProgress(0);
     setReviewIndex(null);
+    const worker = new Worker(new URL('./analysis.worker.ts', import.meta.url), { type: 'module' });
+    analysisWorker.current = worker;
     const rows: ReviewItem[] = [];
-    for (let index = 0; index < moves.length; index++) {
-      await new Promise<void>(resolve => window.setTimeout(resolve, 0));
-      if (run !== analysisRun.current) return;
-      const before = fromFen(fens[index]);
-      const after = fromFen(fens[index + 1]);
-      const played = legalMoves(before).find(move => toFen(applyMove(before, move)) === toFen(after));
-      if (!played) continue;
-      const strongest = bestMove(before, 4);
-      if (!strongest) continue;
-      const actual = scoreMove(before, played, 4);
-      const loss = Math.max(0, strongest.score - actual);
-      const kind = moveKey(strongest.move) === moveKey(played) ? 'best'
-        : loss < 40 ? 'good' : loss < 100 ? 'inaccuracy' : loss < 250 ? 'mistake' : 'blunder';
-      rows.push({
-        label: moves[index],
-        kind,
-        best: moveLabel(before, strongest.move),
-        loss,
-        reason: describeMove(before, strongest.move),
-        reply: loss >= 100 ? (() => {
-          const response = bestMove(after, 1);
-          return response ? moveLabel(after, response.move) : undefined;
-        })() : undefined,
-      });
-      setReviewProgress(index + 1);
-    }
-    setReview(rows);
-    setReviewing(false);
+    worker.onmessage = ({ data }: MessageEvent<{ id: number; index?: number; item?: ReviewItem; done?: boolean }>) => {
+      if (data.id !== analysisRun.current || data.id !== run) return;
+      if (data.item && data.index !== undefined) {
+        rows[data.index] = data.item;
+        setReviewProgress(data.index + 1);
+      }
+      if (data.done) {
+        setReview(rows.filter(Boolean));
+        setReviewing(false);
+        worker.terminate();
+        analysisWorker.current = null;
+      }
+    };
+    worker.onerror = () => { setReviewing(false); worker.terminate(); analysisWorker.current = null; };
+    worker.postMessage({ id: run, fens, moves });
   };
 
   const reset = () => {
     analysisRun.current++;
+    analysisWorker.current?.terminate();
     setReviewing(false);
     setFens([START_FEN]);
     setMoves([]);
@@ -183,7 +174,7 @@ export function ChessGame({ playerNames, onBack }: Props) {
     setReviewIndex(null);
   };
 
-  useEffect(() => () => { analysisRun.current++; }, []);
+  useEffect(() => () => { analysisRun.current++; analysisWorker.current?.terminate(); }, []);
 
   const status = result === 'white' ? text('whiteWins') : result === 'black' ? text('blackWins')
     : result === 'draw' ? text('draw') : thinking ? text('thinking')
@@ -191,22 +182,22 @@ export function ChessGame({ playerNames, onBack }: Props) {
   const names = [playerNames[0] ?? text('white'), isLocal ? playerNames[1] ?? text('black') : text('computer')];
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-3 pb-8 text-white">
-      <div className="flex items-center justify-between gap-2 pt-4">
+    <div className="chess-scene mx-auto flex w-full max-w-5xl flex-col gap-5 px-3 pb-10 text-white">
+      <div className="chess-header flex items-center justify-between gap-2 pt-5">
         <button className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-white/80" onClick={() => { analysisRun.current++; onBack(); }}>
           <ArrowLeft size={20} />{t('common.back')}
         </button>
-        <h1 className="text-xl font-bold">{text('title')}</h1>
+        <h1 className="flex items-center gap-2 text-xl font-bold tracking-wide"><Sparkles size={19} className="text-amber-300" />{text('title')}</h1>
         <button className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-white/80" onClick={reset}>
           <RotateCcw size={18} />{text('newGame')}
         </button>
       </div>
-      <div className="glass-card rounded-2xl p-4">
-        <div className="mb-3 flex items-center justify-between gap-2 text-sm">
-          <span>{names[1]} · ♟</span>
-          <span className={result ? 'font-bold text-amber-300' : 'text-white/70'}>{status}</span>
+      <div className="chess-table rounded-[2rem] p-3 sm:p-6">
+        <div className="chess-player mb-4 flex items-center justify-between gap-2 px-2 py-2 text-sm">
+          <span className="flex items-center gap-3"><span className="chess-avatar">♚</span>{names[1]}</span>
+          <span className={`chess-status ${result ? 'font-bold text-amber-300' : ''}`}>{status}</span>
         </div>
-        <div className="mx-auto grid aspect-square w-full max-w-[560px] grid-cols-8 overflow-hidden rounded-xl border border-white/20">
+        <div className="chess-board mx-auto grid aspect-square w-full max-w-[620px] grid-cols-8 overflow-hidden rounded-xl">
           {displayed.board.map((piece, square) => {
             const target = selectedMoves.some(move => move.to === square);
             const suggested = hint && (hint.from === square || hint.to === square);
@@ -218,15 +209,17 @@ export function ChessGame({ playerNames, onBack }: Props) {
                 type="button"
                 onClick={() => onSquare(square)}
                 aria-label={squareName(square)}
-                className={`relative flex aspect-square items-center justify-center text-[clamp(1.8rem,7vw,3.7rem)] leading-none ${dark ? 'bg-emerald-800' : 'bg-stone-200'} ${selected === square ? 'ring-4 ring-inset ring-amber-300' : ''} ${highlighted ? 'shadow-[inset_0_0_0_4px_rgba(251,191,36,.45)]' : ''} ${suggested ? 'shadow-[inset_0_0_0_4px_rgba(34,211,238,.8)]' : ''}`}
+                className={`chess-square relative flex aspect-square items-center justify-center text-[clamp(1.8rem,7vw,3.7rem)] leading-none ${dark ? 'chess-dark' : 'chess-light'} ${selected === square ? 'chess-selected' : ''} ${highlighted ? 'chess-last' : ''} ${suggested ? 'chess-hint' : ''}`}
               >
-                {target && <span className="absolute h-3 w-3 rounded-full bg-amber-300/80" />}
-                {piece && <span className={piece === piece.toUpperCase() ? 'text-white drop-shadow-[0_2px_2px_#111]' : 'text-stone-950 drop-shadow-[0_0_2px_white]'}>{GLYPHS[piece]}</span>}
+                {square % 8 === 0 && <span className="chess-coordinate absolute left-1 top-1 text-[10px] font-bold">{8 - Math.floor(square / 8)}</span>}
+                {square >= 56 && <span className="chess-coordinate absolute bottom-0.5 right-1 text-[10px] font-bold">{'abcdefgh'[square % 8]}</span>}
+                {target && <span className="chess-target absolute h-[23%] w-[23%] rounded-full" />}
+                {piece && <span key={piece} className={`chess-piece ${piece === piece.toUpperCase() ? 'chess-white-piece' : 'chess-black-piece'}`}>{GLYPHS[piece]}</span>}
               </button>
             );
           })}
         </div>
-        <div className="mt-3 flex justify-between text-sm"><span>{names[0]} · ♙</span><span>{text('movesCount', { n: moves.length })}</span></div>
+        <div className="chess-player mt-4 flex items-center justify-between px-2 py-2 text-sm"><span className="flex items-center gap-3"><span className="chess-avatar">♔</span>{names[0]}</span><span className="text-white/55">{text('movesCount', { n: moves.length })}</span></div>
       </div>
       {pendingPromotion && (
         <div className="glass-card rounded-2xl p-4">
@@ -239,9 +232,9 @@ export function ChessGame({ playerNames, onBack }: Props) {
         </div>
       )}
       <div className="flex flex-wrap gap-2">
-        <button className="flex min-h-11 items-center gap-2 rounded-xl bg-white/10 px-4 disabled:opacity-40" disabled={!moves.length || thinking || reviewing} onClick={undo}><Undo2 size={18} />{text('undo')}</button>
-        {isTraining && <button className="flex min-h-11 items-center gap-2 rounded-xl bg-cyan-600 px-4 disabled:opacity-40" disabled={!playerTurn || !!result || thinking} onClick={askHint}><Lightbulb size={18} />{text('hint')}</button>}
-        <button className="flex min-h-11 items-center gap-2 rounded-xl bg-violet-600 px-4 disabled:opacity-40" disabled={!moves.length || reviewing} onClick={() => void analyze()}><Search size={18} />{reviewing ? text('analyzingProgress', { done: reviewProgress, total: moves.length }) : text('analyze')}</button>
+        <button className="chess-action flex min-h-11 items-center gap-2 rounded-xl px-4 disabled:opacity-40" disabled={!moves.length || thinking || reviewing} onClick={undo}><Undo2 size={18} />{text('undo')}</button>
+        {isTraining && <button className="chess-action flex min-h-11 items-center gap-2 rounded-xl px-4 disabled:opacity-40" disabled={!playerTurn || !!result || thinking} onClick={askHint}><Lightbulb size={18} />{text('hint')}</button>}
+        <button className="chess-action chess-action-primary flex min-h-11 items-center gap-2 rounded-xl px-4 disabled:opacity-40" disabled={!moves.length || reviewing} onClick={analyze}><Search size={18} />{reviewing ? text('analyzingProgress', { done: reviewProgress, total: moves.length }) : text('analyze')}</button>
       </div>
       {hint && <div className="glass-card rounded-2xl p-4 text-sm"><strong>{text('suggestion')} {moveLabel(current, hint)}</strong><p className="mt-1 text-white/70">{text(`reasons.${describeMove(current, hint)}`)}</p></div>}
       <div className="glass-card rounded-2xl p-4">
