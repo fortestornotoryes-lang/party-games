@@ -547,8 +547,8 @@ for (const difficulty of ['easy', 'medium', 'hard'] as const) {
     existing.add(key);
     return true;
   });
-  if (additions.length < 200) {
+  if (additions.length < 50) {
     throw new Error(`Недостаточно новых слов Fake Artist для сложности ${difficulty}: ${additions.length}`);
   }
-  FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty].push(...additions.slice(0, 200));
+  FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty].push(...additions.slice(0, 50));
 }
