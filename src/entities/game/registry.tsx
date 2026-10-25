@@ -32,21 +32,27 @@ import {
 import type { GamesRegistryMap } from './types';
 import { GameKey } from './types';
 
-import alieaImage from '@/assets/alias.JPG';
-import CodenamesImage from '@/assets/CodenamesImage.JPG';
-import ConnectFourImage from '@/assets/ConnectFourImage2.png';
-import decryptoImage from '@/assets/DecryptoImage.JPG';
-import FakeArtistImage from '@/assets/FakeArtistImage.png';
-import hopperImage from '@/assets/hopperImage.png';
-import JustOneImage from '@/assets/JustOneImage.png';
-import mafia2 from '@/assets/mafia_2.png';
-import MemoryImage from '@/assets/memoryImage2.png';
-import ResistanceImage from '@/assets/ResistanceImage.png';
-import SpyHuntImage from '@/assets/SpyHuntImage.png';
-import TabyImage from '@/assets/tabyImage2.JPG';
-import telestrationsImg from '@/assets/telephone.png';
-import TruthOrDareImage from '@/assets/TruthOrDare123.png';
-import WavelengthImage from '@/assets/WavelengthImage.JPG';
+import alieaImage from '@/assets/alias.webp';
+import ChessCardImage from '@/assets/ChessCard.webp';
+import CodenamesImage from '@/assets/CodenamesImage.webp';
+import ConnectFourImage from '@/assets/ConnectFourImage2.webp';
+import CorridorCardImage from '@/assets/CorridorCard.webp';
+import CrocodileCardImage from '@/assets/CrocodileCard.webp';
+import decryptoImage from '@/assets/DecryptoImage.webp';
+import FakeArtistImage from '@/assets/FakeArtistImage.webp';
+import hopperImage from '@/assets/hopperImage.webp';
+import JustOneImage from '@/assets/JustOneImage.webp';
+import mafia2 from '@/assets/mafia_2.webp';
+import MemoryImage from '@/assets/memoryImage2.webp';
+import MillionaireCardImage from '@/assets/MillionaireCard.webp';
+import ResistanceImage from '@/assets/ResistanceImage.webp';
+import SpyHuntImage from '@/assets/SpyHuntImage.webp';
+import TabyImage from '@/assets/tabyImage2.webp';
+import telestrationsImg from '@/assets/telephone.webp';
+import TruthOrDareImage from '@/assets/TruthOrDare123.webp';
+import TwoTruthsCardImage from '@/assets/TwoTruthsCard.webp';
+import WavelengthImage from '@/assets/WavelengthImage.webp';
+import WhoAmongUsCardImage from '@/assets/WhoAmongUsCard.webp';
 import { ALIAS_DIFFICULTY_CONFIG } from '@/games/AliasGame/constants.ts';
 import { BUNKER_MODES } from '@/games/BunkerGame/constants.ts';
 import { CHESS_MODES } from '@/games/ChessGame/constants.ts';
@@ -79,6 +85,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '1–2',
     minPlayers: 1,
     maxPlayers: 2,
+    backgroundImage: ChessCardImage,
     modes: [
       { id: CHESS_MODES.COMPUTER, icon: Brain },
       { id: CHESS_MODES.LOCAL, icon: Users },
@@ -164,6 +171,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 2,
     maxPlayers: 2,
     hasDifficulty: false,
+    backgroundImage: CorridorCardImage,
   },
   [GameKey.MemoRisk]: {
     id: GameKey.MemoRisk,
@@ -189,6 +197,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '2+',
     minPlayers: 1,
     hasDifficulty: false,
+    backgroundImage: MillionaireCardImage,
   },
   [GameKey.TruthOrDare]: {
     id: GameKey.TruthOrDare,
@@ -303,6 +312,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 4,
     // Сложность выбирает объясняющий в каждом раунде (3 слова), общей настройки нет
     hasDifficulty: false,
+    backgroundImage: CrocodileCardImage,
   },
   [GameKey.Resistance]: {
     id: GameKey.Resistance,
@@ -340,6 +350,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     minPlayers: 3,
     // Каждый игрок рассказывает по разу — количество раундов равно числу игроков
     hasDifficulty: false,
+    backgroundImage: TwoTruthsCardImage,
   },
   [GameKey.WhoAmongUs]: {
     id: GameKey.WhoAmongUs,
@@ -348,6 +359,7 @@ export const GAMES_REGISTRY: GamesRegistryMap = {
     players: '3+',
     minPlayers: 3,
     hasDifficulty: false,
+    backgroundImage: WhoAmongUsCardImage,
   },
   [GameKey.Mafia]: {
     id: GameKey.Mafia,
