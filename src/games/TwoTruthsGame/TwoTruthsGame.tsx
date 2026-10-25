@@ -152,6 +152,7 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
                   playerLabel={t(`${NS.TWO_TRUTHS}.storytellerLabel`)}
                   instruction={t(`${NS.TWO_TRUTHS}.passInstruction`, { name: storyteller })}
                   icon={Ghost}
+                  accentColor="teal"
                   onClick={() => {
                     setPhase(TwoTruthsPhase.Writing);
                   }}
@@ -199,6 +200,7 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
                       playerLabel={t(`${NS.TWO_TRUTHS}.voterLabel`)}
                       instruction={t(`${NS.TWO_TRUTHS}.voterPass`, { name: voter })}
                       icon={Ghost}
+                      accentColor="teal"
                       onClick={() => {
                         setVoterReady(true);
                       }}

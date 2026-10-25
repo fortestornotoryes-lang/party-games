@@ -48,7 +48,6 @@ export const TabooPassPhase: React.FC<TabooPassPhaseProps> = ({
       <PassPhoneCard
         playerName={currentExplainer}
         badge={t(`${NS.TABOO}.explainerBadge`)}
-        badgeColor={accentColor}
         instruction={instruction}
         icon={icon}
         accentColor={accentColor}

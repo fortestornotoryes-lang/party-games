@@ -1,8 +1,8 @@
-import { ArrowRight, Eye } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
 import { FitText } from '@/shared/components/FitText';
+import { SecretWordCard } from '@/shared/components/SecretWordCard';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -10,8 +10,6 @@ interface Props {
   currentPlayer: string;
   shuffledPlayers: string[];
   currentWord: string;
-  wordRevealed: boolean;
-  onReveal: () => void;
   onReady: () => void;
 }
 
@@ -19,8 +17,6 @@ export const TelestrationsStart: React.FC<Props> = ({
   currentPlayer,
   shuffledPlayers,
   currentWord,
-  wordRevealed,
-  onReveal,
   onReady,
 }) => {
   const { t } = useTranslation();
@@ -40,7 +36,9 @@ export const TelestrationsStart: React.FC<Props> = ({
             {t(`${NS.TELESTRATIONS}.firstDraws`)}
           </span>
         </div>
-        <FitText as="h3" className="text-4xl font-black italic">{currentPlayer}</FitText>
+        <FitText as="h3" className="text-4xl font-black italic">
+          {currentPlayer}
+        </FitText>
         <p className="text-sm text-white/30">{t(`${NS.TELESTRATIONS}.rememberAndDraw`)}</p>
       </div>
 
@@ -66,36 +64,16 @@ export const TelestrationsStart: React.FC<Props> = ({
         </div>
       </div>
 
-      {!wordRevealed ? (
-        <button
-          onClick={onReveal}
-          className="border-premium-orange/20 rounded-premium-3xl hover:bg-premium-orange/5 hover:border-premium-orange/40 group w-full max-w-sm border-2 border-dashed bg-white/5 p-8 text-center transition-all"
-        >
-          <p className="text-micro mb-3 font-black tracking-widest text-white/25 uppercase">
-            {t(`${NS.TELESTRATIONS}.makeSureNoOneWatches`)}
-          </p>
-          <div className="text-premium-orange/50 group-hover:text-premium-orange flex items-center justify-center gap-2 transition-colors">
-            <Eye className="h-5 w-5" />
-            <span className="text-base font-black">{t(`${NS.TELESTRATIONS}.showWord`)}</span>
-          </div>
-        </button>
-      ) : (
-        <div className="bg-premium-orange/10 border-premium-orange/30 rounded-premium-3xl w-full max-w-sm border p-8 text-center">
-          <p className="text-tag mb-2 font-black tracking-widest text-white/25 uppercase">
-            {t(`${NS.TELESTRATIONS}.yourSecretWord`)}
-          </p>
-          <FitText as="h4" className="text-premium-orange text-3xl font-black">{currentWord}</FitText>
-        </div>
-      )}
-
-      <button
-        onClick={onReady}
-        disabled={!wordRevealed}
-        className="rounded-premium-md flex w-full max-w-sm items-center justify-center space-x-3 bg-white py-5 font-black tracking-[0.2em] text-black uppercase shadow-2xl transition-opacity disabled:cursor-not-allowed disabled:opacity-30"
-      >
-        <span>{t(`${NS.TELESTRATIONS}.readyToDraw`)}</span>
-        <ArrowRight className="h-5 w-5" />
-      </button>
+      {/* Слово видно, только пока палец на карточке — как при раздаче ролей */}
+      <div className="w-full max-w-sm">
+        <SecretWordCard
+          label={t(`${NS.TELESTRATIONS}.yourSecretWord`)}
+          word={currentWord}
+          accent="orange"
+          doneLabel={t(`${NS.TELESTRATIONS}.readyToDraw`)}
+          onDone={onReady}
+        />
+      </div>
     </motion.div>
   );
 };

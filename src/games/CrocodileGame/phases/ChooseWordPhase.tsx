@@ -3,7 +3,7 @@ import type { Variants } from 'motion/react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { CROCODILE_LEVELS, LEVEL_STYLES, REPLACE_PENALTY } from '../constants';
+import { CROCODILE_LEVELS, LEVEL_COLOR, REPLACE_PENALTY } from '../constants';
 import { formatTime } from '../helpers';
 import type { WordOption } from '../types';
 
@@ -12,6 +12,7 @@ import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+import { rgba } from '@/shared/theme/colors';
 import { PHASE_VARIANTS, SPRING, STAGGER_ITEM } from '@/shared/theme/motion';
 import type { Difficulty } from '@/shared/types';
 
@@ -23,10 +24,11 @@ const LEVEL_LABEL_KEY: Record<Difficulty, string> = {
 
 /** Пауза между выбором карточки и стартом раунда — успевает сыграть анимация выбора, мс */
 const PICK_DELAY_MS = 380;
+const DISPLAY = 'font-black italic uppercase tracking-tighter';
 
 const optionKey = (option: WordOption) => `${option.difficulty}-${option.word}`;
 
-// Набор из трёх карточек: при замене старые переворачиваются «от себя», новые раздаются заново
+// Набор из трёх плит: при замене старые переворачиваются «от себя», новые раздаются заново
 const batchVariants: Variants = {
   initial: {},
   animate: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
@@ -78,15 +80,15 @@ export const ChooseWordPhase: React.FC<ChooseWordPhaseProps> = ({
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex h-full flex-col gap-4 overflow-x-hidden overflow-y-auto p-6"
+      className="flex h-full flex-col gap-5 overflow-x-hidden overflow-y-auto p-6"
     >
-      <motion.div variants={STAGGER_ITEM} className="space-y-1 text-center">
-        <Typography.Heading size="md" align="center">
+      <motion.div variants={STAGGER_ITEM} className="space-y-2">
+        <Typography.Title color="white" as="h2">
           {t(`${NS.CROCODILE}.chooseWord`)}
-        </Typography.Heading>
-        <Typography.Caption color="dimmer" align="center">
+        </Typography.Title>
+        <Typography.Body size="sm" color="muted">
           {t(`${NS.CROCODILE}.chooseHint`)}
-        </Typography.Caption>
+        </Typography.Body>
       </motion.div>
 
       <div className="flex flex-1 flex-col justify-center">
@@ -97,50 +99,73 @@ export const ChooseWordPhase: React.FC<ChooseWordPhaseProps> = ({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex flex-col gap-3 perspective-distant"
+            className="flex flex-col gap-5 perspective-distant"
           >
             {options.map((option) => {
               const level = CROCODILE_LEVELS[option.difficulty];
-              const style = LEVEL_STYLES[option.difficulty];
+              const color = LEVEL_COLOR[option.difficulty];
               const isPicked = picked !== null && optionKey(picked) === optionKey(option);
               const isDimmed = picked !== null && !isPicked;
               return (
+                // Раздача — на кнопке, реакция на выбор — на вложенном слое (см. gotchas.md)
                 <motion.button
                   key={optionKey(option)}
                   type="button"
                   variants={cardVariants}
-                  whileTap={picked ? undefined : { scale: 0.96 }}
                   onClick={() => {
                     if (!picked) setPicked(option);
                   }}
-                  className={`rounded-premium-lg flex min-h-24 flex-col items-center justify-center gap-2 border px-4 py-4 transition-colors ${style.card}`}
+                  className="block w-full text-left transition-[translate] duration-75 active:translate-y-1"
                 >
-                  <motion.div
-                    className="flex w-full flex-col items-center gap-2"
+                  <motion.span
+                    className="rounded-premium-lg relative flex w-full items-center gap-4 p-3 pr-5"
+                    style={{
+                      background: `linear-gradient(135deg, ${rgba(color, 0.14)} 0%, rgba(255,255,255,0.02) 100%)`,
+                      border: `1.5px solid ${rgba(color, 0.45)}`,
+                      boxShadow: `0 6px 0 ${rgba(color, 0.25)}, 0 0 30px ${rgba(color, 0.12)}, inset 0 1px 0 rgba(255,255,255,0.06)`,
+                    }}
                     animate={{
-                      scale: isPicked ? 1.06 : isDimmed ? 0.94 : 1,
-                      opacity: isDimmed ? 0.25 : 1,
+                      scale: isPicked ? 1.04 : isDimmed ? 0.96 : 1,
+                      opacity: isDimmed ? 0.2 : 1,
                     }}
                     transition={SPRING.pop}
                   >
-                    <FitText
-                      as="p"
-                      className="text-3xl leading-tight font-black text-white uppercase"
+                    {/* Вспышка выбранной плиты: анимируется opacity готовой тени */}
+                    <motion.span
+                      aria-hidden
+                      className="rounded-premium-lg pointer-events-none absolute -inset-px"
+                      style={{
+                        boxShadow: `0 0 50px ${rgba(color, 0.65)}, inset 0 0 24px ${rgba(color, 0.25)}`,
+                      }}
+                      initial={false}
+                      animate={{ opacity: isPicked ? 1 : 0 }}
+                      transition={{ duration: 0.25 }}
+                    />
+                    <span
+                      className={`rounded-premium-md flex h-16 w-16 shrink-0 items-center justify-center text-[26px] ${DISPLAY}`}
+                      style={{
+                        background: rgba(color, 0.14),
+                        border: `1.5px solid ${rgba(color, 0.55)}`,
+                        color: rgba(color, 1),
+                        textShadow: `0 0 24px ${rgba(color, 0.8)}`,
+                      }}
                     >
-                      {option.word}
-                    </FitText>
-                    <div className="flex flex-wrap items-center justify-center gap-2">
-                      <span
-                        className={`text-micro rounded-full border px-3 py-1 font-black tracking-[0.2em] uppercase ${style.chip}`}
+                      +{level.points}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <FitText
+                        as="span"
+                        minFontSize={14}
+                        className={`text-[26px] leading-tight text-white ${DISPLAY}`}
                       >
-                        {t(`${NS.CROCODILE}.${LEVEL_LABEL_KEY[option.difficulty]}`)}
-                      </span>
-                      <span className="text-micro font-black tracking-[0.2em] text-white/50 uppercase">
-                        {t(`${NS.CROCODILE}.pointsValue`, { n: level.points })} ·{' '}
+                        {option.word}
+                      </FitText>
+                      <span className="mt-1 block text-xs font-bold text-white/45">
+                        {t(`${NS.CROCODILE}.${LEVEL_LABEL_KEY[option.difficulty]}`)},{' '}
                         {formatTime(level.time)}
                       </span>
-                    </div>
-                  </motion.div>
+                    </span>
+                  </motion.span>
                 </motion.button>
               );
             })}
@@ -163,6 +188,7 @@ export const ChooseWordPhase: React.FC<ChooseWordPhaseProps> = ({
         )}
         <PrimaryButton
           onClick={replace}
+          disabled={picked !== null}
           iconElement={
             <motion.span
               className="relative z-10 flex"

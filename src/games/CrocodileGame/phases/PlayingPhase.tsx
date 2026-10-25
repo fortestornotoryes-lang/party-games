@@ -2,7 +2,7 @@ import { CheckCircle, Drama, XCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { CROCODILE_LEVELS, LEVEL_STYLES, URGENT_SECONDS } from '../constants';
+import { CROCODILE_LEVELS, LEVEL_COLOR, URGENT_SECONDS } from '../constants';
 import { formatTime } from '../helpers';
 import type { WordOption } from '../types';
 
@@ -14,7 +14,7 @@ import { UrgencyVignette } from '@/shared/components/UrgencyVignette';
 import { useTimerSelect, type Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-import { rgba } from '@/shared/theme/colors';
+import { getTheme, rgba } from '@/shared/theme/colors';
 import { PHASE_VARIANTS, SPRING, STAGGER_ITEM } from '@/shared/theme/motion';
 
 /** Общий вид обеих сторон карточки слова */
@@ -103,7 +103,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ ...SPRING.pop, delay: 0.75 }}
-                  className={`text-micro pt-2 font-black tracking-[0.3em] uppercase ${LEVEL_STYLES[chosen.difficulty].text}`}
+                  className={`text-micro pt-2 font-black tracking-[0.3em] uppercase ${getTheme(LEVEL_COLOR[chosen.difficulty]).text}`}
                 >
                   {t(`${NS.CROCODILE}.pointsValue`, { n: points })}
                 </motion.p>

@@ -156,6 +156,7 @@
   --animate-spin-slow: spin 24s linear infinite; /* лучи VictoryHero */
   --animate-ripple: ripple 1.4s ease-out infinite; /* расходящиеся кольца */
   --animate-shimmer: shimmer 2.8s ease-in infinite; /* блик по полосе */
+  --animate-nudge: nudge 1.4s ease-in-out infinite; /* PassPhoneCard: подсказка «смахни вверх» */
 
   @keyframes breathe {
     50% {
@@ -228,6 +229,11 @@
   }
   /* Элемент блика — во всю ширину полосы и сдвинут за её левый край (-left-full):
      без анимации его не видно, блик — узкий градиент в его центре */
+  @keyframes nudge {
+    50% {
+      transform: translateY(-7px);
+    }
+  }
   @keyframes shimmer {
     from {
       transform: translateX(0);

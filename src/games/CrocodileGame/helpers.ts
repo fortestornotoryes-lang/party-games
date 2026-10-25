@@ -30,9 +30,6 @@ export const movePlayerToNextTeam = (teams: Team[], player: string): Team[] => {
   });
 };
 
-export const isTeamsValid = (teams: Team[]): boolean =>
-  teams.every((t) => t.players.length >= MIN_TEAM_SIZE);
-
 /** Объясняющий в текущем раунде команды — игроки идут по очереди. */
 export const getExplainer = (team: Team): string =>
   team.players[team.turnsPlayed % team.players.length];

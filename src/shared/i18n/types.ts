@@ -49,6 +49,13 @@ export interface CommonTranslations {
   scoreTable: string; // 'Счёт'
   teamN: string; // 'Команда {{n}}'
   youDraw: string; // 'Рисуешь'
+  /** PassPhoneCard: подсказка под картой и кнопка — альтернатива смахиванию */
+  passSwipeHint: string; // 'Смахни карту вверх, когда телефон у тебя'
+  passTakeCard: string; // 'Взять карту'
+  /** SecretWordCard: содержимое видно, пока палец на карточке */
+  peekHint: string; // 'Держи палец на карточке, чтобы увидеть'
+  peekRelease: string; // 'Отпусти, и всё снова спрячется'
+  secretCard: string; // 'Секретная карта' — одна подпись для всех ролей раздачи
 }
 
 /** Главное меню (MainMenu) */
@@ -327,7 +334,6 @@ export interface CodenamesTranslations {
 export interface MillionaireTranslations {
   gameTitle: string; // "МИЛЛИОНЕР"
   subtitle: string; // "Кто хочет стать миллионером"
-  tapToStart: string; // "Нажми, чтобы начать"
   tierEasy: string; // "Лёгкий"
   tierMedium: string; // "Средний"
   tierHard: string; // "Сложный"
@@ -508,7 +514,6 @@ export interface SpyHuntTranslations {
   subtitleReveal: string; // 'Результаты'
 
   // RoleDistribution.tsx — shared
-  secretRole: string; // 'Секретная роль'
   startGame: string; // 'НАЧАТЬ ИГРУ'
   gotIt: string; // 'ЛАДУШКИ'
 
@@ -525,7 +530,6 @@ export interface SpyHuntTranslations {
   helpSpyConfuseOthers: string; // 'Помогай шпиону, запутывай остальных'
 
   // Agent card
-  agentLabel: string; // 'Агент'
   secretLocation: string; // 'Секретная локация'
   yourRole: string; // 'Твоя роль'
   findSpy: string; // 'Вычисли шпиона, не раскрывая локацию'
@@ -544,14 +548,11 @@ export interface SpyHuntTranslations {
 
 export interface FakeArtistTranslations {
   // Distribution
-  secretRole: string; // 'Секретная роль'
   imposter: string; // 'САМОЗВАНЕЦ'
   categoryLabel: string; // 'Тема'
   imposterHint: string; // 'Слово неизвестно — рисуй, чтобы не выдать себя'
   startGame: string; // 'НАЧАТЬ ИГРУ'
   gotIt: string; // 'ПОНЯТНО'
-  artistRole: string; // 'Художник'
-  yourWord: string; // 'Твоё слово'
   artistHint: string; // 'Рисуй, не раскрывая слово напрямую'
   // Playing phase
   turnSubtitle: string; // 'Ход {{current}} / {{total}}'
@@ -577,7 +578,6 @@ export interface ResistanceTranslations {
   selectTeam: string; // 'Выбери {{n}} чел. для операции'
   startMission: string; // 'НАЧАТЬ МИССИЮ'
   votingBadge: string; // 'Голосует'
-  tapToVote: string; // 'Нажми чтобы проголосовать'
   success: string; // 'УСПЕХ'
   fail: string; // 'ПРОВАЛ'
   missionTitle: string; // 'ОПЕРАЦИЯ'
@@ -603,7 +603,6 @@ export interface ResistanceTranslations {
 export interface TruthOrDareTranslations {
   // TruthOrDareGame.tsx, PassPhase.tsx
   subtitle: string; // 'Правда или Действие'
-  tapToContinue: string; // 'Нажми чтобы продолжить'
   // ChoicePhase.tsx
   choosing: string; // 'Выбирает'
   truthTitle: string; // 'ПРАВДА'
@@ -755,8 +754,6 @@ export interface TelestrationsTranslations {
   draws: string; // 'Рисует'
   guesses: string; // 'Угадывает'
   // TelestrationsGame.tsx — Transition phase PassPhoneCard
-  tapToSeeWord: string; // 'Нажми чтобы увидеть слово'
-  tapToSeeDrawing: string; // 'Нажми чтобы увидеть рисунок'
   // TelestrationsSetup.tsx
   settingsTitle: string; // 'Настройки'
   difficultyLabel: string; // 'Сложность'
@@ -776,8 +773,6 @@ export interface TelestrationsTranslations {
   firstDraws: string; // 'Первый рисует'
   rememberAndDraw: string; // 'Запомни слово и нарисуй его так, чтобы другие поняли'
   gameOrder: string; // 'Порядок этой игры'
-  makeSureNoOneWatches: string; // 'Убедись, что остальные не смотрят'
-  showWord: string; // 'Показать слово'
   yourSecretWord: string; // 'Твоё секретное слово'
   readyToDraw: string; // 'Я готов рисовать'
   // TelestrationsGuess.tsx

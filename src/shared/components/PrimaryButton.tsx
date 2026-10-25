@@ -2,6 +2,8 @@ import type { LucideIcon } from 'lucide-react';
 import React from 'react';
 
 import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
+import { getTheme } from '@/shared/theme/colors';
+import type { GameTheme } from '@/shared/types';
 
 export type ButtonVariant = 'white' | 'premium' | 'red' | 'blue' | 'emerald' | 'purple' | 'outline';
 const buttonVariants: Record<ButtonVariant, string> = {
@@ -21,6 +23,8 @@ interface PrimaryButtonProps {
   iconElement?: React.ReactNode;
   disabled?: boolean;
   variant?: ButtonVariant;
+  /** Цвет игры (как кнопка «Старт» в Setup) — заменяет variant */
+  theme?: GameTheme;
   className?: string;
   type?: 'button' | 'submit';
 }
@@ -32,6 +36,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   iconElement,
   disabled,
   variant = 'premium',
+  theme,
   className,
   type = 'button',
 }) => {
@@ -49,7 +54,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       type={type}
       onClick={handleClick}
       disabled={disabled}
-      className={`${baseStyles} ${buttonVariants[variant]} ${className ?? ''}`}
+      className={`${baseStyles} ${theme ? `${getTheme(theme).button} text-white` : buttonVariants[variant]} ${className ?? ''}`}
     >
       <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       {iconElement ?? (Icon && <Icon className="relative z-10 h-6 w-6" />)}

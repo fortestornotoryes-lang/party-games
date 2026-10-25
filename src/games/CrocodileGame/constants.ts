@@ -2,7 +2,7 @@ import type {TeamColor} from './types';
 
 import type {ButtonVariant} from '@/shared/components/PrimaryButton';
 import type {TypoColor} from '@/shared/components/Typography';
-import type {Difficulty} from '@/shared/types';
+import type {Difficulty, GameTheme} from '@/shared/types';
 
 /** Награда и время на объяснение по сложности выбранного слова. */
 export const CROCODILE_LEVELS: Record<Difficulty, { points: number; time: number }> = {
@@ -14,23 +14,11 @@ export const CROCODILE_LEVELS: Record<Difficulty, { points: number; time: number
 /** Порядок карточек выбора: от лёгкого к сложному. */
 export const LEVEL_ORDER: readonly Difficulty[] = ['easy', 'medium', 'hard'];
 
-/** Литеральные классы (Tailwind не видит динамически собранные) для карточек сложности. */
-export const LEVEL_STYLES: Record<Difficulty, { card: string; chip: string; text: string }> = {
-    easy: {
-        card: 'bg-premium-green/[0.07] border-premium-green/20 active:bg-premium-green/14',
-        chip: 'bg-premium-green/10 border-premium-green/25 text-premium-green',
-        text: 'text-premium-green',
-    },
-    medium: {
-        card: 'bg-premium-yellow/[0.07] border-premium-yellow/20 active:bg-premium-yellow/14',
-        chip: 'bg-premium-yellow/10 border-premium-yellow/25 text-premium-yellow',
-        text: 'text-premium-yellow',
-    },
-    hard: {
-        card: 'bg-premium-red/[0.07] border-premium-red/20 active:bg-premium-red/14',
-        chip: 'bg-premium-red/10 border-premium-red/25 text-premium-red',
-        text: 'text-premium-red',
-    },
+/** Цвет сложности: плита выбора слова, подпись слова в раунде. */
+export const LEVEL_COLOR: Record<Difficulty, GameTheme> = {
+    easy: 'green',
+    medium: 'yellow',
+    hard: 'red',
 };
 
 /** Цели партии (до скольки очков играем). */

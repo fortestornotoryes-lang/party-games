@@ -45,6 +45,11 @@ export const ru: Translations = {
     scoreTable: 'Счёт',
     teamN: 'Команда {{n}}',
     youDraw: 'Рисуешь',
+    passSwipeHint: 'Смахни карту вверх, когда телефон у тебя',
+    passTakeCard: 'Взять карту',
+    peekHint: 'Держи палец на карточке, чтобы увидеть',
+    peekRelease: 'Отпусти, и всё снова спрячется',
+    secretCard: 'Секретная карта',
   },
   menu: {
     tagline: '{{n}} игр · Вечеринка начинается',
@@ -594,7 +599,6 @@ export const ru: Translations = {
   millionaire: {
     gameTitle: 'МИЛЛИОНЕР',
     subtitle: 'Кто хочет стать миллионером',
-    tapToStart: 'Нажми, чтобы начать',
     tierEasy: 'Лёгкий',
     tierMedium: 'Средний',
     tierHard: 'Сложный',
@@ -726,7 +730,6 @@ export const ru: Translations = {
     subtitlePlaying: 'Идет поиск...',
     subtitleReveal: 'Результаты',
 
-    secretRole: 'Секретная роль',
     startGame: 'НАЧАТЬ ИГРУ',
     gotIt: 'ЛАДУШКИ',
 
@@ -740,7 +743,6 @@ export const ru: Translations = {
     yourLocation: 'Твоя локация',
     helpSpyConfuseOthers: 'Помогай шпиону, запутывай остальных',
 
-    agentLabel: 'Агент',
     secretLocation: 'Секретная локация',
     yourRole: 'Твоя роль',
     findSpy: 'Вычисли шпиона, не раскрывая локацию',
@@ -755,14 +757,11 @@ export const ru: Translations = {
     backToMenu: 'ВЕРНУТЬСЯ В МЕНЮ',
   },
   fake_artist: {
-    secretRole: 'Секретная роль',
     imposter: 'САМОЗВАНЕЦ',
     categoryLabel: 'Тема',
     imposterHint: 'Слово неизвестно — рисуй,\nчтобы не выдать себя',
     startGame: 'НАЧАТЬ ИГРУ',
     gotIt: 'ПОНЯТНО',
-    artistRole: 'Художник',
-    yourWord: 'Твоё слово',
     artistHint: 'Рисуй, не раскрывая слово напрямую',
     turnSubtitle: 'Ход {{current}} / {{total}}',
     drawingLabel: 'Рисует',
@@ -778,7 +777,6 @@ export const ru: Translations = {
   },
   truth_or_dare: {
     subtitle: 'Правда или Действие',
-    tapToContinue: 'Нажми чтобы продолжить',
     choosing: 'Выбирает',
     truthTitle: 'ПРАВДА',
     truthHint: 'Ответь честно',
@@ -938,8 +936,6 @@ export const ru: Translations = {
     playerCount: 'Игроков: {{n}}',
     draws: 'Рисует',
     guesses: 'Угадывает',
-    tapToSeeWord: 'Нажми чтобы увидеть слово',
-    tapToSeeDrawing: 'Нажми чтобы увидеть рисунок',
     settingsTitle: 'Настройки',
     difficultyLabel: 'Сложность',
     difficultyLabels: {
@@ -957,8 +953,6 @@ export const ru: Translations = {
     firstDraws: 'Первый рисует',
     rememberAndDraw: 'Запомни слово и нарисуй его так, чтобы другие поняли',
     gameOrder: 'Порядок этой игры',
-    makeSureNoOneWatches: 'Убедись, что остальные не смотрят',
-    showWord: 'Показать слово',
     yourSecretWord: 'Твоё секретное слово',
     readyToDraw: 'Я готов рисовать',
     guessDrawing: '💬 Угадай рисунок',
@@ -978,7 +972,6 @@ export const ru: Translations = {
     selectTeam: 'Выбери {{n}} чел. для операции',
     startMission: 'НАЧАТЬ МИССИЮ',
     votingBadge: 'Голосует',
-    tapToVote: 'Нажми чтобы проголосовать',
     success: 'УСПЕХ',
     fail: 'ПРОВАЛ',
     missionTitle: 'ОПЕРАЦИЯ',

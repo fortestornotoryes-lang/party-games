@@ -45,6 +45,11 @@ export const en: Translations = {
     scoreTable: 'Score',
     teamN: 'Team {{n}}',
     youDraw: 'Drawing',
+    passSwipeHint: 'Swipe the card up once you have the phone',
+    passTakeCard: 'Take the card',
+    peekHint: 'Hold your finger on the card to see it',
+    peekRelease: 'Let go and it hides again',
+    secretCard: 'Secret card',
   },
   menu: {
     tagline: '{{n}} games · Let the party begin',
@@ -594,7 +599,6 @@ export const en: Translations = {
   millionaire: {
     gameTitle: 'MILLIONAIRE',
     subtitle: 'Who Wants to Be a Millionaire',
-    tapToStart: 'Tap to start',
     tierEasy: 'Easy',
     tierMedium: 'Medium',
     tierHard: 'Hard',
@@ -726,7 +730,6 @@ export const en: Translations = {
     subtitlePlaying: 'Search in progress...',
     subtitleReveal: 'Results',
 
-    secretRole: 'Secret Role',
     startGame: 'START GAME',
     gotIt: 'GOT IT',
 
@@ -740,7 +743,6 @@ export const en: Translations = {
     yourLocation: 'Your location',
     helpSpyConfuseOthers: 'Help the spy, confuse the others',
 
-    agentLabel: 'Agent',
     secretLocation: 'Secret Location',
     yourRole: 'Your role',
     findSpy: 'Find the spy without revealing the location',
@@ -755,14 +757,11 @@ export const en: Translations = {
     backToMenu: 'BACK TO MENU',
   },
   fake_artist: {
-    secretRole: 'Secret Role',
     imposter: 'IMPOSTOR',
     categoryLabel: 'Theme',
     imposterHint: 'Word unknown — draw without\ngiving yourself away',
     startGame: 'START GAME',
     gotIt: 'GOT IT',
-    artistRole: 'Artist',
-    yourWord: 'Your Word',
     artistHint: 'Draw without directly revealing the word',
     turnSubtitle: 'Turn {{current}} / {{total}}',
     drawingLabel: 'Drawing',
@@ -778,7 +777,6 @@ export const en: Translations = {
   },
   truth_or_dare: {
     subtitle: 'Truth or Dare',
-    tapToContinue: 'Tap to continue',
     choosing: 'Chooses',
     truthTitle: 'TRUTH',
     truthHint: 'Answer honestly',
@@ -939,8 +937,6 @@ export const en: Translations = {
     playerCount: 'Players: {{n}}',
     draws: 'Drawing',
     guesses: 'Guessing',
-    tapToSeeWord: 'Tap to see the word',
-    tapToSeeDrawing: 'Tap to see the drawing',
     settingsTitle: 'Settings',
     difficultyLabel: 'Difficulty',
     difficultyLabels: {
@@ -958,8 +954,6 @@ export const en: Translations = {
     firstDraws: 'First one draws',
     rememberAndDraw: 'Remember the word and draw it so others can guess',
     gameOrder: "This game's order",
-    makeSureNoOneWatches: 'Make sure no one else is looking',
-    showWord: 'Show word',
     yourSecretWord: 'Your secret word',
     readyToDraw: "I'm ready to draw",
     guessDrawing: '💬 Guess the drawing',
@@ -979,7 +973,6 @@ export const en: Translations = {
     selectTeam: 'Pick {{n}} agents for the operation',
     startMission: 'START MISSION',
     votingBadge: 'Voting',
-    tapToVote: 'Tap to cast your vote',
     success: 'SUCCESS',
     fail: 'SABOTAGE',
     missionTitle: 'OPERATION',

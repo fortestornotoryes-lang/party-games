@@ -28,10 +28,8 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ currentPlayer, onPassDone 
           <PassPhoneCard
             playerName={currentPlayer}
             badge={t(`${NS.TRUTH_OR_DARE}.subtitle`)}
-            badgeColor="red"
             accentColor="red"
             icon={Flame}
-            instruction={t(`${NS.TRUTH_OR_DARE}.tapToContinue`)}
             onClick={onPassDone}
           />
         </div>

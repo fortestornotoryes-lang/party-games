@@ -27,10 +27,8 @@ export const PassPhase: React.FC<PassPhaseProps> = ({ currentPlayer, onPassDone 
           <PassPhoneCard
             playerName={currentPlayer}
             badge={t(`${NS.MILLIONAIRE}.subtitle`)}
-            badgeColor="yellow"
             accentColor="yellow"
             icon={Trophy}
-            instruction={t(`${NS.MILLIONAIRE}.tapToStart`)}
             onClick={onPassDone}
           />
         </div>

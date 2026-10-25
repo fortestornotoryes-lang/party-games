@@ -5,12 +5,13 @@ import React, { useState } from 'react';
 import type { Player } from '@/entities/player/types';
 import { PassPhoneCard } from '@/shared/components/PassPhoneCard';
 import { ProgressDots } from '@/shared/components/ProgressDots';
-
-type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
+import type { GameTheme } from '@/shared/types';
 
 export interface CardStyleResult {
   className?: string;
   style?: React.CSSProperties;
+  /** Карточка рисует себя сама (SecretWordCard) — без рамки и overflow-hidden обёртки */
+  bare?: boolean;
 }
 
 interface DistributionFlowProps {
@@ -22,7 +23,7 @@ interface DistributionFlowProps {
   getCardStyle?: (player: Player) => CardStyleResult;
   passInstruction?: string;
   passIcon?: LucideIcon;
-  passAccentColor?: AccentColor;
+  passAccentColor?: GameTheme;
   /** Tailwind class for ProgressDots active dot, e.g. "bg-premium-red" */
   activeColor?: string;
 }
@@ -86,6 +87,7 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
                   instruction={passInstruction}
                   icon={passIcon}
                   accentColor={passAccentColor}
+                  deckDepth={Math.min(2, players.length - currentIndex - 1)}
                   onClick={() => {
                     setIsRevealed(true);
                   }}
@@ -97,8 +99,12 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
                 initial={{ scale: 0.82, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className={`rounded-premium-2xl relative flex w-full flex-col overflow-hidden ${cardMeta.className ?? ''}`}
-                style={cardMeta.style}
+                className={
+                  cardMeta.bare
+                    ? 'w-full'
+                    : `rounded-premium-2xl relative flex w-full flex-col overflow-hidden ${cardMeta.className ?? ''}`
+                }
+                style={cardMeta.bare ? undefined : cardMeta.style}
               >
                 {renderCard(currentPlayer, isLast, handleNext)}
               </motion.div>

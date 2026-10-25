@@ -72,7 +72,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
   );
   const [initialWord, setInitialWord] = usePersistedState(K, 'initialWord', initState?.word ?? '');
   const [currentWord, setCurrentWord] = usePersistedState(K, 'currentWord', initState?.word ?? '');
-  const [wordRevealed, setWordRevealed] = usePersistedState(K, 'wordRevealed', false);
   const [guess, setGuess] = useState('');
 
   const currentPlayer = shuffledPlayers[currentRound % shuffledPlayers.length];
@@ -108,7 +107,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setShuffledPlayers(shuffle(playerNames));
     setSteps([]);
     setCurrentRound(0);
-    setWordRevealed(false);
     timer.setTimeLeft(0);
     setPhase(TelestrationsPhase.Start);
   };
@@ -116,7 +114,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
   const startNewGame = () => {
     setSteps([]);
     setCurrentRound(0);
-    setWordRevealed(false);
     timer.setTimeLeft(0);
     setPhase(TelestrationsPhase.Setup);
   };
@@ -167,10 +164,6 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
               currentPlayer={currentPlayer}
               shuffledPlayers={shuffledPlayers}
               currentWord={currentWord}
-              wordRevealed={wordRevealed}
-              onReveal={() => {
-                setWordRevealed(true);
-              }}
               onReady={startAction}
             />
           )}
@@ -206,12 +199,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
                       ? t(`${NS.TELESTRATIONS}.draws`)
                       : t(`${NS.TELESTRATIONS}.guesses`)
                   }
-                  badgeColor={isDrawingRound ? 'orange' : 'sky'}
-                  instruction={
-                    isDrawingRound
-                      ? t(`${NS.TELESTRATIONS}.tapToSeeWord`)
-                      : t(`${NS.TELESTRATIONS}.tapToSeeDrawing`)
-                  }
+                  accentColor={isDrawingRound ? 'orange' : 'sky'}
                   onClick={startAction}
                 />
               </div>

@@ -16,7 +16,13 @@
 
 ## Общие компоненты (`src/shared/components/`)
 
-Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, RingTimer (круговой таймер раунда), TimerValue (render-prop секунд таймера — изолирует тики), FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Анимационные: AnimatedNumber (прокрутка числа), VictoryHero (кубок/корона с лучами и искрами), FlipCard (3D-переворот при монтировании), UrgencyVignette (красная виньетка последних секунд). Игрокоспецифичные списки — `entities/player/components/` (LeaderboardList с `animated`, FinalStandings — финал игры на очки).
+Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, RingTimer (круговой таймер раунда), TimerValue (render-prop секунд таймера — изолирует тики), FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона: колода, карту смахивают вверх или «Взять карту»), SecretWordCard (+ SecretDetail; секрет виден, пока палец на карточке), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Анимационные: AnimatedNumber (прокрутка числа), VictoryHero (кубок/корона с лучами и искрами), FlipCard (3D-переворот при монтировании), UrgencyVignette (красная виньетка последних секунд). PrimaryButton с `theme={GameTheme}` — кнопка цвета игры. Деление на команды — `features/team-setup` (TeamSetupPhase + NeonOption), раздача ролей — `features/role-distribution` (DistributionFlow; `getCardStyle → { bare: true }` для SecretWordCard). Игрокоспецифичные списки — `entities/player/components/` (LeaderboardList с `animated`, FinalStandings — финал игры на очки).
+
+## Неоновый стиль общих экранов
+
+Тёмная карточка `linear-gradient(160deg, #1b1630, #0d0a18)` + рамка `1.5px rgba(цвет игры, 0.4–0.55)` + внешнее свечение `0 0 70px rgba(цвет, 0.18–0.25)` + радиальный блик сверху; крупный текст — `font-black italic uppercase tracking-tighter` со `textShadow` цветом игры; подписи — `Typography.Label` (капс с разрядкой). Образцы: `PassPhoneCard`, `SecretWordCard`, `TeamSetupPhase`, `CrocodileGame/phases/ChooseWordPhase.tsx`. Цвет экрана передачи/показа — цвет игры из реестра.
+
+**Раздача ролей:** все роли одной раздачи показываются одной механикой и с одной подписью (`common.secretCard`) — иначе по поведению игрока (держит палец или нет) или по подписи видно особую роль.
 
 ## Анимации
 

@@ -202,7 +202,6 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
           {phase === CodenamesPhase.PassCaptain && (
             <PassPhoneCard
               playerName={currentCaptain}
-              badgeColor={turn}
               playerLabel={t(`${NS.CODENAMES}.captain`)}
               instruction={t(`${NS.CODENAMES}.othersNoSee`)}
               icon={User}
@@ -231,7 +230,6 @@ export const CodenamesGame: React.FC<CodenamesGameProps> = ({ playerNames, onBac
               playerName={
                 turn === 'red' ? t(`${NS.CODENAMES}.teamRed`) : t(`${NS.CODENAMES}.teamBlue`)
               }
-              badgeColor={turn}
               playerLabel={t(`${NS.COMMON}.team`)}
               instruction={t(`${NS.CODENAMES}.othersNoSee`)}
               icon={User}

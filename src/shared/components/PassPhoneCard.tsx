@@ -1,219 +1,199 @@
 import type { LucideIcon } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
+import type { PanInfo } from 'motion/react';
 import { motion } from 'motion/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FitText } from '@/shared/components/FitText';
+import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
-
-type BadgeColor = 'orange' | 'sky' | 'red' | 'green' | 'blue' | 'purple' | 'yellow' | 'default';
-type AccentColor = 'green' | 'sky' | 'red' | 'orange' | 'blue' | 'purple' | 'yellow' | 'default';
+import { useTranslation } from '@/shared/i18n';
+import { NS } from '@/shared/i18n/keys';
+import { feedbackService, VIBRATE } from '@/shared/services/feedbackService';
+import { rgba } from '@/shared/theme/colors';
+import { SPRING } from '@/shared/theme/motion';
+import type { GameTheme } from '@/shared/types';
 
 interface PassPhoneCardProps {
   playerName: string;
+  /** Подпись над именем; по умолчанию «Передай телефон» */
   playerLabel?: string;
+  /** Чип действия/роли над именем («Объясняет», «Голосует») */
   badge?: string;
-  badgeColor?: BadgeColor;
+  /** Пояснение под именем */
   instruction?: string;
+  /** Иконка в углах карты; без неё — первая буква имени */
   icon?: LucideIcon;
-  accentColor?: AccentColor;
+  accentColor?: GameTheme;
+  /** Сколько карт колоды видно под верхней (0–2) */
+  deckDepth?: number;
   onClick: () => void;
 }
 
-const badgeStyles: Record<BadgeColor, string> = {
-  orange: 'bg-premium-orange/10 border-premium-orange/20 text-premium-orange',
-  sky: 'bg-premium-sky/10    border-premium-sky/20    text-premium-sky',
-  red: 'bg-premium-red/10    border-premium-red/20    text-premium-red',
-  green: 'bg-premium-green/10  border-premium-green/20  text-premium-green',
-  blue: 'bg-premium-blue/10   border-premium-blue/20   text-premium-blue',
-  purple: 'bg-premium-purple/10 border-premium-purple/20 text-premium-purple',
-  yellow: 'bg-premium-yellow/10 border-premium-yellow/20 text-premium-yellow',
-  default: 'bg-white/5           border-white/10          text-white/40',
-};
+/** Смахивание засчитывается после стольких px вверх или при броске с такой скоростью */
+const SWIPE_DISTANCE = 90;
+const SWIPE_VELOCITY = 500;
+/** Карта улетает вверх — потом onClick, мс */
+const FLY_AWAY_MS = 320;
+const CARD_RADIUS = 28;
+const DEFAULT_DECK_DEPTH = 2;
 
-const accentStyles: Record<
-  AccentColor,
-  {
-    ring: string;
-    icon: string;
-    border: string;
-    glow: string;
-    text: string;
-    shadow: string;
-  }
-> = {
-  default: {
-    ring: 'bg-white/4 border-white/8',
-    icon: 'text-white/35',
-    border: 'border-premium-blue',
-    glow: 'rgba(0,0,0,0.55)',
-    text: 'text-white/22',
-    shadow: 'shadow-[0_0_15px_rgba(255,255,255,0.15)]',
-  },
-  green: {
-    ring: 'bg-premium-green/10 border-premium-green/30',
-    icon: 'text-premium-green',
-    border: 'border-premium-green',
-    glow: 'rgba(34,197,94,0.15)',
-    text: 'text-premium-green/40',
-    shadow: 'shadow-[0_0_20px_rgba(0,216,138,0.4)] text-premium-green',
-  },
-  sky: {
-    ring: 'bg-premium-sky/10 border-premium-sky/30',
-    icon: 'text-premium-sky',
-    border: 'border-premium-sky',
-    glow: 'rgba(14,165,233,0.15)',
-    text: 'text-premium-sky/40',
-    shadow: 'shadow-[0_0_20px_rgba(31,182,255,0.4)] text-premium-sky',
-  },
-  red: {
-    ring: 'bg-premium-red/10 border-premium-red/30',
-    icon: 'text-premium-red',
-    border: 'border-premium-red',
-    glow: 'rgba(239,68,68,0.15)',
-    text: 'text-premium-red/40',
-    shadow: 'shadow-[0_0_20px_rgba(255,46,77,0.4)] text-premium-red',
-  },
-  orange: {
-    ring: 'bg-premium-orange/10 border-premium-orange/30',
-    icon: 'text-premium-orange',
-    border: 'border-premium-orange',
-    glow: 'rgba(249,115,22,0.15)',
-    text: 'text-premium-orange/40',
-    shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.4)] text-premium-orange',
-  },
-  blue: {
-    ring: 'bg-premium-blue/10 border-premium-blue/30',
-    icon: 'text-premium-blue',
-    border: 'border-premium-blue',
-    glow: 'rgba(59,130,246,0.15)',
-    text: 'text-premium-blue/40',
-    shadow: 'shadow-[0_0_20px_rgba(63,123,255,0.4)] text-premium-blue',
-  },
-  purple: {
-    ring: 'bg-premium-purple/10 border-premium-purple/30',
-    icon: 'text-premium-purple',
-    border: 'border-premium-purple',
-    glow: 'rgba(168,85,247,0.15)',
-    text: 'text-premium-purple/40',
-    shadow: 'shadow-[0_0_20px_rgba(199,123,255,0.4)] text-premium-purple',
-  },
-  yellow: {
-    ring: 'bg-premium-yellow/10 border-premium-yellow/30',
-    icon: 'text-premium-yellow',
-    border: 'border-premium-yellow',
-    glow: 'rgba(234,179,8,0.15)',
-    text: 'text-premium-yellow/40',
-    shadow: 'shadow-[0_0_20px_rgba(255,204,31,0.4)] text-premium-yellow',
-  },
-};
+/** Фон неоновой карты — как у карточек ролей */
+const CARD_BG = 'linear-gradient(160deg, #1b1630 0%, #0d0a18 100%)';
+const DISPLAY = 'font-black italic uppercase tracking-tighter';
+
+/** Неоновая «рубашка»: тёмная карта с сеткой цвета игры и свечением сверху */
+const cardBack = (accent: GameTheme, borderAlpha: number): React.CSSProperties => ({
+  background: [
+    `radial-gradient(circle at 50% 0%, ${rgba(accent, 0.3)}, transparent 65%)`,
+    `repeating-linear-gradient(45deg, ${rgba(accent, 0.07)} 0 1px, transparent 1px 14px)`,
+    `repeating-linear-gradient(-45deg, ${rgba(accent, 0.07)} 0 1px, transparent 1px 14px)`,
+    CARD_BG,
+  ].join(', '),
+  border: `1.5px solid ${rgba(accent, borderAlpha)}`,
+  borderRadius: CARD_RADIUS,
+});
+
+/**
+ * Передача телефона: колода, верхняя карта подписана именем игрока.
+ * Карту смахивают вверх (или кнопка «Взять карту») — она улетает, и вызывается onClick.
+ */
 export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
   playerName,
   playerLabel,
   badge,
-  badgeColor = 'default',
   instruction,
   icon: Icon,
-  accentColor = 'default',
+  accentColor = 'purple',
+  deckDepth = DEFAULT_DECK_DEPTH,
   onClick,
 }) => {
-  const accent = accentStyles[accentColor];
+  const { t } = useTranslation();
+  const [gone, setGone] = useState(false);
+  const accent = accentColor;
+
+  useEffect(() => {
+    if (!gone) return;
+    const id = window.setTimeout(onClick, FLY_AWAY_MS);
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [gone, onClick]);
+
+  // Звук и вибрацию кнопки даёт PrimaryButton, смахиванию — свои
+  const onDragEnd = (_: PointerEvent, info: PanInfo) => {
+    if (info.offset.y > -SWIPE_DISTANCE && info.velocity.y > -SWIPE_VELOCITY) return;
+    feedbackService.playSound('click');
+    feedbackService.vibrate(VIBRATE.tap);
+    setGone(true);
+  };
+
+  const glow = { color: rgba(accent, 1), filter: `drop-shadow(0 0 8px ${rgba(accent, 0.8)})` };
+  const corner = Icon ? (
+    <Icon className="h-6 w-6" style={glow} />
+  ) : (
+    <span
+      className={`text-2xl ${DISPLAY}`}
+      style={{ color: rgba(accent, 1), textShadow: `0 0 24px ${rgba(accent, 0.8)}` }}
+    >
+      {playerName.charAt(0).toUpperCase()}
+    </span>
+  );
 
   return (
-    <motion.div
-      whileTap={{ scale: 0.97 }}
-      onClick={onClick}
-      className="rounded-premium-2xl relative flex min-h-[calc(min(100vw_-_3rem,24rem)*4/3)] w-full cursor-pointer flex-col items-center justify-center overflow-hidden transition-colors duration-300"
-      style={{
-        background:
-          'linear-gradient(145deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.018) 100%)',
-        border: `1.5px solid ${accent.border}`,
-        boxShadow: `var(--shadow-card), 0 0 40px ${accent.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`,
-      }}
-    >
-      {/* Grid texture */}
-      <div
-        className="opacity-noise absolute inset-0"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
-        }}
-      />
-
-      <div
-        className={`rounded-tl-premium-xs absolute top-5 left-5 h-10 w-10 border-t border-l ${accent.border}`}
-      />
-      <div
-        className={`absolute top-5 right-5 h-10 w-10 border-t border-r ${accent.border} rounded-tr-premium-xs`}
-      />
-      <div
-        className={`absolute bottom-5 left-5 h-10 w-10 border-b border-l ${accent.border} rounded-bl-premium-xs`}
-      />
-      <div
-        className={`absolute right-5 bottom-5 h-10 w-10 border-r border-b ${accent.border} rounded-br-premium-xs`}
-      />
-
-      <div className="relative z-10 space-y-7 px-6 text-center sm:px-10">
-        <div
-          className={`animate-beacon mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full border transition-colors duration-500 ${accent.ring}`}
+    <div className="flex w-full flex-col items-center gap-6 select-none">
+      <div className="relative aspect-[5/7] w-full max-w-[290px]">
+        {/* Остаток колоды под верхней картой */}
+        {Array.from({ length: deckDepth }, (_, i) => deckDepth - i).map((depth) => (
+          <span
+            key={depth}
+            aria-hidden
+            className="absolute inset-0 opacity-50"
+            style={{
+              ...cardBack(accent, 0.25),
+              transform: `translateY(${depth * 10}px) rotate(${depth * 2.5}deg)`,
+            }}
+          />
+        ))}
+        <motion.div
+          drag={gone ? false : 'y'}
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.7}
+          onDragEnd={onDragEnd}
+          animate={gone ? { y: -720, rotate: -14, opacity: 0 } : { y: 0, rotate: 0, opacity: 1 }}
+          transition={gone ? { duration: FLY_AWAY_MS / 1000, ease: 'easeIn' } : SPRING.snappy}
+          className="absolute inset-0 cursor-grab touch-none overflow-hidden active:cursor-grabbing"
+          style={{
+            ...cardBack(accent, 0.55),
+            boxShadow: `0 0 70px ${rgba(accent, 0.25)}, var(--shadow-card), inset 0 1px 0 ${rgba(accent, 0.14)}`,
+          }}
         >
-          {!!Icon && <Icon className={`h-12 w-12 transition-colors duration-300 ${accent.icon}`} />}
-        </div>
+          <span
+            aria-hidden
+            className="absolute inset-3 rounded-[20px] border"
+            style={{
+              borderColor: rgba(accent, 0.3),
+              boxShadow: `inset 0 0 24px ${rgba(accent, 0.12)}`,
+            }}
+          />
+          <span aria-hidden className="absolute top-6 left-6">
+            {corner}
+          </span>
+          <span aria-hidden className="absolute right-6 bottom-6 rotate-180">
+            {corner}
+          </span>
 
-        <div className="space-y-3">
-          {!!badge && (
-            <div
-              className={`text-micro inline-block rounded-full border px-3 py-1 font-black tracking-widest uppercase transition-colors duration-300 ${badgeStyles[badgeColor]}`}
-            >
-              {badge}
-            </div>
-          )}
-          <div>
-            <Typography.Label
-              size="sm"
-              className={`mb-2 font-black tracking-[0.45em] uppercase transition-colors duration-300 ${accent.text}`}
-            >
-              {playerLabel}
-            </Typography.Label>
-
-            {/* Cyberpunk HUD Container */}
-            <div className="rounded-premium-xs relative inline-flex max-w-full items-center justify-center overflow-visible border border-white/5 bg-black/40 px-4 py-3 delay-1000 sm:px-6">
-              {/* Технологический микро-текст по бокам */}
-              <span className="text-pico absolute bottom-1 left-1 font-mono text-white/20 select-none">
-                SYS_ERR
-              </span>
-              <span className="text-pico text-premium-pink/40 absolute top-1 right-1 font-mono select-none">
-                [v4.02]
-              </span>
-
-              {/* Задняя плашка помех, которая взрывается глитчами */}
-              <div className="animate-matrix-glitch pointer-events-none absolute inset-0 z-0 bg-white/5 opacity-5" />
-
-              {/* FitText: длинное имя уменьшается, а не вылезает за карточку */}
-              <FitText
-                as="h2"
-                minFontSize={12}
-                className="font-display relative z-10 text-4xl leading-none font-black tracking-tighter text-white/80 uppercase italic select-none"
+          <div
+            className="rounded-premium-lg absolute inset-x-5 top-1/2 -translate-y-1/2 bg-black/50 px-4 py-5 text-center"
+            style={{ border: `1.5px solid ${rgba(accent, 0.35)}` }}
+          >
+            {badge && (
+              <span
+                className="text-micro mb-3 inline-block rounded-full px-3 py-1 font-black tracking-widest uppercase"
+                style={{
+                  color: rgba(accent, 1),
+                  background: rgba(accent, 0.12),
+                  border: `1px solid ${rgba(accent, 0.3)}`,
+                }}
               >
-                {playerName}
-
-                {/* Glitch Layer 1 - Cyan / Мощное смещение */}
-                <span className="text-premium-cyan animate-cyber-hard-1 pointer-events-none absolute top-0 left-0 z-[-1] h-full w-full opacity-100 mix-blend-screen select-none before:content-['_'] after:content-['_']">
-                  {playerName}
-                </span>
-
-                {/* Glitch Layer 2 - Pink-Red / Противоположный разрыв */}
-                <span className="text-premium-pink animate-cyber-hard-2 pointer-events-none absolute top-0 left-0 z-[-2] h-full w-full opacity-100 mix-blend-screen select-none before:content-['_'] after:content-['_']">
-                  {playerName}
-                </span>
-              </FitText>
-            </div>
+                {badge}
+              </span>
+            )}
+            <Typography.Label size="xs" color="muted" align="center">
+              {playerLabel ?? t(`${NS.COMMON}.passPhone`)}
+            </Typography.Label>
+            <FitText
+              as="h2"
+              minFontSize={16}
+              className={`mt-2 text-[44px] leading-none text-white ${DISPLAY}`}
+              style={{ textShadow: `0 0 32px ${rgba(accent, 0.6)}` }}
+            >
+              {playerName}
+            </FitText>
+            {instruction && (
+              <Typography.Body size="xs" color="muted" align="center" className="mt-3 leading-snug">
+                {instruction}
+              </Typography.Body>
+            )}
           </div>
-        </div>
-
-        <Typography.Body className="leading-relaxed font-bold tracking-[0.25em] text-white/18 uppercase">
-          {instruction}
-        </Typography.Body>
+        </motion.div>
       </div>
-    </motion.div>
+
+      <div className="flex w-full max-w-sm flex-col items-center gap-3">
+        <ChevronUp aria-hidden className="animate-nudge h-7 w-7" style={glow} />
+        <Typography.Body size="sm" color="muted" align="center">
+          {t(`${NS.COMMON}.passSwipeHint`)}
+        </Typography.Body>
+        <PrimaryButton
+          variant="premium"
+          onClick={() => {
+            setGone(true);
+          }}
+          disabled={gone}
+        >
+          {t(`${NS.COMMON}.passTakeCard`)}
+        </PrimaryButton>
+      </div>
+    </div>
   );
 };

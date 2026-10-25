@@ -149,6 +149,7 @@ export const WhoAmongUsGame: React.FC<WhoAmongUsGameProps> = ({ playerNames, onB
                       playerLabel={t(`${NS.WHO_AMONG_US}.voterLabel`)}
                       instruction={t(`${NS.WHO_AMONG_US}.voterPass`, { name: voter })}
                       icon={Vote}
+                      accentColor="pink"
                       onClick={() => {
                         setVoterReady(true);
                       }}

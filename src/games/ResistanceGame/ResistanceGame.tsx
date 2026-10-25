@@ -223,8 +223,6 @@ export const ResistanceGame: React.FC<ResistanceGameProps> = ({ playerNames, onB
               <PassPhoneCard
                 playerName={currentVoter?.name ?? ''}
                 badge={t(`${NS.RESISTANCE}.votingBadge`)}
-                badgeColor="sky"
-                instruction={t(`${NS.RESISTANCE}.tapToVote`)}
                 icon={Fingerprint}
                 accentColor="sky"
                 onClick={() => {

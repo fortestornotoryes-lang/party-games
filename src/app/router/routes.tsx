@@ -57,17 +57,6 @@ export const router = createBrowserRouter(
             { path: 'play', element: <GamePlayRoute /> },
           ],
         },
-        // Дизайн-лаборатория общих экранов — только в dev, в прод-сборку не попадает
-        ...(import.meta.env.DEV
-          ? [
-              {
-                path: 'design-lab',
-                lazy: async () => ({
-                  Component: (await import('@/pages/design-lab/DesignLabRoute')).DesignLabRoute,
-                }),
-              },
-            ]
-          : []),
         { path: '*', element: <Navigate to="/" replace /> },
       ],
     },
