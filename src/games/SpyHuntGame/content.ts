@@ -1,4 +1,5 @@
 import type { Difficulty } from '@/shared/types';
+import { EXTRA_LOCATIONS } from './extraContent';
 
 export type SpyDifficulty = Difficulty;
 
@@ -3525,4 +3526,5 @@ export const LOCATIONS_DATA: readonly LocationInfo[] = [
       'Бортовой ИИ капсулы',
     ],
   },
+  ...EXTRA_LOCATIONS,
 ] as const;

@@ -1,4 +1,5 @@
 import type { Difficulty } from '@/shared/types';
+import { EXTRA_FAKE_ARTIST_CANDIDATES } from './extraContent';
 
 export interface FakeArtistCategory {
   category: string;
@@ -537,3 +538,17 @@ export const FAKE_ARTIST_DATA_BY_DIFFICULTY: Record<Difficulty, FakeArtistCatego
     { category: 'Мифология', word: 'Йети' },
   ],
 };
+
+for (const difficulty of ['easy', 'medium', 'hard'] as const) {
+  const existing = new Set(FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty].map(({ word }) => word.toLocaleLowerCase('ru')));
+  const additions = EXTRA_FAKE_ARTIST_CANDIDATES[difficulty].filter(({ word }) => {
+    const key = word.toLocaleLowerCase('ru');
+    if (existing.has(key)) return false;
+    existing.add(key);
+    return true;
+  });
+  if (additions.length < 200) {
+    throw new Error(`Недостаточно новых слов Fake Artist для сложности ${difficulty}: ${additions.length}`);
+  }
+  FAKE_ARTIST_DATA_BY_DIFFICULTY[difficulty].push(...additions.slice(0, 200));
+}
