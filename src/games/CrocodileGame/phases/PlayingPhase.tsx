@@ -9,7 +9,9 @@ import type { WordOption } from '../types';
 import { FitText } from '@/shared/components/FitText';
 import { FlipCard } from '@/shared/components/FlipCard';
 import { RingTimer } from '@/shared/components/RingTimer';
+import { TimerValue } from '@/shared/components/TimerValue';
 import { UrgencyVignette } from '@/shared/components/UrgencyVignette';
+import { useTimerSelect, type Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { rgba } from '@/shared/theme/colors';
@@ -21,20 +23,21 @@ const CARD_FACE =
 
 interface PlayingPhaseProps {
   chosen: WordOption;
-  timeLeft: number;
+  timer: Timer;
   onGuessed: () => void;
   onGiveUp: () => void;
 }
 
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   chosen,
-  timeLeft,
+  timer,
   onGuessed,
   onGiveUp,
 }) => {
   const { t } = useTranslation();
   const { points, time } = CROCODILE_LEVELS[chosen.difficulty];
-  const urgent = timeLeft <= URGENT_SECONDS;
+  // Фаза перерисовывается только при входе в «срочно», а не каждую секунду
+  const urgent = useTimerSelect(timer, (t) => t <= URGENT_SECONDS);
 
   return (
     <motion.div
@@ -48,15 +51,19 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       <UrgencyVignette active={urgent} />
 
       <motion.div variants={STAGGER_ITEM} className="relative z-10 flex justify-center pt-5 pb-1">
-        <RingTimer
-          timeLeft={timeLeft}
-          total={time}
-          urgent={urgent}
-          color="var(--color-premium-lime)"
-          label={formatTime(timeLeft)}
-          sizeClassName="h-20 w-20"
-          textClassName="text-lg"
-        />
+        <TimerValue timer={timer}>
+          {(timeLeft) => (
+            <RingTimer
+              timeLeft={timeLeft}
+              total={time}
+              urgent={urgent}
+              color="var(--color-premium-lime)"
+              label={formatTime(timeLeft)}
+              sizeClassName="h-20 w-20"
+              textClassName="text-lg"
+            />
+          )}
+        </TimerValue>
       </motion.div>
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">

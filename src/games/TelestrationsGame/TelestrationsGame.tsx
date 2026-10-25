@@ -94,7 +94,8 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     }
   };
 
-  const [timeLeft, setTimeLeft] = useCountdown(phase === TelestrationsPhase.Action, 0, () => {
+  // Секунды читают только DrawingCanvas / TelestrationsGuess — корень на тиках не перерисовывается
+  const timer = useCountdown(phase === TelestrationsPhase.Action, 0, () => {
     if (phase === TelestrationsPhase.Action && !isDrawingRound) {
       finishAction(guess, STEP_TYPE.Guess);
     }
@@ -108,7 +109,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setSteps([]);
     setCurrentRound(0);
     setWordRevealed(false);
-    setTimeLeft(0);
+    timer.setTimeLeft(0);
     setPhase(TelestrationsPhase.Start);
   };
 
@@ -116,7 +117,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setSteps([]);
     setCurrentRound(0);
     setWordRevealed(false);
-    setTimeLeft(0);
+    timer.setTimeLeft(0);
     setPhase(TelestrationsPhase.Setup);
   };
 
@@ -124,7 +125,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
     setPhase(TelestrationsPhase.Action);
     setGuess('');
     const cfg = DIFFICULTY_CONFIG[difficulty];
-    setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
+    timer.setTimeLeft(isDrawingRound ? cfg.drawTime : cfg.guessTime);
   };
 
   const diffLabel = t(`${NS.TELESTRATIONS}.difficultyLabels.${difficulty}`);
@@ -228,7 +229,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
               {isDrawingRound ? (
                 <DrawingCanvas
                   word={currentWord}
-                  timeLeft={timeLeft}
+                  timer={timer}
                   playerCount={shuffledPlayers.length}
                   currentRound={currentRound}
                   onFinish={(dataUrl) => {
@@ -238,7 +239,7 @@ export const TelestrationsGame: React.FC<TelestrationsGameProps> = ({
               ) : (
                 <TelestrationsGuess
                   lastDrawing={steps[steps.length - 1].content}
-                  timeLeft={timeLeft}
+                  timer={timer}
                   currentRound={currentRound}
                   shuffledPlayers={shuffledPlayers}
                   guess={guess}

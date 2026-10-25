@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { lazy } from 'react';
+import { lazy, useCallback, useMemo } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
@@ -12,7 +12,9 @@ import { storageService } from '@/shared/services/storageService';
 const SpyHuntGame = lazy(() =>
   import('@/games/SpyHuntGame/SpyHuntGame').then((m) => ({ default: m.SpyHuntGame }))
 );
-const ChessGame = lazy(() => import('@/games/ChessGame/ChessGame').then((m) => ({ default: m.ChessGame })));
+const ChessGame = lazy(() =>
+  import('@/games/ChessGame/ChessGame').then((m) => ({ default: m.ChessGame }))
+);
 const AliasGame = lazy(() =>
   import('@/games/AliasGame/AliasGame').then((m) => ({ default: m.AliasGame }))
 );
@@ -118,7 +120,17 @@ export function GamePlayRoute() {
   // Игроки приходят через navigation state из Setup;
   // при прямом заходе/обновлении страницы — из storage (Setup их персистит).
   const statePlayerNames = (location.state as { playerNames?: string[] } | null)?.playerNames;
-  const playerNames = statePlayerNames ?? storageService.getPlayers();
+  // Стабильные пропсы игры: иначе любой рендер маршрута перерисовывал бы игру целиком
+  // и сбрасывал memo у шапки и фаз
+  const playerNames = useMemo(
+    () => statePlayerNames ?? storageService.getPlayers(),
+    [statePlayerNames]
+  );
+  const handleBack = useCallback(() => void navigate('/'), [navigate]);
+  const handleRestart = useCallback(
+    () => void navigate(`/game/${currentGameKey}/setup`),
+    [navigate, currentGameKey]
+  );
 
   if (playerNames.length < config.minPlayers) {
     return <Navigate to={`/game/${currentGameKey}/setup`} replace />;
@@ -132,8 +144,8 @@ export function GamePlayRoute() {
   return (
     <Game
       playerNames={playerNames}
-      onBack={() => void navigate('/')}
-      onRestart={() => void navigate(`/game/${currentGameKey}/setup`)}
+      onBack={handleBack}
+      onRestart={handleRestart}
       initialDifficulty={difficulty}
     />
   );

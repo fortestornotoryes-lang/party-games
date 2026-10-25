@@ -63,11 +63,8 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   // ── Timer ──────────────────────────────────────────────────────────────────
   const [timedOut, setTimedOut] = usePersistedState(GameKey.Taboo, 'timedOut', false);
 
-  const {
-    timeLeft,
-    start: startTimer,
-    reset: resetTimer,
-  } = useTimer({
+  // Секунды читает только PlayingPhase — корень на тиках не перерисовывается
+  const timer = useTimer({
     initialTime: cardTimer,
     onTimeUp: () => {
       feedbackService.vibrate(VIBRATE.timeout);
@@ -75,14 +72,10 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
       setPhase(TabooPhase.Verdict);
     },
   });
+  const { start: startTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
-  usePersistedTimer(
-    GameKey.Taboo,
-    'timeLeft',
-    { timeLeft, start: startTimer, reset: resetTimer },
-    phase === TabooPhase.Playing
-  );
+  usePersistedTimer(GameKey.Taboo, 'timeLeft', timer, phase === TabooPhase.Playing);
 
   // ── Confetti on game over ──────────────────────────────────────────────────
   useEffect(() => {
@@ -199,7 +192,7 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
               key="playing"
               card={card}
               currentExplainer={currentExplainer}
-              timeLeft={timeLeft}
+              timer={timer}
               cardTimer={cardTimer}
               onGuessed={handleGuessed}
             />

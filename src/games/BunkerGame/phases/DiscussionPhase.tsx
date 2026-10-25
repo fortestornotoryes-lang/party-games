@@ -9,6 +9,7 @@ import { type BunkerCharacter, type DifficultyLevel } from '../types';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
+import { TimerValue } from '@/shared/components/TimerValue';
 import { Typography } from '@/shared/components/Typography';
 import { useTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
@@ -35,13 +36,15 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
   const { timerSeconds } = useGameSettings();
   const isLastRound = revealRound === totalRounds;
 
-  const { timeLeft, start, reset } = useTimer({
+  // Секунды читает только блок таймера — списки черт на тиках не перерисовываются
+  const timer = useTimer({
     initialTime: timerSeconds,
     onTimeUp: () => {
       feedbackService.vibrate(VIBRATE.timeout);
     },
   });
 
+  const { start, reset } = timer;
   useEffect(() => {
     reset(timerSeconds);
     start();
@@ -52,12 +55,6 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
     feedbackService.vibrate(VIBRATE.tap);
     onNext();
   };
-
-  const timerPct = (timeLeft / timerSeconds) * 100;
-  const timerColor = timerPct > 50 ? '#00D88A' : timerPct > 20 ? '#FFCC1F' : '#FF2E4D';
-
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
 
   return (
     <motion.div
@@ -82,15 +79,26 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
       </div>
 
       {/* Timer */}
-      <div className="space-y-2">
-        <TimerBar pct={timerPct} color={timerColor} />
-        <div className="flex items-center justify-center gap-2">
-          <Clock className="h-3.5 w-3.5 text-white/30" />
-          <span className="text-2xl font-black italic tabular-nums" style={{ color: timerColor }}>
-            {minutes}:{String(seconds).padStart(2, '0')}
-          </span>
-        </div>
-      </div>
+      <TimerValue timer={timer}>
+        {(timeLeft) => {
+          const timerPct = (timeLeft / timerSeconds) * 100;
+          const timerColor = timerPct > 50 ? '#00D88A' : timerPct > 20 ? '#FFCC1F' : '#FF2E4D';
+          return (
+            <div className="space-y-2">
+              <TimerBar pct={timerPct} color={timerColor} />
+              <div className="flex items-center justify-center gap-2">
+                <Clock className="h-3.5 w-3.5 text-white/30" />
+                <span
+                  className="text-2xl font-black italic tabular-nums"
+                  style={{ color: timerColor }}
+                >
+                  {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+                </span>
+              </div>
+            </div>
+          );
+        }}
+      </TimerValue>
 
       {/* What was revealed this round */}
       <div className="space-y-2">
@@ -116,7 +124,9 @@ export const DiscussionPhase: React.FC<DiscussionPhaseProps> = ({
                     {char.playerName} · {t(`${NS.BUNKER}.ageShort`, { n: char.age })} ·{' '}
                     {char.gender} · {t(`${NS.BUNKER}.traitLabels.${rev.traitKey}`)}
                   </div>
-                  <div className="text-sm leading-tight font-bold wrap-anywhere text-white">{rev.entry.name}</div>
+                  <div className="text-sm leading-tight font-bold wrap-anywhere text-white">
+                    {rev.entry.name}
+                  </div>
                 </div>
                 {!rev.entry.isPositive && <span className="text-premium-red/70 text-xs">⚠</span>}
               </div>

@@ -1,13 +1,15 @@
 import { CheckCircle, XCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import type { SwipeDirection } from '../components/SwipeWordCard';
 import { SwipeWordCard } from '../components/SwipeWordCard';
 import { URGENT_SECONDS } from '../constants';
 
 import { RingTimer } from '@/shared/components/RingTimer';
+import { TimerValue } from '@/shared/components/TimerValue';
 import { UrgencyVignette } from '@/shared/components/UrgencyVignette';
+import { useTimerSelect, type Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 import { rgba } from '@/shared/theme/colors';
@@ -28,7 +30,7 @@ interface ScorePop {
 interface PlayingPhaseProps {
   currentWord: string;
   roundScore: number;
-  timeLeft: number;
+  timer: Timer;
   roundTime: number;
   onCorrect: () => void;
   onSkip: () => void;
@@ -37,7 +39,7 @@ interface PlayingPhaseProps {
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   currentWord,
   roundScore,
-  timeLeft,
+  timer,
   roundTime,
   onCorrect,
   onSkip,
@@ -48,7 +50,8 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   const [cardNo, setCardNo] = useState(0);
   const [pops, setPops] = useState<ScorePop[]>([]);
   const popId = useRef(0);
-  const urgent = timeLeft <= URGENT_SECONDS;
+  // Фаза перерисовывается только при входе в «срочно», а не каждую секунду
+  const urgent = useTimerSelect(timer, (t) => t <= URGENT_SECONDS);
 
   const answer = (dir: 1 | -1) => {
     setDirection(dir);
@@ -61,6 +64,15 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
     if (dir === 1) onCorrect();
     else onSkip();
   };
+
+  // Стабильный обработчик свайпа для memo-карточки: answer пересоздаётся каждый рендер
+  const answerRef = useRef(answer);
+  useLayoutEffect(() => {
+    answerRef.current = answer;
+  });
+  const handleSwipe = useCallback((dir: 1 | -1) => {
+    answerRef.current(dir);
+  }, []);
 
   const removePop = (id: number) => {
     setPops((prev) => prev.filter((p) => p.id !== id));
@@ -96,12 +108,16 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       )}
 
       <div className="relative z-10 flex justify-center pt-5 pb-1">
-        <RingTimer
-          timeLeft={timeLeft}
-          total={roundTime}
-          urgent={urgent}
-          color="var(--color-premium-sky)"
-        />
+        <TimerValue timer={timer}>
+          {(timeLeft) => (
+            <RingTimer
+              timeLeft={timeLeft}
+              total={roundTime}
+              urgent={urgent}
+              color="var(--color-premium-sky)"
+            />
+          )}
+        </TimerValue>
       </div>
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-4 px-6">
@@ -122,7 +138,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
               label={t(`${NS.ALIAS}.explainWord`)}
               correctLabel={t(`${NS.ALIAS}.guessed`)}
               skipLabel={t(`${NS.COMMON}.skip`)}
-              onSwipe={answer}
+              onSwipe={handleSwipe}
             />
           </AnimatePresence>
         </div>

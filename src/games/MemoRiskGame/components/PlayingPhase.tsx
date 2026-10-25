@@ -10,6 +10,8 @@ import { ShapeBadges } from './ShapeBadges';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { StopGameButton } from '@/shared/components/StopGameButton';
 import { TimerBar } from '@/shared/components/TimerBar';
+import { TimerValue } from '@/shared/components/TimerValue';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
@@ -31,7 +33,7 @@ interface PlayingPhaseProps {
   /** Карт в колоде добора */
   deckCount: number;
   /** null — режим без таймера */
-  timer: { timeLeft: number; totalSeconds: number } | null;
+  timer: { timer: Timer; totalSeconds: number } | null;
   escalation: number;
   onFlip: (slot: number) => void;
   onBank: () => void;
@@ -65,15 +67,19 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const timerPct = timer ? (timer.timeLeft / timer.totalSeconds) * 100 : 0;
-  const timerColor = timerPct > 50 ? '#00d88a' : timerPct > 25 ? '#ffcc1f' : '#ff2e4d';
   const isBusted = outcome === TurnOutcome.Busted;
   const verdictAmount = isBusted ? turnPoints : gainedPoints;
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
       {timer ? (
-        <TimerBar pct={timerPct} color={timerColor} className="overflow-hidden rounded-full" />
+        <TimerValue timer={timer.timer}>
+          {(timeLeft) => {
+            const pct = (timeLeft / timer.totalSeconds) * 100;
+            const color = pct > 50 ? '#00d88a' : pct > 25 ? '#ffcc1f' : '#ff2e4d';
+            return <TimerBar pct={pct} color={color} className="overflow-hidden rounded-full" />;
+          }}
+        </TimerValue>
       ) : null}
 
       {/* Цели и опасности раунда — общие для всех */}

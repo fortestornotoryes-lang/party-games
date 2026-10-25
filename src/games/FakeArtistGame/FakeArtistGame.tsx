@@ -13,6 +13,7 @@ import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
+import { TimerValue } from '@/shared/components/TimerValue';
 import { coalescedPoints, useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
 import { useCountdown } from '@/shared/hooks/useCountdown';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
@@ -100,13 +101,15 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
   const timerActive =
     gameState.timerSeconds > 0 && !isTransitioning && phase === FakeArtistPhase.Playing;
-  const [timeLeft, setTimeLeft] = useCountdown(timerActive, gameState.timerSeconds, () => {
+  // Секунды читает только надпись таймера (TimerValue) — холст и игра на тиках не перерисовываются
+  const timer = useCountdown(timerActive, gameState.timerSeconds, () => {
     confirm();
   });
 
-  // Новый ход — перезапускаем отсчёт
+  // Новый ход — полное время (видно уже на экране передачи), отсчёт — когда художник готов
   useEffect(() => {
-    if (timerActive) setTimeLeft(gameState.timerSeconds);
+    timer.reset(gameState.timerSeconds);
+    if (timerActive) timer.start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turnIndex, timerActive, gameState.timerSeconds]);
 
@@ -254,11 +257,15 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                 </div>
                 <div className="max-w-[45%] shrink-0 space-y-1 text-right">
                   {gameState.timerSeconds > 0 && (
-                    <p
-                      className={`mb-1 text-xl font-black italic ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}
-                    >
-                      {t(`${NS.FAKE_ARTIST}.timerSeconds`, { n: timeLeft })}
-                    </p>
+                    <TimerValue timer={timer}>
+                      {(timeLeft) => (
+                        <p
+                          className={`mb-1 text-xl font-black italic ${timeLeft <= 5 ? 'text-premium-red animate-pulse' : 'text-white/80'}`}
+                        >
+                          {t(`${NS.FAKE_ARTIST}.timerSeconds`, { n: timeLeft })}
+                        </p>
+                      )}
+                    </TimerValue>
                   )}
                   <p className="text-tag font-black tracking-widest text-white/80 uppercase">
                     {t(`${NS.FAKE_ARTIST}.categoryLabel`)}

@@ -7,13 +7,21 @@ import { FitText } from '@/shared/components/FitText';
 import { PlayingHeader } from '@/shared/components/PlayingHeader.tsx';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
+import { TimerValue } from '@/shared/components/TimerValue';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+
+const timerPct = (timeLeft: number, total: number) => (timeLeft / total) * 100;
+const timerColor = (timeLeft: number, total: number) => {
+  const pct = timerPct(timeLeft, total);
+  return pct > 50 ? '#22c55e' : pct > 25 ? '#eab308' : '#ef4444';
+};
 
 interface PlayingPhaseProps {
   card: TabooClassicCard;
   currentExplainer: string;
-  timeLeft: number;
+  timer: Timer;
   cardTimer: number;
   onGuessed: () => void;
 }
@@ -21,13 +29,11 @@ interface PlayingPhaseProps {
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   card,
   currentExplainer,
-  timeLeft,
+  timer,
   cardTimer,
   onGuessed,
 }) => {
   const { t } = useTranslation();
-  const timerPct = (timeLeft / cardTimer) * 100;
-  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
 
   return (
     <motion.div
@@ -37,10 +43,23 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       className="flex min-h-full flex-col"
     >
-      <TimerBar pct={timerPct} color={timerColor} />
+      {/* Посекундно перерисовываются только полоса и цифры таймера, не вся карточка */}
+      <TimerValue timer={timer}>
+        {(timeLeft) => (
+          <TimerBar pct={timerPct(timeLeft, cardTimer)} color={timerColor(timeLeft, cardTimer)} />
+        )}
+      </TimerValue>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-5 p-6">
-        <PlayingHeader explainer={currentExplainer} timeLeft={timeLeft} timerColor={timerColor} />
+        <TimerValue timer={timer}>
+          {(timeLeft) => (
+            <PlayingHeader
+              explainer={currentExplainer}
+              timeLeft={timeLeft}
+              timerColor={timerColor(timeLeft, cardTimer)}
+            />
+          )}
+        </TimerValue>
 
         {/* Forbidden words — shown first so explainer sees the constraints */}
         <div className="rounded-premium-lg border-premium-red/30 bg-premium-red/5 border-2 p-5">

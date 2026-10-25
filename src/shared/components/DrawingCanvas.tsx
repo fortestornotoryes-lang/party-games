@@ -1,12 +1,14 @@
 import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+import { TimerValue } from '@/shared/components/TimerValue';
 import {
   coalescedPoints,
   exportCanvasImage,
   useCanvasSurface,
 } from '@/shared/hooks/useCanvasSurface';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 
 const BRUSH_COLORS = [
@@ -36,7 +38,8 @@ interface Stroke {
 
 interface DrawingCanvasProps {
   word: string;
-  timeLeft: number;
+  /** Таймер хода: при обнулении рисунок отправляется автоматически */
+  timer: Timer;
   playerCount: number;
   currentRound: number;
   onFinish: (dataUrl: string) => void;
@@ -44,7 +47,7 @@ interface DrawingCanvasProps {
 
 export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   word,
-  timeLeft,
+  timer,
   playerCount,
   currentRound,
   onFinish,
@@ -57,7 +60,6 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
   const strokesRef = useRef<Stroke[]>([]);
   // Текущий штрих живёт вне React-состояния: pointermove рисует сегмент напрямую в canvas
   const currentRef = useRef<Stroke | null>(null);
-  const prevTimeLeftRef = useRef(timeLeft);
   const [brushColor, setBrushColor] = useState('#ffffff');
   const [brushSize, setBrushSize] = useState(2);
 
@@ -66,12 +68,18 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     onFinish(canvas ? exportCanvasImage(canvas) : '');
   };
 
-  // Auto-submit when timer transitions from >0 to 0
+  // Автоотправка, когда время дошло до нуля (подписка — без перерисовки холста каждую секунду)
+  const finishRef = useRef(finish);
+  useLayoutEffect(() => {
+    finishRef.current = finish;
+  });
   useEffect(() => {
-    if (prevTimeLeftRef.current > 0 && timeLeft === 0) finish();
-    prevTimeLeftRef.current = timeLeft;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, onFinish]);
+    let prev = timer.getTimeLeft();
+    return timer.subscribe((timeLeft) => {
+      if (prev > 0 && timeLeft === 0) finishRef.current();
+      prev = timeLeft;
+    });
+  }, [timer]);
 
   /** Масштаб «CSS-пиксель → пиксель битмапа» для ctx.setTransform */
   const applyCssTransform = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
@@ -175,11 +183,15 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           </motion.p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <span
-            className={`min-w-[2rem] text-right text-sm font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/35'}`}
-          >
-            {t('common.secondsShort', { n: timeLeft })}
-          </span>
+          <TimerValue timer={timer}>
+            {(timeLeft) => (
+              <span
+                className={`min-w-[2rem] text-right text-sm font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/35'}`}
+              >
+                {t('common.secondsShort', { n: timeLeft })}
+              </span>
+            )}
+          </TimerValue>
           <button
             onClick={undoDrawing}
             className="rounded-premium-sm hover:bg-premium-orange/20 hover:text-premium-orange bg-white/5 p-2.5 text-white/35 transition-colors"

@@ -8,13 +8,21 @@ import { FitText } from '@/shared/components/FitText';
 import { PlayingHeader } from '@/shared/components/PlayingHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { TimerBar } from '@/shared/components/TimerBar';
+import { TimerValue } from '@/shared/components/TimerValue';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
+
+const timerPct = (timeLeft: number, total: number) => (timeLeft / total) * 100;
+const timerColor = (timeLeft: number, total: number) => {
+  const pct = timerPct(timeLeft, total);
+  return pct > 50 ? '#22c55e' : pct > 25 ? '#eab308' : '#ef4444';
+};
 
 interface PlayingPhaseProps {
   card: TabooCard;
   currentExplainer: string;
-  timeLeft: number;
+  timer: Timer;
   cardTimer: number;
   isBlitz?: boolean;
   blitzStats?: { guessed: number; skipped: number };
@@ -25,7 +33,7 @@ interface PlayingPhaseProps {
 export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   card,
   currentExplainer,
-  timeLeft,
+  timer,
   cardTimer,
   isBlitz,
   blitzStats,
@@ -33,8 +41,6 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
   onSkip,
 }) => {
   const { t } = useTranslation();
-  const timerPct = (timeLeft / cardTimer) * 100;
-  const timerColor = timerPct > 50 ? '#22c55e' : timerPct > 25 ? '#eab308' : '#ef4444';
 
   return (
     <motion.div
@@ -44,27 +50,36 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       className="flex min-h-full flex-col"
     >
-      <TimerBar pct={timerPct} color={timerColor} />
+      {/* Посекундно перерисовываются только полоса и цифры таймера, не вся карточка */}
+      <TimerValue timer={timer}>
+        {(timeLeft) => (
+          <TimerBar pct={timerPct(timeLeft, cardTimer)} color={timerColor(timeLeft, cardTimer)} />
+        )}
+      </TimerValue>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-6 p-6">
-        <PlayingHeader
-          explainer={currentExplainer}
-          timeLeft={timeLeft}
-          timerColor={timerColor}
-          extra={
-            !!isBlitz &&
-            !!blitzStats && (
-              <div className="flex items-center gap-2">
-                <span className="text-label text-premium-green font-black tabular-nums">
-                  ✓{blitzStats.guessed}
-                </span>
-                <span className="text-label text-premium-red font-black tabular-nums">
-                  ✗{blitzStats.skipped}
-                </span>
-              </div>
-            )
-          }
-        />
+        <TimerValue timer={timer}>
+          {(timeLeft) => (
+            <PlayingHeader
+              explainer={currentExplainer}
+              timeLeft={timeLeft}
+              timerColor={timerColor(timeLeft, cardTimer)}
+              extra={
+                !!isBlitz &&
+                !!blitzStats && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-label text-premium-green font-black tabular-nums">
+                      ✓{blitzStats.guessed}
+                    </span>
+                    <span className="text-label text-premium-red font-black tabular-nums">
+                      ✗{blitzStats.skipped}
+                    </span>
+                  </div>
+                )
+              }
+            />
+          )}
+        </TimerValue>
 
         {/* Secret word */}
         <div className="rounded-premium-2xl border-premium-orange/30 bg-premium-orange/5 border-2 px-4 py-8 text-center sm:px-8">
@@ -72,11 +87,11 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
             {t(`${NS.TABOO_REVERSE}.secretWord`)}
           </p>
           <FitText
-              as="h2"
-              className="text-[3.5rem] leading-tight font-black tracking-tighter text-white uppercase italic"
-            >
-              {card.word}
-            </FitText>
+            as="h2"
+            className="text-[3.5rem] leading-tight font-black tracking-tighter text-white uppercase italic"
+          >
+            {card.word}
+          </FitText>
         </div>
 
         {/* Required words */}

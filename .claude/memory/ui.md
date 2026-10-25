@@ -16,7 +16,7 @@
 
 ## Общие компоненты (`src/shared/components/`)
 
-Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, RingTimer (круговой таймер раунда), FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Анимационные: AnimatedNumber (прокрутка числа), VictoryHero (кубок/корона с лучами и искрами), FlipCard (3D-переворот при монтировании), UrgencyVignette (красная виньетка последних секунд). Игрокоспецифичные списки — `entities/player/components/` (LeaderboardList с `animated`, FinalStandings — финал игры на очки).
+Перед созданием нового UI — проверить, нет ли готового: PrimaryButton, IconButton, TabButton, GameCard, GameHeader, PlayingHeader, TimerBar, RingTimer (круговой таймер раунда), TimerValue (render-prop секунд таймера — изолирует тики), FitText (текст, который не вылезает за экран — см. gotchas.md), PassPhoneCard (передача телефона), DrawingCanvas (рисование: DPR + ResizeObserver уже внутри), InstructionsModal, PageWrapper, Typography, Badge, SectionLabel, ProgressDots, Pagination, TextInput, StopGameButton. Анимационные: AnimatedNumber (прокрутка числа), VictoryHero (кубок/корона с лучами и искрами), FlipCard (3D-переворот при монтировании), UrgencyVignette (красная виньетка последних секунд). Игрокоспецифичные списки — `entities/player/components/` (LeaderboardList с `animated`, FinalStandings — финал игры на очки).
 
 ## Анимации
 

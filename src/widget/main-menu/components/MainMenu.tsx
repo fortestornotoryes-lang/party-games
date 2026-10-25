@@ -1,6 +1,6 @@
 import { BarChart3, Users, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { GameMenuCard } from '@/entities/game/components/GameMenuCard';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
@@ -33,13 +33,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
 
   useEffect(() => {
     setCurrentGameId(null);
-    // Только при маунте: setCurrentGameId из контекста пересоздаётся каждый рендер,
-    // в deps он перезапускал бы эффект.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setCurrentGameId]);
 
   const gameIds = useMemo(() => sortedGames.map((g) => g.id), [sortedGames]);
   const statsOf = useWordStats(gameIds, STATS_DIFFICULTIES);
+  const openDescription = useCallback((id: GameKey) => {
+    setDescriptionGameId(id);
+  }, []);
 
   const descriptionGame = descriptionGameId
     ? (GAMES.find((g) => g.id === descriptionGameId) ?? null)
@@ -81,12 +81,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                 game={game}
                 index={index}
                 countDisplay={countDisplay}
-                onSelect={() => {
-                  onSelectGame(game.id);
-                }}
-                onDescriptionClick={() => {
-                  setDescriptionGameId(game.id);
-                }}
+                onSelect={onSelectGame}
+                onDescriptionClick={openDescription}
               />
             );
           })}

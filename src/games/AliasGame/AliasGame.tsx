@@ -44,24 +44,17 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [roundScore, setRoundScore] = usePersistedState(GameKey.Alias, 'roundScore', 0);
 
   const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
-  const {
-    timeLeft,
-    start: startTimer,
-    reset: resetTimer,
-  } = useTimer({
+  // Секунды читает только PlayingPhase (RingTimer) — корень на тиках не перерисовывается
+  const timer = useTimer({
     initialTime: roundTime,
     onTimeUp: () => {
       setPhase(AliasPhase.RoundEnd);
     },
   });
+  const { start: startTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
-  usePersistedTimer(
-    GameKey.Alias,
-    'timeLeft',
-    { timeLeft, start: startTimer, reset: resetTimer },
-    phase === AliasPhase.Playing
-  );
+  usePersistedTimer(GameKey.Alias, 'timeLeft', timer, phase === AliasPhase.Playing);
 
   useEffect(() => {
     // Команды уже восстановлены из сессии — не перетасовываем заново.
@@ -71,7 +64,9 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   }, [playerNames]);
 
   // Смена числа команд и «Перемешать» — новая случайная раздача; ручные правки сбрасываются.
-  const reshuffle = (count: number) => { setTeams(buildTeams(playerNames, count)); };
+  const reshuffle = (count: number) => {
+    setTeams(buildTeams(playerNames, count));
+  };
 
   const nextWord = () => {
     const available = getAliasWords(difficulty);
@@ -149,9 +144,15 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
               teams={teams}
               playersCount={playerNames.length}
               onTeamsCountChange={reshuffle}
-              onShuffle={() => { reshuffle(teams.length); }}
-              onMovePlayer={(player) => { setTeams((prev) => movePlayerToNextTeam(prev, player)); }}
-              onStart={() => { setPhase(AliasPhase.Start); }}
+              onShuffle={() => {
+                reshuffle(teams.length);
+              }}
+              onMovePlayer={(player) => {
+                setTeams((prev) => movePlayerToNextTeam(prev, player));
+              }}
+              onStart={() => {
+                setPhase(AliasPhase.Start);
+              }}
             />
           )}
 
@@ -163,7 +164,7 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
             <PlayingPhase
               currentWord={currentWord}
               roundScore={roundScore}
-              timeLeft={timeLeft}
+              timer={timer}
               roundTime={roundTime}
               onCorrect={handleCorrect}
               onSkip={handleSkip}

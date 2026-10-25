@@ -2,7 +2,7 @@ import { HelpCircle, Users } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import type { GameMetadata } from '../types';
+import type { GameKey, GameMetadata } from '../types';
 
 import { getTheme } from '@/shared/theme/colors';
 
@@ -13,17 +13,19 @@ interface GameMenuCardProps {
   game: GameMetadata;
   index: number;
   countDisplay: string | null;
-  onSelect: () => void;
-  onDescriptionClick: () => void;
+  /** Колбэки получают id игры: один стабильный обработчик на весь список вместо замыканий */
+  onSelect: (id: GameKey) => void;
+  onDescriptionClick: (id: GameKey) => void;
 }
 
-export const GameMenuCard: React.FC<GameMenuCardProps> = ({
+// memo: открытие шторки описания, подгрузка счётчиков и т.п. не перерисовывают все 20+ карточек
+export const GameMenuCard = React.memo(function GameMenuCard({
   game,
   index,
   countDisplay,
   onSelect,
   onDescriptionClick,
-}) => {
+}: GameMenuCardProps) {
   const t = getTheme(game.theme);
 
   return (
@@ -39,7 +41,9 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
         ease: [0.25, 0.1, 0.25, 1],
       }}
       whileTap={{ scale: 0.975 }}
-      onClick={onSelect}
+      onClick={() => {
+        onSelect(game.id);
+      }}
       className="rounded-r-premium-2xl shadow-card2 group relative flex w-full items-center gap-4 overflow-hidden border border-white/8 bg-white/[0.035] p-4 text-left transition-colors duration-300 hover:border-white/12 hover:bg-white/6"
     >
       {/* Background image (optional, per-game) — right-anchored with left fade */}
@@ -104,7 +108,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onDescriptionClick();
+              onDescriptionClick(game.id);
             }}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/8 bg-white/4 text-white/20 transition-[color,border-color,transform] hover:border-white/20 hover:text-white/60 active:scale-90"
           >
@@ -114,4 +118,4 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
       </div>
     </motion.div>
   );
-};
+});

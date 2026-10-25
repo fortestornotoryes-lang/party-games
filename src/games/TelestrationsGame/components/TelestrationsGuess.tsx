@@ -1,12 +1,14 @@
 import { MessageSquare } from 'lucide-react';
 import React from 'react';
 
+import { TimerValue } from '@/shared/components/TimerValue';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
 interface Props {
   lastDrawing: string;
-  timeLeft: number;
+  timer: Timer;
   currentRound: number;
   shuffledPlayers: string[];
   guess: string;
@@ -16,7 +18,7 @@ interface Props {
 
 export const TelestrationsGuess: React.FC<Props> = ({
   lastDrawing,
-  timeLeft,
+  timer,
   currentRound,
   shuffledPlayers,
   guess,
@@ -31,11 +33,15 @@ export const TelestrationsGuess: React.FC<Props> = ({
         <p className="text-tag font-black tracking-widest text-white/30 uppercase">
           {t(`${NS.TELESTRATIONS}.guessDrawing`)}
         </p>
-        <span
-          className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}
-        >
-          {t(`${NS.TELESTRATIONS}.timerSeconds`, { n: timeLeft })}
-        </span>
+        <TimerValue timer={timer}>
+          {(timeLeft) => (
+            <span
+              className={`block text-2xl font-black tabular-nums ${timeLeft <= 10 ? 'text-premium-red animate-pulse' : 'text-white/40'}`}
+            >
+              {t(`${NS.TELESTRATIONS}.timerSeconds`, { n: timeLeft })}
+            </span>
+          )}
+        </TimerValue>
         <h3 className="text-xl font-black italic">{t(`${NS.TELESTRATIONS}.whatIsDepicted`)}</h3>
       </div>
 

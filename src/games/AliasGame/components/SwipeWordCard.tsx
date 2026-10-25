@@ -42,13 +42,14 @@ interface SwipeWordCardProps {
 }
 
 /** Карточка слова: тянется пальцем, наклоняется и подсвечивается зелёным/красным. */
-export const SwipeWordCard: React.FC<SwipeWordCardProps> = ({
+// memo: всплывающие «+1», вспышка и счёт перерисовывают фазу, карточку — нет
+export const SwipeWordCard = React.memo(function SwipeWordCard({
   word,
   label,
   correctLabel,
   skipLabel,
   onSwipe,
-}) => {
+}: SwipeWordCardProps) {
   // Улетающая карточка ещё в DOM — повторный свайп по ней не должен засчитаться второй раз
   const isPresent = useIsPresent();
   const x = useMotionValue(0);
@@ -136,4 +137,4 @@ export const SwipeWordCard: React.FC<SwipeWordCardProps> = ({
       />
     </motion.div>
   );
-};
+});

@@ -37,19 +37,12 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
   );
 
   const gameDuration = GAME_DURATION_BY_DIFFICULTY[difficulty ?? DIFFICULTY.MEDIUM] ?? 480;
-  const {
-    timeLeft,
-    start: startTimer,
-    reset: resetTimer,
-  } = useTimer({ initialTime: gameDuration });
+  // Секунды читает только часы в PlayingPhase — корень на тиках не перерисовывается
+  const timer = useTimer({ initialTime: gameDuration });
+  const { start: startTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
-  usePersistedTimer(
-    GameKey.Spy,
-    'timeLeft',
-    { timeLeft, start: startTimer, reset: resetTimer },
-    phase === SpyHuntPhase.Playing
-  );
+  usePersistedTimer(GameKey.Spy, 'timeLeft', timer, phase === SpyHuntPhase.Playing);
 
   useEffect(() => {
     // Роли уже восстановлены из сессии — не раздаём заново.
@@ -110,7 +103,7 @@ export const SpyHuntGame: React.FC<GameProps> = ({ playerNames, onBack }) => {
         {phase === SpyHuntPhase.Playing && (
           <PlayingPhase
             players={players}
-            timeLeft={timeLeft}
+            timer={timer}
             onReveal={() => {
               setPhase(SpyHuntPhase.Reveal);
             }}

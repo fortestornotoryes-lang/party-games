@@ -20,9 +20,13 @@ interface TimerBarProps {
  */
 export const TimerBar: React.FC<TimerBarProps> = ({ pct, color, className }) => (
   <div className={`h-1.5 w-full bg-white/10 ${className}`}>
+    {/* scaleX вместо width: transform идёт на композиторе, width пересчитывал раскладку каждый кадр */}
     <div
-      className="h-full transition-all duration-1000 ease-linear"
-      style={{ width: `${pct}%`, backgroundColor: color }}
+      className="h-full origin-left transition-[transform,background-color] duration-1000 ease-linear"
+      style={{
+        transform: `scaleX(${Math.max(0, Math.min(100, pct)) / 100})`,
+        backgroundColor: color,
+      }}
     />
   </div>
 );

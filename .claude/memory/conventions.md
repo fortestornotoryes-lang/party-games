@@ -24,7 +24,7 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 
 - `sessionService` (`shared/services/`) — ключ `party_app_session_<gameKey>`, хранит `players` + произвольные `fields`
 - В компонентах игр — `usePersistedState(gameKey, field, initial, codec?)` как drop-in замена useState; для Set/Map передавать codec
-- Жизненный цикл: Setup при старте очищает сессию; `syncPlayers` в GamePlayRoute сбрасывает её при смене состава. Таймеры — `useTimer`/`useCountdown` (`shared/hooks`)
+- Жизненный цикл: Setup при старте очищает сессию; `syncPlayers` в GamePlayRoute сбрасывает её при смене состава. Таймеры — `useTimer`/`useCountdown` (`shared/hooks`): объект-стор, секунды в рендере читать через `TimerValue`/`useTimeLeft` (подробно — gotchas.md, «Производительность»); персист — `usePersistedTimer`
 
 ## Контент и словари
 
@@ -47,4 +47,4 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 - Инструкции игр: `GAME_INSTRUCTIONS` (ru) + `GAME_INSTRUCTIONS_EN` в `entities/game/instructions.ts`, выбор — `getGameInstructions(gameKey, lang)`.
 - **Не переводится намеренно**: контент-пулы (слова/вопросы/персонажи Бункера — русский игровой контент), `debug/BunkerBalanceView`, секция «Язык / Language» (двуязычная по дизайну), комментарии в коде.
 
-_Ревизия: 2026-07-12_
+_Ревизия: 2026-10-25_

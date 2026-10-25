@@ -130,22 +130,15 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
     setPhase(isBlitz ? TabooReversePhase.BlitzVerdict : TabooReversePhase.Verdict);
   }, [isBlitz, setPhase, setTimedOut]);
 
-  const {
-    timeLeft,
-    start: startTimer,
-    reset: resetTimer,
-  } = useTimer({
+  // Секунды читает только PlayingPhase — корень на тиках не перерисовывается
+  const timer = useTimer({
     initialTime: cardTimer,
     onTimeUp: handleTimeUp,
   });
+  const { start: startTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
-  usePersistedTimer(
-    GameKey.TabooReverse,
-    'timeLeft',
-    { timeLeft, start: startTimer, reset: resetTimer },
-    phase === TabooReversePhase.Playing
-  );
+  usePersistedTimer(GameKey.TabooReverse, 'timeLeft', timer, phase === TabooReversePhase.Playing);
 
   // ── Confetti on game over ──────────────────────────────────────────────────
   useEffect(() => {
@@ -357,7 +350,7 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
               key="playing"
               card={card}
               currentExplainer={currentExplainer}
-              timeLeft={timeLeft}
+              timer={timer}
               cardTimer={cardTimer}
               isBlitz={isBlitz}
               blitzStats={blitzStats}

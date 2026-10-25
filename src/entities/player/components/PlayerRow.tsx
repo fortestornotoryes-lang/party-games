@@ -20,7 +20,9 @@ interface PlayerRowProps {
   onChange: (id: string, name: string) => void;
 }
 
-export const PlayerRow: React.FC<PlayerRowProps> = ({
+// memo: при вводе имени меняется одна строка — остальные не перерисовываются
+// (Setup передаёт стабильные onRemove/onChange, а неизменённые игроки сохраняют ссылку)
+export const PlayerRow = React.memo(function PlayerRow({
   player,
   index,
   canRemove,
@@ -28,7 +30,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   placeholder,
   onRemove,
   onChange,
-}) => {
+}: PlayerRowProps) {
   const dragControls = useDragControls();
 
   return (
@@ -79,4 +81,4 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
       )}
     </Reorder.Item>
   );
-};
+});

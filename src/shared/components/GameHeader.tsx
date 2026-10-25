@@ -14,14 +14,15 @@ interface GameHeaderProps {
   extraActions?: React.ReactNode;
 }
 
-export const GameHeader: React.FC<GameHeaderProps> = ({
+// memo: шапка одна на всю партию, а корень игры перерисовывается на каждом ходе
+export const GameHeader = React.memo(function GameHeader({
   title,
   subtitle,
   icon: Icon,
   theme,
   onBack,
   extraActions,
-}) => {
+}: GameHeaderProps) {
   const t = getTheme(theme);
   return (
     <div
@@ -57,4 +58,4 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       </div>
     </div>
   );
-};
+});

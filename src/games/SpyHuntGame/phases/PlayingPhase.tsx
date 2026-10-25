@@ -7,16 +7,37 @@ import { LOCATIONS, QUESTION_IDEAS } from '@/games/SpyHuntGame/constants.ts';
 import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
+import { useTimeLeft, type Timer as RoundTimer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
 interface PlayingPhaseProps {
   players: Player[];
-  timeLeft: number;
+  timer: RoundTimer;
   onReveal: () => void;
 }
 
-export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, onReveal }) => {
+/** Часы раунда — единственное, что перерисовывается каждую секунду (списки фазы — нет) */
+const SpyClock: React.FC<{ timer: RoundTimer }> = ({ timer }) => {
+  const timeLeft = useTimeLeft(timer);
+  return (
+    <div
+      className={`flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 ${
+        timeLeft < 60 ? 'border-premium-red/60 bg-premium-red/8' : 'border-white/10 bg-white/5'
+      }`}
+      style={timeLeft < 60 ? { boxShadow: '0 0 30px rgba(255,46,77,0.2)' } : undefined}
+    >
+      <Timer
+        className={`mb-1 h-6 w-6 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`}
+      />
+      <span className="text-3xl font-black tracking-tighter italic">
+        {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+      </span>
+    </div>
+  );
+};
+
+export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timer, onReveal }) => {
   const { t } = useTranslation();
   const [showQuestions, setShowQuestions] = useState(false);
   const [showLocations, setShowLocations] = useState(false);
@@ -30,19 +51,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({ players, timeLeft, o
       className="mx-auto min-h-0 w-full max-w-2xl flex-1 space-y-6 overflow-y-auto p-6"
     >
       <div className="flex justify-center">
-        <div
-          className={`flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 ${
-            timeLeft < 60 ? 'border-premium-red/60 bg-premium-red/8' : 'border-white/10 bg-white/5'
-          }`}
-          style={timeLeft < 60 ? { boxShadow: '0 0 30px rgba(255,46,77,0.2)' } : undefined}
-        >
-          <Timer
-            className={`mb-1 h-6 w-6 ${timeLeft < 60 ? 'text-premium-red animate-pulse' : 'text-white/30'}`}
-          />
-          <span className="text-3xl font-black tracking-tighter italic">
-            {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-          </span>
-        </div>
+        <SpyClock timer={timer} />
       </div>
 
       <div className="space-y-3">

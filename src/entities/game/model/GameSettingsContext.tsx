@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 
 import { CLASSIC_MODE_ID, GameKey, type GameMode } from '@/entities/game/types';
 import { storageService } from '@/shared/services/storageService';
@@ -42,121 +42,98 @@ const DEFAULT_GAME_CONFIG: Required<SavedConfig> = {
   countHiddenTraits: true,
 };
 
+type GameConfig = Required<SavedConfig>;
+
+const defaultConfigFor = (id: GameKey): GameConfig => ({
+  ...DEFAULT_GAME_CONFIG,
+  rounds: GAME_DEFAULT_ROUNDS[id] ?? DEFAULT_GAME_CONFIG.rounds,
+});
+
 export const GameSettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [difficulty, setDifficultyState] = useState<Difficulty>(DEFAULT_GAME_CONFIG.difficulty);
-  const [mode, setModeState] = useState<GameMode['id']>(DEFAULT_GAME_CONFIG.mode);
-  const [rounds, setRoundsState] = useState<number>(DEFAULT_GAME_CONFIG.rounds);
-  const [timerSeconds, setTimerSecondsState] = useState<number>(DEFAULT_GAME_CONFIG.timerSeconds);
-  const [countHiddenTraits, setCountHiddenTraitsState] = useState<boolean>(
-    DEFAULT_GAME_CONFIG.countHiddenTraits
-  );
+  const [config, setConfig] = useState<GameConfig>(DEFAULT_GAME_CONFIG);
   const [currentGameId, setCurrentGameIdState] = useState<GameKey | null>(null);
+  // Последние значения для стабильных сеттеров (useCallback без зависимостей от state)
+  const configRef = useRef(config);
+  const gameIdRef = useRef(currentGameId);
 
-  const loadGameConfig = async (id: GameKey) => {
-    const savedConfig = await storageService.getGameConfigAsync<SavedConfig>(id);
-    if (savedConfig) {
-      if (savedConfig.difficulty) setDifficultyState(savedConfig.difficulty);
-      if (savedConfig.mode) setModeState(savedConfig.mode);
-      if (savedConfig.rounds) setRoundsState(savedConfig.rounds);
-      if (savedConfig.timerSeconds !== undefined) setTimerSecondsState(savedConfig.timerSeconds);
-      if (savedConfig.countHiddenTraits !== undefined)
-        setCountHiddenTraitsState(savedConfig.countHiddenTraits);
-    } else {
-      setDifficultyState(DEFAULT_GAME_CONFIG.difficulty);
-      setModeState(DEFAULT_GAME_CONFIG.mode);
-      setRoundsState(GAME_DEFAULT_ROUNDS[id] ?? DEFAULT_GAME_CONFIG.rounds);
-      setTimerSecondsState(DEFAULT_GAME_CONFIG.timerSeconds);
-      setCountHiddenTraitsState(DEFAULT_GAME_CONFIG.countHiddenTraits);
-    }
-  };
+  /** Поменять часть настроек и сохранить конфиг текущей игры целиком */
+  const update = useCallback((patch: Partial<GameConfig>) => {
+    const next = { ...configRef.current, ...patch };
+    configRef.current = next;
+    setConfig(next);
+    if (gameIdRef.current) void storageService.saveGameConfigAsync(gameIdRef.current, next);
+  }, []);
 
-  const setCurrentGameId = (id: GameKey | null) => {
+  const setCurrentGameId = useCallback((id: GameKey | null) => {
+    gameIdRef.current = id;
     setCurrentGameIdState(id);
-    if (id) void loadGameConfig(id);
-  };
+    if (!id) return;
+    void storageService.getGameConfigAsync<SavedConfig>(id).then((saved) => {
+      // Ответ пришёл, когда уже выбрана другая игра, — не перетираем её настройки
+      if (gameIdRef.current !== id) return;
+      // Недостающие в сохранённом конфиге поля — дефолты этой игры, а не значения прошлой
+      const next = { ...defaultConfigFor(id), ...saved };
+      configRef.current = next;
+      setConfig(next);
+    });
+  }, []);
 
-  const setDifficulty = (d: Difficulty) => {
-    setDifficultyState(d);
-    if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty: d,
-        mode,
-        rounds,
-        timerSeconds,
-      });
-    }
-  };
-
-  const setMode = (m: GameMode['id']) => {
-    setModeState(m);
-    if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty,
-        mode: m,
-        rounds,
-        timerSeconds,
-      });
-    }
-  };
-
-  const setRounds = (r: number) => {
-    setRoundsState(r);
-    if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty,
-        mode,
-        rounds: r,
-        timerSeconds,
-      });
-    }
-  };
-
-  const setTimerSeconds = (s: number) => {
-    setTimerSecondsState(s);
-    if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty,
-        mode,
-        rounds,
-        timerSeconds: s,
-        countHiddenTraits,
-      });
-    }
-  };
-
-  const setCountHiddenTraits = (v: boolean) => {
-    setCountHiddenTraitsState(v);
-    if (currentGameId) {
-      void storageService.saveGameConfigAsync(currentGameId, {
-        difficulty,
-        mode,
-        rounds,
-        timerSeconds,
-        countHiddenTraits: v,
-      });
-    }
-  };
-
-  return (
-    <GameSettingsContext.Provider
-      value={{
-        difficulty,
-        mode,
-        rounds,
-        timerSeconds,
-        countHiddenTraits,
-        setDifficulty,
-        setMode,
-        setRounds,
-        setTimerSeconds,
-        setCountHiddenTraits,
-        currentGameId,
-        setCurrentGameId,
-      }}
-    >
-      {children}
-    </GameSettingsContext.Provider>
+  const setDifficulty = useCallback(
+    (difficulty: Difficulty) => {
+      update({ difficulty });
+    },
+    [update]
   );
+  const setMode = useCallback(
+    (mode: GameMode['id']) => {
+      update({ mode });
+    },
+    [update]
+  );
+  const setRounds = useCallback(
+    (rounds: number) => {
+      update({ rounds });
+    },
+    [update]
+  );
+  const setTimerSeconds = useCallback(
+    (timerSeconds: number) => {
+      update({ timerSeconds });
+    },
+    [update]
+  );
+  const setCountHiddenTraits = useCallback(
+    (countHiddenTraits: boolean) => {
+      update({ countHiddenTraits });
+    },
+    [update]
+  );
+
+  // Стабильное значение: потребители перерисовываются только при реальной смене настроек
+  const value = useMemo<GameSettingsContextType>(
+    () => ({
+      ...config,
+      setDifficulty,
+      setMode,
+      setRounds,
+      setTimerSeconds,
+      setCountHiddenTraits,
+      currentGameId,
+      setCurrentGameId,
+    }),
+    [
+      config,
+      currentGameId,
+      setDifficulty,
+      setMode,
+      setRounds,
+      setTimerSeconds,
+      setCountHiddenTraits,
+      setCurrentGameId,
+    ]
+  );
+
+  return <GameSettingsContext.Provider value={value}>{children}</GameSettingsContext.Provider>;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

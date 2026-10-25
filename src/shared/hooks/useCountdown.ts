@@ -1,31 +1,19 @@
-import React from 'react';
+import { useEffect } from 'react';
 
-export function useCountdown(
-  active: boolean,
-  initial = 0,
-  onExpire?: () => void
-): [number, (s: number) => void] {
-  const [timeLeft, setTimeLeft] = React.useState(initial);
-  const onExpireRef = React.useRef(onExpire);
+import { useTimer, type Timer } from './useTimer';
 
-  // Sync the ref inside an effect or layout effect to avoid mutating during render
-  React.useLayoutEffect(() => {
-    onExpireRef.current = onExpire;
-  }, [onExpire]);
+/**
+ * Отсчёт, который идёт, пока `active` (фаза хода и т.п.). Время задаётся через
+ * `timer.setTimeLeft(n)`; при достижении нуля вызывается onExpire.
+ * Секунды читать через `useTimeLeft` / `<TimerValue>` — см. useTimer.
+ */
+export function useCountdown(active: boolean, initial = 0, onExpire?: () => void): Timer {
+  const timer = useTimer({ initialTime: initial, onTimeUp: onExpire });
 
-  React.useEffect(() => {
-    if (!active || timeLeft <= 0) return;
+  useEffect(() => {
+    if (active) timer.start();
+    else timer.pause();
+  }, [active, timer]);
 
-    const t = setTimeout(() => {
-      const next = Math.max(0, timeLeft - 1);
-      setTimeLeft(next);
-      if (next === 0) onExpireRef.current?.();
-    }, 1000);
-
-    return () => {
-      clearTimeout(t);
-    };
-  }, [active, timeLeft]);
-
-  return [timeLeft, setTimeLeft];
+  return timer;
 }

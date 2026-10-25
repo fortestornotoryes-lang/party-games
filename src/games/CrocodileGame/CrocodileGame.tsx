@@ -65,11 +65,8 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
   const [timedOut, setTimedOut] = usePersistedState(GameKey.Crocodile, 'timedOut', false);
 
   const roundTime = chosen ? CROCODILE_LEVELS[chosen.difficulty].time : 0;
-  const {
-    timeLeft,
-    start: startTimer,
-    reset: resetTimer,
-  } = useTimer({
+  // Секунды читает только PlayingPhase — корень на тиках не перерисовывается
+  const timer = useTimer({
     initialTime: roundTime,
     onTimeUp: () => {
       feedbackService.playSound('timeout');
@@ -79,20 +76,21 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
       setPhase(CrocodilePhase.RoundEnd);
     },
   });
+  const { start: startTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
-  usePersistedTimer(
-    GameKey.Crocodile,
-    'timeLeft',
-    { timeLeft, start: startTimer, reset: resetTimer },
-    phase === CrocodilePhase.Playing
-  );
+  usePersistedTimer(GameKey.Crocodile, 'timeLeft', timer, phase === CrocodilePhase.Playing);
 
   // Тик каждую секунду, пока идёт время; в последние секунды — выше и громче.
   useEffect(() => {
-    if (phase !== CrocodilePhase.Playing || timeLeft <= 0) return;
-    feedbackService.playSound(timeLeft <= URGENT_SECONDS ? 'tickUrgent' : 'tick');
-  }, [phase, timeLeft]);
+    if (phase !== CrocodilePhase.Playing) return;
+    const tick = (timeLeft: number) => {
+      if (timeLeft > 0)
+        feedbackService.playSound(timeLeft <= URGENT_SECONDS ? 'tickUrgent' : 'tick');
+    };
+    tick(timer.getTimeLeft());
+    return timer.subscribe(tick);
+  }, [phase, timer]);
 
   useEffect(() => {
     // Команды уже восстановлены из сессии — не перетасовываем заново.
@@ -102,7 +100,9 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
   }, [playerNames]);
 
   // Смена числа команд и «Перемешать» — новая случайная раздача; ручные правки сбрасываются.
-  const reshuffle = (count: number) => { setTeams(buildTeams(playerNames, count)); };
+  const reshuffle = (count: number) => {
+    setTeams(buildTeams(playerNames, count));
+  };
 
   const showWords = () => {
     setWordOptions(drawWordOptions());
@@ -185,9 +185,15 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
               targetScore={targetScore}
               onTargetScoreChange={setTargetScore}
               onTeamsCountChange={reshuffle}
-              onShuffle={() => { reshuffle(teams.length); }}
-              onMovePlayer={(player) => { setTeams((prev) => movePlayerToNextTeam(prev, player)); }}
-              onStart={() => { setPhase(CrocodilePhase.Start); }}
+              onShuffle={() => {
+                reshuffle(teams.length);
+              }}
+              onMovePlayer={(player) => {
+                setTeams((prev) => movePlayerToNextTeam(prev, player));
+              }}
+              onStart={() => {
+                setPhase(CrocodilePhase.Start);
+              }}
             />
           )}
 
@@ -201,17 +207,13 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
           )}
 
           {phase === CrocodilePhase.ChooseWord && (
-            <ChooseWordPhase
-              options={wordOptions}
-              onChoose={chooseWord}
-              onReplace={replaceWords}
-            />
+            <ChooseWordPhase options={wordOptions} onChoose={chooseWord} onReplace={replaceWords} />
           )}
 
           {phase === CrocodilePhase.Playing && chosen !== null && (
             <PlayingPhase
               chosen={chosen}
-              timeLeft={timeLeft}
+              timer={timer}
               onGuessed={handleGuessed}
               onGiveUp={handleGiveUp}
             />

@@ -1,4 +1,5 @@
 import { Settings as SettingsIcon } from 'lucide-react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
@@ -9,11 +10,14 @@ export function MenuRoute() {
   const navigate = useNavigate();
   const { setCurrentGameId } = useGameSettings();
 
-  const handleSelectGame = (gameId: GameKey) => {
-    // Ставим id до навигации, чтобы Setup сразу отрендерился с нужным конфигом
-    setCurrentGameId(gameId);
-    void navigate(`/game/${gameId}/setup`);
-  };
+  const handleSelectGame = useCallback(
+    (gameId: GameKey) => {
+      // Ставим id до навигации, чтобы Setup сразу отрендерился с нужным конфигом
+      setCurrentGameId(gameId);
+      void navigate(`/game/${gameId}/setup`);
+    },
+    [navigate, setCurrentGameId]
+  );
 
   return (
     <div className="relative">

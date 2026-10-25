@@ -1,6 +1,6 @@
 import { ArrowLeft, HelpCircle, Play, Shuffle, UserPlus, Users } from 'lucide-react';
 import { motion, Reorder } from 'motion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { DEFAULT_NAMES, DEFAULT_NAMES_EN, PlayerRow } from '@/entities/player/components/PlayerRow';
@@ -82,12 +82,16 @@ export const Setup: React.FC<SetupProps> = ({
         },
       ]);
   };
-  const removePlayer = (id: string) => {
-    if (players.length > minPlayers) setPlayers((prev) => prev.filter((p) => p.id !== id));
-  };
-  const handleNameChange = (id: string, name: string) => {
+  // Стабильные колбэки — иначе memo у PlayerRow не срабатывает
+  const removePlayer = useCallback(
+    (id: string) => {
+      setPlayers((prev) => (prev.length > minPlayers ? prev.filter((p) => p.id !== id) : prev));
+    },
+    [minPlayers]
+  );
+  const handleNameChange = useCallback((id: string, name: string) => {
     setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, name } : p)));
-  };
+  }, []);
   const shufflePlayers = () => {
     setPlayers((prev) => shuffle(prev));
   };
@@ -126,7 +130,12 @@ export const Setup: React.FC<SetupProps> = ({
                 <span className={config.text}>{title}</span>
               )}
             </Typography.Title>
-            <img src={icon} alt="" aria-hidden className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-lg" />
+            <img
+              src={icon}
+              alt=""
+              aria-hidden
+              className="h-12 w-12 shrink-0 rounded-xl object-cover shadow-lg"
+            />
           </div>
 
           <div className="px-1">

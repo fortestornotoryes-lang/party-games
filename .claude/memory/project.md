@@ -26,7 +26,7 @@ src/
 
 ## Роутинг и жизненный цикл игры
 
-Маршруты: `/` (меню) → `/game/:gameKey/setup` (Setup: инструкции + игроки + настройки) → `/game/:gameKey/play`. Прочее: `/settings`, `*` → `/`.
+Маршруты: `/` (меню) → `/game/:gameKey/setup` (Setup: инструкции + игроки + настройки) → `/game/:gameKey/play`. Прочее: `/settings`, `*` → `/`. Только в dev: `/design-lab` (`pages/design-lab/`) — витрина 3 дизайн-вариантов общих экранов (передача телефона, показ слова, выбор слова, команды) на демо-данных; после выбора варианта перенести его в shared/features и удалить лабораторию вместе с маршрутом.
 
 - Игроки передаются из Setup через navigation state; при прямом заходе/F5 берутся из `storageService.getPlayers()`. Если игроков меньше `minPlayers` — redirect на setup (`GamePlayRoute.tsx`).
 - Setup при «Начать игру» очищает сессию партии; `sessionService.syncPlayers` в GamePlayRoute инвалидирует сессию при смене состава.
@@ -75,4 +75,4 @@ src/
 6. Lazy-импорт + запись в `GAME_COMPONENTS` в `GamePlayRoute.tsx`
 7. Персистенция партии через `usePersistedState` (см. conventions.md), контент через пул-хелперы
 
-_Ревизия: 2026-10-18_
+_Ревизия: 2026-10-25_

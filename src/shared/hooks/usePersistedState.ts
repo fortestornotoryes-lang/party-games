@@ -3,6 +3,8 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { sessionService } from '../services/sessionService';
 
+import type { Timer } from './useTimer';
+
 /**
  * Кодек для значений, которые нельзя сериализовать в JSON напрямую
  * (Set, Map и т.п.). save → JSON-представление, load → обратно.
@@ -56,14 +58,14 @@ export function usePersistedState<T>(
 /**
  * Восстановление таймера после перезагрузки страницы.
  *
- * Сохраняет timeLeft в сессию на каждом тике; при маунте, если игра
- * была в «играющей» фазе (resumeRunning), перезапускает таймер
- * с сохранённого значения.
+ * Сохраняет timeLeft в сессию на каждом тике (подпиской — без перерисовки игры);
+ * при маунте, если игра была в «играющей» фазе (resumeRunning), перезапускает
+ * таймер с сохранённого значения.
  */
 export function usePersistedTimer(
   gameKey: string,
   field: string,
-  timer: { timeLeft: number; start: () => void; reset: (newTime?: number) => void },
+  timer: Timer,
   resumeRunning: boolean
 ) {
   // Сохранённое значение читаем лениво при маунте — до того,
@@ -82,6 +84,9 @@ export function usePersistedTimer(
   }, []);
 
   useEffect(() => {
-    sessionService.saveField(gameKey, field, timer.timeLeft);
-  }, [gameKey, field, timer.timeLeft]);
+    sessionService.saveField(gameKey, field, timer.getTimeLeft());
+    return timer.subscribe((timeLeft) => {
+      sessionService.saveField(gameKey, field, timeLeft);
+    });
+  }, [gameKey, field, timer]);
 }

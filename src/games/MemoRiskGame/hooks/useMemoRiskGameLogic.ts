@@ -294,7 +294,8 @@ export const useMemoRiskGameLogic = (playerNames: string[]) => {
     superActive,
     outcome,
     flipsLeft: isLimited ? flipsLeft : null,
-    timer: isTimed ? { timeLeft: timer.timeLeft, totalSeconds: cfg.turnSeconds } : null,
+    // Сам таймер, а не его секунды: иначе каждый тик перерисовывал всё поле карт
+    timer: isTimed ? { timer, totalSeconds: cfg.turnSeconds } : null,
     escalation,
     flipCard,
     handleBank,
