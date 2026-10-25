@@ -1,5 +1,6 @@
-import type { Difficulty } from '@/shared/types';
 import { EXTRA_FAKE_ARTIST_CANDIDATES } from './extraContent';
+
+import type { Difficulty } from '@/shared/types';
 
 export interface FakeArtistCategory {
   category: string;

@@ -9,6 +9,11 @@ import type { Lang } from '@/shared/i18n/types';
  * выбор по языку — getGameInstructions(gameKey, lang).
  */
 export const GAME_INSTRUCTIONS: GameInstructionsMap = {
+  [GameKey.Chess]: [
+    { title: 'Ходы', content: 'Выберите фигуру, затем клетку назначения. Подсветка показывает разрешённые ходы. Поддерживаются рокировка, взятие на проходе и превращение пешки.' },
+    { title: 'Режимы', content: 'Играйте против компьютера, вдвоём на одном устройстве или тренируйтесь с подсказками. Сложность меняет глубину поиска компьютера.' },
+    { title: 'Разбор', content: 'После ходов нажмите «Анализ», чтобы увидеть оценку каждого хода, более сильное продолжение и краткое объяснение.' },
+  ],
   [GameKey.TwoTruths]: [
     {
       title: 'Суть игры',
@@ -432,6 +437,11 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
 } as const;
 
 export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
+  [GameKey.Chess]: [
+    { title: 'Moves', content: 'Select a piece and then a destination. Highlighted squares show legal moves. Castling, en passant and promotion are supported.' },
+    { title: 'Modes', content: 'Play the computer, play locally with a friend, or train with hints. Difficulty changes the computer search depth.' },
+    { title: 'Review', content: 'Press Analyze after making moves to see a grade, a stronger alternative and a short explanation for each move.' },
+  ],
   [GameKey.TwoTruths]: [
     {
       title: 'The Idea',

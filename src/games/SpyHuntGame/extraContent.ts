@@ -1,4 +1,5 @@
 import type { LocationInfo } from './content';
+
 import type { Difficulty } from '@/shared/types';
 
 // У каждой группы своя семёрка ролей: игрокам есть о чём спрашивать в выбранной локации.

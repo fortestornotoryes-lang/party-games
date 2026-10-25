@@ -96,6 +96,17 @@ export const ru: Translations = {
       shapes: '{{n}} фиг.',
     },
     games: {
+      chess: {
+        title: 'ШАХМАТЫ',
+        subtitle: 'Игра, обучение и разбор',
+        placeholder: 'Игрок',
+        description: 'Шахматы против компьютера, вдвоём или с подсказками и разбором ходов.',
+        modes: {
+          classic: { name: 'Против компьютера', description: 'Три уровня сложности' },
+          local: { name: 'Вдвоём', description: 'Игра на одном устройстве' },
+          training: { name: 'Обучение', description: 'Подсказки во время игры' },
+        },
+      },
       spy: {
         title: 'SPY HUNT',
         subtitle: 'Вычисли шпиона среди своих',
@@ -343,7 +354,7 @@ export const ru: Translations = {
         placeholder: 'Житель',
         description: 'Город засыпает...',
       },
-      connect_four: {
+  connect_four: {
         title: 'ЧЕТЫРЕ В РЯД',
         subtitle: 'Connect Four',
         placeholder: 'Игрок',
@@ -801,6 +812,24 @@ export const ru: Translations = {
     inDevelopment:
       'Этот режим игры находится в разработке. Используйте это приложение как помощника для раздачи ролей или ведения игры.',
     goBack: 'Вернуться',
+  },
+  chess: {
+    title: 'Шахматы', newGame: 'Новая партия', white: 'Белые', black: 'Чёрные', computer: 'Компьютер',
+    whiteTurn: 'Ход белых', blackTurn: 'Ход чёрных', whiteWins: 'Белые победили — мат', blackWins: 'Чёрные победили — мат',
+    draw: 'Ничья', check: 'Шах!', thinking: 'Компьютер думает…', movesCount: 'Ходов: {{n}}',
+    choosePromotion: 'Выберите фигуру для превращения', undo: 'Отменить ход', hint: 'Подсказка',
+    analyze: 'Анализ партии', analyzing: 'Анализируем…', analyzingProgress: 'Анализ: {{done}}/{{total}}', suggestion: 'Лучший ход:',
+    moveHistory: 'Ходы', liveBoard: 'Вернуться к текущей позиции', analysisTitle: 'Разбор партии',
+    analysisNote: 'Локальный анализ на глубине 4 полухода. Оценки приблизительны.',
+    betterMove: 'Лучше: {{move}}.', opponentReply: 'Сильный ответ соперника: {{move}}.', grades: {
+      best: 'лучший ход', good: 'хороший ход', inaccuracy: 'неточность', mistake: 'ошибка', blunder: 'грубая ошибка',
+    },
+    reasons: {
+      mate: 'Завершает партию матом.', check: 'Объявляет шах королю.',
+      castle: 'Укрывает короля и вводит ладью в игру.', promotion: 'Превращает пешку в сильную фигуру.',
+      capture: 'Выигрывает материал или меняет фигуры.', development: 'Развивает фигуру и усиливает контроль над доской.',
+      center: 'Занимает центр и открывает линии фигурам.', improve: 'Улучшает положение и сохраняет варианты.',
+    },
   },
   connect_four: {
     title: 'ЧЕТЫРЕ В РЯД',

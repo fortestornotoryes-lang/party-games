@@ -1,5 +1,6 @@
-import type { Difficulty } from '@/shared/types';
 import { EXTRA_LOCATIONS } from './extraContent';
+
+import type { Difficulty } from '@/shared/types';
 
 export type SpyDifficulty = Difficulty;
 

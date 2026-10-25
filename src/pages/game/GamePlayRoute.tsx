@@ -12,6 +12,7 @@ import { storageService } from '@/shared/services/storageService';
 const SpyHuntGame = lazy(() =>
   import('@/games/SpyHuntGame/SpyHuntGame').then((m) => ({ default: m.SpyHuntGame }))
 );
+const ChessGame = lazy(() => import('@/games/ChessGame/ChessGame').then((m) => ({ default: m.ChessGame })));
 const AliasGame = lazy(() =>
   import('@/games/AliasGame/AliasGame').then((m) => ({ default: m.AliasGame }))
 );
@@ -80,6 +81,7 @@ const WhoAmongUsGame = lazy(() =>
 // каждая объявляет нужное ей подмножество (onRestart — Bunker,
 // initialDifficulty — Telestrations, остальные — playerNames + onBack).
 const GAME_COMPONENTS: Record<GameKey, ComponentType<GameComponentProps>> = {
+  [GameKey.Chess]: ChessGame,
   [GameKey.Spy]: SpyHuntGame,
   [GameKey.Bunker]: BunkerGame,
   [GameKey.Telestrations]: TelestrationsGame,

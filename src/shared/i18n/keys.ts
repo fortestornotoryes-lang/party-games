@@ -26,4 +26,5 @@ export const NS = {
   CROCODILE: 'crocodile',
   TWO_TRUTHS: 'two_truths',
   WHO_AMONG_US: 'who_among_us',
+  CHESS: 'chess',
 } as const;

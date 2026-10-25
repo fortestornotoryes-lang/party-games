@@ -96,6 +96,17 @@ export const en: Translations = {
       shapes: '{{n}} shp',
     },
     games: {
+      chess: {
+        title: 'CHESS',
+        subtitle: 'Play, learn and review',
+        placeholder: 'Player',
+        description: 'Play chess against the computer, locally with a friend, or learn with hints and move review.',
+        modes: {
+          classic: { name: 'Computer', description: 'Three difficulty levels' },
+          local: { name: 'Two players', description: 'Share one device' },
+          training: { name: 'Training', description: 'Hints while playing' },
+        },
+      },
       spy: {
         title: 'SPY HUNT',
         subtitle: 'Find the spy among your own',
@@ -343,7 +354,7 @@ export const en: Translations = {
         placeholder: 'Citizen',
         description: 'The city falls asleep...',
       },
-      connect_four: {
+  connect_four: {
         title: 'CONNECT FOUR',
         subtitle: 'Connect Four',
         placeholder: 'Player',
@@ -802,6 +813,24 @@ export const en: Translations = {
     inDevelopment:
       'This game mode is in development. Use this app as an assistant for assigning roles or running the game.',
     goBack: 'Go Back',
+  },
+  chess: {
+    title: 'Chess', newGame: 'New game', white: 'White', black: 'Black', computer: 'Computer',
+    whiteTurn: 'White to move', blackTurn: 'Black to move', whiteWins: 'White wins by checkmate', blackWins: 'Black wins by checkmate',
+    draw: 'Draw', check: 'Check!', thinking: 'Computer is thinking…', movesCount: 'Moves: {{n}}',
+    choosePromotion: 'Choose a promotion piece', undo: 'Undo', hint: 'Hint',
+    analyze: 'Analyze game', analyzing: 'Analyzing…', analyzingProgress: 'Analyzing: {{done}}/{{total}}', suggestion: 'Best move:',
+    moveHistory: 'Move history', liveBoard: 'Return to live board', analysisTitle: 'Game review',
+    analysisNote: 'Local analysis searches 4 plies. Evaluations are approximate.',
+    betterMove: 'Better: {{move}}.', opponentReply: 'Strong opponent reply: {{move}}.', grades: {
+      best: 'best move', good: 'good move', inaccuracy: 'inaccuracy', mistake: 'mistake', blunder: 'blunder',
+    },
+    reasons: {
+      mate: 'Ends the game with checkmate.', check: 'Checks the king.',
+      castle: 'Shelters the king and brings the rook into play.', promotion: 'Promotes the pawn to a stronger piece.',
+      capture: 'Wins material or trades pieces.', development: 'Develops a piece and controls more squares.',
+      center: 'Takes the center and opens lines for the pieces.', improve: 'Improves the position while keeping options open.',
+    },
   },
   connect_four: {
     title: 'CONNECT FOUR',

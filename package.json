@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "eslint src && tsc --project tsconfig.json --noEmit",
+    "test:chess": "node scripts/testChessEngine.cjs",
     "lint:fix": "eslint . --fix && prettier --write ."
   },
   "dependencies": {

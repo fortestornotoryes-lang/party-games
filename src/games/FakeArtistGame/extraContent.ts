@@ -1,7 +1,8 @@
-import type { Difficulty } from '@/shared/types';
 import type { FakeArtistCategory } from './content';
 
-type Group = { category: string; words: string };
+import type { Difficulty } from '@/shared/types';
+
+interface Group { category: string; words: string }
 
 const groups: Record<Difficulty, Group[]> = {
   easy: [

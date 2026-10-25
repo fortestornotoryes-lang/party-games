@@ -25,6 +25,7 @@ export const GameKey = {
   Crocodile: 'crocodile',
   TwoTruths: 'two_truths',
   WhoAmongUs: 'who_among_us',
+  Chess: 'chess',
 } as const;
 
 export type GameKey = (typeof GameKey)[keyof typeof GameKey];

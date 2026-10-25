@@ -2,6 +2,7 @@ import {
   ArrowDown,
   Ban,
   Brain,
+  Castle,
   Clock,
   Crown,
   Drama,
@@ -48,6 +49,7 @@ import TruthOrDareImage from '@/assets/TruthOrDare123.png';
 import WavelengthImage from '@/assets/WavelengthImage.JPG';
 import { ALIAS_DIFFICULTY_CONFIG } from '@/games/AliasGame/constants.ts';
 import { BUNKER_MODES } from '@/games/BunkerGame/constants.ts';
+import { CHESS_MODES } from '@/games/ChessGame/constants.ts';
 import { CODENAMES_MODES } from '@/games/CodenamesGame/constants.ts';
 import { CONNECT_FOUR_MODES } from '@/games/ConnectFourGame/constants.ts';
 import { DECRYPTO_MODES } from '@/games/DecryptoGame/constants.ts';
@@ -70,6 +72,19 @@ const wordsLeft = (_d: Difficulty, remaining: number | undefined, t: TranslateFn
   remaining !== undefined ? t('registry.sublabels.wordsLeft', { n: remaining }) : undefined;
 
 export const GAMES_REGISTRY: GamesRegistryMap = {
+  [GameKey.Chess]: {
+    id: GameKey.Chess,
+    icon: Castle,
+    theme: 'green',
+    players: '1–2',
+    minPlayers: 1,
+    maxPlayers: 2,
+    modes: [
+      { id: CHESS_MODES.COMPUTER, icon: Brain },
+      { id: CHESS_MODES.LOCAL, icon: Users },
+      { id: CHESS_MODES.TRAINING, icon: Lightbulb },
+    ],
+  },
   [GameKey.Spy]: {
     id: GameKey.Spy,
     icon: Shield,
