@@ -15,8 +15,8 @@ interface PoolOptions<T> {
  */
 export function availableFromPool<T>(gameId: string, pool: T[], opts: PoolOptions<T> = {}): T[] {
   const { keyOf = (x: T) => String(x), minRemaining = 1 } = opts;
-  const used = storageService.getUsedWords(gameId);
-  const available = pool.filter((item) => !used.includes(keyOf(item)));
+  const used = new Set(storageService.getUsedWords(gameId));
+  const available = pool.filter((item) => !used.has(keyOf(item)));
   if (available.length < minRemaining) {
     storageService.resetUsedWords(gameId);
     return pool;

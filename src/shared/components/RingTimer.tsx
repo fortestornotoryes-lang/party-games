@@ -38,15 +38,19 @@ export const RingTimer: React.FC<RingTimerProps> = ({
     <div className={`relative ${sizeClassName}`}>
       <AnimatePresence>
         {urgent ? (
+          // Внешний слой — появление/исчезновение (motion), внутренний — пульс на CSS
           <motion.div
             key="halo"
-            className="absolute -inset-2 rounded-full"
-            style={{ boxShadow: `0 0 28px ${rgba('red', 0.55)}` }}
+            className="absolute -inset-2"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.25, 0.9, 0.25], scale: [0.96, 1.06, 0.96] }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          >
+            <div
+              className="animate-halo h-full w-full rounded-full"
+              style={{ boxShadow: `0 0 28px ${rgba('red', 0.55)}` }}
+            />
+          </motion.div>
         ) : null}
       </AnimatePresence>
 

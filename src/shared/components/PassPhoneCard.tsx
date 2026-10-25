@@ -153,13 +153,11 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
       />
 
       <div className="relative z-10 space-y-7 px-6 text-center sm:px-10">
-        <motion.div
-          animate={{ opacity: [0.5, 0.9, 0.9, 0.5], scale: [1, 1.15, 1.15, 1] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
-          className={`mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full border transition-colors duration-500 ${accent.ring}`}
+        <div
+          className={`animate-beacon mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full border transition-colors duration-500 ${accent.ring}`}
         >
           {!!Icon && <Icon className={`h-12 w-12 transition-colors duration-300 ${accent.icon}`} />}
-        </motion.div>
+        </div>
 
         <div className="space-y-3">
           {!!badge && (

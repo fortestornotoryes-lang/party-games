@@ -42,7 +42,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   };
 
   const baseStyles =
-    'w-full min-h-16 px-5 py-3 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none';
+    'w-full min-h-16 px-5 py-3 rounded-premium-md font-black italic text-xl flex items-center justify-center space-x-3 active:scale-95 transition-[transform,opacity,background-color] duration-150 disabled:opacity-30 disabled:pointer-events-none relative overflow-hidden group border-none';
 
   return (
     <button

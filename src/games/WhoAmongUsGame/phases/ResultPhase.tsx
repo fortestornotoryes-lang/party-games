@@ -93,20 +93,13 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({
                 >
                   {/* Блик, пробегающий по полосе лидера */}
                   {isTop ? (
-                    <motion.span
+                    <span
                       aria-hidden
-                      className="absolute inset-y-0 w-8"
+                      className="animate-shimmer absolute inset-y-0 -left-full w-full"
                       style={{
                         background:
-                          'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)',
-                      }}
-                      initial={{ left: '-30%' }}
-                      animate={{ left: '120%' }}
-                      transition={{
-                        duration: 1.2,
-                        delay: leadersDelay + 0.3,
-                        repeat: Infinity,
-                        repeatDelay: 1.6,
+                          'linear-gradient(90deg, transparent 42%, rgba(255,255,255,0.7) 50%, transparent 58%)',
+                        animationDelay: `${leadersDelay + 0.3}s`,
                       }}
                     />
                   ) : null}
@@ -123,9 +116,7 @@ export const ResultPhase: React.FC<ResultPhaseProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ ...SPRING.soft, delay: buttonDelay }}
       >
-        <PrimaryButton onClick={onNext}>
-          {t(`${NS.WHO_AMONG_US}.nextRound`)}
-        </PrimaryButton>
+        <PrimaryButton onClick={onNext}>{t(`${NS.WHO_AMONG_US}.nextRound`)}</PrimaryButton>
       </motion.div>
     </>
   );

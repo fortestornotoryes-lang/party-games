@@ -148,7 +148,7 @@ export const VotingPhase: React.FC<VotingPhaseProps> = ({
                 toggle(char.playerName);
               }}
               whileTap={{ scale: 0.97 }}
-              className="rounded-premium-md w-full text-left transition-all"
+              className="rounded-premium-md w-full text-left transition-[color,background-color,border-color,box-shadow,opacity]"
               style={{
                 background: isSelected ? 'rgba(255,46,77,0.1)' : 'rgba(255,255,255,0.04)',
                 border: isSelected

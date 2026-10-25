@@ -5,7 +5,7 @@ import React from 'react';
 
 import type { GameKey, GameMode, GameSettingKey, GameSettingValue } from '@/entities/game/types';
 import { useLocalizedGame } from '@/entities/game/useLocalizedGame';
-import { contentService } from '@/features/word-stats/model/contentService';
+import { useWordStats } from '@/features/word-stats/model/useWordStats';
 import { useTranslation } from '@/shared/i18n';
 import { getTheme } from '@/shared/theme/colors';
 import type { GameTheme } from '@/shared/types';
@@ -52,7 +52,7 @@ const SettingRow: React.FC<SettingRowProps> = ({
             onClick={() => {
               onChange(opt.value);
             }}
-            className={`rounded-premium-md flex h-14 flex-col items-center justify-center border transition-all ${
+            className={`rounded-premium-md flex h-14 flex-col items-center justify-center border transition-colors ${
               isActive
                 ? getTheme(opt.color ?? color ?? 'green').activeOption
                 : 'glass-card border-white/5 text-white/75'
@@ -79,6 +79,8 @@ const SettingRow: React.FC<SettingRowProps> = ({
 
 // ─── main component ───────────────────────────────────────────────────────────
 
+const ALL_DIFFICULTIES = [DIFFICULTY.EASY, DIFFICULTY.MEDIUM, DIFFICULTY.HARD] as const;
+
 interface UniversalGameSettingsProps {
   difficulty: Difficulty;
   setDifficulty: (d: Difficulty) => void;
@@ -103,11 +105,12 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
 }) => {
   const { t } = useTranslation();
   const gameDef = useLocalizedGame(currentGameId);
+  // Считается один раз после маунта, а не на каждый рендер (Setup перерисовывается на каждую букву имени)
+  const statsOf = useWordStats(currentGameId ? [currentGameId] : [], ALL_DIFFICULTIES);
 
   const getDiffSublabel = (d: Difficulty): string | undefined => {
     if (!currentGameId || !gameDef?.difficultySublabel) return undefined;
-    const stats = contentService.getWordStats(currentGameId, d);
-    return gameDef.difficultySublabel(d, stats.total > 0 ? stats.remaining : undefined, t);
+    return gameDef.difficultySublabel(d, statsOf(currentGameId, d)?.remaining, t);
   };
 
   const difficultyOptions: SettingOption[] = [
@@ -163,7 +166,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
                   onClick={() => {
                     setMode(m.id);
                   }}
-                  className={`rounded-premium-lg relative flex items-center gap-6 overflow-hidden border p-3 text-left transition-all ${
+                  className={`rounded-premium-lg relative flex items-center gap-6 overflow-hidden border p-3 text-left transition-[color,background-color,border-color,box-shadow,opacity] ${
                     isActive
                       ? `${getTheme('green').bg10} ${getTheme('green').border40} shadow-premium-green/20 text-white`
                       : 'glass-card border-white/5 text-white/80'

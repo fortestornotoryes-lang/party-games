@@ -2,7 +2,11 @@ import { CheckCircle2, Eraser, Undo2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
+import {
+  coalescedPoints,
+  exportCanvasImage,
+  useCanvasSurface,
+} from '@/shared/hooks/useCanvasSurface';
 import { useTranslation } from '@/shared/i18n';
 
 const BRUSH_COLORS = [
@@ -16,6 +20,19 @@ const BRUSH_COLORS = [
   '#000000',
 ];
 const BRUSH_SIZES = [1, 2, 4, 8, 14];
+const CANVAS_BG = '#120a0a';
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+/** Штрих в CSS-пикселях канваса: история рисунка — векторы, а не снимки битмапа */
+interface Stroke {
+  points: Point[];
+  color: string;
+  size: number;
+}
 
 interface DrawingCanvasProps {
   word: string;
@@ -34,52 +51,62 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
 }) => {
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawHistory = useRef<ImageData[]>([]);
+  // Undo, ресайз и очистка перерисовывают штрихи заново. Раньше перед каждым штрихом
+  // снимался getImageData всего битмапа (синхронное чтение с GPU, ~6 МБ при DPR 3,
+  // до 50 штук в памяти) — отсюда задержка на старте линии и фризы от сборщика мусора.
+  const strokesRef = useRef<Stroke[]>([]);
+  // Текущий штрих живёт вне React-состояния: pointermove рисует сегмент напрямую в canvas
+  const currentRef = useRef<Stroke | null>(null);
   const prevTimeLeftRef = useRef(timeLeft);
-  const isCanvasReady = useRef(false);
-  const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#ffffff');
   const [brushSize, setBrushSize] = useState(2);
 
+  const finish = () => {
+    const canvas = canvasRef.current;
+    onFinish(canvas ? exportCanvasImage(canvas) : '');
+  };
+
   // Auto-submit when timer transitions from >0 to 0
   useEffect(() => {
-    if (prevTimeLeftRef.current > 0 && timeLeft === 0) {
-      onFinish(canvasRef.current?.toDataURL() ?? '');
-    }
+    if (prevTimeLeftRef.current > 0 && timeLeft === 0) finish();
     prevTimeLeftRef.current = timeLeft;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, onFinish]);
 
-  // Raster-подход: содержимое сохраняем снапшотом перед пересозданием битмапа
-  const savedImage = useRef<ImageData | undefined>(undefined);
-  const { getBitmapPos: getCoords } = useCanvasSurface(canvasRef, {
+  /** Масштаб «CSS-пиксель → пиксель битмапа» для ctx.setTransform */
+  const applyCssTransform = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    ctx.setTransform(canvas.width / rect.width, 0, 0, canvas.height / rect.height, 0, 0);
+  };
+
+  const strokePath = (ctx: CanvasRenderingContext2D, { points, color, size }: Stroke) => {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+    ctx.moveTo(points[0].x, points[0].y);
+    for (const p of points) ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  };
+
+  const redraw = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = CANVAS_BG;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    applyCssTransform(ctx, canvas);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    for (const stroke of strokesRef.current) strokePath(ctx, stroke);
+  };
+
+  const { getCssPos } = useCanvasSurface(canvasRef, {
     observeParent: true,
-    onBeforeResize: (ctx, canvas) => {
-      savedImage.current = undefined;
-      // Only save content if the canvas was already properly initialized —
-      // the HTML default (300×150) is transparent and must not be restored.
-      if (isCanvasReady.current && canvas.width > 0 && canvas.height > 0) {
-        try {
-          savedImage.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        } catch {
-          // getImageData может бросить (tainted canvas) — просто не сохраняем
-        }
-      }
-    },
-    onResize: (ctx, canvas) => {
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.fillStyle = '#120a0a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      if (savedImage.current) {
-        try {
-          ctx.putImageData(savedImage.current, 0, 0);
-        } catch {
-          // снимок не удалось восстановить — рисуем с чистого листа
-        }
-      }
-      isCanvasReady.current = true;
+    // Смена размера битмапа стирает рисунок — восстанавливаем из векторов
+    onResize: () => {
+      redraw();
     },
   });
 
@@ -88,73 +115,48 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
     if (!e.isPrimary) return;
     // Захват указателя: штрих не обрывается, если палец/курсор ушёл за край canvas
     e.currentTarget.setPointerCapture(e.pointerId);
-
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return;
-
-    if (canvas.width > 0 && canvas.height > 0) {
-      try {
-        drawHistory.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        if (drawHistory.current.length > 50) drawHistory.current.shift();
-      } catch (err) {
-        console.error('History push error:', err);
-      }
-    }
-
-    setIsDrawing(true);
-    const { x, y } = getCoords(e);
-
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.strokeStyle = brushColor;
-
-    // Using simple ratio for line width consistency
-    const rect = canvas.getBoundingClientRect();
-    const dprScale = canvas.width / rect.width;
-    ctx.lineWidth = brushSize * dprScale;
-
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    currentRef.current = { points: [getCssPos(e)], color: brushColor, size: brushSize };
   };
 
   const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !canvasRef.current) return;
+    const stroke = currentRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!stroke || !canvas || !ctx) return;
 
-    const ctx = canvasRef.current.getContext('2d');
-    if (!ctx) return;
-
-    const { x, y } = getCoords(e);
-    ctx.lineTo(x, y);
-    ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.size;
+    let last = stroke.points[stroke.points.length - 1];
+    ctx.moveTo(last.x, last.y);
+    for (const ev of coalescedPoints(e)) {
+      last = getCssPos(ev);
+      stroke.points.push(last);
+      ctx.lineTo(last.x, last.y);
+    }
+    ctx.stroke();
   };
 
   const stopDrawing = () => {
-    setIsDrawing(false);
+    const stroke = currentRef.current;
+    currentRef.current = null;
+    // Тап без движения линии не рисует — в историю (и в undo) не попадает
+    if (stroke && stroke.points.length > 1) strokesRef.current.push(stroke);
   };
 
   const clearCanvas = () => {
-    drawHistory.current = [];
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (ctx && canvas) {
-      ctx.fillStyle = '#120a0a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
+    strokesRef.current = [];
+    redraw();
   };
 
   const undoDrawing = () => {
-    if (drawHistory.current.length === 0 || !canvasRef.current) return;
-    const ctx = canvasRef.current.getContext('2d');
-    if (!ctx) return;
-    const snapshot = drawHistory.current.pop();
-    if (snapshot) ctx.putImageData(snapshot, 0, 0);
+    if (strokesRef.current.length === 0) return;
+    strokesRef.current.pop();
+    redraw();
   };
 
   const handleSubmit = () => {
-    onFinish(canvasRef.current?.toDataURL() ?? '');
+    finish();
   };
 
   return (
@@ -165,8 +167,8 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
             ✏️ {t('common.youDraw')}
           </p>
           <motion.p
-            initial={{ opacity: 0, filter: 'blur(8px)', x: -10 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', x: 0 }}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
             className="text-premium-orange text-lg leading-tight font-black wrap-anywhere"
           >
             {word}
@@ -180,19 +182,19 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
           </span>
           <button
             onClick={undoDrawing}
-            className="rounded-premium-sm hover:bg-premium-orange/20 hover:text-premium-orange bg-white/5 p-2.5 text-white/35 transition-all"
+            className="rounded-premium-sm hover:bg-premium-orange/20 hover:text-premium-orange bg-white/5 p-2.5 text-white/35 transition-colors"
           >
             <Undo2 className="h-5 w-5" />
           </button>
           <button
             onClick={clearCanvas}
-            className="rounded-premium-sm hover:bg-premium-red/20 hover:text-premium-red bg-white/5 p-2.5 text-white/35 transition-all"
+            className="rounded-premium-sm hover:bg-premium-red/20 hover:text-premium-red bg-white/5 p-2.5 text-white/35 transition-colors"
           >
             <Eraser className="h-5 w-5" />
           </button>
           <button
             onClick={handleSubmit}
-            className="rounded-premium-sm bg-white p-2.5 text-black transition-all hover:bg-zinc-200"
+            className="rounded-premium-sm bg-white p-2.5 text-black transition-colors hover:bg-zinc-200"
           >
             <CheckCircle2 className="h-5 w-5" />
           </button>
@@ -233,7 +235,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({
               onClick={() => {
                 setBrushColor(color);
               }}
-              className={`h-7 w-7 rounded-full border-2 transition-all active:scale-90 ${brushColor === color ? 'scale-110 border-white' : 'border-transparent'}`}
+              className={`h-7 w-7 rounded-full border-2 transition-[transform,border-color] active:scale-90 ${brushColor === color ? 'scale-110 border-white' : 'border-transparent'}`}
               style={{ backgroundColor: color }}
             />
           ))}

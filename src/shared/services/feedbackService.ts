@@ -42,6 +42,21 @@ export const VIBRATE = {
   celebrate: [50, 30, 50, 30, 50] as number[],
 } as const;
 
+// Конфетти рисуются в Web Worker (OffscreenCanvas): дефолтный confetti() считает частицы
+// в main thread и залп на 200 частиц совпадал по времени со сменой фазы — переход дёргался.
+// Без поддержки OffscreenCanvas библиотека сама откатывается на main thread.
+let _confetti: confetti.CreateTypes | null = null;
+
+function getConfetti(): confetti.CreateTypes {
+  if (_confetti) return _confetti;
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText =
+    'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:100';
+  document.body.appendChild(canvas);
+  _confetti = confetti.create(canvas, { resize: true, useWorker: true });
+  return _confetti;
+}
+
 // Singleton AudioContext — браузер ограничивает их количество (~6 на страницу).
 // Переиспользуем один на всё время жизни приложения.
 let _audioCtx: AudioContext | null = null;
@@ -70,7 +85,7 @@ export const feedbackService = {
   celebrate: (preset: ConfettiPreset, overrides?: confetti.Options) => {
     if (!storageService.getSettings().visualEffects) return;
     try {
-      void confetti({ ...CONFETTI[preset], ...overrides });
+      void getConfetti()({ ...CONFETTI[preset], ...overrides });
     } catch {
       // Ignore confetti errors
     }
@@ -87,6 +102,7 @@ export const feedbackService = {
     const defaults: confetti.Options = { startVelocity: 30, spread: 360, ticks: 60, colors };
     const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
+    const fire = getConfetti();
     const interval = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
       if (timeLeft <= 0) {
@@ -95,12 +111,12 @@ export const feedbackService = {
       }
       const particleCount = 50 * (timeLeft / durationMs);
       try {
-        void confetti({
+        void fire({
           ...defaults,
           particleCount,
           origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
         });
-        void confetti({
+        void fire({
           ...defaults,
           particleCount,
           origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },

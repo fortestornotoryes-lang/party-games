@@ -25,7 +25,7 @@ export const IconButton: React.FC<{
   return (
     <button
       onClick={handleClick}
-      className={`rounded-premium-sm flex items-center justify-center p-4 transition-all ${variants[variant]} ${className}`}
+      className={`rounded-premium-sm flex items-center justify-center p-4 transition-[transform,background-color,color] duration-150 ${variants[variant]} ${className}`}
     >
       <Icon className="h-5 w-5" />
     </button>

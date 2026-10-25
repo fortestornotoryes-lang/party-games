@@ -21,16 +21,17 @@ export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 /**
  * Смена фаз: экран всплывает снизу и уходит вверх.
  * Дети с вариантами STAGGER_ITEM появляются каскадом вслед за экраном.
+ * Без scale: масштаб всего экрана заставляет перерастеризовывать весь текст фазы
+ * на каждом кадре — на телефонах переход заметно дёргался.
  */
 export const PHASE_VARIANTS: Variants = {
-  initial: { opacity: 0, y: 24, scale: 0.98 },
+  initial: { opacity: 0, y: 24 },
   animate: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: { ...SPRING.soft, staggerChildren: 0.06, delayChildren: 0.06 },
   },
-  exit: { opacity: 0, y: -16, scale: 0.98, transition: { duration: 0.18, ease: 'easeIn' } },
+  exit: { opacity: 0, y: -16, transition: { duration: 0.18, ease: 'easeIn' } },
 };
 
 /** Элемент каскада внутри PHASE_VARIANTS (или любого контейнера со staggerChildren) */

@@ -74,15 +74,12 @@ export const RoleDistribution: React.FC<RoleDistributionProps> = ({
                 </div>
 
                 <div className="space-y-3 text-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.06, 1] }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
-                  >
+                  <div className="animate-breathe">
                     <Ghost
                       className="text-premium-green mx-auto h-[88px] w-[88px]"
                       style={{ filter: ROLE_TOKENS.agent.iconFilter }}
                     />
-                  </motion.div>
+                  </div>
                   <Typography.Display size="lg" color="green" glow align="center">
                     {t(`${NS.SPY_HUNT}.spy`)}
                   </Typography.Display>

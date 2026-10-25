@@ -17,7 +17,7 @@ interface FlipCardProps {
 /**
  * 3D-карточка, которая монтируется рубашкой вверх и переворачивается лицом.
  * Обе стороны лежат в одной grid-ячейке — высота карточки = высоте большей стороны.
- * Внутри не использовать `.glass-card`: backdrop-filter ломает preserve-3d.
+ * Внутри не использовать backdrop-filter: он ломает preserve-3d.
  */
 export const FlipCard: React.FC<FlipCardProps> = ({
   front,

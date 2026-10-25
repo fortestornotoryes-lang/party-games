@@ -19,7 +19,6 @@ const MAX_TILT = 16;
 const STAMP_START = 24;
 
 const NEUTRAL_BORDER = 'rgba(255,255,255,0.08)';
-const NO_GLOW = '0 0 0px rgba(0,0,0,0)';
 
 // exit получает направление из AnimatePresence custom — карточка улетает в сторону ответа,
 // даже если ответили кнопкой, а не свайпом
@@ -56,16 +55,11 @@ export const SwipeWordCard: React.FC<SwipeWordCardProps> = ({
   const rotate = useTransform(x, [-260, 260], [-MAX_TILT, MAX_TILT]);
   const correctOpacity = useTransform(x, [STAMP_START, SWIPE_OFFSET], [0, 1]);
   const skipOpacity = useTransform(x, [-SWIPE_OFFSET, -STAMP_START], [1, 0]);
-  const borderColor = useTransform(
-    x,
-    [-SWIPE_OFFSET, 0, SWIPE_OFFSET],
-    [rgba('red', 0.7), NEUTRAL_BORDER, rgba('green', 0.7)]
-  );
-  const boxShadow = useTransform(
-    x,
-    [-SWIPE_OFFSET, 0, SWIPE_OFFSET],
-    [`0 0 60px ${rgba('red', 0.35)}`, NO_GLOW, `0 0 60px ${rgba('green', 0.35)}`]
-  );
+  // Подсветка ответа — готовые слои с рамкой и свечением, у которых меняется только opacity
+  // (композитор). Анимация самих borderColor/boxShadow перерисовывала карточку и тень 60px
+  // на каждом кадре перетаскивания.
+  const correctGlow = useTransform(x, [0, SWIPE_OFFSET], [0, 1]);
+  const skipGlow = useTransform(x, [-SWIPE_OFFSET, 0], [1, 0]);
 
   const handleDragEnd = (_: unknown, { offset, velocity }: PanInfo) => {
     if (!isPresent) return;
@@ -88,39 +82,58 @@ export const SwipeWordCard: React.FC<SwipeWordCardProps> = ({
       dragMomentum={false}
       onDragEnd={handleDragEnd}
       whileDrag={{ scale: 1.04 }}
-      style={{
-        x,
-        rotate,
-        borderColor,
-        boxShadow,
-        zIndex: isPresent ? 1 : 2,
-        background:
-          'linear-gradient(145deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.02) 100%), #0e0b1c',
-      }}
-      className="rounded-premium-2xl relative flex min-h-56 w-full cursor-grab touch-pan-y flex-col items-center justify-center gap-2 overflow-hidden border-2 px-6 py-10 text-center select-none [grid-area:1/1] active:cursor-grabbing"
+      style={{ x, rotate, zIndex: isPresent ? 1 : 2 }}
+      className="relative w-full cursor-grab touch-pan-y will-change-transform select-none [grid-area:1/1] active:cursor-grabbing"
     >
-      <motion.span
-        style={{ opacity: correctOpacity }}
-        className="rounded-premium-xs border-premium-green text-premium-green absolute top-5 right-5 rotate-12 border-2 px-3 py-1 text-xs font-black tracking-[0.2em] uppercase"
+      <div
+        style={{
+          borderColor: NEUTRAL_BORDER,
+          background:
+            'linear-gradient(145deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.02) 100%), #0e0b1c',
+        }}
+        className="rounded-premium-2xl relative flex min-h-56 w-full flex-col items-center justify-center gap-2 overflow-hidden border-2 px-6 py-10 text-center"
       >
-        {correctLabel}
-      </motion.span>
-      <motion.span
-        style={{ opacity: skipOpacity }}
-        className="rounded-premium-xs border-premium-red text-premium-red absolute top-5 left-5 -rotate-12 border-2 px-3 py-1 text-xs font-black tracking-[0.2em] uppercase"
-      >
-        {skipLabel}
-      </motion.span>
+        <motion.span
+          style={{ opacity: correctOpacity }}
+          className="rounded-premium-xs border-premium-green text-premium-green absolute top-5 right-5 rotate-12 border-2 px-3 py-1 text-xs font-black tracking-[0.2em] uppercase"
+        >
+          {correctLabel}
+        </motion.span>
+        <motion.span
+          style={{ opacity: skipOpacity }}
+          className="rounded-premium-xs border-premium-red text-premium-red absolute top-5 left-5 -rotate-12 border-2 px-3 py-1 text-xs font-black tracking-[0.2em] uppercase"
+        >
+          {skipLabel}
+        </motion.span>
 
-      <p className="text-micro text-premium-sky/35 font-black tracking-[0.5em] uppercase">
-        {label}
-      </p>
-      <FitText
-        as="h2"
-        className="text-6xl leading-none font-black tracking-tighter text-white uppercase italic"
-      >
-        {word}
-      </FitText>
+        <p className="text-micro text-premium-sky/35 font-black tracking-[0.5em] uppercase">
+          {label}
+        </p>
+        <FitText
+          as="h2"
+          className="text-6xl leading-none font-black tracking-tighter text-white uppercase italic"
+        >
+          {word}
+        </FitText>
+      </div>
+      <motion.div
+        aria-hidden
+        className="rounded-premium-2xl pointer-events-none absolute inset-0 border-2"
+        style={{
+          opacity: correctGlow,
+          borderColor: rgba('green', 0.7),
+          boxShadow: `0 0 60px ${rgba('green', 0.35)}`,
+        }}
+      />
+      <motion.div
+        aria-hidden
+        className="rounded-premium-2xl pointer-events-none absolute inset-0 border-2"
+        style={{
+          opacity: skipGlow,
+          borderColor: rgba('red', 0.7),
+          boxShadow: `0 0 60px ${rgba('red', 0.35)}`,
+        }}
+      />
     </motion.div>
   );
 };

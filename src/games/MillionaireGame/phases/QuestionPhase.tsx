@@ -356,7 +356,7 @@ const AnswerButton: React.FC<AnswerButtonProps> = ({ letter, text, state, disabl
       transition={{ duration: 0.4 }}
       onClick={!disabled ? onClick : undefined}
       disabled={disabled && state !== 'correct' && state !== 'wrong'}
-      className={`rounded-premium-md relative flex min-h-[4.5rem] items-stretch overflow-hidden border text-left transition-all duration-300 ${s.wrapper}`}
+      className={`rounded-premium-md relative flex min-h-[4.5rem] items-stretch overflow-hidden border text-left transition-[color,background-color,border-color,box-shadow,opacity] duration-300 ${s.wrapper}`}
     >
       {/* Letter column */}
       <div className={`flex w-10 shrink-0 items-center justify-center transition-all ${s.badge}`}>
@@ -396,27 +396,23 @@ const LifelineButton: React.FC<LifelineButtonProps> = ({
     disabled={used || disabled}
     className="flex flex-col items-center gap-1.5"
   >
-    <motion.div
-      animate={
-        !used && !disabled
-          ? {
-              boxShadow: [
-                '0 0 0px rgba(255,204,31,0)',
-                '0 0 14px rgba(255,204,31,0.35)',
-                '0 0 0px rgba(255,204,31,0)',
-              ],
-            }
-          : {}
-      }
-      transition={{ duration: 2.5, repeat: Infinity }}
-      className={`flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-200 ${
+    <div
+      className={`relative flex h-12 w-12 items-center justify-center rounded-full border transition-[color,background-color,border-color,transform] duration-200 ${
         used || disabled
           ? 'border-white/8 bg-transparent text-white/15'
           : 'border-premium-yellow/35 bg-premium-yellow/10 text-premium-yellow active:scale-90'
       }`}
     >
+      {/* Мерцание — opacity готового свечения (композитор), а не анимация box-shadow (перерисовка) */}
+      {!used && !disabled && (
+        <span
+          aria-hidden
+          className="animate-glow-pulse pointer-events-none absolute inset-0 rounded-full"
+          style={{ boxShadow: '0 0 14px rgba(255,204,31,0.35)' }}
+        />
+      )}
       {icon}
-    </motion.div>
+    </div>
     <span
       className={`text-micro font-black tracking-widest uppercase ${
         used ? 'text-white/20 line-through' : 'text-white/40'

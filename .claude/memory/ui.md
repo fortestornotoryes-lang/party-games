@@ -10,7 +10,7 @@
 ## Стили
 
 - Tailwind 4, кастомные утилиты и `@theme` — в `src/app/styles/index.css`
-- `.glass-card` (index.css) — стеклянная карточка с `backdrop-filter: blur(16px)`; переиспользовать класс, не писать свой blur (см. gotchas.md про производительность)
+- `.glass-card` (index.css) — полупрозрачная «стеклянная» карточка **без** backdrop-filter (размытие убрано ради производительности, на тёмном однотонном фоне визуально не отличается). Плавающим поверх контента элементам добавлять непрозрачную подложку `bg-bg/90`. Свой `backdrop-blur` не писать (см. gotchas.md)
 - Safe-area: классы `safe-top` / `safe-bottom` (используются в RootLayout)
 - Каркас приложения: центрированная колонка `max-w-3xl` (routes.tsx)
 
@@ -25,7 +25,8 @@
 - Смена фаз: корень фазы `variants={PHASE_VARIANTS} initial="initial" animate="animate" exit="exit"` под `AnimatePresence mode="wait"`; дети с `variants={STAGGER_ITEM}` появляются каскадом автоматически.
 - Перелёт элементов между контейнерами (игроки между командами, плашка «Ложь») — `layoutId`; у прокручиваемого предка — `layoutScroll`.
 - Выбор ответа с анимацией (карточка вспыхивает, остальные гаснут) — локальный `picked` + `setTimeout(PICK_DELAY_MS)` в эффекте, потом колбэк наверх (Crocodile ChooseWord, VotePhase в TwoTruths/WhoAmongUs).
-- Настройка «Визуальные эффекты» выключает движение глобально: `MotionConfig reducedMotion` в RootLayout (`app/router/routes.tsx`). Imperative `animate()` (AnimatedNumber) и конфетти этим не управляются — конфетти гасит `feedbackService`.
+- **Бесконечные анимации (пульс, парение, вращение, блик) — только CSS-утилиты** `animate-breathe` / `breathe-soft` / `beacon` / `halo` / `glow-pulse` / `float` / `bob` / `spin-slow` / `ripple` / `shimmer` из `@theme` в index.css (transform/opacity на композиторе). motion с `repeat: Infinity` — только для opacity (WAAPI); `x/y/scale/rotate` motion двигает из main thread каждый кадр. Если элементу нужно ещё и появление/исчезновение — внешний `motion.div` для входа/выхода, внутренний `div` с CSS-циклом (см. `RingTimer`, `VictoryHero`).
+- Настройка «Визуальные эффекты» выключает движение глобально: `MotionConfig reducedMotion` в RootLayout (`app/router/routes.tsx`) + атрибут `data-reduced-motion` на `<html>`, по которому index.css гасит все CSS-анимации. Imperative `animate()` (AnimatedNumber) и конфетти этим не управляются — конфетти гасит `feedbackService` (рисуются в Web Worker через `confetti.create(..., { useWorker: true })`, напрямую `canvas-confetti` не вызывать).
 - Эталоны: Alias (свайп-карточка `AliasGame/components/SwipeWordCard.tsx`), TwoTruths `phases/RevealPhase.tsx` (последовательное раскрытие со звуком по таймерам).
 
-_Ревизия: 2026-10-18_
+_Ревизия: 2026-10-25_

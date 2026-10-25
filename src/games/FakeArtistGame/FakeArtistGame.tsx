@@ -13,7 +13,7 @@ import { FitText } from '@/shared/components/FitText';
 import { GameCard } from '@/shared/components/GameCard';
 import { GameHeader } from '@/shared/components/GameHeader';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
-import { useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
+import { coalescedPoints, useCanvasSurface } from '@/shared/hooks/useCanvasSurface';
 import { useCountdown } from '@/shared/hooks/useCountdown';
 import { usePersistedState } from '@/shared/hooks/usePersistedState';
 import { useTranslation } from '@/shared/i18n';
@@ -62,7 +62,10 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = usePersistedState(K, 'hasDrawn', false);
   const [strokes, setStrokes] = usePersistedState<Stroke[]>(K, 'strokes', []);
-  const [currentStroke, setCurrentStroke] = useState<Point[] | null>(null);
+  // Текущий штрих — вне React-состояния: pointermove дорисовывает сегмент прямо в canvas.
+  // Раньше каждое движение пальца копировало массив точек, перерендеривало всю игру
+  // и перерисовывало все штрихи с нуля — линия отставала от пальца.
+  const currentStrokeRef = useRef<Point[] | null>(null);
   const [isTransitioning, setIsTransitioning] = usePersistedState(K, 'isTransitioning', true);
 
   useEffect(() => {
@@ -140,6 +143,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
       });
       ctx.stroke();
     });
+    const currentStroke = currentStrokeRef.current;
     if (currentStroke) {
       ctx.beginPath();
       ctx.strokeStyle = playerColor;
@@ -149,7 +153,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
       });
       ctx.stroke();
     }
-  }, [strokes, currentStroke, playerColor]);
+  }, [strokes, playerColor]);
 
   useEffect(() => {
     drawAllRef.current = drawAll;
@@ -161,12 +165,35 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
 
   // Штрих из одной точки (случайный тап) не рисует ничего — не сжигаем на него единственную линию хода
   const finishStroke = () => {
+    const currentStroke = currentStrokeRef.current;
     if (!isDrawing || !currentStroke) return;
     setIsDrawing(false);
-    setCurrentStroke(null);
-    if (currentStroke.length < MIN_STROKE_POINTS) return;
+    currentStrokeRef.current = null;
+    if (currentStroke.length < MIN_STROKE_POINTS) {
+      // Короткий «тап» уже успел нарисоваться сегментами — стираем его
+      drawAll();
+      return;
+    }
     setStrokes([...strokes, { points: currentStroke, color: playerColor }]);
     setHasDrawn(true);
+  };
+
+  /** Дорисовать к текущему штриху новые точки движения — без React-рендера */
+  const extendStroke = (e: React.PointerEvent) => {
+    const currentStroke = currentStrokeRef.current;
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!currentStroke || !ctx) return;
+    // Трансформ CSS→битмап и lineWidth уже выставлены последним drawAll
+    ctx.beginPath();
+    ctx.strokeStyle = playerColor;
+    let last = currentStroke[currentStroke.length - 1];
+    ctx.moveTo(last.x, last.y);
+    for (const ev of coalescedPoints(e)) {
+      last = getCssPos(ev);
+      currentStroke.push(last);
+      ctx.lineTo(last.x, last.y);
+    }
+    ctx.stroke();
   };
 
   if (players.length === 0) return null;
@@ -251,12 +278,9 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                     // Захват указателя: штрих не обрывается за краем поля
                     e.currentTarget.setPointerCapture(e.pointerId);
                     setIsDrawing(true);
-                    setCurrentStroke([getCssPos(e)]);
+                    currentStrokeRef.current = [getCssPos(e)];
                   }}
-                  onPointerMove={(e) => {
-                    if (isDrawing && currentStroke)
-                      setCurrentStroke([...currentStroke, getCssPos(e)]);
-                  }}
+                  onPointerMove={extendStroke}
                   onPointerUp={finishStroke}
                   onPointerCancel={finishStroke}
                 >
@@ -282,7 +306,7 @@ export const FakeArtistGame: React.FC<Props> = ({ playerNames, onBack }) => {
                     setStrokes(strokes.slice(0, -1));
                     setHasDrawn(false);
                   }}
-                  className="rounded-premium-lg flex w-20 items-center justify-center border border-white/10 bg-white/5 py-6 text-white transition-all active:scale-90 disabled:opacity-0"
+                  className="rounded-premium-lg flex w-20 items-center justify-center border border-white/10 bg-white/5 py-6 text-white transition-[transform,opacity] active:scale-90 disabled:opacity-0"
                 >
                   <Undo2 className="h-6 w-6" />
                 </button>

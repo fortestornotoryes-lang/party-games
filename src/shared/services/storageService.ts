@@ -30,6 +30,33 @@ function safeParseJson<T>(raw: string | null, fallback: T): T {
   }
 }
 
+/**
+ * Кэш распарсенных значений по ключу localStorage. Словарь used-слов растёт до тысяч строк,
+ * а читается на каждом ходе (свайп в Alias, звук клика читает настройки) — без кэша каждый
+ * вызов заново парсил весь JSON прямо в момент старта анимации.
+ * Пишем только через writeJson (он обновляет кэш); изменения из других вкладок — событие storage.
+ */
+const parsedCache = new Map<string, unknown>();
+
+function readJson<T>(key: string, fallback: T): T {
+  if (parsedCache.has(key)) return parsedCache.get(key) as T;
+  const value = safeParseJson<T>(localStorage.getItem(key), fallback);
+  parsedCache.set(key, value);
+  return value;
+}
+
+function writeJson(key: string, value: unknown) {
+  parsedCache.set(key, value);
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === null) parsedCache.clear();
+    else parsedCache.delete(e.key);
+  });
+}
+
 export const storageService = {
   // Players
   getPlayers: (): string[] => {
@@ -48,18 +75,19 @@ export const storageService = {
 
   // Used Words
   getUsedWords: (gameId: string): string[] => {
-    const used = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
-    return used[gameId] ?? [];
+    const used = readJson<GameDictionary>(STORAGE_KEYS.USED_WORDS, {});
+    // Копия: массив живёт в кэше и дописывается markWordAsUsed
+    return [...(used[gameId] ?? [])];
   },
   getUsedWordsAsync: (gameId: string): Promise<string[]> => {
     return Promise.resolve(storageService.getUsedWords(gameId));
   },
   markWordAsUsed: (gameId: string, word: string) => {
-    const used = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
+    const used = readJson<GameDictionary>(STORAGE_KEYS.USED_WORDS, {});
     const list = (used[gameId] ??= []);
     if (!list.includes(word)) {
       list.push(word);
-      localStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
+      writeJson(STORAGE_KEYS.USED_WORDS, used);
     }
   },
   markWordAsUsedAsync: async (gameId: string, word: string): Promise<void> => {
@@ -67,9 +95,9 @@ export const storageService = {
     storageService.markWordAsUsed(gameId, word);
   },
   resetUsedWords: (gameId: string) => {
-    const used = safeParseJson<GameDictionary>(localStorage.getItem(STORAGE_KEYS.USED_WORDS), {});
+    const used = readJson<GameDictionary>(STORAGE_KEYS.USED_WORDS, {});
     used[gameId] = [];
-    localStorage.setItem(STORAGE_KEYS.USED_WORDS, JSON.stringify(used));
+    writeJson(STORAGE_KEYS.USED_WORDS, used);
   },
   resetUsedWordsAsync: async (gameId: string): Promise<void> => {
     await Promise.resolve();
@@ -78,24 +106,18 @@ export const storageService = {
 
   // Custom Words
   getCustomWords: (gameId: string): string[] => {
-    const custom = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
-      {}
-    );
-    return custom[gameId] ?? [];
+    const custom = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_WORDS, {});
+    return [...(custom[gameId] ?? [])];
   },
   getCustomWordsAsync: (gameId: string): Promise<string[]> => {
     return Promise.resolve(storageService.getCustomWords(gameId));
   },
   addCustomWord: (gameId: string, word: string) => {
-    const custom = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
-      {}
-    );
+    const custom = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_WORDS, {});
     const list = (custom[gameId] ??= []);
     if (!list.includes(word)) {
       list.push(word);
-      localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
+      writeJson(STORAGE_KEYS.CUSTOM_WORDS, custom);
     }
   },
   addCustomWordAsync: async (gameId: string, word: string): Promise<void> => {
@@ -103,14 +125,11 @@ export const storageService = {
     storageService.addCustomWord(gameId, word);
   },
   removeCustomWord: (gameId: string, word: string) => {
-    const custom = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_WORDS),
-      {}
-    );
+    const custom = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_WORDS, {});
     const list = custom[gameId];
     if (list) {
       custom[gameId] = list.filter((w) => w !== word);
-      localStorage.setItem(STORAGE_KEYS.CUSTOM_WORDS, JSON.stringify(custom));
+      writeJson(STORAGE_KEYS.CUSTOM_WORDS, custom);
     }
   },
 
@@ -132,24 +151,18 @@ export const storageService = {
 
   // Keyed custom words (difficulty-specific, e.g. TruthOrDare: "tod_truth_easy")
   getCustomWordsByKey: (key: string): string[] => {
-    const store = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
-      {}
-    );
-    return store[key] ?? [];
+    const store = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_KEYED, {});
+    return [...(store[key] ?? [])];
   },
   getCustomWordsByKeyAsync: (key: string): Promise<string[]> => {
     return Promise.resolve(storageService.getCustomWordsByKey(key));
   },
   addCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
-      {}
-    );
+    const store = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_KEYED, {});
     const list = (store[key] ??= []);
     if (!list.includes(word)) {
       list.push(word);
-      localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
+      writeJson(STORAGE_KEYS.CUSTOM_KEYED, store);
     }
   },
   addCustomWordByKeyAsync: async (key: string, word: string): Promise<void> => {
@@ -157,14 +170,11 @@ export const storageService = {
     storageService.addCustomWordByKey(key, word);
   },
   removeCustomWordByKey: (key: string, word: string) => {
-    const store = safeParseJson<GameDictionary>(
-      localStorage.getItem(STORAGE_KEYS.CUSTOM_KEYED),
-      {}
-    );
+    const store = readJson<GameDictionary>(STORAGE_KEYS.CUSTOM_KEYED, {});
     const list = store[key];
     if (list) {
       store[key] = list.filter((w) => w !== word);
-      localStorage.setItem(STORAGE_KEYS.CUSTOM_KEYED, JSON.stringify(store));
+      writeJson(STORAGE_KEYS.CUSTOM_KEYED, store);
     }
   },
 
@@ -176,10 +186,7 @@ export const storageService = {
   // Settings
   getSettings: (): GameSettings => {
     const defaults: GameSettings = { visualEffects: true, vibration: true, sounds: true };
-    const saved = safeParseJson<Partial<GameSettings>>(
-      localStorage.getItem(STORAGE_KEYS.SETTINGS),
-      {}
-    );
+    const saved = readJson<Partial<GameSettings>>(STORAGE_KEYS.SETTINGS, {});
     return { ...defaults, ...saved };
   },
   getSettingsAsync: (): Promise<GameSettings> => {
@@ -187,7 +194,7 @@ export const storageService = {
   },
   saveSettings: (settings: Partial<GameSettings>) => {
     const current = storageService.getSettings();
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify({ ...current, ...settings }));
+    writeJson(STORAGE_KEYS.SETTINGS, { ...current, ...settings });
   },
   saveSettingsAsync: async (settings: Partial<GameSettings>): Promise<void> => {
     await Promise.resolve();

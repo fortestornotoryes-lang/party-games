@@ -26,11 +26,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   return (
     <div
       className="sticky top-0 z-30 flex items-center justify-between border-b border-white/6 px-4 py-2.5"
-      style={{
-        background: 'rgba(11, 9, 21, 0.75)',
-        backdropFilter: 'blur(var(--blur-overlay))',
-        WebkitBackdropFilter: 'blur(var(--blur-overlay))',
-      }}
+      // Почти непрозрачный фон вместо backdrop-filter: sticky-шапка с blur пересчитывает
+      // размытие всего, что под ней, на каждом кадре скролла и анимации фаз
+      style={{ background: 'rgba(11, 9, 21, 0.94)' }}
     >
       <div className="flex items-center gap-3">
         <div
@@ -52,7 +50,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         {extraActions}
         <button
           onClick={onBack}
-          className="rounded-premium-sm flex h-12 w-12 items-center justify-center border border-white/8 bg-white/6 text-white/50 transition-all hover:bg-white/[0.10] hover:text-white/80 active:scale-90"
+          className="rounded-premium-sm flex h-12 w-12 items-center justify-center border border-white/8 bg-white/6 text-white/50 transition-[color,background-color,transform] hover:bg-white/[0.10] hover:text-white/80 active:scale-90"
         >
           <Home className="h-5 w-5" />
         </button>

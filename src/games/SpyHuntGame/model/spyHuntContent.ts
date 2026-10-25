@@ -33,9 +33,9 @@ export function getSpyHuntLocationPool(difficulty: string) {
 // TODO: RN — convert to async function awaiting storageService.*Async (sync return is consumed by render/handler call-sites; restructure callers first)
 export function getSpyHuntLocation(difficulty: string) {
   const all = getSpyHuntLocationPool(difficulty);
-  const used = storageService.getUsedWords(GameKey.Spy);
+  const used = new Set(storageService.getUsedWords(GameKey.Spy));
 
-  let available = all.filter((l) => !used.includes(l.name));
+  let available = all.filter((l) => !used.has(l.name));
   if (available.length === 0) {
     storageService.resetUsedWords(GameKey.Spy);
     available = all;

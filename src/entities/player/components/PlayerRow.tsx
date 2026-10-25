@@ -62,7 +62,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
             onChange(player.id, e.target.value);
           }}
           autoComplete="off"
-          className={`glass-card rounded-premium-md h-11 w-full px-4 text-base sm:px-6 font-semibold transition-all placeholder:text-white/10 focus:ring-1 focus:ring-white/20 focus:outline-none ${config.focus}`}
+          className={`glass-card rounded-premium-md h-11 w-full px-4 text-base font-semibold transition-colors placeholder:text-white/10 focus:ring-1 focus:ring-white/20 focus:outline-none sm:px-6 ${config.focus}`}
           placeholder={`${placeholder} ${index + 1}`}
         />
       </div>
@@ -72,7 +72,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           onClick={() => {
             onRemove(player.id);
           }}
-          className="rounded-premium-sm glass-card hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 flex h-11 w-11 shrink-0 items-center justify-center text-white/20 transition-all active:scale-90"
+          className="rounded-premium-sm glass-card hover:text-premium-red hover:bg-premium-red/5 hover:border-premium-red/30 flex h-11 w-11 shrink-0 items-center justify-center text-white/20 transition-[color,background-color,border-color,transform] active:scale-90"
         >
           <UserMinus className="h-5 w-5" />
         </button>

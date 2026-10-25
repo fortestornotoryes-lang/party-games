@@ -22,8 +22,21 @@ interface GameSession {
 
 const keyFor = (gameKey: string) => `${SESSION_PREFIX}${gameKey}`;
 
-function load(gameKey: string): GameSession | null {
-  const raw = localStorage.getItem(keyFor(gameKey));
+/**
+ * Сессии держим в памяти и пишем в localStorage отложенно, одним куском.
+ * Раньше каждое изменение любого поля (в т.ч. тик таймера раз в секунду) синхронно
+ * парсило и заново сериализовало всю сессию — у рисовалок это мегабайты картинок,
+ * отсюда фризы при смене фаз. Теперь: чтение — из памяти, запись — пачкой после
+ * FLUSH_DELAY_MS; при уходе со страницы (pagehide / вкладка скрыта) — сразу.
+ */
+const FLUSH_DELAY_MS = 400;
+
+/** null — сессии нет (проверяли storage), undefined в Map — ещё не читали */
+const cache = new Map<string, GameSession | null>();
+const dirty = new Set<string>();
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+
+function parse(raw: string | null): GameSession | null {
   if (!raw) return null;
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -36,12 +49,44 @@ function load(gameKey: string): GameSession | null {
   }
 }
 
-function save(gameKey: string, session: GameSession) {
+function load(gameKey: string): GameSession | null {
+  const cached = cache.get(gameKey);
+  if (cached !== undefined) return cached;
+  const session = parse(localStorage.getItem(keyFor(gameKey)));
+  cache.set(gameKey, session);
+  return session;
+}
+
+function writeNow(gameKey: string) {
+  dirty.delete(gameKey);
+  const session = cache.get(gameKey);
   try {
-    localStorage.setItem(keyFor(gameKey), JSON.stringify(session));
+    if (session) localStorage.setItem(keyFor(gameKey), JSON.stringify(session));
+    else localStorage.removeItem(keyFor(gameKey));
   } catch {
     // localStorage переполнен или недоступен — игра продолжает работать без персистенции
   }
+}
+
+function flush() {
+  if (flushTimer) {
+    clearTimeout(flushTimer);
+    flushTimer = null;
+  }
+  for (const gameKey of [...dirty]) writeNow(gameKey);
+}
+
+function save(gameKey: string, session: GameSession) {
+  cache.set(gameKey, session);
+  dirty.add(gameKey);
+  flushTimer ??= setTimeout(flush, FLUSH_DELAY_MS);
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush();
+  });
 }
 
 export const sessionService = {
@@ -58,12 +103,14 @@ export const sessionService = {
   },
 
   clear(gameKey: string) {
-    localStorage.removeItem(keyFor(gameKey));
+    cache.set(gameKey, null);
+    writeNow(gameKey);
   },
 
   /** Начало новой партии: пустая сессия, подписанная составом игроков. */
   begin(gameKey: string, players: string[]) {
-    save(gameKey, { players, fields: {} });
+    cache.set(gameKey, { players, fields: {} });
+    writeNow(gameKey);
   },
 
   /**

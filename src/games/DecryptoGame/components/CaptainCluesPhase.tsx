@@ -36,7 +36,7 @@ export const CaptainCluesPhase: React.FC<CaptainCluesPhaseProps> = ({
       exit={{ opacity: 0 }}
       className="relative flex h-full flex-col space-y-6 overflow-auto pb-8"
     >
-      <div className={`sticky top-0 z-10 bg-black/60 py-3 text-center backdrop-blur-md`}>
+      <div className={`sticky top-0 z-10 bg-black/90 py-3 text-center`}>
         <p className={`text-tag font-black tracking-widest uppercase ${tText(activeTeam)}`}>
           {t(`${NS.DECRYPTO}.encryptor`)}
         </p>

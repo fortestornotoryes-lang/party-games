@@ -6,6 +6,9 @@ import type { GameMetadata } from '../types';
 
 import { getTheme } from '@/shared/theme/colors';
 
+/** Сколько карточек появляются каскадом (≈ первый экран телефона), остальные — сразу */
+const MAX_STAGGERED = 7;
+
 interface GameMenuCardProps {
   game: GameMetadata;
   index: number;
@@ -29,13 +32,15 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        delay: 0.08 + index * 0.04,
+        // Каскад только для первого экрана: нижние карточки всё равно вне видимости,
+        // а 20+ одновременно живых анимаций на маунте грузят main thread
+        delay: 0.08 + Math.min(index, MAX_STAGGERED) * 0.04,
         duration: 0.28,
         ease: [0.25, 0.1, 0.25, 1],
       }}
       whileTap={{ scale: 0.975 }}
       onClick={onSelect}
-      className="rounded-r-premium-2xl shadow-card2 group relative flex w-full items-center gap-4 overflow-hidden border border-white/8 bg-white/[0.035] p-4 text-left transition-all duration-300 hover:border-white/12 hover:bg-white/6"
+      className="rounded-r-premium-2xl shadow-card2 group relative flex w-full items-center gap-4 overflow-hidden border border-white/8 bg-white/[0.035] p-4 text-left transition-colors duration-300 hover:border-white/12 hover:bg-white/6"
     >
       {/* Background image (optional, per-game) — right-anchored with left fade */}
       {!!game.backgroundImage && (
@@ -43,7 +48,9 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
           src={game.backgroundImage}
           alt=""
           aria-hidden
-          className="pointer-events-none absolute top-0 right-0 h-full w-auto max-w-[105%] object-contain object-right opacity-90 transition-opacity duration-300"
+          loading={index < MAX_STAGGERED ? 'eager' : 'lazy'}
+          decoding="async"
+          className="pointer-events-none absolute top-0 right-0 h-full w-auto max-w-[105%] object-contain object-right opacity-90"
           style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 65%)' }}
         />
       )}
@@ -59,7 +66,13 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
       >
         <div className="absolute inset-0 bg-linear-to-br from-white/25 to-transparent" />
         <div className="absolute inset-0 bg-linear-to-br from-transparent to-black/25" />
-        <img src={game.icon} alt="" aria-hidden className="relative z-10 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
+        <img
+          src={game.icon}
+          alt=""
+          aria-hidden
+          decoding="async"
+          className="relative z-10 h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
       </div>
 
       {/* Content */}
@@ -93,7 +106,7 @@ export const GameMenuCard: React.FC<GameMenuCardProps> = ({
               e.stopPropagation();
               onDescriptionClick();
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/8 bg-white/4 text-white/20 transition-all hover:border-white/20 hover:text-white/60 active:scale-90"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/8 bg-white/4 text-white/20 transition-[color,border-color,transform] hover:border-white/20 hover:text-white/60 active:scale-90"
           >
             <HelpCircle className="h-6 w-6" />
           </button>

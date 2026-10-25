@@ -58,7 +58,7 @@ export const TelestrationsSetup: React.FC<Props> = ({
               onClick={() => {
                 onDifficultyChange(diff);
               }}
-              className={`rounded-premium-md flex w-full items-center gap-4 border p-4 text-left transition-all ${
+              className={`rounded-premium-md flex w-full items-center gap-4 border p-4 text-left transition-[color,background-color,border-color,box-shadow,opacity] ${
                 isSelected ? `${cfg.border} ${cfg.bg}` : 'border-white/10 bg-white/5 opacity-50'
               }`}
             >

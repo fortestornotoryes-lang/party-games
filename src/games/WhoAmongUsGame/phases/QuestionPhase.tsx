@@ -17,8 +17,9 @@ const wordsVariants: Variants = {
 };
 
 const wordVariants: Variants = {
-  initial: { opacity: 0, y: 14, filter: 'blur(8px)' },
-  animate: { opacity: 1, y: 0, filter: 'blur(0px)', transition: SPRING.soft },
+  // Без filter: blur — размытие каждого слова перерисовывается на каждом кадре
+  initial: { opacity: 0, y: 14, scale: 0.9 },
+  animate: { opacity: 1, y: 0, scale: 1, transition: SPRING.soft },
 };
 
 interface QuestionPhaseProps {

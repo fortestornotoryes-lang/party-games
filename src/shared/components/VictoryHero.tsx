@@ -43,23 +43,26 @@ export const VictoryHero: React.FC<VictoryHeroProps> = ({
   subtitleColor = 'muted',
 }) => (
   <div className="relative flex flex-col items-center">
-    {/* Вращающиеся лучи */}
+    {/* Вращающиеся лучи: появление — motion, бесконечное вращение — CSS (композитор) */}
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute top-12 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full"
-      style={{
-        background: `repeating-conic-gradient(from 0deg, ${rgba(color, 0.22)} 0deg 9deg, transparent 9deg 30deg)`,
-        maskImage: 'radial-gradient(circle, black 15%, transparent 68%)',
-        WebkitMaskImage: 'radial-gradient(circle, black 15%, transparent 68%)',
-      }}
-      initial={{ opacity: 0, scale: 0.3, rotate: 0 }}
-      animate={{ opacity: 1, scale: 1, rotate: 360 }}
+      className="pointer-events-none absolute top-12 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2"
+      initial={{ opacity: 0, scale: 0.3 }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{
         opacity: { duration: 0.6, delay: LANDING_DELAY },
         scale: { ...SPRING.soft, delay: LANDING_DELAY },
-        rotate: { duration: 24, ease: 'linear', repeat: Infinity },
       }}
-    />
+    >
+      <div
+        className="animate-spin-slow h-full w-full rounded-full"
+        style={{
+          background: `repeating-conic-gradient(from 0deg, ${rgba(color, 0.22)} 0deg 9deg, transparent 9deg 30deg)`,
+          maskImage: 'radial-gradient(circle, black 15%, transparent 68%)',
+          WebkitMaskImage: 'radial-gradient(circle, black 15%, transparent 68%)',
+        }}
+      />
+    </motion.div>
 
     {/* Пульсирующее свечение */}
     <motion.div
@@ -91,15 +94,12 @@ export const VictoryHero: React.FC<VictoryHeroProps> = ({
       animate={{ y: 0, scale: 1, rotate: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 260, damping: 14, mass: 0.9 }}
     >
-      <motion.div
-        animate={{ y: [0, -8, 0], rotate: [0, -3, 3, 0] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-      >
+      <div className="animate-bob">
         <Icon
           className={`h-24 w-24 ${iconClassName}`}
           style={{ filter: `drop-shadow(0 0 24px ${rgba(color, 0.6)})` }}
         />
-      </motion.div>
+      </div>
     </motion.div>
 
     <motion.div

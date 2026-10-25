@@ -60,7 +60,8 @@ export function useCanvasSurface(
 
   /** Координаты события в CSS-пикселях относительно канваса */
   const getCssPos = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    // MouseEvent — нативные события из getCoalescedEvents() (PointerEvent наследует MouseEvent)
+    (e: React.MouseEvent | React.TouchEvent | MouseEvent) => {
       const canvas = canvasRef.current;
       const point = 'touches' in e ? (e.touches[0] as Touch | undefined) : e;
       if (!canvas || !point) return { x: 0, y: 0 };
@@ -72,7 +73,7 @@ export function useCanvasSurface(
 
   /** Координаты события в пикселях битмапа (CSS-координаты × масштаб DPR) */
   const getBitmapPos = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    (e: React.MouseEvent | React.TouchEvent | MouseEvent) => {
       const canvas = canvasRef.current;
       if (!canvas) return { x: 0, y: 0 };
       const rect = canvas.getBoundingClientRect();
@@ -84,4 +85,40 @@ export function useCanvasSurface(
   );
 
   return { getCssPos, getBitmapPos };
+}
+
+/**
+ * Промежуточные точки движения пальца, которые браузер склеил в одно событие
+ * (на 120 Гц экранах их несколько за кадр) — без них быстрый штрих выходит ломаным.
+ */
+export function coalescedPoints(e: React.PointerEvent): MouseEvent[] {
+  const events = e.nativeEvent.getCoalescedEvents?.() ?? [];
+  return events.length > 0 ? events : [e.nativeEvent];
+}
+
+/** Длинная сторона экспортируемого рисунка, px: хватает для показа во всю ширину телефона */
+const MAX_EXPORT_SIDE = 1080;
+const EXPORT_QUALITY = 0.85;
+
+/**
+ * Снимок канваса для сохранения в состояние игры. Рисунки живут в сессии партии
+ * (localStorage), поэтому важен вес: PNG битмапа с DPR 3 — сотни КБ на рисунок,
+ * WebP (Safari без WebP-энкодера — JPEG) с ограничением размера — в разы меньше.
+ * Только для непрозрачного фона: JPEG не хранит прозрачность.
+ */
+export function exportCanvasImage(canvas: HTMLCanvasElement): string {
+  const scale = Math.min(1, MAX_EXPORT_SIDE / Math.max(canvas.width, canvas.height, 1));
+  let source = canvas;
+  if (scale < 1) {
+    source = document.createElement('canvas');
+    source.width = Math.round(canvas.width * scale);
+    source.height = Math.round(canvas.height * scale);
+    const ctx = source.getContext('2d');
+    if (!ctx) return canvas.toDataURL();
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(canvas, 0, 0, source.width, source.height);
+  }
+  const webp = source.toDataURL('image/webp', EXPORT_QUALITY);
+  // Браузер без WebP-энкодера молча отдаёт PNG
+  return webp.startsWith('data:image/webp') ? webp : source.toDataURL('image/jpeg', EXPORT_QUALITY);
 }

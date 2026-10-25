@@ -1,17 +1,23 @@
 import { BarChart3, Users, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 
-import { BunkerBalanceView } from '@/debug/BunkerBalanceView';
 import { GameMenuCard } from '@/entities/game/components/GameMenuCard';
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
 import { getGameStartCounts, sortGamesByPopularity } from '@/entities/game/popularity';
 import type { GameKey } from '@/entities/game/types';
 import { useLocalizedGames } from '@/entities/game/useLocalizedGame';
-import { contentService } from '@/features/word-stats/model/contentService';
+import { useWordStats } from '@/features/word-stats/model/useWordStats';
 import { useTranslation } from '@/shared/i18n';
 import { getTheme } from '@/shared/theme/colors';
 import { DIFFICULTY } from '@/shared/types';
+
+// Отладочный экран баланса Бункера тянет весь контент Бункера — грузим только по кнопке
+const BunkerBalanceView = lazy(() =>
+  import('@/debug/BunkerBalanceView').then((m) => ({ default: m.BunkerBalanceView }))
+);
+
+const STATS_DIFFICULTIES = [DIFFICULTY.MEDIUM] as const;
 
 interface MainMenuProps {
   onSelectGame: (gameId: GameKey) => void;
@@ -32,10 +38,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getGameStats = (gameId: GameKey) => {
-    const stats = contentService.getWordStats(gameId, DIFFICULTY.MEDIUM);
-    return stats.total > 0 ? stats : null;
-  };
+  const gameIds = useMemo(() => sortedGames.map((g) => g.id), [sortedGames]);
+  const statsOf = useWordStats(gameIds, STATS_DIFFICULTIES);
 
   const descriptionGame = descriptionGameId
     ? (GAMES.find((g) => g.id === descriptionGameId) ?? null)
@@ -68,7 +72,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
         {/* Game List */}
         <div className="space-y-3">
           {sortedGames.map((game, index) => {
-            const stats = getGameStats(game.id);
+            const stats = statsOf(game.id, DIFFICULTY.MEDIUM);
             const countDisplay = stats ? `${stats.remaining} / ${stats.total}` : null;
 
             return (
@@ -96,7 +100,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
           onClick={() => {
             setShowBalance(true);
           }}
-          className="mx-auto mt-6 flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-widest uppercase transition-all active:scale-95"
+          className="mx-auto mt-6 flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-widest uppercase transition-transform active:scale-95"
           style={{
             background: 'rgba(255,138,31,0.07)',
             border: '1px solid rgba(255,138,31,0.18)',
@@ -109,16 +113,18 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
       </div>
 
       {/* Balance view overlay */}
-      <AnimatePresence>
-        {showBalance && (
-          <BunkerBalanceView
-            key="balance"
-            onClose={() => {
-              setShowBalance(false);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <Suspense fallback={null}>
+        <AnimatePresence>
+          {showBalance && (
+            <BunkerBalanceView
+              key="balance"
+              onClose={() => {
+                setShowBalance(false);
+              }}
+            />
+          )}
+        </AnimatePresence>
+      </Suspense>
 
       {/* Description bottom sheet */}
       <AnimatePresence>
@@ -137,8 +143,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                   onClick={() => {
                     setDescriptionGameId(null);
                   }}
-                  className="fixed inset-0 z-40 bg-black/60"
-                  style={{ backdropFilter: 'blur(var(--blur-backdrop))' }}
+                  className="fixed inset-0 z-40 bg-black/70"
                 />
 
                 {/* Sheet */}
@@ -155,7 +160,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                     style={{
                       background:
                         'linear-gradient(160deg, rgba(20,20,25,0.97) 0%, rgba(10,10,12,0.99) 100%)',
-                      backdropFilter: 'blur(var(--blur-modal))',
                       boxShadow: '0 -8px 48px rgba(0,0,0,0.5), var(--shadow-rim)',
                     }}
                   >
@@ -171,7 +175,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           className={`rounded-premium-md h-12 w-12 ${t.solid} relative flex shrink-0 items-center justify-center overflow-hidden`}
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
-                          <img src={descriptionGame.icon} alt="" aria-hidden className="relative z-10 h-full w-full object-cover" />
+                          <img
+                            src={descriptionGame.icon}
+                            alt=""
+                            aria-hidden
+                            className="relative z-10 h-full w-full object-cover"
+                          />
                         </div>
                         <div className="min-w-0 flex-1">
                           <h3
@@ -217,7 +226,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onSelectGame }) => {
                           setDescriptionGameId(null);
                           onSelectGame(descriptionGame.id);
                         }}
-                        className={`rounded-premium-md text-card w-full py-4 font-black tracking-[0.15em] text-black uppercase ${t.solid} transition-transform active:scale-[0.98]`}
+                        className={`rounded-premium-md text-card w-full py-4 font-black tracking-[0.15em] text-black uppercase ${t.solid}`}
                         style={{ boxShadow: 'var(--shadow-button)' }}
                       >
                         {tr('menu.play')}

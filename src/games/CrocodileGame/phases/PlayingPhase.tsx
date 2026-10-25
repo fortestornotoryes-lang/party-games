@@ -61,11 +61,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
         {/* Лёгкое парение карточки, пока идёт показ */}
-        <motion.div
-          className="w-full max-w-sm"
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        >
+        <div className="animate-float w-full max-w-sm">
           <FlipCard
             revealDelay={0.25}
             back={
@@ -107,7 +103,7 @@ export const PlayingPhase: React.FC<PlayingPhaseProps> = ({
               </div>
             }
           />
-        </motion.div>
+        </div>
       </div>
 
       <motion.div

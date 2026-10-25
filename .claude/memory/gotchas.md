@@ -6,18 +6,26 @@
 
 - Не писать raw-canvas: DPR-масштабирование, ресайз (`ResizeObserver`) и маппинг координат живут в хуке `shared/hooks/useCanvasSurface.ts` — на нём построены `DrawingCanvas` и канвас FakeArtist. Без этого рисунок мылится/смещается на мобильных.
 - На элементах с жестами рисования/перетаскивания нужен `touch-action: none`, иначе браузер перехватывает скролл.
+- История рисунка — **векторы** (массив штрихов в CSS-пикселях), undo/ресайз = перерисовка. Не снимать `getImageData` всего битмапа на каждый штрих (синхронное чтение с GPU, ~6 МБ на снимок при DPR 3). Текущий штрих держать в `ref` и дорисовывать сегментом в `pointermove` (+ `coalescedPoints` из `useCanvasSurface`), не в React-state: setState на каждое движение пальца перерендеривал всю игру. Экспорт рисунка в состояние — `exportCanvasImage` (WebP/JPEG ≤1080px; PNG при DPR 3 — сотни КБ в localStorage).
 - События рисования — только **Pointer Events** (`onPointerDown/Move/Up/Cancel` + `setPointerCapture`), не пара `onMouse*` + `onTouch*`: после тапа браузер шлёт ещё и эмулированные mouse-события, штрих стартует дважды (двойной снимок в undo). Штрих из одной точки (случайный тап) не засчитывать как линию (FakeArtist: `MIN_STROKE_POINTS`).
 
-## Производительность
+## Производительность (лаги/фризы на телефонах — разобрано 2026-10-25)
 
-- `backdrop-filter` дорогой на мобильных: не вкладывать blur-элементы друг в друга (вложенный backdrop-filter ломает плавность скролла). Использовать готовый `.glass-card` один слоем.
+- **`backdrop-filter` не использовать** (ни на карточках, ни на sticky-шапках, ни на оверлеях): пересчитывается на каждом кадре скролла и анимации предков. Вместо него — почти непрозрачный фон (`rgba(11,9,21,0.94)`, `bg-black/90`).
+- Полноэкранные слои с `mix-blend-mode` (шум `body::after`) — заставляют перекомпоновывать всё под ними. Шум — плиткой без blend-mode.
+- Не анимировать `filter: blur(...)`, `box-shadow`, `left/width` в циклах и при перетаскивании — перерисовка каждый кадр. Свечение = отдельный слой с готовой тенью, анимируется его `opacity` (см. `SwipeWordCard`, `LifelineButton` в Millionaire).
+- Не анимировать `scale` у целого экрана фазы — перерастеризация всего текста (`PHASE_VARIANTS` без scale).
+- **localStorage**: `storageService` кэширует распарсенные значения (`readJson`/`writeJson`) — новые ключи читать/писать через них, а не `JSON.parse(localStorage...)`. `sessionService` держит сессии в памяти и пишет пачкой через 400 мс + сразу на `pagehide`/скрытие вкладки — поэтому в тестах содержимое `party_app_session_*` появляется с задержкой.
+- Фильтрация used-слов — через `Set`, не `includes` (пулы и used-списки на тысячи строк → O(n·m) на каждом свайпе).
+- Тяжёлое в рендере (счётчики пулов) — не считать на каждый рендер: Setup перерисовывается на каждую букву имени. Счётчики — хук `useWordStats` (`features/word-stats`), словари грузятся `import()` после отрисовки экрана; статически импортировать контент игр вне `games/` нельзя — он попадает в стартовый бандл.
 
 ## Анимации (motion, веб)
 
 - **Свой `animate={{...}}` у элемента отключает наследование вариантов от родителя.** Если на элементе одновременно `variants={STAGGER_ITEM}` и `animate={{ borderColor }}`, он унаследует `initial` (opacity 0), но не `animate` — и останется невидимым. Каскад и собственную анимацию разносить на два вложенных `motion.div` (см. `TwoTruthsGame/phases/WritingPhase.tsx`).
 - Spring поддерживает только 2 кейфрейма: для `x: SHAKE_X` вместе с пружинным `scale` задавать раздельные transition — `transition={{ scale: SPRING.pop, x: { duration: 0.45 } }}`.
-- На элементах, которыми управляет motion (`whileTap`, `drag`, layout), не ставить `transition-all` — CSS-transition сглаживает покадровые transform и даёт лаг; оставлять `transition-colors`.
-- 3D-флип (`FlipCard`): внутри граней не использовать `.glass-card` — `backdrop-filter` ломает `preserve-3d`.
+- На элементах, которыми управляет motion (`whileTap`, `drag`, layout, `animate` с x/scale), не ставить `transition-all` — CSS-transition сглаживает покадровые transform и даёт лаг; оставлять `transition-colors` (или явный список `transition-[color,background-color,...]`). На кнопках с большими цветными тенями (`PrimaryButton`) `transition-all` ещё и анимирует тень при `active:scale`.
+- Не ставить `scroll-behavior: smooth` на `html`: ScrollRestoration при смене экрана превращается в анимированную прокрутку поверх анимации входа.
+- 3D-флип (`FlipCard`): внутри граней не использовать `backdrop-filter` — ломает `preserve-3d` (у `.glass-card` его больше нет, она безопасна).
 - `layout`-анимация корректирует border-radius только из `style`, не из класса: у карточек с `layout` дублировать радиус в `style={{ borderRadius }}`.
 - В фоновой вкладке rAF троттлится — проверки анимаций через JS видят результат с запозданием (drag/exit «не сработали», а на деле сработали позже).
 
@@ -63,4 +71,4 @@
 - `no-unnecessary-condition` (предупреждение) врёт на `record[key] ?? fallback` и `arr[i]?.x`: `noUncheckedIndexedAccess` выключен, TS считает доступ по индексу всегда успешным. **Не удалять** такие проверки — данные часто из localStorage/битых настроек. Честный фикс — `Partial<Record<…>>` (см. `GameDictionary` в `storageService.ts`). Флаг, выставляемый внутри `forEach`-колбэка, TS тоже не видит → `for…of`.
 - `react/jsx-no-leaked-render` выключено в `eslint.config.js` (не видит типов, конфликтовало с `no-unnecessary-type-conversion`, которое запрещает `!!` на boolean). Писать `{flag && …}` без `!!`; число слева от `&&` (рендерит `0`) — ловить на ревью, использовать `n > 0 &&`.
 
-_Ревизия: 2026-10-18_
+_Ревизия: 2026-10-25_

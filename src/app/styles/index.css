@@ -52,11 +52,7 @@
   --text-logo: 3.5rem; /* 56px — main app logo */
   --text-display-xl: 4.375rem; /* 70px — hero display text */
   --text-display-2xl: 5.5rem; /* 88px — full-screen highlight */
-  /* ─── Blur ───────────────────────────────────────────────────────────── */
-  /* Usage: backdrop-blur-overlay in className; blur(var(--blur-overlay)) in style */
-  --blur-backdrop: 4px; /* dim overlays */
-  --blur-overlay: 20px; /* sticky headers */
-  --blur-modal: 32px; /* bottom sheets, modals */
+  /* Blur-токенов нет намеренно: backdrop-filter не используем (лаги на телефонах, см. gotchas.md) */
   /* ─── Shadows ─────────────────────────────────────────────────────────── */
   /* Usage: var(--shadow-rim) in style or compose: '... , var(--shadow-card)' */
   --shadow-rim: inset 0 1px 0 rgba(255, 255, 255, 0.06);
@@ -146,6 +142,102 @@
       transform: scaleY(1);
     }
   }
+  /* ─── Зацикленные «живые» анимации ────────────────────────────────────── */
+  /* Бесконечные пульсации/парение — только CSS (transform/opacity идут на композиторе
+     и не зависят от загрузки JS). motion для бесконечных x/y/scale не использовать:
+     он двигает их из main thread каждый кадр (см. ui.md). */
+  --animate-breathe: breathe 2.5s ease-in-out infinite; /* лёгкий «вдох» иконки */
+  --animate-breathe-soft: breathe-soft 1.6s ease-in-out infinite; /* кнопка «готово» */
+  --animate-beacon: beacon 1.2s ease-in-out infinite; /* PassPhoneCard: «передай телефон» */
+  --animate-halo: halo 1s ease-in-out infinite; /* RingTimer: свечение последних секунд */
+  --animate-glow-pulse: glow-pulse 2.5s ease-in-out infinite; /* мягкое мерцание свечения */
+  --animate-float: float 4s ease-in-out infinite; /* парение карточки */
+  --animate-bob: bob 3.2s ease-in-out 1s infinite; /* покачивание кубка VictoryHero */
+  --animate-spin-slow: spin 24s linear infinite; /* лучи VictoryHero */
+  --animate-ripple: ripple 1.4s ease-out infinite; /* расходящиеся кольца */
+  --animate-shimmer: shimmer 2.8s ease-in infinite; /* блик по полосе */
+
+  @keyframes breathe {
+    50% {
+      transform: scale(1.06);
+    }
+  }
+  @keyframes breathe-soft {
+    50% {
+      transform: scale(1.03);
+    }
+  }
+  @keyframes beacon {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    33%,
+    66% {
+      opacity: 0.9;
+      transform: scale(1.15);
+    }
+  }
+  @keyframes halo {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.96);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.06);
+    }
+  }
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-5px) rotate(-3deg);
+    }
+    66% {
+      transform: translateY(-5px) rotate(3deg);
+    }
+  }
+  @keyframes ripple {
+    from {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(2.8);
+    }
+  }
+  /* Элемент блика — во всю ширину полосы и сдвинут за её левый край (-left-full):
+     без анимации его не видно, блик — узкий градиент в его центре */
+  @keyframes shimmer {
+    from {
+      transform: translateX(0);
+    }
+    43%,
+    to {
+      transform: translateX(200%);
+    }
+  }
+
   /* Анимации Tailwind v4 */
   --animate-glitch: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
   --animate-glitch-layer-1:
@@ -243,7 +335,8 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth не ставить: ScrollRestoration и любой scrollTo при смене экрана
+       превращаются в анимированную прокрутку поверх анимации входа — переход дёргается */
     /* Быстрые повторные тапы (Alias «Угадано/Пропустить») не должны зумить страницу в iOS Safari;
        щипок-зум остаётся доступным */
     touch-action: manipulation;
@@ -266,8 +359,11 @@
     position: fixed;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.022;
-    mix-blend-mode: overlay;
+    /* Шум растрится один раз плиткой 256px. Без mix-blend-mode: полноэкранный слой
+       с blend-mode заставляет браузер перекомпоновывать всё под ним на каждом кадре
+       (скролл, анимации) — главный источник лагов на телефонах (см. gotchas.md). */
+    background-size: 256px 256px;
+    opacity: 0.03;
     pointer-events: none;
     z-index: 0;
   }
@@ -279,8 +375,9 @@
       rgba(255, 255, 255, 0.02) 100%
     );
     border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Без backdrop-filter: карточки лежат на однотонном тёмном фоне, размытие его не меняет,
+       а стоит дорого — особенно на кнопках и строках списков, которые анимируются
+       (см. gotchas.md). Плавающим поверх контента элементам давать непрозрачный bg-bg/90. */
   }
 
   .glass-input {
@@ -319,4 +416,20 @@
 
 .font-display {
   font-family: var(--font-display);
+}
+
+/* «Визуальные эффекты» выключены (RootLayout ставит data-reduced-motion на <html>)
+   или reduce motion в ОС — гасим все CSS-анимации. motion гасится через MotionConfig. */
+:root[data-reduced-motion] *,
+:root[data-reduced-motion] *::before,
+:root[data-reduced-motion] *::after {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
 }

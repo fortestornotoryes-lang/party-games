@@ -107,14 +107,11 @@ export const WritingPhase: React.FC<WritingPhaseProps> = ({
       })}
 
       <motion.div variants={STAGGER_ITEM} className="mt-2">
-        <motion.div
-          animate={ready ? { scale: [1, 1.03, 1] } : { scale: 1 }}
-          transition={ready ? { duration: 1.6, repeat: Infinity, ease: 'easeInOut' } : SPRING.soft}
-        >
+        <div className={ready ? 'animate-breathe-soft' : undefined}>
           <PrimaryButton onClick={onSubmit} disabled={!ready}>
             {t(`${NS.TWO_TRUTHS}.showAll`)}
           </PrimaryButton>
-        </motion.div>
+        </div>
       </motion.div>
     </>
   );

@@ -119,8 +119,8 @@ export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({
         </motion.p>
         <motion.div
           className="px-4 pt-2"
-          initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, y: 16, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...SPRING.soft, delay: 0.6 }}
         >
           <p className="text-xs text-white/40">{t(`${NS.CROCODILE}.wordWas`)}</p>

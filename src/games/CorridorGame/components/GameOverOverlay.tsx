@@ -27,11 +27,7 @@ export const GameOverOverlay: React.FC<Props> = ({ winner, p1, p2, onRestart, on
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="absolute inset-0 z-50 flex items-center justify-center"
-          style={{
-            background: 'rgba(11,9,21,0.88)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-          }}
+          style={{ background: 'rgba(11,9,21,0.93)' }}
         >
           <motion.div
             initial={{ scale: 0.85, y: 24 }}

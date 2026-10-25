@@ -65,12 +65,9 @@ export const FakeArtistDistribution: React.FC<Props> = ({ players, onFinish }) =
               </div>
 
               <div className="space-y-3">
-                <motion.div
-                  animate={{ scale: [1, 1.06, 1] }}
-                  transition={{ duration: 2.5, repeat: Infinity }}
-                >
+                <div className="animate-breathe">
                   <Ghost className="text-premium-red mx-auto h-[88px] w-[88px]" />
-                </motion.div>
+                </div>
                 <h3 className="text-3xl leading-none font-black tracking-tighter italic">
                   {t(`${NS.FAKE_ARTIST}.imposter`)}
                 </h3>

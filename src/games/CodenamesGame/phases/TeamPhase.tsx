@@ -64,7 +64,7 @@ export const TeamPhase: React.FC<TeamPhaseProps> = ({
               exit={{ opacity: 0, scale: 1.2 }}
               className="absolute inset-0 z-10 flex items-center justify-center p-4"
             >
-              <div className="rounded-premium-lg border border-white/20 bg-black/90 px-6 py-4 shadow-2xl backdrop-blur-md">
+              <div className="rounded-premium-lg border border-white/20 bg-black/90 px-6 py-4 shadow-2xl">
                 <p className="text-center text-xl font-black tracking-widest text-white">
                   {lastActionMsg}
                 </p>

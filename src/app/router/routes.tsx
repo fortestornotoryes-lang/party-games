@@ -1,5 +1,5 @@
 import { MotionConfig } from 'motion/react';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { createBrowserRouter, Navigate, Outlet, ScrollRestoration } from 'react-router';
 
 import { GameLayout } from '@/pages/game/GameLayout';
@@ -17,6 +17,10 @@ function RootLayout() {
   // (transform/layout), остаются только fade. Читаем на каждом рендере: каркас
   // перерисовывается при навигации, так что смена настройки подхватывается без перезагрузки.
   const reducedMotion = storageService.getSettings().visualEffects ? 'user' : 'always';
+  // Зацикленные CSS-анимации (animate-breathe и т.п.) гасятся тем же флагом — правило в index.css
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-reduced-motion', reducedMotion === 'always');
+  }, [reducedMotion]);
   return (
     <MotionConfig reducedMotion={reducedMotion}>
       <div className="safe-top safe-bottom flex min-h-dvh flex-col items-center">

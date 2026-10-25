@@ -83,12 +83,10 @@ export const WinPhase: React.FC<WinPhaseProps> = ({
           {/* Expanding rings for million */}
           {isMillion &&
             Array.from({ length: 4 }).map((_, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ scale: 1, opacity: 0.5 }}
-                animate={{ scale: 2.8, opacity: 0 }}
-                transition={{ duration: 1.4, delay: i * 0.3, repeat: Infinity }}
-                className="border-premium-yellow/25 absolute inset-0 rounded-full border"
+                className="animate-ripple border-premium-yellow/25 absolute inset-0 rounded-full border opacity-0"
+                style={{ animationDelay: `${i * 0.3}s` }}
               />
             ))}
         </motion.div>
