@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import { ChevronUp } from 'lucide-react';
 import type { PanInfo } from 'motion/react';
 import { motion } from 'motion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { FitText } from '@/shared/components/FitText';
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
@@ -34,7 +34,7 @@ interface PassPhoneCardProps {
 const SWIPE_DISTANCE = 90;
 const SWIPE_VELOCITY = 500;
 /** Карта улетает вверх — потом onClick, мс */
-const FLY_AWAY_MS = 320;
+const FLY_AWAY_MS = 260;
 const CARD_RADIUS = 28;
 const DEFAULT_DECK_DEPTH = 2;
 
@@ -70,15 +70,8 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const [gone, setGone] = useState(false);
+  const completed = useRef(false);
   const accent = accentColor;
-
-  useEffect(() => {
-    if (!gone) return;
-    const id = window.setTimeout(onClick, FLY_AWAY_MS);
-    return () => {
-      window.clearTimeout(id);
-    };
-  }, [gone, onClick]);
 
   // Звук и вибрацию кнопки даёт PrimaryButton, смахиванию — свои
   const onDragEnd = (_: PointerEvent, info: PanInfo) => {
@@ -120,12 +113,18 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={0.7}
           onDragEnd={onDragEnd}
+          onAnimationComplete={() => {
+            if (!gone || completed.current) return;
+            completed.current = true;
+            onClick();
+          }}
           animate={gone ? { y: -720, rotate: -14, opacity: 0 } : { y: 0, rotate: 0, opacity: 1 }}
           transition={gone ? { duration: FLY_AWAY_MS / 1000, ease: 'easeIn' } : SPRING.snappy}
           className="absolute inset-0 cursor-grab touch-none overflow-hidden active:cursor-grabbing"
           style={{
             ...cardBack(accent, 0.55),
             boxShadow: `0 0 70px ${rgba(accent, 0.25)}, var(--shadow-card), inset 0 1px 0 ${rgba(accent, 0.14)}`,
+            willChange: 'transform, opacity',
           }}
         >
           <span

@@ -105,6 +105,7 @@ export const SecretWordCard: React.FC<SecretWordCardProps> = ({
         <div className="relative mt-7 flex min-h-28 items-center">
           <motion.div
             className="w-full"
+            initial={{ opacity: 0 }}
             animate={{ opacity: peeking ? 1 : 0 }}
             transition={{ duration: PEEK_FADE_S }}
           >
@@ -120,6 +121,7 @@ export const SecretWordCard: React.FC<SecretWordCardProps> = ({
           <motion.span
             aria-hidden
             className="rounded-premium-sm absolute inset-y-4 left-0 w-[80%] origin-left"
+            initial={{ scaleX: 1 }}
             style={{
               background: `repeating-linear-gradient(-45deg, ${rgba(accent, 0.24)} 0 6px, ${rgba(accent, 0.08)} 6px 12px)`,
               border: `1px solid ${rgba(accent, 0.35)}`,
@@ -132,6 +134,7 @@ export const SecretWordCard: React.FC<SecretWordCardProps> = ({
         {details && (
           <motion.div
             className="mt-4"
+            initial={{ opacity: 0 }}
             animate={{ opacity: peeking ? 1 : 0 }}
             transition={{ duration: PEEK_FADE_S }}
           >

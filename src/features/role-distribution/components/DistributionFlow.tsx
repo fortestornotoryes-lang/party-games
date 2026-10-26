@@ -65,52 +65,43 @@ export const DistributionFlow: React.FC<DistributionFlowProps> = ({
       />
 
       <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: -20 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-          className="w-full max-w-sm"
-        >
-          <AnimatePresence mode="wait">
-            {!isRevealed ? (
-              <motion.div
-                key="locked"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 280, damping: 24 }}
-              >
-                <PassPhoneCard
-                  playerName={currentPlayer.name}
-                  instruction={passInstruction}
-                  icon={passIcon}
-                  accentColor={passAccentColor}
-                  deckDepth={Math.min(2, players.length - currentIndex - 1)}
-                  onClick={() => {
-                    setIsRevealed(true);
-                  }}
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="revealed"
-                initial={{ scale: 0.82, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className={
-                  cardMeta.bare
-                    ? 'w-full'
-                    : `rounded-premium-2xl relative flex w-full flex-col overflow-hidden ${cardMeta.className ?? ''}`
-                }
-                style={cardMeta.bare ? undefined : cardMeta.style}
-              >
-                {renderCard(currentPlayer, isLast, handleNext)}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+        {!isRevealed ? (
+          <motion.div
+            key={`${currentIndex}-locked`}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -12 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="w-full max-w-sm"
+          >
+            <PassPhoneCard
+              playerName={currentPlayer.name}
+              instruction={passInstruction}
+              icon={passIcon}
+              accentColor={passAccentColor}
+              deckDepth={Math.min(2, players.length - currentIndex - 1)}
+              onClick={() => {
+                setIsRevealed(true);
+              }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={`${currentIndex}-revealed`}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -12 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className={
+              cardMeta.bare
+                ? 'w-full max-w-sm'
+                : `rounded-premium-2xl relative flex w-full max-w-sm flex-col overflow-hidden ${cardMeta.className ?? ''}`
+            }
+            style={cardMeta.bare ? undefined : cardMeta.style}
+          >
+            {renderCard(currentPlayer, isLast, handleNext)}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
