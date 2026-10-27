@@ -1,6 +1,6 @@
 import { Ghost } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { STATEMENTS_COUNT, STATEMENT_MAX_LENGTH } from './constants';
 import { addScores, isStatementsReady, scoreTwoTruthsRound } from './helpers';
@@ -61,9 +61,6 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
     'scores',
     {}
   );
-  // Экран «передай телефон» перед голосом — не сохраняем, после F5 покажется снова
-  const [voterReady, setVoterReady] = useState(false);
-
   // Голосуют все, кроме рассказчика
   const voters = playerNames.filter((p) => p !== storyteller);
   const voter = voters[voterIdx] ?? '';
@@ -77,7 +74,6 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
   const showAll = () => {
     if (!isStatementsReady(statements, lieIndex)) return;
     setVoterIdx(0);
-    setVoterReady(false);
     setGuesses({});
     setPhase(TwoTruthsPhase.Voting);
   };
@@ -89,7 +85,6 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
 
     if (voterIdx + 1 < voters.length) {
       setVoterIdx(voterIdx + 1);
-      setVoterReady(false);
       return;
     }
 
@@ -185,31 +180,19 @@ export const TwoTruthsGame: React.FC<TwoTruthsGameProps> = ({ playerNames, onBac
 
           {phase === TwoTruthsPhase.Voting && (
             <motion.div
-              key={`voting-${voterIdx}-${voterReady}`}
+              key="voting"
               variants={PHASE_VARIANTS}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="flex min-h-full flex-col gap-4 p-6 perspective-distant"
+              className="flex min-h-full flex-col gap-4 p-6"
             >
-              {!voterReady ? (
-                <div className="flex min-h-full flex-1 items-center justify-center">
-                  <motion.div variants={CARD_DEAL_VARIANTS} className="w-full">
-                    <PassPhoneCard
-                      playerName={voter}
-                      playerLabel={t(`${NS.TWO_TRUTHS}.voterLabel`)}
-                      instruction={t(`${NS.TWO_TRUTHS}.voterPass`, { name: voter })}
-                      icon={Ghost}
-                      accentColor="teal"
-                      onClick={() => {
-                        setVoterReady(true);
-                      }}
-                    />
-                  </motion.div>
-                </div>
-              ) : (
-                <VotePhase statements={statements} onPick={submitGuess} />
-              )}
+              <VotePhase
+                key={voterIdx}
+                voter={voter}
+                statements={statements}
+                onPick={submitGuess}
+              />
             </motion.div>
           )}
 

@@ -7,6 +7,14 @@ export const AliasPhase = {
 } as const;
 export type AliasPhase = (typeof AliasPhase)[keyof typeof AliasPhase];
 
+/** Результат слова в раунде: пропуск, ещё не отмечено, угадано. */
+export type WordResult = -1 | 0 | 1;
+
+export interface RoundWord {
+  word: string;
+  result: WordResult;
+}
+
 export const TEAM_COLORS = ['red', 'blue', 'green', 'yellow'] as const;
 export type TeamColor = (typeof TEAM_COLORS)[number];
 

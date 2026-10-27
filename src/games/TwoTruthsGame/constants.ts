@@ -10,9 +10,6 @@ export const POINTS_FOR_CORRECT_GUESS = 1;
 /** Очко рассказчику за каждого, кого он обманул */
 export const POINTS_FOR_FOOLED = 1;
 
-/** Пауза между выбором ответа и переходом дальше — успевает сыграть анимация выбора, мс */
-export const PICK_DELAY_MS = 380;
-
 /** Тайминги раскрытия (с): сначала по очереди переворачиваются правды, после паузы — ложь */
 export const REVEAL_TIMING = {
   start: 0.3,

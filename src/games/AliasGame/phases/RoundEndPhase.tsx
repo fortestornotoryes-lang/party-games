@@ -1,28 +1,30 @@
-import { AlarmClock } from 'lucide-react';
+import { AlarmClock, CheckCircle, XCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import { AnimatedNumber } from '@/shared/components/AnimatedNumber';
+import type { RoundWord, WordResult } from '../types';
+
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
-import { rgba } from '@/shared/theme/colors';
-import { PHASE_VARIANTS, SPRING, STAGGER_ITEM } from '@/shared/theme/motion';
+import { PHASE_VARIANTS, SPRING } from '@/shared/theme/motion';
 
 const fmtScore = (n: number) => `${n > 0 ? '+' : ''}${n}`;
 
-/** Волны, расходящиеся от счёта */
-const RIPPLES = [0, 0.25, 0.5];
-
 interface RoundEndPhaseProps {
   roundScore: number;
+  roundWords: RoundWord[];
+  onWordResultChange: (index: number, result: WordResult) => void;
   onContinue: () => void;
 }
 
-export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({ roundScore, onContinue }) => {
+export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({
+  roundScore,
+  roundWords,
+  onWordResultChange,
+  onContinue,
+}) => {
   const { t } = useTranslation();
-  const positive = roundScore >= 0;
-  const color = positive ? 'green' : 'red';
 
   return (
     <motion.div
@@ -31,62 +33,110 @@ export const RoundEndPhase: React.FC<RoundEndPhaseProps> = ({ roundScore, onCont
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex h-full flex-col items-center justify-center gap-8 p-6 text-center"
+      className="flex h-full min-h-0 flex-col items-center gap-4 p-5 text-center"
     >
-      <div className="space-y-2">
-        <motion.div variants={STAGGER_ITEM} className="flex flex-col items-center gap-3">
-          <motion.div
-            animate={{ rotate: [0, -18, 16, -12, 8, 0] }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-          >
-            <AlarmClock className="h-8 w-8 text-white/30" />
-          </motion.div>
-          <p className="text-micro font-black tracking-[0.5em] text-white/20 uppercase">
+      <div className="shrink-0">
+        <div className="mb-1 flex items-center justify-center gap-2 text-white/45">
+          <AlarmClock className="h-5 w-5" />
+          <p className="text-micro font-black tracking-[0.35em] uppercase">
             {t(`${NS.ALIAS}.timeUp`)}
           </p>
-        </motion.div>
-
-        <div className="relative flex items-center justify-center py-2">
-          {RIPPLES.map((delay) => (
-            <motion.span
-              key={delay}
-              aria-hidden
-              className="absolute h-28 w-28 rounded-full border-2"
-              style={{ borderColor: rgba(color, 0.5) }}
-              initial={{ scale: 0.4, opacity: 0 }}
-              animate={{ scale: 2.4, opacity: [0, 0.8, 0] }}
-              transition={{ duration: 1.3, delay: 0.5 + delay, ease: 'easeOut' }}
-            />
-          ))}
-          <motion.div
-            initial={{ scale: 0.3, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ ...SPRING.pop, delay: 0.2 }}
-            className={`relative text-8xl leading-none font-black tracking-tighter italic ${
-              positive ? 'text-premium-green' : 'text-premium-red'
-            }`}
-            style={{ textShadow: `0 0 40px ${rgba(color, 0.45)}` }}
-          >
-            <AnimatedNumber value={roundScore} from={0} delay={0.3} format={fmtScore} />
-          </motion.div>
         </div>
-
-        <motion.h3
-          variants={STAGGER_ITEM}
-          className="text-sm font-black tracking-tight text-white/45 uppercase italic"
+        <motion.div
+          key={roundScore}
+          initial={{ scale: 0.85, opacity: 0.5 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={SPRING.pop}
+          className={`text-6xl leading-none font-black tracking-tighter italic tabular-nums ${
+            roundScore >= 0 ? 'text-premium-green' : 'text-premium-red'
+          }`}
         >
+          {fmtScore(roundScore)}
+        </motion.div>
+        <p className="text-label mt-1 font-black tracking-tight text-white/45 uppercase italic">
           {t(`${NS.ALIAS}.pointsPerRound`)}
-        </motion.h3>
+        </p>
       </div>
 
-      <motion.div
-        className="w-full"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ...SPRING.soft, delay: 0.8 }}
-      >
+      <section className="rounded-premium-lg flex min-h-0 w-full flex-1 flex-col overflow-hidden border border-white/10 bg-white/[0.03] text-left">
+        <div className="border-b border-white/10 px-4 py-3">
+          <h3 className="text-label font-black tracking-widest text-white uppercase">
+            {t(`${NS.ALIAS}.roundWords`)}
+          </h3>
+          <p className="text-label mt-1 text-white/45">{t(`${NS.ALIAS}.reviewHint`)}</p>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
+          {roundWords.length === 0 ? (
+            <p className="py-6 text-center text-sm text-white/45">
+              {t(`${NS.ALIAS}.noRoundWords`)}
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {roundWords.map((entry, index) => (
+                <div
+                  key={index}
+                  className="rounded-premium-md border border-white/8 bg-black/20 px-3 py-3"
+                >
+                  <div className="mb-2 flex min-w-0 items-start justify-between gap-3">
+                    <span className="min-w-0 text-sm leading-snug font-bold wrap-anywhere text-white">
+                      <span className="mr-2 text-white/30">{index + 1}.</span>
+                      {entry.word}
+                    </span>
+                    <span
+                      className={`shrink-0 text-sm font-black tabular-nums ${
+                        entry.result > 0
+                          ? 'text-premium-green'
+                          : entry.result < 0
+                            ? 'text-premium-red'
+                            : 'text-white/35'
+                      }`}
+                    >
+                      {entry.result > 0 ? '+1' : entry.result < 0 ? '−1' : '—'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      aria-pressed={entry.result === -1}
+                      onClick={() => {
+                        onWordResultChange(index, entry.result === -1 ? 0 : -1);
+                      }}
+                      className={`rounded-premium-sm flex min-h-11 items-center justify-center gap-1.5 border px-2 text-xs font-bold transition-colors ${
+                        entry.result === -1
+                          ? 'border-premium-red/60 bg-premium-red/20 text-premium-red'
+                          : 'border-white/10 text-white/50 hover:bg-white/5'
+                      }`}
+                    >
+                      <XCircle className="h-4 w-4 shrink-0" />
+                      {t(`${NS.COMMON}.skip`)}
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={entry.result === 1}
+                      onClick={() => {
+                        onWordResultChange(index, entry.result === 1 ? 0 : 1);
+                      }}
+                      className={`rounded-premium-sm flex min-h-11 items-center justify-center gap-1.5 border px-2 text-xs font-bold transition-colors ${
+                        entry.result === 1
+                          ? 'border-premium-green/60 bg-premium-green/20 text-premium-green'
+                          : 'border-white/10 text-white/50 hover:bg-white/5'
+                      }`}
+                    >
+                      <CheckCircle className="h-4 w-4 shrink-0" />
+                      {t(`${NS.ALIAS}.guessed`)}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="w-full shrink-0">
         <PrimaryButton onClick={onContinue}>{t(`${NS.ALIAS}.continueBtn`)}</PrimaryButton>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

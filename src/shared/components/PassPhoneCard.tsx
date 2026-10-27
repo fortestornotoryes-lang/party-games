@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { ChevronUp } from 'lucide-react';
 import type { PanInfo } from 'motion/react';
-import { motion } from 'motion/react';
+import { motion, useAnimationControls } from 'motion/react';
 import React, { useRef, useState } from 'react';
 
 import { FitText } from '@/shared/components/FitText';
@@ -71,14 +71,35 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
   const { t } = useTranslation();
   const [gone, setGone] = useState(false);
   const completed = useRef(false);
+  const controls = useAnimationControls();
   const accent = accentColor;
+
+  const leave = () => {
+    if (gone || completed.current) return;
+    setGone(true);
+    void controls
+      .start({
+        y: -720,
+        rotate: -14,
+        opacity: 0,
+        transition: { duration: FLY_AWAY_MS / 1000, ease: 'easeIn' },
+      })
+      .then(() => {
+        if (completed.current) return;
+        completed.current = true;
+        onClick();
+      });
+  };
 
   // Звук и вибрацию кнопки даёт PrimaryButton, смахиванию — свои
   const onDragEnd = (_: PointerEvent, info: PanInfo) => {
-    if (info.offset.y > -SWIPE_DISTANCE && info.velocity.y > -SWIPE_VELOCITY) return;
+    if (info.offset.y > -SWIPE_DISTANCE && info.velocity.y > -SWIPE_VELOCITY) {
+      void controls.start({ y: 0, transition: SPRING.snappy });
+      return;
+    }
     feedbackService.playSound('click');
     feedbackService.vibrate(VIBRATE.tap);
-    setGone(true);
+    leave();
   };
 
   const glow = { color: rgba(accent, 1), filter: `drop-shadow(0 0 8px ${rgba(accent, 0.8)})` };
@@ -96,6 +117,12 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
   return (
     <div className="flex w-full flex-col items-center gap-6 select-none">
       <div className="relative aspect-[5/7] w-full max-w-[290px]">
+        {/* Свечение остаётся под колодой: большая тень не расширяет слой, который двигается за пальцем. */}
+        <span
+          aria-hidden
+          className="absolute inset-0 rounded-[28px]"
+          style={{ boxShadow: `0 0 70px ${rgba(accent, 0.25)}, var(--shadow-card)` }}
+        />
         {/* Остаток колоды под верхней картой */}
         {Array.from({ length: deckDepth }, (_, i) => deckDepth - i).map((depth) => (
           <span
@@ -108,22 +135,17 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
             }}
           />
         ))}
+        {/* Без dragConstraints: их отскок начинается раньше onDragEnd и спорит с вылетом карты. */}
         <motion.div
           drag={gone ? false : 'y'}
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.7}
+          dragMomentum={false}
           onDragEnd={onDragEnd}
-          onAnimationComplete={() => {
-            if (!gone || completed.current) return;
-            completed.current = true;
-            onClick();
-          }}
-          animate={gone ? { y: -720, rotate: -14, opacity: 0 } : { y: 0, rotate: 0, opacity: 1 }}
-          transition={gone ? { duration: FLY_AWAY_MS / 1000, ease: 'easeIn' } : SPRING.snappy}
+          initial={{ y: 0, rotate: 0, opacity: 1 }}
+          animate={controls}
           className="absolute inset-0 cursor-grab touch-none overflow-hidden active:cursor-grabbing"
           style={{
             ...cardBack(accent, 0.55),
-            boxShadow: `0 0 70px ${rgba(accent, 0.25)}, var(--shadow-card), inset 0 1px 0 ${rgba(accent, 0.14)}`,
+            boxShadow: `inset 0 1px 0 ${rgba(accent, 0.14)}`,
             willChange: 'transform, opacity',
           }}
         >
@@ -183,13 +205,7 @@ export const PassPhoneCard: React.FC<PassPhoneCardProps> = ({
         <Typography.Body size="sm" color="muted" align="center">
           {t(`${NS.COMMON}.passSwipeHint`)}
         </Typography.Body>
-        <PrimaryButton
-          variant="premium"
-          onClick={() => {
-            setGone(true);
-          }}
-          disabled={gone}
-        >
+        <PrimaryButton variant="premium" onClick={leave} disabled={gone}>
           {t(`${NS.COMMON}.passTakeCard`)}
         </PrimaryButton>
       </div>

@@ -424,6 +424,9 @@ export interface AliasTranslations {
   swipeHint: string; // "← пропуск · свайп · угадано →"
   timeUp: string; // "Время вышло"
   pointsPerRound: string; // "Очков за раунд"
+  roundWords: string; // "Слова раунда"
+  reviewHint: string; // "Проверьте результаты и исправьте ошибки"
+  noRoundWords: string; // "В этом раунде слов не было"
   continueBtn: string; // "ПРОДОЛЖИТЬ"
   victory: string; // "ПОБЕДА!"
   winningTeam: string; // "Команда {{name}}"
@@ -441,7 +444,6 @@ export interface TwoTruthsTranslations {
   markedLie: string;
   showAll: string;
   voterLabel: string;
-  voterPass: string; // "{{name}}, твоя очередь угадать ложь"
   voteQuestion: string;
   revealTitle: string;
   lieLabel: string;

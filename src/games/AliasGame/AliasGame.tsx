@@ -9,7 +9,7 @@ import { PlayingPhase } from './phases/PlayingPhase';
 import { RoundEndPhase } from './phases/RoundEndPhase';
 import { SetupPhase } from './phases/SetupPhase';
 import { StartPhase } from './phases/StartPhase';
-import type { Team } from './types';
+import type { RoundWord, Team, WordResult } from './types';
 import { AliasPhase } from './types';
 
 import { useGameSettings } from '@/entities/game/model/GameSettingsContext';
@@ -42,6 +42,11 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const [phase, setPhase] = usePersistedState<AliasPhase>(GameKey.Alias, 'phase', AliasPhase.Setup);
   const [currentWord, setCurrentWord] = usePersistedState(GameKey.Alias, 'currentWord', '');
   const [roundScore, setRoundScore] = usePersistedState(GameKey.Alias, 'roundScore', 0);
+  const [roundWords, setRoundWords] = usePersistedState<RoundWord[]>(
+    GameKey.Alias,
+    'roundWords',
+    []
+  );
 
   const roundTime = ALIAS_DIFFICULTY_CONFIG[difficulty].roundTime;
   // Секунды читает только PlayingPhase (RingTimer) — корень на тиках не перерисовывается
@@ -72,12 +77,14 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
     const available = getAliasWords(difficulty);
     const word = pickRandom(available);
     setCurrentWord(word);
+    setRoundWords((prev) => [...prev, { word, result: 0 }]);
     storageService.markWordAsUsed(GameKey.Alias, word);
   };
 
   const startRound = () => {
     resetTimer(roundTime);
     setRoundScore(0);
+    setRoundWords([]);
     nextWord();
     setPhase(AliasPhase.Playing);
     startTimer();
@@ -86,6 +93,9 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const handleCorrect = () => {
     feedbackService.playSound('success');
     feedbackService.vibrate(VIBRATE.correct);
+    setRoundWords((prev) =>
+      prev.map((entry, i) => (i === prev.length - 1 ? { ...entry, result: 1 } : entry))
+    );
     setRoundScore((s) => s + 1);
     nextWord();
   };
@@ -93,8 +103,19 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
   const handleSkip = () => {
     feedbackService.playSound('error');
     feedbackService.vibrate(VIBRATE.error);
+    setRoundWords((prev) =>
+      prev.map((entry, i) => (i === prev.length - 1 ? { ...entry, result: -1 } : entry))
+    );
     setRoundScore((s) => s - 1);
     nextWord();
+  };
+
+  const correctRoundWord = (index: number, result: WordResult) => {
+    if (index < 0 || index >= roundWords.length) return;
+    const previous = roundWords[index].result;
+    if (previous === result) return;
+    setRoundWords((prev) => prev.map((entry, i) => (i === index ? { ...entry, result } : entry)));
+    setRoundScore((score) => score + result - previous);
   };
 
   const finishRound = () => {
@@ -172,7 +193,12 @@ export const AliasGame: React.FC<AliasGameProps> = ({ playerNames, onBack }) => 
           )}
 
           {phase === AliasPhase.RoundEnd && (
-            <RoundEndPhase roundScore={roundScore} onContinue={finishRound} />
+            <RoundEndPhase
+              roundScore={roundScore}
+              roundWords={roundWords}
+              onWordResultChange={correctRoundWord}
+              onContinue={finishRound}
+            />
           )}
 
           {phase === AliasPhase.GameOver && (
