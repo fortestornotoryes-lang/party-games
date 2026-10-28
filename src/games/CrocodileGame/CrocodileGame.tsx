@@ -69,6 +69,8 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
   const timer = useTimer({
     initialTime: roundTime,
     onTimeUp: () => {
+      // Страховка: раунд уже завершён кнопкой — просроченный тик не должен его переписать.
+      if (phase !== CrocodilePhase.Playing) return;
       feedbackService.playSound('timeout');
       feedbackService.vibrate(VIBRATE.timeout);
       setGuessed(false);
@@ -76,7 +78,7 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
       setPhase(CrocodilePhase.RoundEnd);
     },
   });
-  const { start: startTimer, reset: resetTimer } = timer;
+  const { start: startTimer, pause: pauseTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
   usePersistedTimer(GameKey.Crocodile, 'timeLeft', timer, phase === CrocodilePhase.Playing);
@@ -127,7 +129,10 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
     startTimer();
   };
 
+  // Раунд закрыт кнопкой — таймер останавливаем, иначе он дотикает до нуля уже в следующих
+  // фазах, сбросит результат и выкинет следующую команду из выбора слова.
   const handleGuessed = () => {
+    pauseTimer();
     feedbackService.playSound('success');
     feedbackService.vibrate(VIBRATE.correct);
     setGuessed(true);
@@ -135,6 +140,7 @@ export const CrocodileGame: React.FC<CrocodileGameProps> = ({ playerNames, onBac
   };
 
   const handleGiveUp = () => {
+    pauseTimer();
     feedbackService.playSound('error');
     feedbackService.vibrate(VIBRATE.error);
     setGuessed(false);

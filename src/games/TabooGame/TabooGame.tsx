@@ -67,12 +67,14 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
   const timer = useTimer({
     initialTime: cardTimer,
     onTimeUp: () => {
+      // Страховка: карточка уже закрыта кнопкой — просроченный тик не должен её переписать.
+      if (phase !== TabooPhase.Playing) return;
       feedbackService.vibrate(VIBRATE.timeout);
       setTimedOut(true);
       setPhase(TabooPhase.Verdict);
     },
   });
-  const { start: startTimer, reset: resetTimer } = timer;
+  const { start: startTimer, pause: pauseTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
   usePersistedTimer(GameKey.Taboo, 'timeLeft', timer, phase === TabooPhase.Playing);
@@ -94,9 +96,11 @@ export const TabooGame: React.FC<TabooGameProps> = ({ playerNames, onBack }) => 
     setPhase(TabooPhase.Playing);
   }, [cardTimer, resetTimer, setPhase, setTimedOut, startTimer]);
 
+  // Таймер останавливаем, иначе он дотикает до нуля уже на следующей фазе и выставит timedOut.
   const handleGuessed = useCallback(() => {
+    pauseTimer();
     setPhase(TabooPhase.Verdict);
-  }, [setPhase]);
+  }, [pauseTimer, setPhase]);
 
   const handleVerdict = useCallback(
     (guesser: string | null, penalty = false) => {

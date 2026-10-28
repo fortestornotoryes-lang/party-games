@@ -125,17 +125,19 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
 
   // ── Timer ─────────────────────────────────────────────────────────────────
   const handleTimeUp = useCallback(() => {
+    // Страховка: карточка уже закрыта кнопкой — просроченный тик не должен её переписать.
+    if (phase !== TabooReversePhase.Playing) return;
     feedbackService.vibrate(VIBRATE.timeout);
     setTimedOut(true);
     setPhase(isBlitz ? TabooReversePhase.BlitzVerdict : TabooReversePhase.Verdict);
-  }, [isBlitz, setPhase, setTimedOut]);
+  }, [isBlitz, phase, setPhase, setTimedOut]);
 
   // Секунды читает только PlayingPhase — корень на тиках не перерисовывается
   const timer = useTimer({
     initialTime: cardTimer,
     onTimeUp: handleTimeUp,
   });
-  const { start: startTimer, reset: resetTimer } = timer;
+  const { start: startTimer, pause: pauseTimer, reset: resetTimer } = timer;
 
   // После перезагрузки страницы в фазе Playing — продолжаем отсчёт.
   usePersistedTimer(GameKey.TabooReverse, 'timeLeft', timer, phase === TabooReversePhase.Playing);
@@ -168,9 +170,11 @@ export const TabooReverseGame: React.FC<TabooReverseGameProps> = ({ playerNames,
       feedbackService.vibrate(VIBRATE.correct);
       cycleCard(card, usedCardIds);
     } else {
+      // Таймер останавливаем, иначе он дотикает до нуля на следующей фазе и выставит timedOut.
+      pauseTimer();
       setPhase(TabooReversePhase.Verdict);
     }
-  }, [isBlitz, setBlitzResults, cycleCard, card, usedCardIds, setPhase]);
+  }, [isBlitz, setBlitzResults, cycleCard, card, usedCardIds, pauseTimer, setPhase]);
 
   // Blitz only: skip current card (−1 to explainer)
   const handleSkip = useCallback(() => {
