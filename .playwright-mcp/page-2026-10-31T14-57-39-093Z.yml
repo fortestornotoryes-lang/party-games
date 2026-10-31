@@ -1,0 +1,140 @@
+- generic [ref=e5]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - heading "PARTY HUB" [level=1] [ref=e9]
+      - paragraph [ref=e10]: 22 игр · Вечеринка начинается
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e18]:
+          - heading "SPY HUNT" [level=3] [ref=e19]
+          - paragraph [ref=e20]: Вычисли шпиона среди своих
+          - generic [ref=e21]: 3–7
+        - button [ref=e29]
+      - generic [ref=e33]:
+        - generic [ref=e39]:
+          - heading "FAKE ARTIST" [level=3] [ref=e40]
+          - paragraph [ref=e41]: Найди того, кто рисует вслепую
+          - generic [ref=e42]: 4–7
+        - button [ref=e50]
+      - generic [ref=e54]:
+        - generic [ref=e60]:
+          - heading "БУНКЕР" [level=3] [ref=e61]
+          - paragraph [ref=e62]: Кто заслуживает выжить?
+          - generic [ref=e63]: 4–10
+        - button [ref=e71]
+      - generic [ref=e75]:
+        - generic [ref=e81]:
+          - heading "КОРИДОР" [level=3] [ref=e82]
+          - paragraph [ref=e83]: Дойди первым до другой стороны
+          - generic [ref=e84]: "2"
+        - button [ref=e92]
+      - generic [ref=e96]:
+        - generic [ref=e102]:
+          - heading "МЕМО-РИСК" [level=3] [ref=e103]
+          - paragraph [ref=e104]: Запомни и рискни
+          - generic [ref=e105]: 2+
+        - button [ref=e113]
+      - generic [ref=e117]:
+        - generic [ref=e123]:
+          - heading "МИЛЛИОНЕР" [level=3] [ref=e124]
+          - paragraph [ref=e125]: Кто хочет стать миллионером
+          - generic [ref=e126]: 2+
+        - button [ref=e134]
+      - generic [ref=e138]:
+        - generic [ref=e144]:
+          - heading "ПРАВДА ИЛИ ДЕЙСТВИЕ" [level=3] [ref=e145]
+          - paragraph [ref=e146]: "Выбирай: откровение или вызов"
+          - generic [ref=e147]: 2+
+        - button [ref=e155]
+      - generic [ref=e159]:
+        - generic [ref=e165]:
+          - heading "ТАБУ" [level=3] [ref=e166]
+          - paragraph [ref=e167]: Объясняй, не называя лишнего
+          - generic [ref=e168]: 4–10
+        - button [ref=e176]
+      - generic [ref=e180]:
+        - generic [ref=e186]:
+          - heading "ТАБУ НАОБОРОТ" [level=3] [ref=e187]
+          - paragraph [ref=e188]: Подсказки под запретом — больше нет
+          - generic [ref=e189]: 4–10
+        - button [ref=e197]
+      - generic [ref=e201]:
+        - generic [ref=e207]:
+          - heading "TELESTRATIONS" [level=3] [ref=e208]
+          - paragraph [ref=e209]: Рисунок превращается в хаос
+          - generic [ref=e210]: 4–12
+        - button [ref=e218]
+      - generic [ref=e222]:
+        - generic [ref=e228]:
+          - heading "CODENAMES" [level=3] [ref=e229]
+          - paragraph [ref=e230]: Битва шпионов
+          - generic [ref=e231]: 4+
+        - button [ref=e239]
+      - generic [ref=e243]:
+        - generic [ref=e249]:
+          - heading "DECRYPTO" [level=3] [ref=e250]
+          - paragraph [ref=e251]: Коды и перехваты
+          - generic [ref=e252]: 4+
+        - button [ref=e260]
+      - generic [ref=e264]:
+        - generic [ref=e270]:
+          - heading "ALIAS" [level=3] [ref=e271]
+          - paragraph [ref=e272]: Объясни быстрее всех
+          - generic [ref=e273]: 4+
+        - button [ref=e281]
+      - generic [ref=e285]:
+        - generic [ref=e291]:
+          - heading "КРОКОДИЛ" [level=3] [ref=e292]
+          - paragraph [ref=e293]: Покажи и объясни
+          - generic [ref=e294]: 4+
+        - button [ref=e302]
+      - generic [ref=e306]:
+        - generic [ref=e312]:
+          - heading "RESISTANCE" [level=3] [ref=e313]
+          - paragraph [ref=e314]: Свергните тиранию
+          - generic [ref=e315]: 5–10
+        - button [ref=e323]
+      - generic [ref=e327]:
+        - generic [ref=e333]:
+          - heading "WAVELENGTH" [level=3] [ref=e334]
+          - paragraph [ref=e335]: На одной волне
+          - generic [ref=e336]: 4+
+        - button [ref=e344]
+      - generic [ref=e348]:
+        - generic [ref=e354]:
+          - heading "JUST ONE" [level=3] [ref=e355]
+          - paragraph [ref=e356]: Пойми намек команды
+          - generic [ref=e357]: 3–12
+        - button [ref=e365]
+      - generic [ref=e369]:
+        - generic [ref=e375]:
+          - heading "ДВЕ ПРАВДЫ И ОДНА ЛОЖЬ" [level=3] [ref=e376]
+          - paragraph [ref=e377]: Угадай ложь
+          - generic [ref=e378]: 3+
+        - button [ref=e386]
+      - generic [ref=e390]:
+        - generic [ref=e396]:
+          - heading "КТО ИЗ НАС" [level=3] [ref=e397]
+          - paragraph [ref=e398]: Голосуй за того, кто подходит
+          - generic [ref=e399]: 3+
+        - button [ref=e407]
+      - generic [ref=e411]:
+        - generic [ref=e417]:
+          - heading "MAFIA" [level=3] [ref=e418]
+          - paragraph [ref=e419]: Город засыпает...
+          - generic [ref=e420]: 6–12
+        - button [ref=e428]
+      - generic [ref=e432]:
+        - generic [ref=e438]:
+          - heading "ЧЕТЫРЕ В РЯД" [level=3] [ref=e439]
+          - paragraph [ref=e440]: Connect Four
+          - generic [ref=e441]: "2"
+        - button [ref=e449]
+      - generic [ref=e453]:
+        - generic [ref=e459]:
+          - heading "ШАХМАТЫ" [level=3] [ref=e460]
+          - paragraph [ref=e461]: Игра, обучение и разбор
+          - generic [ref=e462]: 1–2
+        - button [ref=e470]
+    - button "Баланс · Бункер" [ref=e474]
+  - button [ref=e477]

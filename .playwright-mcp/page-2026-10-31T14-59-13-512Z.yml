@@ -1,0 +1,14 @@
+- generic [ref=e703]:
+  - generic [ref=e704]:
+    - generic [ref=e709]:
+      - heading "ПРАВДА ИЛИ ДЕЙСТВИЕ" [level=2] [ref=e710]
+      - paragraph [ref=e711]: Правда или Действие
+    - button [ref=e713]
+  - generic [ref=e721]:
+    - generic [ref=e734]:
+      - generic [ref=e735]: Правда или Действие
+      - paragraph [ref=e736]: Передай телефон
+      - heading "Дуня" [level=2] [ref=e737]
+    - generic [ref=e738]:
+      - paragraph [ref=e741]: Смахни карту вверх, когда телефон у тебя
+      - button "Взять карту" [ref=e742]

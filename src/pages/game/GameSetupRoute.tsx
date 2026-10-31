@@ -65,6 +65,7 @@ export function GameSetupRoute() {
       description={config.description}
       minPlayers={config.minPlayers}
       maxPlayers={config.maxPlayers}
+      difficultyLabels={config.difficultyLabels}
     >
       <UniversalGameSettings
         difficulty={difficulty}

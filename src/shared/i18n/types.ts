@@ -130,6 +130,11 @@ export interface RegistryGameText {
   modes?: Record<string, RegistryModeText>;
   /** Ключ — GameSettingKey */
   settings?: Record<string, RegistrySettingText>;
+  /** Своё название шкалы сложности и её уровней (напр. острота в Правде или Действии) */
+  difficulty?: {
+    label: string;
+    options: Record<'easy' | 'medium' | 'hard', string>;
+  };
 }
 
 export interface RegistryTranslations {
@@ -615,6 +620,16 @@ export interface TruthOrDareTranslations {
   truthBadge: string; // 'Правда'
   dareBadge: string; // 'Действие'
   completed: string; // 'ВЫПОЛНЕНО'
+  refuse: string; // 'Слиться'
+  seconds: string; // '{{n}} сек' — подстановка {t:N} в тексте карточки
+  startTimer: string; // 'СТАРТ'
+  timeUp: string; // 'Время!'
+  // PenaltyPhase.tsx
+  penaltyBadge: string; // 'Штраф за слив'
+  accept: string; // 'ПРИНЯТО'
+  shameBoard: string; // 'Доска позора'
+  // ChoicePhase.tsx
+  refusals: string; // 'Сливов: {{n}}'
 }
 
 export interface CorridorTranslations {

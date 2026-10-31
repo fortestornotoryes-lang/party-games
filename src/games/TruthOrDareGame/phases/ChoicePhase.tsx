@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import React from 'react';
 
 import type { ChoiceType } from '../types';
+import { CHOICE_TYPE } from '../types';
 
 import { Typography } from '@/shared/components/Typography';
 import { useTranslation } from '@/shared/i18n';
@@ -10,10 +11,12 @@ import { NS } from '@/shared/i18n/keys';
 
 interface ChoicePhaseProps {
   currentPlayer: string;
+  /** Сколько раз текущий игрок уже сливался */
+  refusals: number;
   onChoice: (type: ChoiceType) => void;
 }
 
-export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoice }) => {
+export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, refusals, onChoice }) => {
   const { t } = useTranslation();
 
   return (
@@ -37,6 +40,11 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
         <Typography.Display size="md" className="text-center">
           {currentPlayer}
         </Typography.Display>
+        {refusals > 0 && (
+          <span className="border-premium-orange/30 bg-premium-orange/10 text-premium-orange text-tag mt-2 rounded-full border px-3 py-1 font-black tracking-[0.2em] uppercase">
+            {t(`${NS.TRUTH_OR_DARE}.refusals`, { n: refusals })}
+          </span>
+        )}
       </motion.div>
 
       <div className="h-40" />
@@ -49,7 +57,7 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
           transition={{ delay: 0.1, type: 'spring', stiffness: 360, damping: 28 }}
           whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
           onClick={() => {
-            onChoice('truth');
+            onChoice(CHOICE_TYPE.TRUTH);
           }}
           className="rounded-premium-2xl relative flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden"
           style={{
@@ -95,7 +103,7 @@ export const ChoicePhase: React.FC<ChoicePhaseProps> = ({ currentPlayer, onChoic
           transition={{ delay: 0.17, type: 'spring', stiffness: 360, damping: 28 }}
           whileTap={{ scale: 0.975, transition: { duration: 0.08 } }}
           onClick={() => {
-            onChoice('dare');
+            onChoice(CHOICE_TYPE.DARE);
           }}
           className="rounded-premium-2xl relative flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden"
           style={{

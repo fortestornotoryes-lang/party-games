@@ -116,6 +116,9 @@ export interface GameMetadata extends GameMetadataDef {
   readonly description: string;
   readonly modes?: readonly GameMode[];
   readonly settings?: readonly GameSettingDef[];
+  /** Своё название шкалы сложности (registry.games.<id>.difficulty) — иначе общее «Сложность» */
+  readonly difficultyLabel?: string;
+  readonly difficultyLabels?: Readonly<Record<Difficulty, string>>;
 }
 
 /**

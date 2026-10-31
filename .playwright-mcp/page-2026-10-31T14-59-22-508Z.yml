@@ -1,0 +1,19 @@
+- generic [ref=e703]:
+  - generic [ref=e704]:
+    - generic [ref=e709]:
+      - heading "ПРАВДА ИЛИ ДЕЙСТВИЕ" [level=2] [ref=e710]
+      - paragraph [ref=e711]: Правда или Действие
+    - button [ref=e713]
+  - generic [ref=e745]:
+    - generic [ref=e746]:
+      - paragraph [ref=e747]: Выбирает
+      - generic [ref=e748]: Дуня
+    - generic [ref=e750]:
+      - button "ПРАВДА Ответь честно" [ref=e751]:
+        - generic [ref=e766]:
+          - generic [ref=e767]: ПРАВДА
+          - generic [ref=e768]: Ответь честно
+      - button "ДЕЙСТВИЕ Выполни задание" [ref=e769]:
+        - generic [ref=e773]:
+          - generic [ref=e774]: ДЕЙСТВИЕ
+          - generic [ref=e775]: Выполни задание

@@ -1,0 +1,17 @@
+- generic [ref=e703]:
+  - generic [ref=e704]:
+    - generic [ref=e709]:
+      - heading "ПРАВДА ИЛИ ДЕЙСТВИЕ" [level=2] [ref=e710]
+      - paragraph [ref=e711]: Правда или Действие
+    - button [ref=e713]
+  - generic [ref=e794]:
+    - generic [ref=e795]:
+      - generic [ref=e796]: Штраф за слив
+      - heading "Дуня" [level=1] [ref=e803]
+    - generic [ref=e804]:
+      - paragraph [ref=e807]: Танцуй без музыки 20 сек
+      - button "20" [disabled] [ref=e820]
+    - generic [ref=e811]:
+      - paragraph [ref=e812]: Доска позора
+      - generic [ref=e813]: Дуня · 1
+    - button "ПРИНЯТО" [ref=e815]

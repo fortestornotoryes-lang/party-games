@@ -12,7 +12,7 @@ import { shuffle } from '@/shared/helpers/random';
 import { useLanguage } from '@/shared/i18n';
 import { storageService } from '@/shared/services/storageService';
 import { getTheme } from '@/shared/theme/colors';
-import { DIFFICULTY, type GameTheme } from '@/shared/types';
+import { DIFFICULTY, type Difficulty, type GameTheme } from '@/shared/types';
 
 interface SetupProps {
   onStart: (playerNames: string[]) => void;
@@ -27,6 +27,8 @@ interface SetupProps {
   description?: string;
   minPlayers: number;
   maxPlayers?: number;
+  /** Свои подписи уровней сложности (напр. острота) — иначе общие */
+  difficultyLabels?: Readonly<Record<Difficulty, string>>;
   children?: React.ReactNode;
 }
 
@@ -46,6 +48,7 @@ export const Setup: React.FC<SetupProps> = ({
   description,
   minPlayers,
   maxPlayers = 12,
+  difficultyLabels,
   children,
 }) => {
   const { difficulty } = useGameSettings();
@@ -149,11 +152,7 @@ export const Setup: React.FC<SetupProps> = ({
               <div
                 className={`rounded-premium-sm glass-card text-tag font-display border-none px-4 py-1.5 font-black tracking-[0.2em] uppercase italic ${difficulty === DIFFICULTY.EASY ? 'text-premium-green' : difficulty === DIFFICULTY.MEDIUM ? 'text-premium-sky' : 'text-premium-red'}`}
               >
-                {difficulty === DIFFICULTY.EASY
-                  ? t('common.difficultyShort.easy')
-                  : difficulty === DIFFICULTY.MEDIUM
-                    ? t('common.difficultyShort.medium')
-                    : t('common.difficultyShort.hard')}
+                {difficultyLabels?.[difficulty] ?? t(`common.difficultyShort.${difficulty}`)}
               </div>
             </div>
           </div>

@@ -77,6 +77,10 @@ const DIFFICULTIES: { id: Difficulty; labelKey: string }[] = [
   { id: DIFFICULTY.HARD, labelKey: 'common.difficultyShort.hard' },
 ];
 
+/** В Правде или Действии сложность — это острота: свои подписи уровней */
+const todDiffLabelKey = (diff: Difficulty) =>
+  `registry.games.${GameKey.TruthOrDare}.difficulty.options.${diff}`;
+
 function todKey(type: 'truth' | 'dare', diff: Difficulty) {
   return `tod_${type}_${diff}`;
 }
@@ -446,7 +450,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
                             : 'border-white/8 text-white/20'
                         }`}
                       >
-                        {t(d.labelKey)}
+                        {t(todDiffLabelKey(d.id))}
                       </button>
                     ))}
                   </div>
@@ -570,7 +574,7 @@ export const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <div>
               <SectionLabel>
                 {isTod
-                  ? `${todType === 'truth' ? t('settingsPage.customTruths') : t('settingsPage.customDares')} · ${t(DIFFICULTIES.find((d) => d.id === todDiff)?.labelKey ?? '')}`
+                  ? `${todType === 'truth' ? t('settingsPage.customTruths') : t('settingsPage.customDares')} · ${t(todDiffLabelKey(todDiff))}`
                   : `${t('settingsPage.customWords')} · ${t(DIFFICULTIES.find((d) => d.id === wordDiff)?.labelKey ?? '')}`}
               </SectionLabel>
 

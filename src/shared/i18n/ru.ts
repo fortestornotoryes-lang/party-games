@@ -224,7 +224,11 @@ export const ru: Translations = {
         subtitle: 'Выбирай: откровение или вызов',
         placeholder: 'Игрок',
         description:
-          'Задавайте неудобные вопросы, выполняйте смелые задания и проверяйте, кто готов рискнуть ради веселья.',
+          'Неудобные вопросы про присутствующих, задания с телефоном и друг другом, штрафы за слив. Три уровня остроты — от разогрева до 18+.',
+        difficulty: {
+          label: 'Острота',
+          options: { easy: 'Разогрев', medium: 'Остро', hard: '18+' },
+        },
       },
       taboo: {
         title: 'ТАБУ',
@@ -787,6 +791,14 @@ export const ru: Translations = {
     truthBadge: 'Правда',
     dareBadge: 'Действие',
     completed: 'ВЫПОЛНЕНО',
+    refuse: 'Слиться',
+    seconds: '{{n}} сек',
+    startTimer: 'СТАРТ',
+    timeUp: 'Время!',
+    penaltyBadge: 'Штраф за слив',
+    accept: 'ПРИНЯТО',
+    shameBoard: 'Доска позора',
+    refusals: 'Сливов: {{n}}',
   },
   just_one: {
     subtitle: 'Пойми намёк',

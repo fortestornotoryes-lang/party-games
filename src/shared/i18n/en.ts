@@ -224,7 +224,11 @@ export const en: Translations = {
         subtitle: 'Choose: confession or challenge',
         placeholder: 'Player',
         description:
-          "Ask awkward questions, take on bold challenges and find out who's ready to risk it all for fun.",
+          'Awkward questions about the people in the room, dares with phones and each other, penalties for chickening out. Three heat levels — from warm-up to 18+.',
+        difficulty: {
+          label: 'Heat',
+          options: { easy: 'Warm-up', medium: 'Spicy', hard: '18+' },
+        },
       },
       taboo: {
         title: 'TABOO',
@@ -787,6 +791,14 @@ export const en: Translations = {
     truthBadge: 'Truth',
     dareBadge: 'Dare',
     completed: 'DONE',
+    refuse: 'Chicken out',
+    seconds: '{{n}} sec',
+    startTimer: 'START',
+    timeUp: 'Time!',
+    penaltyBadge: 'Chicken-out penalty',
+    accept: 'ACCEPTED',
+    shameBoard: 'Hall of shame',
+    refusals: 'Chickened out: {{n}}',
   },
   just_one: {
     subtitle: 'Guess the Hint',

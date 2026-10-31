@@ -15,6 +15,7 @@ function tOptional(t: TranslateFn, path: string): string | undefined {
 /** Дополняет структурную запись реестра текстами из словарей registry.games.<id> */
 export function localizeGameMeta(def: GameMetadataDef, t: TranslateFn): GameMetadata {
   const base = `registry.games.${def.id}`;
+  const difficultyLabel = tOptional(t, `${base}.difficulty.label`);
   return {
     ...def,
     title: t(`${base}.title`),
@@ -38,6 +39,14 @@ export function localizeGameMeta(def: GameMetadataDef, t: TranslateFn): GameMeta
         };
       }),
     })),
+    difficultyLabel,
+    difficultyLabels: difficultyLabel
+      ? {
+          easy: t(`${base}.difficulty.options.easy`),
+          medium: t(`${base}.difficulty.options.medium`),
+          hard: t(`${base}.difficulty.options.hard`),
+        }
+      : undefined,
   };
 }
 

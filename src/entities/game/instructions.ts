@@ -279,22 +279,27 @@ export const GAME_INSTRUCTIONS: GameInstructionsMap = {
     {
       title: 'Суть игры',
       content:
-        'Игроки ходят по очереди. Каждый выбирает: ответить честно на вопрос (Правда) или выполнить задание (Действие).',
+        'Игроки ходят по очереди и передают телефон. Каждый выбирает: честно ответить на вопрос (Правда) или выполнить задание (Действие). В карточках часто встречаются имена других игроков — им тоже достанется.',
     },
     {
-      title: 'Правда',
+      title: 'Острота',
       content:
-        'Если выбрал Правду — отвечай честно на вопрос. Нельзя уклоняться или врать. Остальные игроки следят за честностью ответа.',
+        '«Разогрев» — для любой компании, даже малознакомой. «Остро» — для друзей: отношения, бывшие, переписки. «18+» — только для взрослых: секс, флирт, поцелуи. Любой физический контакт — только с тем, кто согласен.',
     },
     {
-      title: 'Действие',
+      title: 'Таймер',
       content:
-        'Если выбрал Действие — выполни задание полностью и без отговорок. Сложность заданий зависит от выбранного уровня.',
+        'Если в задании есть время, под карточкой появится кнопка «Старт». Запусти отсчёт, когда будешь готов — по окончании телефон просигналит.',
+    },
+    {
+      title: 'Слиться',
+      content:
+        'Не хочешь отвечать или выполнять — жми «Слиться». Вместо карточки выпадет штраф, и его придётся выполнить. Все сливы считаются и попадают на доску позора.',
     },
     {
       title: 'Победитель',
       content:
-        'В этой игре нет победителей — только незабываемые моменты. Игра идёт столько, сколько хочет компания.',
+        'Победителей нет — но тот, у кого меньше всех сливов, может смело называть себя самым смелым в компании.',
     },
   ],
   [GameKey.TabooReverse]: [
@@ -704,22 +709,27 @@ export const GAME_INSTRUCTIONS_EN: GameInstructionsMap = {
     {
       title: 'The Idea',
       content:
-        'Players take turns. Each one chooses: answer a question honestly (Truth) or complete a challenge (Dare).',
+        'Players take turns passing the phone. Each one chooses: answer a question honestly (Truth) or complete a challenge (Dare). Cards often name other players — they get dragged in too.',
     },
     {
-      title: 'Truth',
+      title: 'Heat',
       content:
-        'If you picked Truth — answer honestly. No dodging, no lying. The other players judge your honesty.',
+        '"Warm-up" works for any crowd, even strangers. "Spicy" is for friends: relationships, exes, chats. "18+" is adults only: sex, flirting, kissing. Any physical contact only with someone who agrees.',
     },
     {
-      title: 'Dare',
+      title: 'Timer',
       content:
-        'If you picked Dare — complete the challenge fully, no excuses. Difficulty depends on the chosen level.',
+        'If a card has a time limit, a "Start" button appears under it. Start the countdown when ready — the phone signals when time is up.',
+    },
+    {
+      title: 'Chicken Out',
+      content:
+        "Don't want to answer or do it? Tap “Chicken out”. You get a penalty instead, and you have to do it. Every chicken-out is counted on the hall of shame.",
     },
     {
       title: 'The Winner',
       content:
-        'There are no winners here — only unforgettable moments. Play as long as the party wants.',
+        'There are no winners — but whoever chickened out the least can call themselves the bravest in the room.',
     },
   ],
   [GameKey.TabooReverse]: [

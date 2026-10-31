@@ -33,6 +33,8 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 - Слова Крокодила (`CrocodileGame/content.ts`) и Alias (`AliasGame/content.ts`): не длиннее 2 слов (правило игры). Счёт слов по пробелам; дефис не разделяет (`Винни-Пух` — 1 слово). Just One — только одиночные слова.
 - Кастомные слова: общие (`getCustomWords(gameId)`) + привязанные к сложности через keyed-хранилище (`getCustomWordsByKey('<gameId>_<difficulty>')`); объединение — `getAllCustomWords`
 - Контент игры — `content.ts` или `contents/` в папке игры, разбит по `Difficulty`
+- **Правда или Действие**: сложность = острота (easy «Разогрев» / medium «Остро» / hard «18+»). Карточки — шаблоны: `{player}`/`{player2}` (случайные другие игроки; карточки с `{player2}` отфильтровываются при <3 игроках), `{t:N}` (таймер, N ∈ 10/15/20/30/45/60/90/120). Подстановка — `renderCard` в `TruthOrDareGame/helpers.ts`. Правила текста: имя **только в именительном падеже** (не склоняется), **без родовых форм** про игроков (пол неизвестен: «было такое, что ты…», «этот человек»), физический контакт в 18+ — только «с тем, кто согласится». Штрафы за слив — отдельный пул `contents/penalties.ts` со своим used-ключом (`PENALTY_POOL_ID`).
+- Свои подписи шкалы сложности игры: `registry.games.<id>.difficulty.{label, options}` в словарях → `difficultyLabel`/`difficultyLabels` из `useLocalizedGame` (Setup и UniversalGameSettings подхватывают сами).
 
 ## Эффекты (звук / вибрация / конфетти)
 
@@ -47,4 +49,4 @@ export type Difficulty = (typeof DIFFICULTY)[keyof typeof DIFFICULTY];
 - Инструкции игр: `GAME_INSTRUCTIONS` (ru) + `GAME_INSTRUCTIONS_EN` в `entities/game/instructions.ts`, выбор — `getGameInstructions(gameKey, lang)`.
 - **Не переводится намеренно**: контент-пулы (слова/вопросы/персонажи Бункера — русский игровой контент), `debug/BunkerBalanceView`, секция «Язык / Language» (двуязычная по дизайну), комментарии в коде.
 
-_Ревизия: 2026-10-25_
+_Ревизия: 2026-10-31_

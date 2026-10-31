@@ -1,0 +1,14 @@
+- generic [ref=e703]:
+  - generic [ref=e704]:
+    - generic [ref=e709]:
+      - heading "ПРАВДА ИЛИ ДЕЙСТВИЕ" [level=2] [ref=e710]
+      - paragraph [ref=e711]: Правда или Действие
+    - button [ref=e713]
+  - generic [ref=e776]:
+    - generic [ref=e777]:
+      - generic [ref=e778]: Действие
+      - heading "Дуня" [level=1] [ref=e779]
+    - paragraph [ref=e783]: Группа выбирает песню, которая стоит у тебя на рингтоне до конца игры, — и кто-то сразу звонит тебе проверить
+    - generic [ref=e784]:
+      - button "ВЫПОЛНЕНО" [ref=e785]
+      - button "Слиться" [ref=e791]

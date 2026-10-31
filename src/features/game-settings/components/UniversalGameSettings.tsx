@@ -113,22 +113,25 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
     return gameDef.difficultySublabel(d, statsOf(currentGameId, d)?.remaining, t);
   };
 
+  const diffLabel = (d: Difficulty) =>
+    gameDef?.difficultyLabels?.[d] ?? t(`common.difficultyShort.${d}`);
+
   const difficultyOptions: SettingOption[] = [
     {
       value: DIFFICULTY.EASY,
-      label: t('common.difficultyShort.easy'),
+      label: diffLabel(DIFFICULTY.EASY),
       sublabel: getDiffSublabel(DIFFICULTY.EASY),
       color: 'green',
     },
     {
       value: DIFFICULTY.MEDIUM,
-      label: t('common.difficultyShort.medium'),
+      label: diffLabel(DIFFICULTY.MEDIUM),
       sublabel: getDiffSublabel(DIFFICULTY.MEDIUM),
       color: 'sky',
     },
     {
       value: DIFFICULTY.HARD,
-      label: t('common.difficultyShort.hard'),
+      label: diffLabel(DIFFICULTY.HARD),
       sublabel: getDiffSublabel(DIFFICULTY.HARD),
       color: 'red',
     },
@@ -138,7 +141,7 @@ export const UniversalGameSettings: React.FC<UniversalGameSettingsProps> = ({
     <div className="mb-10 space-y-12">
       {gameDef?.hasDifficulty !== false && (
         <SettingRow
-          label={t('common.difficultyLabel')}
+          label={gameDef?.difficultyLabel ?? t('common.difficultyLabel')}
           icon={Target}
           options={difficultyOptions}
           value={difficulty}

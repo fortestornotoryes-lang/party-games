@@ -1,29 +1,42 @@
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Flag } from 'lucide-react';
 import { motion } from 'motion/react';
 import React from 'react';
 
-import type { ChoiceType } from '../types';
+import { CardFace } from '../components/CardFace';
+import { CardTimer } from '../components/CardTimer';
+import type { CardTimerStatus, ChoiceType, TruthOrDareCard } from '../types';
+import { CHOICE_TYPE } from '../types';
 
 import { PrimaryButton } from '@/shared/components/PrimaryButton';
 import { Typography } from '@/shared/components/Typography';
+import type { Timer } from '@/shared/hooks/useTimer';
 import { useTranslation } from '@/shared/i18n';
 import { NS } from '@/shared/i18n/keys';
 
 interface ActionPhaseProps {
   currentPlayer: string;
   choice: ChoiceType;
-  content: string;
+  card: TruthOrDareCard;
+  timer: Timer;
+  timerStatus: CardTimerStatus;
+  onStartTimer: () => void;
   onDone: () => void;
+  onRefuse: () => void;
 }
 
 export const ActionPhase: React.FC<ActionPhaseProps> = ({
   currentPlayer,
   choice,
-  content,
+  card,
+  timer,
+  timerStatus,
+  onStartTimer,
   onDone,
+  onRefuse,
 }) => {
   const { t } = useTranslation();
-  const isTruth = choice === 'truth';
+  const isTruth = choice === CHOICE_TYPE.TRUTH;
+  const accent = isTruth ? 'sky' : 'red';
 
   return (
     <motion.div
@@ -42,43 +55,38 @@ export const ActionPhase: React.FC<ActionPhaseProps> = ({
               : 'bg-premium-red/10 border-premium-red/25'
           }`}
         >
-          <Typography.Label color={isTruth ? 'sky' : 'red'} as="span">
+          <Typography.Label color={accent} as="span">
             {isTruth ? t(`${NS.TRUTH_OR_DARE}.truthBadge`) : t(`${NS.TRUTH_OR_DARE}.dareBadge`)}
           </Typography.Label>
         </div>
         <Typography.Title className="text-center">{currentPlayer}</Typography.Title>
       </div>
 
-      <div className="flex flex-1 items-center justify-center px-2">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.08 }}
-          className="rounded-premium-xl relative w-full overflow-hidden p-8 text-center"
-          style={{
-            background: isTruth
-              ? 'linear-gradient(145deg, rgba(31,182,255,0.1) 0%, rgba(31,182,255,0.04) 100%)'
-              : 'linear-gradient(145deg, rgba(255,46,77,0.1) 0%, rgba(255,46,77,0.04) 100%)',
-            border: isTruth
-              ? '1.5px solid rgba(31,182,255,0.2)'
-              : '1.5px solid rgba(255,46,77,0.2)',
-            boxShadow: isTruth ? '0 0 80px rgba(31,182,255,0.07)' : '0 0 80px rgba(255,46,77,0.07)',
-          }}
-        >
-          <div
-            className="absolute inset-0 opacity-[0.035]"
-            style={{
-              backgroundImage:
-                'repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 28px), repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 28px)',
-            }}
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 px-2">
+        <CardFace text={card.text} accent={accent} />
+        {card.timerSeconds > 0 && (
+          <CardTimer
+            timer={timer}
+            total={card.timerSeconds}
+            status={timerStatus}
+            accent={accent}
+            onStart={onStartTimer}
           />
-          <p className="relative z-10 text-xl leading-snug font-black text-white">{content}</p>
-        </motion.div>
+        )}
       </div>
 
-      <PrimaryButton onClick={onDone} icon={CheckCircle} variant={isTruth ? 'blue' : 'red'}>
-        {t(`${NS.TRUTH_OR_DARE}.completed`)}
-      </PrimaryButton>
+      <div className="flex flex-col gap-2">
+        <PrimaryButton onClick={onDone} icon={CheckCircle} variant={isTruth ? 'blue' : 'red'}>
+          {t(`${NS.TRUTH_OR_DARE}.completed`)}
+        </PrimaryButton>
+        <button
+          onClick={onRefuse}
+          className="text-tag flex items-center justify-center gap-2 py-3 font-black tracking-[0.3em] text-white/35 uppercase transition-colors active:text-white/60"
+        >
+          <Flag className="h-3.5 w-3.5" />
+          {t(`${NS.TRUTH_OR_DARE}.refuse`)}
+        </button>
+      </div>
     </motion.div>
   );
 };
